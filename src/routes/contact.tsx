@@ -49,7 +49,13 @@ function ContactPage() {
       return;
     }
     setSaving(true);
-    const { error } = await supabase.from("contact_messages").insert(parsed.data);
+    const { error } = await supabase.from("contact_messages").insert({
+      full_name: parsed.data.full_name,
+      email: parsed.data.email,
+      phone: parsed.data.phone ?? null,
+      subject: parsed.data.subject,
+      message: parsed.data.message,
+    });
     setSaving(false);
     if (error) {
       toast.error("Sorry, your message could not be sent. Please try again.");
