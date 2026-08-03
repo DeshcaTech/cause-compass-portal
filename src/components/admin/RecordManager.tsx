@@ -124,17 +124,27 @@ function ImageField({
   value,
   onChange,
   rules: overrides,
+  crop: cropOverrides,
 }: {
   id: string;
   value: string;
   onChange: (url: string) => void;
   rules?: Partial<ImageRules> | undefined;
+  crop?: Partial<CropSpec> | undefined;
 }) {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [pending, setPending] = useState<{ src: string; type: string } | null>(null);
   const rules: ImageRules = { ...DEFAULT_IMAGE_RULES, ...overrides };
+  const spec: CropSpec = { aspect: 16 / 9, outputWidth: 1600, ...cropOverrides };
 
-  async function upload(file: File) {
+  useEffect(() => {
+    return () => {
+      if (pending) URL.revokeObjectURL(pending.src);
+    };
+  }, [pending]);
+
+  async function pick(file: File) {
     setError(null);
     const problem = await validateImage(file, rules);
     if (problem) {
@@ -142,13 +152,24 @@ function ImageField({
       toast.error(problem);
       return;
     }
+    setPending({ src: URL.createObjectURL(file), type: file.type });
+  }
+
+  function closeCropper() {
+    if (pending) URL.revokeObjectURL(pending.src);
+    setPending(null);
+  }
+
+  async function upload(blob: Blob) {
+    const type = blob.type;
+    closeCropper();
     setUploading(true);
     try {
-      const ext = file.name.split(".").pop() ?? "jpg";
+      const ext = type === "image/png" ? "png" : "jpg";
       const path = `${id}/${crypto.randomUUID()}.${ext}`;
       const { error } = await supabase.storage
         .from(IMAGE_BUCKET)
-        .upload(path, file, { cacheControl: "31536000", upsert: false });
+        .upload(path, blob, { cacheControl: "31536000", upsert: false, contentType: type });
       if (error) throw new Error(error.message);
       const { data, error: signError } = await supabase.storage
         .from(IMAGE_BUCKET)
