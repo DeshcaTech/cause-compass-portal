@@ -58,65 +58,68 @@ function Index() {
 
   return (
     <>
-      <section className="relative isolate overflow-hidden">
-        <img
-          src={hero}
-          alt="CCGMs members of all generations celebrating together"
-          width={1920}
-          height={1200}
-          className="absolute inset-0 -z-10 h-full w-full object-cover"
-        />
-        <div className="hero-overlay absolute inset-0 -z-10" />
-        <div className="container-page flex flex-col items-center py-24 text-center text-primary-foreground md:py-32">
-          <img
-            src={logo}
-            alt="CCGMs logo"
-            width={140}
-            height={140}
-            className="h-28 w-28 drop-shadow-lg md:h-36 md:w-36"
-          />
-          <h1 className="mt-8 max-w-4xl text-4xl leading-[1.05] md:text-6xl">
-            Stronger together, <span className="text-gold">generation after generation</span>
-          </h1>
-          <p className="mt-5 max-w-2xl text-base text-primary-foreground/85 md:text-lg">
-            CCGMs is a community association built on family, culture and mutual support. Join us,
-            give to a cause, and be part of everything we build together.
-          </p>
-          <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-            <Button asChild variant="hero" size="xl">
-              <Link to="/donate">
-                Donate <ArrowRight />
-              </Link>
-            </Button>
-            <Button asChild variant="onHero" size="xl">
-              <Link to="/fundraising">Support Our Causes</Link>
-            </Button>
+      {/* Magazine masthead hero: editorial split */}
+      <section className="relative isolate overflow-hidden bg-primary text-primary-foreground">
+        <div className="container-page grid items-center gap-10 py-16 md:grid-cols-[1.05fr_0.95fr] md:py-24">
+          <div className="min-w-0">
+            <div className="flex items-center gap-4">
+              <img
+                src={logo}
+                alt="CCGMs logo"
+                width={140}
+                height={140}
+                className="h-16 w-16 shrink-0 md:h-20 md:w-20"
+              />
+              <p className="eyebrow text-gold">Community association</p>
+            </div>
+            <h1 className="mt-7 text-[2.6rem] leading-[0.98] md:text-[4.2rem]">
+              Stronger together,
+              <br />
+              <span className="text-gold">generation after generation</span>
+            </h1>
+            <p className="mt-6 max-w-xl text-base text-primary-foreground/80 md:text-lg">
+              CCGMs is built on family, culture and mutual support. Join us, give to a cause, and
+              be part of everything we build together.
+            </p>
+            <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+              <Button asChild variant="gold" size="xl">
+                <Link to="/donate">
+                  Donate <ArrowRight />
+                </Link>
+              </Button>
+              <Button asChild variant="onHero" size="xl">
+                <Link to="/fundraising">Support Our Causes</Link>
+              </Button>
+            </div>
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+              {[
+                { icon: Smartphone, label: "Android" },
+                { icon: Apple, label: "iPhone" },
+              ].map(({ icon: Icon, label }) => (
+                <a
+                  key={label}
+                  href="#"
+                  className="inline-flex items-center gap-3 rounded-2xl border border-primary-foreground/25 px-5 py-3 text-left transition-colors hover:bg-primary-foreground/10"
+                >
+                  <Icon className="size-6 shrink-0" />
+                  <span>
+                    <span className="block text-[11px] uppercase tracking-widest opacity-70">
+                      Download for
+                    </span>
+                    <span className="block text-sm font-semibold">{label}</span>
+                  </span>
+                </a>
+              ))}
+            </div>
           </div>
-          <div className="mt-10 flex flex-col items-center gap-3 sm:flex-row">
-            <a
-              href="#"
-              className="inline-flex items-center gap-3 rounded-xl border border-primary-foreground/30 bg-primary-foreground/10 px-5 py-3 text-left backdrop-blur-sm transition-colors hover:bg-primary-foreground/20"
-            >
-              <Smartphone className="size-6" />
-              <span>
-                <span className="block text-[11px] uppercase tracking-widest opacity-75">
-                  Download for
-                </span>
-                <span className="block text-sm font-semibold">Android</span>
-              </span>
-            </a>
-            <a
-              href="#"
-              className="inline-flex items-center gap-3 rounded-xl border border-primary-foreground/30 bg-primary-foreground/10 px-5 py-3 text-left backdrop-blur-sm transition-colors hover:bg-primary-foreground/20"
-            >
-              <Apple className="size-6" />
-              <span>
-                <span className="block text-[11px] uppercase tracking-widest opacity-75">
-                  Download for
-                </span>
-                <span className="block text-sm font-semibold">iPhone</span>
-              </span>
-            </a>
+          <div className="relative">
+            <img
+              src={hero}
+              alt="CCGMs members of all generations celebrating together"
+              width={1920}
+              height={1200}
+              className="aspect-[4/3] w-full rounded-3xl object-cover shadow-[var(--shadow-lift)]"
+            />
           </div>
         </div>
       </section>
@@ -125,9 +128,9 @@ function Index() {
         <div className="grid gap-5 md:grid-cols-3">
           {highlights.map((item) => (
             <Link key={item.to} to={item.to} className="group">
-              <Card className="h-full border-border/70 shadow-[var(--shadow-soft)] transition-all group-hover:-translate-y-1 group-hover:shadow-[var(--shadow-lift)]">
+              <Card className="h-full border-border/70 transition-all group-hover:-translate-y-1 group-hover:shadow-[var(--shadow-lift)]">
                 <CardContent className="p-7">
-                  <span className="inline-flex size-11 items-center justify-center rounded-xl bg-accent text-accent-foreground">
+                  <span className="inline-flex size-11 items-center justify-center rounded-2xl bg-accent text-accent-foreground">
                     <item.icon className="size-5" />
                   </span>
                   <h2 className="mt-5 text-xl">{item.title}</h2>
@@ -153,23 +156,38 @@ function Index() {
               <Link to="/events">All events</Link>
             </Button>
           </div>
-          <div className="mt-8 grid gap-5 md:grid-cols-3">
-            {upcoming.map((event) => (
-              <Card key={event.id} className="border-border/70">
-                <CardContent className="p-6">
-                  <p className="eyebrow text-primary">{formatDate(event.start_at)}</p>
-                  <h3 className="mt-2 text-lg">{event.title}</h3>
-                  <p className="mt-2 line-clamp-3 text-sm text-muted-foreground">
-                    {event.description}
+          {upcoming.length === 0 ? (
+            <p className="mt-8 text-sm text-muted-foreground">New events are being planned.</p>
+          ) : (
+            <div className="mt-8 grid gap-6 lg:grid-cols-[1.4fr_1fr]">
+              {/* Lead story */}
+              <Card className="overflow-hidden border-border/70 bg-primary text-primary-foreground">
+                <CardContent className="flex h-full flex-col p-8 md:p-10">
+                  <p className="eyebrow text-gold">{formatDate(upcoming[0]!.start_at)}</p>
+                  <h3 className="mt-3 text-3xl leading-tight md:text-4xl">{upcoming[0]!.title}</h3>
+                  <p className="mt-4 line-clamp-4 text-sm text-primary-foreground/80 md:text-base">
+                    {upcoming[0]!.description}
                   </p>
-                  <p className="mt-3 text-xs text-muted-foreground">{event.location}</p>
+                  <p className="mt-auto pt-6 text-xs uppercase tracking-widest text-primary-foreground/60">
+                    {upcoming[0]!.location}
+                  </p>
                 </CardContent>
               </Card>
-            ))}
-            {upcoming.length === 0 ? (
-              <p className="text-sm text-muted-foreground">New events are being planned.</p>
-            ) : null}
-          </div>
+              {/* Supporting column */}
+              <div className="divide-y divide-border rounded-xl border border-border/70 bg-card">
+                {upcoming.slice(1).map((event) => (
+                  <div key={event.id} className="p-6">
+                    <p className="eyebrow text-terracotta">{formatDate(event.start_at)}</p>
+                    <h3 className="mt-2 text-lg">{event.title}</h3>
+                    <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">
+                      {event.description}
+                    </p>
+                    <p className="mt-3 text-xs text-muted-foreground">{event.location}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </section>
 
