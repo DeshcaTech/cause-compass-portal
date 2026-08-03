@@ -91,9 +91,6 @@ function PartnersPage() {
           {selected ? (
             <div className="space-y-4">
               <Badge variant="secondary">{selected.category}</Badge>
-              {selected.owner_name ? (
-                <p className="text-sm text-muted-foreground">Owned by {selected.owner_name}</p>
-              ) : null}
               <p className="text-sm text-foreground/85">{selected.description}</p>
               <ul className="space-y-2 text-sm text-muted-foreground">
                 {selected.phone ? (
