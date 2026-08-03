@@ -81,9 +81,14 @@ export function Footer() {
       <div className="border-t border-primary-foreground/15">
         <div className="container-page flex flex-col gap-2 py-5 text-xs text-primary-foreground/60 sm:flex-row sm:items-center sm:justify-between">
           <p>© {new Date().getFullYear()} CCGMs Community Association. All rights reserved.</p>
-          <Link to="/contact" className="hover:text-gold">
-            Contact us
-          </Link>
+          <span className="flex gap-4">
+            <Link to="/contact" className="hover:text-gold">
+              Contact us
+            </Link>
+            <Link to="/admin" className="hover:text-gold">
+              Admin
+            </Link>
+          </span>
         </div>
       </div>
     </footer>
