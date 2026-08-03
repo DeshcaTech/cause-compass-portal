@@ -16,7 +16,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { campaignsQuery, formatMoney } from "@/lib/queries";
 
 export const Route = createFileRoute("/donate")({
-  validateSearch: (search: Record<string, unknown>) => ({
+  validateSearch: (search: Record<string, unknown>): { campaign?: string | undefined } => ({
     campaign: typeof search['campaign'] === "string" ? search['campaign'] : undefined,
   }),
   head: () => ({
