@@ -21,7 +21,7 @@ export const Route = createFileRoute("/")({
       {
         property: "og:description",
         content:
-          "Join CCGMs, support our causes and stay connected with community events, partners and campaigns.",
+          "CCGMs is a community association for families: membership, events, fundraising campaigns, member businesses and support when you need it.",
       },
     ],
   }),
