@@ -470,6 +470,7 @@ export function RecordManager({
                     id={field.name}
                     value={form[field.name] ?? ""}
                     rules={field.image}
+                    crop={field.crop}
                     onChange={(url) => setForm({ ...form, [field.name]: url })}
                   />
                 ) : (
