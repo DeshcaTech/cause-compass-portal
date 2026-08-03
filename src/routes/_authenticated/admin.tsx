@@ -136,7 +136,7 @@ function AdminPage() {
                   ],
                 },
                 { name: "organiser", label: "Organiser" },
-                { name: "image_url", label: "Event picture", type: "image" },
+                { name: "image_url", label: "Event picture", type: "image", crop: { aspect: 16 / 9, outputWidth: 1600 } },
                 { name: "ticket_url", label: "Ticket link" },
               ]}
             />
@@ -157,7 +157,7 @@ function AdminPage() {
                 { name: "title", label: "Album title", required: true },
                 { name: "description", label: "Description", type: "textarea" },
                 { name: "event_date", label: "Event date", type: "date" },
-                { name: "cover_url", label: "Cover picture", type: "image" },
+                { name: "cover_url", label: "Cover picture", type: "image", crop: { aspect: 16 / 9, outputWidth: 1600 } },
                 {
                   name: "is_default",
                   label: "Open by default",
@@ -196,7 +196,7 @@ function AdminPage() {
                     secondaryLabel={(row) => String(row['photo_url'])}
                     defaults={{ sort_order: 0 }}
                     fields={[
-                      { name: "photo_url", label: "Photo", type: "image", required: true },
+                      { name: "photo_url", label: "Photo", type: "image", required: true, crop: { aspect: 4 / 3, outputWidth: 1600 } },
                       { name: "caption", label: "Caption" },
                       { name: "sort_order", label: "Sort order", type: "number" },
                     ]}
@@ -225,7 +225,7 @@ function AdminPage() {
                 { name: "category", label: "Category", required: true },
                 { name: "short_description", label: "Short description" },
                 { name: "description", label: "Full description", type: "textarea" },
-                { name: "logo_url", label: "Logo / advert picture", type: "image" },
+                { name: "logo_url", label: "Logo / advert picture", type: "image", crop: { aspect: 16 / 9, outputWidth: 1400 } },
                 { name: "phone", label: "Phone" },
                 { name: "email", label: "Email" },
                 { name: "website", label: "Website" },
@@ -248,7 +248,7 @@ function AdminPage() {
                 { name: "title", label: "Title", required: true },
                 { name: "summary", label: "Summary" },
                 { name: "description", label: "Description", type: "textarea" },
-                { name: "image_url", label: "Campaign picture", type: "image" },
+                { name: "image_url", label: "Campaign picture", type: "image", crop: { aspect: 16 / 9, outputWidth: 1600 } },
                 { name: "goal_amount", label: "Goal amount", type: "number", required: true },
                 { name: "raised_amount", label: "Raised amount", type: "number", required: true },
                 {
@@ -282,7 +282,7 @@ function AdminPage() {
                 { name: "role_title", label: "Role", required: true },
                 { name: "term_label", label: "Term (e.g. 2024–2026)", required: true },
                 { name: "bio", label: "Bio", type: "textarea" },
-                { name: "photo_url", label: "Photo", type: "image" },
+                { name: "photo_url", label: "Photo", type: "image", crop: { aspect: 1, outputWidth: 800 } },
                 { name: "is_current", label: "Current team", type: "switch" },
                 { name: "sort_order", label: "Sort order", type: "number" },
               ]}
@@ -303,7 +303,7 @@ function AdminPage() {
               fields={[
                 { name: "name", label: "Asset name", required: true },
                 { name: "description", label: "Description", type: "textarea" },
-                { name: "image_url", label: "Asset picture", type: "image" },
+                { name: "image_url", label: "Asset picture", type: "image", crop: { aspect: 16 / 9, outputWidth: 1400 } },
                 { name: "quantity", label: "Quantity", type: "number", required: true },
                 { name: "member_price", label: "Member price", type: "number" },
                 { name: "non_member_price", label: "Non-member price", type: "number" },
@@ -324,7 +324,7 @@ function AdminPage() {
               fields={[
                 { name: "title", label: "Title", required: true },
                 { name: "description", label: "Description", type: "textarea" },
-                { name: "image_url", label: "Survey picture", type: "image" },
+                { name: "image_url", label: "Survey picture", type: "image", crop: { aspect: 16 / 6, outputWidth: 1600 } },
                 {
                   name: "questions",
                   label: "Questions (JSON)",
