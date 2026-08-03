@@ -192,7 +192,10 @@ function ImageField({
         <img
           src={value}
           alt="Selected preview"
-          className="h-32 w-full rounded-md border border-border object-cover"
+          className={`w-full rounded-md border border-border object-cover ${
+            spec.aspect === 1 ? "size-32 rounded-full" : "aspect-[16/9]"
+          }`}
+          style={spec.aspect === 1 ? undefined : { aspectRatio: String(spec.aspect) }}
         />
       ) : null}
       <div className="flex flex-wrap items-center gap-2">
@@ -205,7 +208,7 @@ function ImageField({
           aria-invalid={error ? true : undefined}
           onChange={(e) => {
             const file = e.target.files?.[0];
-            if (file) void upload(file);
+            if (file) void pick(file);
             e.target.value = "";
           }}
         />
@@ -232,6 +235,16 @@ function ImageField({
           {rules.minHeight}px to {rules.maxWidth}×{rules.maxHeight}px
         </p>
       )}
+      {pending ? (
+        <ImageCropper
+          open
+          src={pending.src}
+          mimeType={pending.type}
+          spec={spec}
+          onCancel={closeCropper}
+          onCropped={(blob) => void upload(blob)}
+        />
+      ) : null}
     </div>
   );
 }
