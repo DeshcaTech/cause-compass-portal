@@ -30,12 +30,95 @@ const db = supabase as unknown as {
 export type AdminField = {
   name: string;
   label: string;
-  type?: "text" | "textarea" | "number" | "date" | "datetime" | "select" | "switch";
+  type?:
+    | "text"
+    | "textarea"
+    | "number"
+    | "date"
+    | "datetime"
+    | "select"
+    | "switch"
+    | "image"
+    | "json";
   options?: { value: string; label: string }[];
   required?: boolean;
   placeholder?: string;
   help?: string;
 };
+
+const IMAGE_BUCKET = "site-images";
+const SIGNED_URL_TTL = 60 * 60 * 24 * 365 * 10; // 10 years
+
+function ImageField({
+  id,
+  value,
+  onChange,
+}: {
+  id: string;
+  value: string;
+  onChange: (url: string) => void;
+}) {
+  const [uploading, setUploading] = useState(false);
+
+  async function upload(file: File) {
+    setUploading(true);
+    try {
+      const ext = file.name.split(".").pop() ?? "jpg";
+      const path = `${id}/${crypto.randomUUID()}.${ext}`;
+      const { error } = await supabase.storage
+        .from(IMAGE_BUCKET)
+        .upload(path, file, { cacheControl: "31536000", upsert: false });
+      if (error) throw new Error(error.message);
+      const { data, error: signError } = await supabase.storage
+        .from(IMAGE_BUCKET)
+        .createSignedUrl(path, SIGNED_URL_TTL);
+      if (signError || !data) throw new Error(signError?.message ?? "Could not create image link");
+      onChange(data.signedUrl);
+      toast.success("Picture uploaded");
+    } catch (error) {
+      toast.error((error as Error).message);
+    } finally {
+      setUploading(false);
+    }
+  }
+
+  return (
+    <div className="space-y-2">
+      {value ? (
+        <img
+          src={value}
+          alt="Selected preview"
+          className="h-32 w-full rounded-md border border-border object-cover"
+        />
+      ) : null}
+      <div className="flex flex-wrap items-center gap-2">
+        <Input
+          id={id}
+          type="file"
+          accept="image/*"
+          disabled={uploading}
+          className="max-w-[16rem] cursor-pointer"
+          onChange={(e) => {
+            const file = e.target.files?.[0];
+            if (file) void upload(file);
+            e.target.value = "";
+          }}
+        />
+        {uploading ? <span className="text-xs text-muted-foreground">Uploading…</span> : null}
+        {value ? (
+          <Button type="button" variant="ghost" size="sm" onClick={() => onChange("")}>
+            Remove
+          </Button>
+        ) : null}
+      </div>
+      <Input
+        placeholder="…or paste an image link"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+      />
+    </div>
+  );
+}
 
 export type RecordManagerProps = {
   table: string;
@@ -53,6 +136,7 @@ function toFormValue(field: AdminField, value: any) {
   if (value === null || value === undefined) return field.type === "switch" ? false : "";
   if (field.type === "datetime") return String(value).slice(0, 16);
   if (field.type === "date") return String(value).slice(0, 10);
+  if (field.type === "json") return JSON.stringify(value, null, 2);
   return value;
 }
 
@@ -61,6 +145,13 @@ function toDbValue(field: AdminField, value: any) {
   if (value === "" || value === undefined) return null;
   if (field.type === "number") return Number(value);
   if (field.type === "datetime") return new Date(value).toISOString();
+  if (field.type === "json") {
+    try {
+      return JSON.parse(value);
+    } catch {
+      throw new Error(`${field.label} must be valid JSON`);
+    }
+  }
   return value;
 }
 
@@ -210,10 +301,10 @@ export function RecordManager({
             {fields.map((field) => (
               <div key={field.name} className="space-y-1.5">
                 <Label htmlFor={field.name}>{field.label}</Label>
-                {field.type === "textarea" ? (
+                {field.type === "textarea" || field.type === "json" ? (
                   <Textarea
                     id={field.name}
-                    rows={4}
+                    rows={field.type === "json" ? 8 : 4}
                     required={field.required}
                     placeholder={field.placeholder}
                     value={form[field.name] ?? ""}
@@ -245,6 +336,12 @@ export function RecordManager({
                       {form[field.name] ? "Yes" : "No"}
                     </span>
                   </div>
+                ) : field.type === "image" ? (
+                  <ImageField
+                    id={field.name}
+                    value={form[field.name] ?? ""}
+                    onChange={(url) => setForm({ ...form, [field.name]: url })}
+                  />
                 ) : (
                   <Input
                     id={field.name}

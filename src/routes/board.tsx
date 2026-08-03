@@ -36,13 +36,22 @@ function MemberGrid({ members }: { members: BoardMember[] }) {
       {members.map((member) => (
         <Card key={member.id} className="border-border/70">
           <CardContent className="p-6">
-            <div className="flex size-14 items-center justify-center rounded-full bg-[image:var(--gradient-gold)] font-display text-lg text-gold-foreground">
-              {member.full_name
-                .split(" ")
-                .map((part) => part[0])
-                .slice(0, 2)
-                .join("")}
-            </div>
+            {member.photo_url ? (
+              <img
+                src={member.photo_url}
+                alt={member.full_name}
+                loading="lazy"
+                className="size-16 rounded-full object-cover"
+              />
+            ) : (
+              <div className="flex size-14 items-center justify-center rounded-full bg-[image:var(--gradient-gold)] font-display text-lg text-gold-foreground">
+                {member.full_name
+                  .split(" ")
+                  .map((part) => part[0])
+                  .slice(0, 2)
+                  .join("")}
+              </div>
+            )}
             <p className="mt-4 font-display text-lg">{member.full_name}</p>
             <p className="text-sm text-primary">{member.role_title}</p>
             <Badge variant="secondary" className="mt-3">

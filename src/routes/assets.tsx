@@ -92,9 +92,18 @@ function AssetsPage() {
           {assets.map((asset) => (
             <Card key={asset.id} className="flex flex-col border-border/70">
               <CardContent className="flex flex-1 flex-col p-6">
-                <span className="inline-flex size-11 items-center justify-center rounded-xl bg-accent text-accent-foreground">
-                  <Package className="size-5" />
-                </span>
+                {asset.image_url ? (
+                  <img
+                    src={asset.image_url}
+                    alt={asset.name}
+                    loading="lazy"
+                    className="aspect-[16/9] w-full rounded-xl object-cover"
+                  />
+                ) : (
+                  <span className="inline-flex size-11 items-center justify-center rounded-xl bg-accent text-accent-foreground">
+                    <Package className="size-5" />
+                  </span>
+                )}
                 <div className="mt-4 flex items-start justify-between gap-3">
                   <h2 className="text-lg">{asset.name}</h2>
                   <Badge variant={asset.is_available ? "secondary" : "outline"}>

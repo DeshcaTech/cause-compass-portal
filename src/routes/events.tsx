@@ -47,6 +47,14 @@ function EventCard({ event, onOpen }: { event: EventRow; onOpen: () => void }) {
       onClick={onOpen}
     >
       <CardContent className="p-6">
+        {event.image_url ? (
+          <img
+            src={event.image_url}
+            alt={event.title}
+            loading="lazy"
+            className="mb-4 aspect-[16/9] w-full rounded-xl object-cover"
+          />
+        ) : null}
         <div className="flex items-start justify-between gap-3">
           <p className="eyebrow text-primary">{formatDate(event.start_at)}</p>
           <TypeBadge type={event.event_type} />

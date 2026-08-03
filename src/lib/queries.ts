@@ -66,6 +66,7 @@ export type Survey = {
   id: string;
   title: string;
   description: string | null;
+  image_url: string | null;
   questions: SurveyQuestion[];
   is_active: boolean;
   closes_at: string | null;

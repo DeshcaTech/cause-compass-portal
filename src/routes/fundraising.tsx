@@ -34,6 +34,14 @@ function CampaignCard({ campaign }: { campaign: Campaign }) {
   return (
     <Card className="flex flex-col border-border/70">
       <CardContent className="flex flex-1 flex-col p-6">
+        {campaign.image_url ? (
+          <img
+            src={campaign.image_url}
+            alt={campaign.title}
+            loading="lazy"
+            className="mb-4 aspect-[16/9] w-full rounded-xl object-cover"
+          />
+        ) : null}
         <div className="flex items-start justify-between gap-3">
           <h2 className="text-lg">{campaign.title}</h2>
           <Badge variant={campaign.status === "active" ? "default" : "secondary"}>

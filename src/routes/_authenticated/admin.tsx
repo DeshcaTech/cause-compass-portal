@@ -103,6 +103,9 @@ function AdminPage() {
             <TabsTrigger value="gallery">Gallery</TabsTrigger>
             <TabsTrigger value="partners">Partners</TabsTrigger>
             <TabsTrigger value="campaigns">Campaigns</TabsTrigger>
+            <TabsTrigger value="board">Board</TabsTrigger>
+            <TabsTrigger value="assets">Assets</TabsTrigger>
+            <TabsTrigger value="surveys">Surveys</TabsTrigger>
           </TabsList>
 
           <TabsContent value="events" className="mt-8">
@@ -133,7 +136,7 @@ function AdminPage() {
                   ],
                 },
                 { name: "organiser", label: "Organiser" },
-                { name: "image_url", label: "Image URL" },
+                { name: "image_url", label: "Event picture", type: "image" },
                 { name: "ticket_url", label: "Ticket link" },
               ]}
             />
@@ -154,7 +157,7 @@ function AdminPage() {
                 { name: "title", label: "Album title", required: true },
                 { name: "description", label: "Description", type: "textarea" },
                 { name: "event_date", label: "Event date", type: "date" },
-                { name: "cover_url", label: "Cover image URL" },
+                { name: "cover_url", label: "Cover picture", type: "image" },
                 {
                   name: "is_default",
                   label: "Open by default",
@@ -193,7 +196,7 @@ function AdminPage() {
                     secondaryLabel={(row) => String(row['photo_url'])}
                     defaults={{ sort_order: 0 }}
                     fields={[
-                      { name: "photo_url", label: "Photo URL", required: true },
+                      { name: "photo_url", label: "Photo", type: "image", required: true },
                       { name: "caption", label: "Caption" },
                       { name: "sort_order", label: "Sort order", type: "number" },
                     ]}
@@ -222,7 +225,7 @@ function AdminPage() {
                 { name: "category", label: "Category", required: true },
                 { name: "short_description", label: "Short description" },
                 { name: "description", label: "Full description", type: "textarea" },
-                { name: "logo_url", label: "Logo URL" },
+                { name: "logo_url", label: "Logo / advert picture", type: "image" },
                 { name: "phone", label: "Phone" },
                 { name: "email", label: "Email" },
                 { name: "website", label: "Website" },
@@ -245,7 +248,7 @@ function AdminPage() {
                 { name: "title", label: "Title", required: true },
                 { name: "summary", label: "Summary" },
                 { name: "description", label: "Description", type: "textarea" },
-                { name: "image_url", label: "Image URL" },
+                { name: "image_url", label: "Campaign picture", type: "image" },
                 { name: "goal_amount", label: "Goal amount", type: "number", required: true },
                 { name: "raised_amount", label: "Raised amount", type: "number", required: true },
                 {
@@ -259,6 +262,78 @@ function AdminPage() {
                   ],
                 },
                 { name: "ends_at", label: "Closing date", type: "date" },
+              ]}
+            />
+          </TabsContent>
+
+          <TabsContent value="board" className="mt-8">
+            <RecordManager
+              table="board_members"
+              title="Board & team members"
+              description="Current and past team members shown on the board page."
+              orderBy={{ column: "sort_order" }}
+              primaryLabel={(row) => String(row['full_name'])}
+              secondaryLabel={(row) =>
+                `${row['role_title']} · ${row['term_label']}${row['is_current'] ? " · current" : ""}`
+              }
+              defaults={{ is_current: true, sort_order: 0 }}
+              fields={[
+                { name: "full_name", label: "Full name", required: true },
+                { name: "role_title", label: "Role", required: true },
+                { name: "term_label", label: "Term (e.g. 2024–2026)", required: true },
+                { name: "bio", label: "Bio", type: "textarea" },
+                { name: "photo_url", label: "Photo", type: "image" },
+                { name: "is_current", label: "Current team", type: "switch" },
+                { name: "sort_order", label: "Sort order", type: "number" },
+              ]}
+            />
+          </TabsContent>
+
+          <TabsContent value="assets" className="mt-8">
+            <RecordManager
+              table="community_assets"
+              title="Community assets"
+              description="Items members can request to rent."
+              orderBy={{ column: "name" }}
+              primaryLabel={(row) => String(row['name'])}
+              secondaryLabel={(row) =>
+                `${row['quantity']} available${row['is_available'] ? "" : " · hidden"}`
+              }
+              defaults={{ is_available: true, quantity: 1 }}
+              fields={[
+                { name: "name", label: "Asset name", required: true },
+                { name: "description", label: "Description", type: "textarea" },
+                { name: "image_url", label: "Asset picture", type: "image" },
+                { name: "quantity", label: "Quantity", type: "number", required: true },
+                { name: "member_price", label: "Member price", type: "number" },
+                { name: "non_member_price", label: "Non-member price", type: "number" },
+                { name: "is_available", label: "Available", type: "switch" },
+              ]}
+            />
+          </TabsContent>
+
+          <TabsContent value="surveys" className="mt-8">
+            <RecordManager
+              table="surveys"
+              title="Surveys"
+              description="Surveys shown on the surveys page."
+              orderBy={{ column: "created_at", ascending: false }}
+              primaryLabel={(row) => String(row['title'])}
+              secondaryLabel={(row) => (row['is_active'] ? "Active" : "Closed")}
+              defaults={{ is_active: true, questions: [] }}
+              fields={[
+                { name: "title", label: "Title", required: true },
+                { name: "description", label: "Description", type: "textarea" },
+                { name: "image_url", label: "Survey picture", type: "image" },
+                {
+                  name: "questions",
+                  label: "Questions (JSON)",
+                  type: "json",
+                  required: true,
+                  help: 'e.g. [{"id":"q1","type":"choice","label":"Your view?","options":["Yes","No"]}]',
+                },
+                { name: "is_active", label: "Active", type: "switch" },
+                { name: "closes_at", label: "Closing date", type: "date" },
               ]}
             />
           </TabsContent>

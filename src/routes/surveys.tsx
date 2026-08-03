@@ -74,6 +74,14 @@ function SurveyForm({ survey }: { survey: Survey }) {
   return (
     <Card className="border-border/70">
       <CardContent className="p-6 sm:p-8">
+        {survey.image_url ? (
+          <img
+            src={survey.image_url}
+            alt={survey.title}
+            loading="lazy"
+            className="mb-5 aspect-[16/6] w-full rounded-xl object-cover"
+          />
+        ) : null}
         <div className="flex flex-wrap items-start justify-between gap-3">
           <h3 className="text-xl">{survey.title}</h3>
           {survey.closes_at ? (
@@ -172,6 +180,14 @@ function SurveysPage() {
               closed.map((survey) => (
                 <Card key={survey.id} className="border-border/70">
                   <CardContent className="p-6">
+                    {survey.image_url ? (
+                      <img
+                        src={survey.image_url}
+                        alt={survey.title}
+                        loading="lazy"
+                        className="mb-4 aspect-[16/6] w-full rounded-xl object-cover"
+                      />
+                    ) : null}
                     <h3 className="text-lg">{survey.title}</h3>
                     <p className="mt-2 text-sm text-muted-foreground">{survey.description}</p>
                     <Badge variant="secondary" className="mt-3">
