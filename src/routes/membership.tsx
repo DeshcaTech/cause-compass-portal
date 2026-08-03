@@ -16,8 +16,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { supabase } from "@/integrations/supabase/client";
 import { formatMoney } from "@/lib/queries";
+import { submitMembership } from "@/lib/signup.functions";
 
 export const Route = createFileRoute("/membership")({
   head: () => ({
@@ -115,34 +115,36 @@ function MembershipPage() {
     }
 
     setSaving(true);
-    const { data, error } = await supabase.rpc("submit_membership", {
-      _full_name: parsed.data.full_name,
-      _email: parsed.data.email,
-      _phone: parsed.data.phone,
-      _address: parsed.data.address,
-      _birth_month: parsed.data.birth_month,
-      _birth_year: parsed.data.birth_year,
-      _membership_type: tier,
-      _amount: price,
-      _family:
-        tier === "family"
-          ? family.map((member) => ({
-              full_name: member.full_name,
-              relation: member.relation,
-              birth_month: Number(member.birth_month),
-              birth_year: Number(member.birth_year),
-              phone: member.relation === "partner" ? member.phone : "",
-            }))
-          : [],
-    });
-    setSaving(false);
-
-    if (error) {
+    try {
+      const result = await submitMembership({
+        data: {
+          full_name: parsed.data.full_name,
+          email: parsed.data.email,
+          phone: parsed.data.phone,
+          address: parsed.data.address,
+          birth_month: parsed.data.birth_month,
+          birth_year: parsed.data.birth_year,
+          membership_type: tier,
+          amount: price,
+          family:
+            tier === "family"
+              ? family.map((member) => ({
+                  full_name: member.full_name,
+                  relation: member.relation,
+                  birth_month: Number(member.birth_month),
+                  birth_year: Number(member.birth_year),
+                  phone: member.relation === "partner" ? member.phone : "",
+                }))
+              : [],
+        },
+      });
+      setNumber(result.membershipNumber);
+      toast.success("Welcome to CCGMs!");
+    } catch {
       toast.error("Registration failed. Please check your details and try again.");
-      return;
+    } finally {
+      setSaving(false);
     }
-    setNumber(data as string);
-    toast.success("Welcome to CCGMs!");
   }
 
   if (number) {

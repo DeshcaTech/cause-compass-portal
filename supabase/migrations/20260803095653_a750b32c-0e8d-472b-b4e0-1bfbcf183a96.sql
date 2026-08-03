@@ -1,0 +1,1 @@
+DELETE FROM public.memberships WHERE email = 'test@example.com';

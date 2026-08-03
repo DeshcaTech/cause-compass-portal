@@ -11,7 +11,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { supabase } from "@/integrations/supabase/client";
+import { submitVolunteerApplication } from "@/lib/signup.functions";
 
 export const Route = createFileRoute("/volunteer")({
   head: () => ({
@@ -66,21 +66,24 @@ function VolunteerPage() {
       return;
     }
     setSaving(true);
-    const { error } = await supabase.from("volunteer_applications").insert({
-      full_name: parsed.data.full_name,
-      email: parsed.data.email,
-      phone: parsed.data.phone || null,
-      membership_number: parsed.data.membership_number || null,
-      availability: parsed.data.availability || null,
-      message: parsed.data.message || null,
-      areas,
-    });
-    setSaving(false);
-    if (error) {
+    try {
+      await submitVolunteerApplication({
+        data: {
+          full_name: parsed.data.full_name,
+          email: parsed.data.email,
+          phone: parsed.data.phone,
+          membership_number: parsed.data.membership_number,
+          availability: parsed.data.availability,
+          message: parsed.data.message,
+          areas,
+        },
+      });
+      setDone(true);
+    } catch {
       toast.error("Your application could not be sent. Please try again.");
-      return;
+    } finally {
+      setSaving(false);
     }
-    setDone(true);
   }
 
   if (done) {
