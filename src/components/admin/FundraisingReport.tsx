@@ -207,7 +207,10 @@ export function FundraisingReport() {
         ))}
       </div>
 
-      <CampaignProgress rows={report.campaignRows} />
+      <CampaignProgress
+        rows={report.campaignRows}
+        donationsByCampaign={report.donationsByCampaign}
+      />
 
       <div className="grid gap-6 lg:grid-cols-2">
         <Card className="border-border/70">
