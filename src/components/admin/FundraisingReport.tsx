@@ -85,7 +85,16 @@ export function FundraisingReport() {
 
     const byCampaign = new Map<
       string,
-      { name: string; total: number; count: number; supporters: Set<string>; goal: number }
+      {
+        name: string;
+        total: number;
+        count: number;
+        supporters: Set<string>;
+        goal: number;
+        status: string | null;
+        endsAt: string | null;
+        createdAt: string | null;
+      }
     >();
     for (const campaign of campaigns) {
       byCampaign.set(campaign.id, {
