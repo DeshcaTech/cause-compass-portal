@@ -175,9 +175,10 @@ function ImageField({
         <Input
           id={id}
           type="file"
-          accept="image/*"
+          accept={rules.accept.join(",")}
           disabled={uploading}
-          className="max-w-[16rem] cursor-pointer"
+          className={`max-w-[16rem] cursor-pointer ${error ? "border-destructive" : ""}`}
+          aria-invalid={error ? true : undefined}
           onChange={(e) => {
             const file = e.target.files?.[0];
             if (file) void upload(file);
@@ -194,8 +195,19 @@ function ImageField({
       <Input
         placeholder="…or paste an image link"
         value={value}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={(e) => {
+          setError(null);
+          onChange(e.target.value);
+        }}
       />
+      {error ? (
+        <p className="text-xs font-medium text-destructive">{error}</p>
+      ) : (
+        <p className="text-xs text-muted-foreground">
+          {typeNames(rules.accept)} · up to {formatBytes(rules.maxBytes)} · {rules.minWidth}×
+          {rules.minHeight}px to {rules.maxWidth}×{rules.maxHeight}px
+        </p>
+      )}
     </div>
   );
 }
