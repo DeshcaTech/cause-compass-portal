@@ -15,8 +15,11 @@ import { Route as AssetsRouteImport } from './routes/assets'
 import { Route as BoardRouteImport } from './routes/board'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as DocumentsRouteImport } from './routes/documents'
+import { Route as DonateRouteImport } from './routes/donate'
 import { Route as EventsRouteImport } from './routes/events'
+import { Route as FundraisingRouteImport } from './routes/fundraising'
 import { Route as GalleryRouteImport } from './routes/gallery'
+import { Route as MembershipRouteImport } from './routes/membership'
 import { Route as PartnersRouteImport } from './routes/partners'
 
 const IndexRoute = IndexRouteImport.update({
@@ -49,14 +52,29 @@ const DocumentsRoute = DocumentsRouteImport.update({
   path: '/documents',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DonateRoute = DonateRouteImport.update({
+  id: '/donate',
+  path: '/donate',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const EventsRoute = EventsRouteImport.update({
   id: '/events',
   path: '/events',
   getParentRoute: () => rootRouteImport,
 } as any)
+const FundraisingRoute = FundraisingRouteImport.update({
+  id: '/fundraising',
+  path: '/fundraising',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const GalleryRoute = GalleryRouteImport.update({
   id: '/gallery',
   path: '/gallery',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MembershipRoute = MembershipRouteImport.update({
+  id: '/membership',
+  path: '/membership',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PartnersRoute = PartnersRouteImport.update({
@@ -72,8 +90,11 @@ export interface FileRoutesByFullPath {
   '/board': typeof BoardRoute
   '/contact': typeof ContactRoute
   '/documents': typeof DocumentsRoute
+  '/donate': typeof DonateRoute
   '/events': typeof EventsRoute
+  '/fundraising': typeof FundraisingRoute
   '/gallery': typeof GalleryRoute
+  '/membership': typeof MembershipRoute
   '/partners': typeof PartnersRoute
 }
 export interface FileRoutesByTo {
@@ -83,8 +104,11 @@ export interface FileRoutesByTo {
   '/board': typeof BoardRoute
   '/contact': typeof ContactRoute
   '/documents': typeof DocumentsRoute
+  '/donate': typeof DonateRoute
   '/events': typeof EventsRoute
+  '/fundraising': typeof FundraisingRoute
   '/gallery': typeof GalleryRoute
+  '/membership': typeof MembershipRoute
   '/partners': typeof PartnersRoute
 }
 export interface FileRoutesById {
@@ -95,8 +119,11 @@ export interface FileRoutesById {
   '/board': typeof BoardRoute
   '/contact': typeof ContactRoute
   '/documents': typeof DocumentsRoute
+  '/donate': typeof DonateRoute
   '/events': typeof EventsRoute
+  '/fundraising': typeof FundraisingRoute
   '/gallery': typeof GalleryRoute
+  '/membership': typeof MembershipRoute
   '/partners': typeof PartnersRoute
 }
 export interface FileRouteTypes {
@@ -108,8 +135,11 @@ export interface FileRouteTypes {
     | '/board'
     | '/contact'
     | '/documents'
+    | '/donate'
     | '/events'
+    | '/fundraising'
     | '/gallery'
+    | '/membership'
     | '/partners'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -119,8 +149,11 @@ export interface FileRouteTypes {
     | '/board'
     | '/contact'
     | '/documents'
+    | '/donate'
     | '/events'
+    | '/fundraising'
     | '/gallery'
+    | '/membership'
     | '/partners'
   id:
     | '__root__'
@@ -130,8 +163,11 @@ export interface FileRouteTypes {
     | '/board'
     | '/contact'
     | '/documents'
+    | '/donate'
     | '/events'
+    | '/fundraising'
     | '/gallery'
+    | '/membership'
     | '/partners'
   fileRoutesById: FileRoutesById
 }
@@ -142,8 +178,11 @@ export interface RootRouteChildren {
   BoardRoute: typeof BoardRoute
   ContactRoute: typeof ContactRoute
   DocumentsRoute: typeof DocumentsRoute
+  DonateRoute: typeof DonateRoute
   EventsRoute: typeof EventsRoute
+  FundraisingRoute: typeof FundraisingRoute
   GalleryRoute: typeof GalleryRoute
+  MembershipRoute: typeof MembershipRoute
   PartnersRoute: typeof PartnersRoute
 }
 
@@ -191,6 +230,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DocumentsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/donate': {
+      id: '/donate'
+      path: '/donate'
+      fullPath: '/donate'
+      preLoaderRoute: typeof DonateRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/events': {
       id: '/events'
       path: '/events'
@@ -198,11 +244,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EventsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/fundraising': {
+      id: '/fundraising'
+      path: '/fundraising'
+      fullPath: '/fundraising'
+      preLoaderRoute: typeof FundraisingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/gallery': {
       id: '/gallery'
       path: '/gallery'
       fullPath: '/gallery'
       preLoaderRoute: typeof GalleryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/membership': {
+      id: '/membership'
+      path: '/membership'
+      fullPath: '/membership'
+      preLoaderRoute: typeof MembershipRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/partners': {
@@ -222,8 +282,11 @@ const rootRouteChildren: RootRouteChildren = {
   BoardRoute: BoardRoute,
   ContactRoute: ContactRoute,
   DocumentsRoute: DocumentsRoute,
+  DonateRoute: DonateRoute,
   EventsRoute: EventsRoute,
+  FundraisingRoute: FundraisingRoute,
   GalleryRoute: GalleryRoute,
+  MembershipRoute: MembershipRoute,
   PartnersRoute: PartnersRoute,
 }
 export const routeTree = rootRouteImport
