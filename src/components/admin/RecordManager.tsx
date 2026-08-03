@@ -30,7 +30,16 @@ const db = supabase as unknown as {
 export type AdminField = {
   name: string;
   label: string;
-  type?: "text" | "textarea" | "number" | "date" | "datetime" | "select" | "switch" | "image";
+  type?:
+    | "text"
+    | "textarea"
+    | "number"
+    | "date"
+    | "datetime"
+    | "select"
+    | "switch"
+    | "image"
+    | "json";
   options?: { value: string; label: string }[];
   required?: boolean;
   placeholder?: string;
@@ -127,6 +136,7 @@ function toFormValue(field: AdminField, value: any) {
   if (value === null || value === undefined) return field.type === "switch" ? false : "";
   if (field.type === "datetime") return String(value).slice(0, 16);
   if (field.type === "date") return String(value).slice(0, 10);
+  if (field.type === "json") return JSON.stringify(value, null, 2);
   return value;
 }
 
@@ -135,6 +145,13 @@ function toDbValue(field: AdminField, value: any) {
   if (value === "" || value === undefined) return null;
   if (field.type === "number") return Number(value);
   if (field.type === "datetime") return new Date(value).toISOString();
+  if (field.type === "json") {
+    try {
+      return JSON.parse(value);
+    } catch {
+      throw new Error(`${field.label} must be valid JSON`);
+    }
+  }
   return value;
 }
 
@@ -284,10 +301,10 @@ export function RecordManager({
             {fields.map((field) => (
               <div key={field.name} className="space-y-1.5">
                 <Label htmlFor={field.name}>{field.label}</Label>
-                {field.type === "textarea" ? (
+                {field.type === "textarea" || field.type === "json" ? (
                   <Textarea
                     id={field.name}
-                    rows={4}
+                    rows={field.type === "json" ? 8 : 4}
                     required={field.required}
                     placeholder={field.placeholder}
                     value={form[field.name] ?? ""}
