@@ -203,11 +203,12 @@ export function FundraisingReport() {
         ))}
       </div>
 
+      <CampaignProgress rows={report.campaignRows} />
+
       <div className="grid gap-6 lg:grid-cols-2">
         <Card className="border-border/70">
           <CardHeader>
             <CardTitle className="text-base">Donations by month</CardTitle>
-          </CardHeader>
           </CardHeader>
           <CardContent className="h-72">
             {report.monthRows.length ? (
