@@ -24,7 +24,10 @@ export const Route = createFileRoute("/gallery")({
 });
 
 function GalleryPage() {
-  const { data: galleries = [] } = useQuery(galleriesQuery);
+  const { data: rawGalleries = [] } = useQuery(galleriesQuery);
+  const galleries = [...rawGalleries].sort(
+    (a, b) => Number(b.is_default) - Number(a.is_default),
+  );
   const { data: photos = [] } = useQuery(galleryPhotosQuery);
   const [activeId, setActiveId] = useState<string | null>(null);
 
