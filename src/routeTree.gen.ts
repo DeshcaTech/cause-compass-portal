@@ -10,8 +10,10 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as AssetsRouteImport } from './routes/assets'
+import { Route as AuthRouteImport } from './routes/auth'
 import { Route as BoardRouteImport } from './routes/board'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as DocumentsRouteImport } from './routes/documents'
@@ -24,10 +26,15 @@ import { Route as PartnersRouteImport } from './routes/partners'
 import { Route as ReferRouteImport } from './routes/refer'
 import { Route as SurveysRouteImport } from './routes/surveys'
 import { Route as VolunteerRouteImport } from './routes/volunteer'
+import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AboutRoute = AboutRouteImport.update({
@@ -38,6 +45,11 @@ const AboutRoute = AboutRouteImport.update({
 const AssetsRoute = AssetsRouteImport.update({
   id: '/assets',
   path: '/assets',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BoardRoute = BoardRouteImport.update({
@@ -100,11 +112,17 @@ const VolunteerRoute = VolunteerRouteImport.update({
   path: '/volunteer',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/assets': typeof AssetsRoute
+  '/auth': typeof AuthRoute
   '/board': typeof BoardRoute
   '/contact': typeof ContactRoute
   '/documents': typeof DocumentsRoute
@@ -117,11 +135,13 @@ export interface FileRoutesByFullPath {
   '/refer': typeof ReferRoute
   '/surveys': typeof SurveysRoute
   '/volunteer': typeof VolunteerRoute
+  '/admin': typeof AuthenticatedAdminRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/assets': typeof AssetsRoute
+  '/auth': typeof AuthRoute
   '/board': typeof BoardRoute
   '/contact': typeof ContactRoute
   '/documents': typeof DocumentsRoute
@@ -134,12 +154,15 @@ export interface FileRoutesByTo {
   '/refer': typeof ReferRoute
   '/surveys': typeof SurveysRoute
   '/volunteer': typeof VolunteerRoute
+  '/admin': typeof AuthenticatedAdminRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/about': typeof AboutRoute
   '/assets': typeof AssetsRoute
+  '/auth': typeof AuthRoute
   '/board': typeof BoardRoute
   '/contact': typeof ContactRoute
   '/documents': typeof DocumentsRoute
@@ -152,6 +175,7 @@ export interface FileRoutesById {
   '/refer': typeof ReferRoute
   '/surveys': typeof SurveysRoute
   '/volunteer': typeof VolunteerRoute
+  '/_authenticated/admin': typeof AuthenticatedAdminRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -159,6 +183,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/assets'
+    | '/auth'
     | '/board'
     | '/contact'
     | '/documents'
@@ -171,11 +196,13 @@ export interface FileRouteTypes {
     | '/refer'
     | '/surveys'
     | '/volunteer'
+    | '/admin'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/about'
     | '/assets'
+    | '/auth'
     | '/board'
     | '/contact'
     | '/documents'
@@ -188,11 +215,14 @@ export interface FileRouteTypes {
     | '/refer'
     | '/surveys'
     | '/volunteer'
+    | '/admin'
   id:
     | '__root__'
     | '/'
+    | '/_authenticated'
     | '/about'
     | '/assets'
+    | '/auth'
     | '/board'
     | '/contact'
     | '/documents'
@@ -205,12 +235,15 @@ export interface FileRouteTypes {
     | '/refer'
     | '/surveys'
     | '/volunteer'
+    | '/_authenticated/admin'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AboutRoute: typeof AboutRoute
   AssetsRoute: typeof AssetsRoute
+  AuthRoute: typeof AuthRoute
   BoardRoute: typeof BoardRoute
   ContactRoute: typeof ContactRoute
   DocumentsRoute: typeof DocumentsRoute
@@ -234,6 +267,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/about': {
       id: '/about'
       path: '/about'
@@ -246,6 +286,13 @@ declare module '@tanstack/react-router' {
       path: '/assets'
       fullPath: '/assets'
       preLoaderRoute: typeof AssetsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/board': {
@@ -332,13 +379,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof VolunteerRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/admin': {
+      id: '/_authenticated/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AuthenticatedAdminRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAdminRoute: AuthenticatedAdminRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AboutRoute: AboutRoute,
   AssetsRoute: AssetsRoute,
+  AuthRoute: AuthRoute,
   BoardRoute: BoardRoute,
   ContactRoute: ContactRoute,
   DocumentsRoute: DocumentsRoute,
