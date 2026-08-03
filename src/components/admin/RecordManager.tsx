@@ -432,6 +432,7 @@ export function RecordManager({
                   <ImageField
                     id={field.name}
                     value={form[field.name] ?? ""}
+                    rules={field.image}
                     onChange={(url) => setForm({ ...form, [field.name]: url })}
                   />
                 ) : (
