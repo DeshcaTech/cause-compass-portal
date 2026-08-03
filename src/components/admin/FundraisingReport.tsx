@@ -33,6 +33,7 @@ type DonationRow = {
   email: string | null;
   donor_name: string | null;
   status: string;
+  is_anonymous: boolean | null;
 };
 
 const money = new Intl.NumberFormat("en-GB", {
@@ -60,7 +61,7 @@ export function FundraisingReport() {
       const [donations, campaigns] = await Promise.all([
         supabase
           .from("donations")
-          .select("id, amount, created_at, campaign_id, email, donor_name, status")
+          .select("id, amount, created_at, campaign_id, email, donor_name, status, is_anonymous")
           .order("created_at", { ascending: true }),
         supabase
           .from("campaigns")
@@ -120,6 +121,7 @@ export function FundraisingReport() {
     });
 
     const byMonth = new Map<string, { total: number; count: number; supporters: Set<string> }>();
+    const donationsByCampaign: Record<string, DonationRow[]> = {};
 
     for (const row of donations) {
       const amount = Number(row.amount ?? 0);
@@ -128,6 +130,7 @@ export function FundraisingReport() {
       campaign.total += amount;
       campaign.count += 1;
       campaign.supporters.add(supporterKey(row));
+      (donationsByCampaign[key] ??= []).push(row);
 
       const mKey = monthKey(row.created_at);
       const month = byMonth.get(mKey) ?? { total: 0, count: 0, supporters: new Set<string>() };
@@ -168,6 +171,7 @@ export function FundraisingReport() {
     return {
       campaignRows,
       monthRows,
+      donationsByCampaign,
       total,
       supporters,
       count: donations.length,
@@ -203,7 +207,10 @@ export function FundraisingReport() {
         ))}
       </div>
 
-      <CampaignProgress rows={report.campaignRows} />
+      <CampaignProgress
+        rows={report.campaignRows}
+        donationsByCampaign={report.donationsByCampaign}
+      />
 
       <div className="grid gap-6 lg:grid-cols-2">
         <Card className="border-border/70">
