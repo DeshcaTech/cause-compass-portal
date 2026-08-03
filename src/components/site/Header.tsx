@@ -42,7 +42,6 @@ const linkClass =
 
 export function Header() {
   const [open, setOpen] = useState(false);
-  const [expanded, setExpanded] = useState<string | null>(null);
 
   return (
     <header className="sticky top-0 z-50 border-b border-border/70 bg-background/85 backdrop-blur-md">
@@ -109,35 +108,18 @@ export function Header() {
             <div className="mt-8 flex flex-col gap-1">
               {NAV.map((group) =>
                 group.items ? (
-                  <div key={group.label} className="mt-2">
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setExpanded((prev) => (prev === group.label ? null : group.label))
-                      }
-                      className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm font-medium text-foreground"
-                    >
-                      {group.label}
-                      <ChevronDown
-                        className={`size-4 transition-transform ${
-                          expanded === group.label ? "rotate-180" : ""
-                        }`}
-                      />
-                    </button>
-                    {expanded === group.label ? (
-                      <div className="ml-2 border-l border-border pl-2">
-                        {group.items.map((item) => (
-                          <Link
-                            key={item.to}
-                            to={item.to}
-                            onClick={() => setOpen(false)}
-                            className="block rounded-lg px-3 py-2 text-sm text-foreground/85"
-                          >
-                            {item.label}
-                          </Link>
-                        ))}
-                      </div>
-                    ) : null}
+                  <div key={group.label} className="mt-3">
+                    <p className="eyebrow px-3 py-1 text-muted-foreground">{group.label}</p>
+                    {group.items.map((item) => (
+                      <Link
+                        key={item.to}
+                        to={item.to}
+                        onClick={() => setOpen(false)}
+                        className="block rounded-lg px-3 py-2 text-sm"
+                      >
+                        {item.label}
+                      </Link>
+                    ))}
                   </div>
                 ) : (
                   <Link
