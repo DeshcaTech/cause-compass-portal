@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Pencil, Plus, Trash2 } from "lucide-react";
 import { toast } from "sonner";
@@ -21,6 +21,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { ImageCropper, type CropSpec } from "@/components/admin/ImageCropper";
 
 // Loosely typed table access — the manager is generic over admin content tables.
 const db = supabase as unknown as {
@@ -46,6 +47,8 @@ export type AdminField = {
   help?: string;
   /** Optional per-field overrides for image validation. */
   image?: Partial<ImageRules>;
+  /** Crop frame for this picture. Defaults to 16:9 at 1600px wide. */
+  crop?: Partial<CropSpec>;
 };
 
 const IMAGE_BUCKET = "site-images";
@@ -121,17 +124,27 @@ function ImageField({
   value,
   onChange,
   rules: overrides,
+  crop: cropOverrides,
 }: {
   id: string;
   value: string;
   onChange: (url: string) => void;
   rules?: Partial<ImageRules> | undefined;
+  crop?: Partial<CropSpec> | undefined;
 }) {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [pending, setPending] = useState<{ src: string; type: string } | null>(null);
   const rules: ImageRules = { ...DEFAULT_IMAGE_RULES, ...overrides };
+  const spec: CropSpec = { aspect: 16 / 9, outputWidth: 1600, ...cropOverrides };
 
-  async function upload(file: File) {
+  useEffect(() => {
+    return () => {
+      if (pending) URL.revokeObjectURL(pending.src);
+    };
+  }, [pending]);
+
+  async function pick(file: File) {
     setError(null);
     const problem = await validateImage(file, rules);
     if (problem) {
@@ -139,13 +152,24 @@ function ImageField({
       toast.error(problem);
       return;
     }
+    setPending({ src: URL.createObjectURL(file), type: file.type });
+  }
+
+  function closeCropper() {
+    if (pending) URL.revokeObjectURL(pending.src);
+    setPending(null);
+  }
+
+  async function upload(blob: Blob) {
+    const type = blob.type;
+    closeCropper();
     setUploading(true);
     try {
-      const ext = file.name.split(".").pop() ?? "jpg";
+      const ext = type === "image/png" ? "png" : "jpg";
       const path = `${id}/${crypto.randomUUID()}.${ext}`;
       const { error } = await supabase.storage
         .from(IMAGE_BUCKET)
-        .upload(path, file, { cacheControl: "31536000", upsert: false });
+        .upload(path, blob, { cacheControl: "31536000", upsert: false, contentType: type });
       if (error) throw new Error(error.message);
       const { data, error: signError } = await supabase.storage
         .from(IMAGE_BUCKET)
@@ -168,7 +192,10 @@ function ImageField({
         <img
           src={value}
           alt="Selected preview"
-          className="h-32 w-full rounded-md border border-border object-cover"
+          className={`w-full rounded-md border border-border object-cover ${
+            spec.aspect === 1 ? "size-32 rounded-full" : "aspect-[16/9]"
+          }`}
+          style={spec.aspect === 1 ? undefined : { aspectRatio: String(spec.aspect) }}
         />
       ) : null}
       <div className="flex flex-wrap items-center gap-2">
@@ -181,7 +208,7 @@ function ImageField({
           aria-invalid={error ? true : undefined}
           onChange={(e) => {
             const file = e.target.files?.[0];
-            if (file) void upload(file);
+            if (file) void pick(file);
             e.target.value = "";
           }}
         />
@@ -208,6 +235,16 @@ function ImageField({
           {rules.minHeight}px to {rules.maxWidth}×{rules.maxHeight}px
         </p>
       )}
+      {pending ? (
+        <ImageCropper
+          open
+          src={pending.src}
+          mimeType={pending.type}
+          spec={spec}
+          onCancel={closeCropper}
+          onCropped={(blob) => void upload(blob)}
+        />
+      ) : null}
     </div>
   );
 }
@@ -433,6 +470,7 @@ export function RecordManager({
                     id={field.name}
                     value={form[field.name] ?? ""}
                     rules={field.image}
+                    crop={field.crop}
                     onChange={(url) => setForm({ ...form, [field.name]: url })}
                   />
                 ) : (
