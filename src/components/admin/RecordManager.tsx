@@ -125,7 +125,7 @@ function ImageField({
   id: string;
   value: string;
   onChange: (url: string) => void;
-  rules?: Partial<ImageRules>;
+  rules?: Partial<ImageRules> | undefined;
 }) {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
