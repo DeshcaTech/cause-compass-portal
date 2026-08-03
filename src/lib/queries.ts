@@ -152,10 +152,15 @@ export const campaignsQuery = queryOptions({
     ),
 });
 
+const PARTNER_PUBLIC_COLUMNS =
+  "id, business_name, category, short_description, description, logo_url, phone, email, website, address, is_published, created_at";
+
 export const partnersQuery = queryOptions({
   queryKey: ["partners"],
   queryFn: async () =>
-    unwrap<Partner[]>(await supabase.from("partners").select("*").order("business_name")),
+    unwrap<Partner[]>(
+      await supabase.from("partners").select(PARTNER_PUBLIC_COLUMNS).order("business_name"),
+    ),
 });
 
 export const surveysQuery = queryOptions({
