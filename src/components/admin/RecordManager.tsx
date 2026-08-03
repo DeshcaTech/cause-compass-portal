@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Pencil, Plus, Trash2 } from "lucide-react";
 import { toast } from "sonner";
@@ -21,6 +21,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { ImageCropper, type CropSpec } from "@/components/admin/ImageCropper";
 
 // Loosely typed table access — the manager is generic over admin content tables.
 const db = supabase as unknown as {
@@ -46,6 +47,8 @@ export type AdminField = {
   help?: string;
   /** Optional per-field overrides for image validation. */
   image?: Partial<ImageRules>;
+  /** Crop frame for this picture. Defaults to 16:9 at 1600px wide. */
+  crop?: Partial<CropSpec>;
 };
 
 const IMAGE_BUCKET = "site-images";
