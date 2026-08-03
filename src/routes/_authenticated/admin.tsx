@@ -5,6 +5,7 @@ import { LogOut } from "lucide-react";
 
 import { PageHeader } from "@/components/site/PageHeader";
 import { RecordManager } from "@/components/admin/RecordManager";
+import { FundraisingReport } from "@/components/admin/FundraisingReport";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -120,6 +121,7 @@ function AdminPage() {
             {isAdmin && <TabsTrigger value="gallery">Gallery</TabsTrigger>}
             {isAdmin && <TabsTrigger value="partners">Partners</TabsTrigger>}
             {can("fundraising") && <TabsTrigger value="campaigns">Campaigns</TabsTrigger>}
+            {can("fundraising") && <TabsTrigger value="reports">Reports</TabsTrigger>}
             {can("board") && <TabsTrigger value="board">Board</TabsTrigger>}
             {can("president") && <TabsTrigger value="president">President</TabsTrigger>}
             {isAdmin && <TabsTrigger value="assets">Assets</TabsTrigger>}
@@ -283,6 +285,16 @@ function AdminPage() {
                 { name: "ends_at", label: "Closing date", type: "date" },
               ]}
             />
+          </TabsContent>}
+
+          {can("fundraising") && <TabsContent value="reports" className="mt-8">
+            <div className="mb-6">
+              <h2 className="text-xl">Fundraising reports</h2>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Totals by campaign and by month, with donation and supporter trends.
+              </p>
+            </div>
+            <FundraisingReport />
           </TabsContent>}
 
           {can("board") && <TabsContent value="board" className="mt-8">
