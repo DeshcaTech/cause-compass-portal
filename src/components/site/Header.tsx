@@ -99,7 +99,7 @@ export function Header() {
           </Button>
         </div>
 
-        <Sheet open={open} onOpenChange={setOpen}>
+        <Sheet open={open} onOpenChange={(v) => { setOpen(v); if (!v) setOpenGroup(null); }}>
           <SheetTrigger asChild>
             <Button variant="ghost" size="icon" className="lg:hidden" aria-label="Open menu">
               <Menu />
