@@ -785,6 +785,20 @@ export type Database = {
         }
         Returns: boolean
       }
+      submit_membership: {
+        Args: {
+          _address: string
+          _amount?: number
+          _birth_month: number
+          _birth_year: number
+          _email: string
+          _family?: Json
+          _full_name: string
+          _membership_type: Database["public"]["Enums"]["membership_type"]
+          _phone: string
+        }
+        Returns: string
+      }
     }
     Enums: {
       app_role: "admin" | "member"
