@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as AssetsRouteImport } from './routes/assets'
+import { Route as AuthRouteImport } from './routes/auth'
 import { Route as BoardRouteImport } from './routes/board'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as DocumentsRouteImport } from './routes/documents'
@@ -38,6 +39,11 @@ const AboutRoute = AboutRouteImport.update({
 const AssetsRoute = AssetsRouteImport.update({
   id: '/assets',
   path: '/assets',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BoardRoute = BoardRouteImport.update({
@@ -105,6 +111,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/assets': typeof AssetsRoute
+  '/auth': typeof AuthRoute
   '/board': typeof BoardRoute
   '/contact': typeof ContactRoute
   '/documents': typeof DocumentsRoute
@@ -122,6 +129,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/assets': typeof AssetsRoute
+  '/auth': typeof AuthRoute
   '/board': typeof BoardRoute
   '/contact': typeof ContactRoute
   '/documents': typeof DocumentsRoute
@@ -140,6 +148,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/assets': typeof AssetsRoute
+  '/auth': typeof AuthRoute
   '/board': typeof BoardRoute
   '/contact': typeof ContactRoute
   '/documents': typeof DocumentsRoute
@@ -159,6 +168,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/assets'
+    | '/auth'
     | '/board'
     | '/contact'
     | '/documents'
@@ -176,6 +186,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/assets'
+    | '/auth'
     | '/board'
     | '/contact'
     | '/documents'
@@ -193,6 +204,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/assets'
+    | '/auth'
     | '/board'
     | '/contact'
     | '/documents'
@@ -211,6 +223,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
   AssetsRoute: typeof AssetsRoute
+  AuthRoute: typeof AuthRoute
   BoardRoute: typeof BoardRoute
   ContactRoute: typeof ContactRoute
   DocumentsRoute: typeof DocumentsRoute
@@ -246,6 +259,13 @@ declare module '@tanstack/react-router' {
       path: '/assets'
       fullPath: '/assets'
       preLoaderRoute: typeof AssetsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/board': {
@@ -339,6 +359,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   AssetsRoute: AssetsRoute,
+  AuthRoute: AuthRoute,
   BoardRoute: BoardRoute,
   ContactRoute: ContactRoute,
   DocumentsRoute: DocumentsRoute,
