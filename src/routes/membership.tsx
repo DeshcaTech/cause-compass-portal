@@ -59,9 +59,8 @@ const TIERS = [
     price: 60,
     blurb: "Mum, dad and children up to 21 years old.",
     perks: ["Covers partner & dependents", "One number for the household", "Family event rates"],
-    popular: true,
   },
-] as const;
+];
 
 const MONTHS = [
   "January", "February", "March", "April", "May", "June",
@@ -181,34 +180,40 @@ function MembershipPage() {
       />
 
       <section className="container-page py-14">
-        <Card className="mx-auto max-w-3xl border-border/70">
+        <div className="grid gap-5 md:grid-cols-3">
+          {TIERS.map((item) => (
+            <button
+              key={item.key}
+              type="button"
+              onClick={() => setTier(item.key)}
+              className={`rounded-2xl border p-6 text-left transition-all ${
+                tier === item.key
+                  ? "border-primary bg-accent shadow-[var(--shadow-lift)]"
+                  : "border-border bg-card hover:-translate-y-1"
+              }`}
+            >
+              <p className="eyebrow text-terracotta">{item.name}</p>
+              <p className="mt-2 text-3xl font-semibold">
+                {formatMoney(item.price)}
+                <span className="text-sm font-normal text-muted-foreground"> / year</span>
+              </p>
+              <p className="mt-2 text-sm text-muted-foreground">{item.blurb}</p>
+              <ul className="mt-4 space-y-1.5 text-sm">
+                {item.perks.map((perk) => (
+                  <li key={perk} className="flex items-start gap-2">
+                    <Check className="mt-0.5 size-4 shrink-0 text-primary" />
+                    {perk}
+                  </li>
+                ))}
+              </ul>
+            </button>
+          ))}
+        </div>
+
+        <Card className="mt-10 border-border/70">
           <CardContent className="p-6 sm:p-8">
             <h2 className="text-2xl">Registration details</h2>
             <form onSubmit={onSubmit} className="mt-6 space-y-5">
-              <div className="space-y-3">
-                <Label>Membership type</Label>
-                <div className="grid gap-3 sm:grid-cols-3">
-                  {TIERS.map((item) => (
-                    <button
-                      key={item.key}
-                      type="button"
-                      onClick={() => setTier(item.key)}
-                      className={`rounded-xl border p-4 text-left transition-all ${
-                        tier === item.key
-                          ? "border-primary bg-accent shadow-[var(--shadow-lift)]"
-                          : "border-border bg-card hover:border-primary/40"
-                      }`}
-                    >
-                      <p className="text-sm font-medium">{item.name}</p>
-                      <p className="mt-1 text-lg font-semibold text-primary">
-                        {formatMoney(item.price)}
-                        <span className="text-xs font-normal text-muted-foreground">/yr</span>
-                      </p>
-                    </button>
-                  ))}
-                </div>
-              </div>
-
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="space-y-2">
                   <Label htmlFor="full_name">Full name</Label>
@@ -395,37 +400,6 @@ function MembershipPage() {
             </form>
           </CardContent>
         </Card>
-
-        <div className="mt-14 grid gap-5 md:grid-cols-3">
-          {TIERS.map((item) => (
-            <div
-              key={item.key}
-              className={`relative rounded-2xl border bg-card p-6 ${
-                "popular" in item && item.popular ? "border-primary shadow-[var(--shadow-lift)]" : "border-border"
-              }`}
-            >
-              {"popular" in item && item.popular ? (
-                <span className="absolute right-5 top-5 rounded-full bg-[image:var(--gradient-gold)] px-3 py-1 text-xs font-medium text-gold-foreground">
-                  Most popular
-                </span>
-              ) : null}
-              <p className="eyebrow text-terracotta">{item.name}</p>
-              <p className="mt-2 text-3xl font-semibold">
-                {formatMoney(item.price)}
-                <span className="text-sm font-normal text-muted-foreground"> / year</span>
-              </p>
-              <p className="mt-2 text-sm text-muted-foreground">{item.blurb}</p>
-              <ul className="mt-4 space-y-1.5 text-sm">
-                {item.perks.map((perk) => (
-                  <li key={perk} className="flex items-start gap-2">
-                    <Check className="mt-0.5 size-4 shrink-0 text-primary" />
-                    {perk}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
       </section>
     </>
   );
