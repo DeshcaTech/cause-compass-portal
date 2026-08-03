@@ -1,11 +1,19 @@
-import { useEffect, useMemo, useRef } from "react";
-import { AlertTriangle, PartyPopper, Target, TrendingDown } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { AlertTriangle, ChevronRight, PartyPopper, Target, TrendingDown } from "lucide-react";
 import { toast } from "sonner";
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Progress } from "@/components/ui/progress";
+import { CampaignDrilldown, type DrilldownDonation } from "@/components/admin/CampaignDrilldown";
 
 export type CampaignProgressRow = {
   id: string;
@@ -79,9 +87,17 @@ export function analyseCampaigns(rows: CampaignProgressRow[]): CampaignSignal[] 
     .sort((a, b) => b.pct - a.pct);
 }
 
-export function CampaignProgress({ rows }: { rows: CampaignProgressRow[] }) {
+export function CampaignProgress({
+  rows,
+  donationsByCampaign = {},
+}: {
+  rows: CampaignProgressRow[];
+  donationsByCampaign?: Record<string, DrilldownDonation[]>;
+}) {
   const signals = useMemo(() => analyseCampaigns(rows), [rows]);
   const notified = useRef(false);
+  const [openId, setOpenId] = useState<string | null>(null);
+  const active = signals.find((s) => s.id === openId) ?? null;
 
   const reached = signals.filter((s) => s.pct >= 100);
   const behind = signals.filter((s) => s.behindBy !== null);
@@ -154,9 +170,18 @@ export function CampaignProgress({ rows }: { rows: CampaignProgressRow[] }) {
         </CardHeader>
         <CardContent className="space-y-6">
           {signals.map((s) => (
-            <div key={s.id} className="space-y-2">
+            <button
+              key={s.id}
+              type="button"
+              onClick={() => setOpenId(s.id)}
+              aria-label={`View donations and supporters for ${s.name}`}
+              className="w-full space-y-2 rounded-md p-2 text-left transition-colors hover:bg-muted/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            >
               <div className="flex flex-wrap items-center justify-between gap-2">
-                <p className="font-medium">{s.name}</p>
+                <p className="flex items-center gap-1 font-medium">
+                  {s.name}
+                  <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                </p>
                 <div className="flex items-center gap-2">
                   {s.behindBy !== null && (
                     <Badge variant="destructive" className="gap-1">
@@ -180,10 +205,24 @@ export function CampaignProgress({ rows }: { rows: CampaignProgressRow[] }) {
                     (s.daysLeft > 0 ? ` · ${s.daysLeft} days left` : " · closed")}
                 </span>
               </div>
-            </div>
+            </button>
           ))}
         </CardContent>
       </Card>
+
+      <Dialog open={openId !== null} onOpenChange={(open) => !open && setOpenId(null)}>
+        <DialogContent className="max-w-3xl">
+          <DialogHeader>
+            <DialogTitle>{active?.name ?? "Campaign"}</DialogTitle>
+            <DialogDescription>
+              {active
+                ? `${money.format(active.raised)} of ${money.format(active.goal)} raised (${active.pct}%)`
+                : null}
+            </DialogDescription>
+          </DialogHeader>
+          {active && <CampaignDrilldown donations={donationsByCampaign[active.id] ?? []} />}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
