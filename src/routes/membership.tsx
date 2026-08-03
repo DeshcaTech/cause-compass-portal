@@ -59,8 +59,9 @@ const TIERS = [
     price: 60,
     blurb: "Mum, dad and children up to 21 years old.",
     perks: ["Covers partner & dependents", "One number for the household", "Family event rates"],
+    popular: true,
   },
-];
+] as const;
 
 const MONTHS = [
   "January", "February", "March", "April", "May", "June",
