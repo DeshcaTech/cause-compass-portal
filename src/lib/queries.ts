@@ -160,10 +160,17 @@ export const partnersQuery = queryOptions({
 
 export const surveysQuery = queryOptions({
   queryKey: ["surveys"],
-  queryFn: async () =>
-    unwrap<Survey[]>(
-      await supabase.from("surveys").select("*").order("created_at", { ascending: false }),
-    ),
+  queryFn: async () => {
+    const { data, error } = await supabase
+      .from("surveys")
+      .select("*")
+      .order("created_at", { ascending: false });
+    if (error) throw new Error(error.message);
+    return (data ?? []).map((row) => ({
+      ...row,
+      questions: (row.questions ?? []) as unknown as SurveyQuestion[],
+    })) as Survey[];
+  },
 });
 
 export const galleriesQuery = queryOptions({
