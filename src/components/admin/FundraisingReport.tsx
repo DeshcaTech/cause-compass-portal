@@ -208,6 +208,7 @@ export function FundraisingReport() {
           <CardHeader>
             <CardTitle className="text-base">Donations by month</CardTitle>
           </CardHeader>
+          </CardHeader>
           <CardContent className="h-72">
             {report.monthRows.length ? (
               <ResponsiveContainer width="100%" height="100%">
