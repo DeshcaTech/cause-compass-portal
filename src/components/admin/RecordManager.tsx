@@ -44,23 +44,101 @@ export type AdminField = {
   required?: boolean;
   placeholder?: string;
   help?: string;
+  /** Optional per-field overrides for image validation. */
+  image?: Partial<ImageRules>;
 };
 
 const IMAGE_BUCKET = "site-images";
 const SIGNED_URL_TTL = 60 * 60 * 24 * 365 * 10; // 10 years
 
+export type ImageRules = {
+  accept: string[];
+  maxBytes: number;
+  minWidth: number;
+  minHeight: number;
+  maxWidth: number;
+  maxHeight: number;
+};
+
+const DEFAULT_IMAGE_RULES: ImageRules = {
+  accept: ["image/jpeg", "image/png", "image/webp", "image/avif", "image/gif"],
+  maxBytes: 5 * 1024 * 1024,
+  minWidth: 200,
+  minHeight: 200,
+  maxWidth: 6000,
+  maxHeight: 6000,
+};
+
+function formatBytes(bytes: number) {
+  if (bytes >= 1024 * 1024) return `${(bytes / (1024 * 1024)).toFixed(bytes % (1024 * 1024) === 0 ? 0 : 1)} MB`;
+  return `${Math.round(bytes / 1024)} KB`;
+}
+
+function typeNames(accept: string[]) {
+  return accept.map((t) => t.replace("image/", "").toUpperCase()).join(", ");
+}
+
+function readDimensions(file: File) {
+  return new Promise<{ width: number; height: number }>((resolve, reject) => {
+    const url = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = () => {
+      URL.revokeObjectURL(url);
+      resolve({ width: img.naturalWidth, height: img.naturalHeight });
+    };
+    img.onerror = () => {
+      URL.revokeObjectURL(url);
+      reject(new Error("That file could not be read as an image — it may be corrupted."));
+    };
+    img.src = url;
+  });
+}
+
+async function validateImage(file: File, rules: ImageRules): Promise<string | null> {
+  if (!rules.accept.includes(file.type)) {
+    return `“${file.name}” is a ${file.type || "unknown"} file. Please use ${typeNames(rules.accept)}.`;
+  }
+  if (file.size > rules.maxBytes) {
+    return `That picture is ${formatBytes(file.size)} — the maximum is ${formatBytes(rules.maxBytes)}. Please compress or resize it.`;
+  }
+  let dims: { width: number; height: number };
+  try {
+    dims = await readDimensions(file);
+  } catch (error) {
+    return (error as Error).message;
+  }
+  if (dims.width < rules.minWidth || dims.height < rules.minHeight) {
+    return `That picture is ${dims.width}×${dims.height}px — it must be at least ${rules.minWidth}×${rules.minHeight}px, otherwise it will look blurry.`;
+  }
+  if (dims.width > rules.maxWidth || dims.height > rules.maxHeight) {
+    return `That picture is ${dims.width}×${dims.height}px — the maximum is ${rules.maxWidth}×${rules.maxHeight}px. Please resize it before uploading.`;
+  }
+  return null;
+}
+
 function ImageField({
   id,
   value,
   onChange,
+  rules: overrides,
 }: {
   id: string;
   value: string;
   onChange: (url: string) => void;
+  rules?: Partial<ImageRules>;
 }) {
   const [uploading, setUploading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const rules: ImageRules = { ...DEFAULT_IMAGE_RULES, ...overrides };
 
   async function upload(file: File) {
+    setError(null);
+    const problem = await validateImage(file, rules);
+    if (problem) {
+      setError(problem);
+      toast.error(problem);
+      return;
+    }
     setUploading(true);
     try {
       const ext = file.name.split(".").pop() ?? "jpg";
@@ -76,7 +154,9 @@ function ImageField({
       onChange(data.signedUrl);
       toast.success("Picture uploaded");
     } catch (error) {
-      toast.error((error as Error).message);
+      const message = `Upload failed: ${(error as Error).message}`;
+      setError(message);
+      toast.error(message);
     } finally {
       setUploading(false);
     }
