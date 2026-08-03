@@ -45,7 +45,6 @@ export type Campaign = {
 export type Partner = {
   id: string;
   business_name: string;
-  owner_name: string | null;
   category: string;
   short_description: string | null;
   description: string | null;
