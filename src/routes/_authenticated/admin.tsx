@@ -36,21 +36,24 @@ function AdminPage() {
   const { data: galleries = [] } = useQuery(galleriesQuery);
   const [albumId, setAlbumId] = useState<string>("");
 
-  const { data: isAdmin, isLoading } = useQuery({
-    queryKey: ["is-admin"],
+  const { data: roles = [], isLoading } = useQuery({
+    queryKey: ["my-roles"],
     queryFn: async () => {
       const { data: userData } = await supabase.auth.getUser();
-      if (!userData.user) return false;
+      if (!userData.user) return [] as string[];
       const { data, error } = await supabase
         .from("user_roles")
         .select("role")
-        .eq("user_id", userData.user.id)
-        .eq("role", "admin")
-        .maybeSingle();
+        .eq("user_id", userData.user.id);
       if (error) throw new Error(error.message);
-      return !!data;
+      return (data ?? []).map((row) => String(row.role));
     },
   });
+
+  const isAdmin = roles.includes("admin");
+  const can = (area: "board" | "president" | "fundraising") =>
+    isAdmin || roles.includes(`${area}_manager`);
+  const hasAnyAccess = isAdmin || can("board") || can("president") || can("fundraising");
 
   async function signOut() {
     await queryClient.cancelQueries();
@@ -63,14 +66,15 @@ function AdminPage() {
     return <section className="container-page py-20 text-sm text-muted-foreground">Loading…</section>;
   }
 
-  if (!isAdmin) {
+  if (!hasAnyAccess) {
     return (
       <section className="container-page py-20">
         <Card className="mx-auto max-w-md border-border/70">
           <CardContent className="space-y-4 p-8 text-center">
             <h1 className="text-xl">Admin access required</h1>
             <p className="text-sm text-muted-foreground">
-              Your account doesn't have the admin role. Ask an existing administrator to grant it.
+              Your account doesn't have an admin or manager role. Ask an existing administrator to
+              grant you access to the board, president's message or fundraising area.
             </p>
             <Button variant="soft" onClick={signOut}>
               <LogOut /> Sign out
@@ -82,33 +86,48 @@ function AdminPage() {
   }
 
   const activeAlbum = albumId || galleries[0]?.id || "";
+  const defaultTab = isAdmin
+    ? "events"
+    : can("board")
+      ? "board"
+      : can("president")
+        ? "president"
+        : "campaigns";
 
   return (
     <>
       <PageHeader
         eyebrow="Admin"
         title="Manage site content"
-        description="Add, edit and remove events, gallery albums and photos, partners and fundraising campaigns."
+        description="Your dashboard shows only the areas your role gives you access to."
       />
       <section className="container-page py-12">
-        <div className="mb-6 flex justify-end">
+        <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+          <p className="text-sm text-muted-foreground">
+            Signed in as{" "}
+            <span className="font-medium text-foreground">
+              {isAdmin ? "administrator" : roles.map((role) => role.replace(/_/g, " ")).join(", ")}
+            </span>
+          </p>
           <Button variant="soft" size="sm" onClick={signOut}>
             <LogOut /> Sign out
           </Button>
         </div>
 
-        <Tabs defaultValue="events">
+        <Tabs defaultValue={defaultTab}>
           <TabsList>
-            <TabsTrigger value="events">Events</TabsTrigger>
-            <TabsTrigger value="gallery">Gallery</TabsTrigger>
-            <TabsTrigger value="partners">Partners</TabsTrigger>
-            <TabsTrigger value="campaigns">Campaigns</TabsTrigger>
-            <TabsTrigger value="board">Board</TabsTrigger>
-            <TabsTrigger value="assets">Assets</TabsTrigger>
-            <TabsTrigger value="surveys">Surveys</TabsTrigger>
+            {isAdmin && <TabsTrigger value="events">Events</TabsTrigger>}
+            {isAdmin && <TabsTrigger value="gallery">Gallery</TabsTrigger>}
+            {isAdmin && <TabsTrigger value="partners">Partners</TabsTrigger>}
+            {can("fundraising") && <TabsTrigger value="campaigns">Campaigns</TabsTrigger>}
+            {can("board") && <TabsTrigger value="board">Board</TabsTrigger>}
+            {can("president") && <TabsTrigger value="president">President</TabsTrigger>}
+            {isAdmin && <TabsTrigger value="assets">Assets</TabsTrigger>}
+            {isAdmin && <TabsTrigger value="surveys">Surveys</TabsTrigger>}
+            {isAdmin && <TabsTrigger value="roles">Roles</TabsTrigger>}
           </TabsList>
 
-          <TabsContent value="events" className="mt-8">
+          {isAdmin && <TabsContent value="events" className="mt-8">
             <RecordManager
               table="events"
               title="Events"
@@ -140,9 +159,9 @@ function AdminPage() {
                 { name: "ticket_url", label: "Ticket link" },
               ]}
             />
-          </TabsContent>
+          </TabsContent>}
 
-          <TabsContent value="gallery" className="mt-8 space-y-12">
+          {isAdmin && <TabsContent value="gallery" className="mt-8 space-y-12">
             <RecordManager
               table="galleries"
               title="Gallery albums"
@@ -206,9 +225,9 @@ function AdminPage() {
                 <p className="mt-4 text-sm text-muted-foreground">Create an album first.</p>
               )}
             </div>
-          </TabsContent>
+          </TabsContent>}
 
-          <TabsContent value="partners" className="mt-8">
+          {isAdmin && <TabsContent value="partners" className="mt-8">
             <RecordManager
               table="partners"
               title="Partners"
@@ -233,9 +252,9 @@ function AdminPage() {
                 { name: "is_published", label: "Published", type: "switch" },
               ]}
             />
-          </TabsContent>
+          </TabsContent>}
 
-          <TabsContent value="campaigns" className="mt-8">
+          {can("fundraising") && <TabsContent value="campaigns" className="mt-8">
             <RecordManager
               table="campaigns"
               title="Fundraising campaigns"
@@ -264,9 +283,9 @@ function AdminPage() {
                 { name: "ends_at", label: "Closing date", type: "date" },
               ]}
             />
-          </TabsContent>
+          </TabsContent>}
 
-          <TabsContent value="board" className="mt-8">
+          {can("board") && <TabsContent value="board" className="mt-8">
             <RecordManager
               table="board_members"
               title="Board & team members"
@@ -287,9 +306,30 @@ function AdminPage() {
                 { name: "sort_order", label: "Sort order", type: "number" },
               ]}
             />
-          </TabsContent>
+          </TabsContent>}
 
-          <TabsContent value="assets" className="mt-8">
+          {can("president") && <TabsContent value="president" className="mt-8">
+            <RecordManager
+              table="president_message"
+              title="President's message"
+              description="The president's welcome message shown on the About page."
+              orderBy={{ column: "updated_at", ascending: false }}
+              primaryLabel={(row) => String(row['president_name'])}
+              secondaryLabel={(row) =>
+                `${row['title']}${row['is_published'] ? "" : " · unpublished"}`
+              }
+              defaults={{ is_published: true, title: "President" }}
+              fields={[
+                { name: "president_name", label: "President name", required: true },
+                { name: "title", label: "Title", required: true },
+                { name: "message", label: "Message", type: "textarea", required: true },
+                { name: "photo_url", label: "Photo", type: "image", crop: { aspect: 4 / 3, outputWidth: 1200 } },
+                { name: "is_published", label: "Published", type: "switch" },
+              ]}
+            />
+          </TabsContent>}
+
+          {isAdmin && <TabsContent value="assets" className="mt-8">
             <RecordManager
               table="community_assets"
               title="Community assets"
@@ -310,9 +350,9 @@ function AdminPage() {
                 { name: "is_available", label: "Available", type: "switch" },
               ]}
             />
-          </TabsContent>
+          </TabsContent>}
 
-          <TabsContent value="surveys" className="mt-8">
+          {isAdmin && <TabsContent value="surveys" className="mt-8">
             <RecordManager
               table="surveys"
               title="Surveys"
@@ -336,7 +376,25 @@ function AdminPage() {
                 { name: "closes_at", label: "Closing date", type: "date" },
               ]}
             />
-          </TabsContent>
+          </TabsContent>}
+
+          {isAdmin && <TabsContent value="roles" className="mt-8">
+            <Card className="border-border/70">
+              <CardContent className="space-y-3 p-6 text-sm text-muted-foreground">
+                <h2 className="text-lg text-foreground">Who can manage what</h2>
+                <ul className="list-disc space-y-1 pl-5">
+                  <li><span className="text-foreground">Administrator</span> — every area of the site.</li>
+                  <li><span className="text-foreground">Board manager</span> — board & team members only.</li>
+                  <li><span className="text-foreground">President manager</span> — the president's message only.</li>
+                  <li><span className="text-foreground">Fundraising manager</span> — fundraising campaigns only.</li>
+                </ul>
+                <p>
+                  These limits are enforced in the database, so a manager cannot edit another area
+                  even outside this dashboard.
+                </p>
+              </CardContent>
+            </Card>
+          </TabsContent>}
         </Tabs>
       </section>
     </>
