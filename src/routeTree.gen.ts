@@ -21,6 +21,9 @@ import { Route as FundraisingRouteImport } from './routes/fundraising'
 import { Route as GalleryRouteImport } from './routes/gallery'
 import { Route as MembershipRouteImport } from './routes/membership'
 import { Route as PartnersRouteImport } from './routes/partners'
+import { Route as ReferRouteImport } from './routes/refer'
+import { Route as SurveysRouteImport } from './routes/surveys'
+import { Route as VolunteerRouteImport } from './routes/volunteer'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -82,6 +85,21 @@ const PartnersRoute = PartnersRouteImport.update({
   path: '/partners',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ReferRoute = ReferRouteImport.update({
+  id: '/refer',
+  path: '/refer',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SurveysRoute = SurveysRouteImport.update({
+  id: '/surveys',
+  path: '/surveys',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VolunteerRoute = VolunteerRouteImport.update({
+  id: '/volunteer',
+  path: '/volunteer',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -96,6 +114,9 @@ export interface FileRoutesByFullPath {
   '/gallery': typeof GalleryRoute
   '/membership': typeof MembershipRoute
   '/partners': typeof PartnersRoute
+  '/refer': typeof ReferRoute
+  '/surveys': typeof SurveysRoute
+  '/volunteer': typeof VolunteerRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -110,6 +131,9 @@ export interface FileRoutesByTo {
   '/gallery': typeof GalleryRoute
   '/membership': typeof MembershipRoute
   '/partners': typeof PartnersRoute
+  '/refer': typeof ReferRoute
+  '/surveys': typeof SurveysRoute
+  '/volunteer': typeof VolunteerRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -125,6 +149,9 @@ export interface FileRoutesById {
   '/gallery': typeof GalleryRoute
   '/membership': typeof MembershipRoute
   '/partners': typeof PartnersRoute
+  '/refer': typeof ReferRoute
+  '/surveys': typeof SurveysRoute
+  '/volunteer': typeof VolunteerRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -141,6 +168,9 @@ export interface FileRouteTypes {
     | '/gallery'
     | '/membership'
     | '/partners'
+    | '/refer'
+    | '/surveys'
+    | '/volunteer'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -155,6 +185,9 @@ export interface FileRouteTypes {
     | '/gallery'
     | '/membership'
     | '/partners'
+    | '/refer'
+    | '/surveys'
+    | '/volunteer'
   id:
     | '__root__'
     | '/'
@@ -169,6 +202,9 @@ export interface FileRouteTypes {
     | '/gallery'
     | '/membership'
     | '/partners'
+    | '/refer'
+    | '/surveys'
+    | '/volunteer'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -184,6 +220,9 @@ export interface RootRouteChildren {
   GalleryRoute: typeof GalleryRoute
   MembershipRoute: typeof MembershipRoute
   PartnersRoute: typeof PartnersRoute
+  ReferRoute: typeof ReferRoute
+  SurveysRoute: typeof SurveysRoute
+  VolunteerRoute: typeof VolunteerRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -272,6 +311,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PartnersRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/refer': {
+      id: '/refer'
+      path: '/refer'
+      fullPath: '/refer'
+      preLoaderRoute: typeof ReferRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/surveys': {
+      id: '/surveys'
+      path: '/surveys'
+      fullPath: '/surveys'
+      preLoaderRoute: typeof SurveysRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/volunteer': {
+      id: '/volunteer'
+      path: '/volunteer'
+      fullPath: '/volunteer'
+      preLoaderRoute: typeof VolunteerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -288,6 +348,9 @@ const rootRouteChildren: RootRouteChildren = {
   GalleryRoute: GalleryRoute,
   MembershipRoute: MembershipRoute,
   PartnersRoute: PartnersRoute,
+  ReferRoute: ReferRoute,
+  SurveysRoute: SurveysRoute,
+  VolunteerRoute: VolunteerRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
