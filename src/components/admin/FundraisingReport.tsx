@@ -14,6 +14,7 @@ import {
 } from "recharts";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { CampaignProgress } from "@/components/admin/CampaignProgress";
 import {
   Table,
   TableBody,
@@ -61,7 +62,9 @@ export function FundraisingReport() {
           .from("donations")
           .select("id, amount, created_at, campaign_id, email, donor_name, status")
           .order("created_at", { ascending: true }),
-        supabase.from("campaigns").select("id, title, goal_amount, raised_amount, status"),
+        supabase
+          .from("campaigns")
+          .select("id, title, goal_amount, raised_amount, status, ends_at, created_at"),
       ]);
       if (donations.error) throw new Error(donations.error.message);
       if (campaigns.error) throw new Error(campaigns.error.message);
@@ -91,6 +94,9 @@ export function FundraisingReport() {
         count: 0,
         supporters: new Set(),
         goal: Number(campaign.goal_amount ?? 0),
+        status: campaign.status,
+        endsAt: campaign.ends_at,
+        createdAt: campaign.created_at,
       });
     }
     byCampaign.set("general", {
@@ -99,6 +105,9 @@ export function FundraisingReport() {
       count: 0,
       supporters: new Set(),
       goal: 0,
+      status: null,
+      endsAt: null,
+      createdAt: null,
     });
 
     const byMonth = new Map<string, { total: number; count: number; supporters: Set<string> }>();
@@ -127,6 +136,9 @@ export function FundraisingReport() {
         count: value.count,
         supporters: value.supporters.size,
         goal: value.goal,
+        status: value.status,
+        endsAt: value.endsAt,
+        createdAt: value.createdAt,
       }))
       .filter((row) => row.count > 0 || row.goal > 0)
       .sort((a, b) => b.total - a.total);
