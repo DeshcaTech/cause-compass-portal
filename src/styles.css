@@ -169,6 +169,7 @@
     background-color: var(--color-background);
     color: var(--color-foreground);
     font-family: var(--font-body);
+    font-size: 14px;
     -webkit-font-smoothing: antialiased;
   }
 
