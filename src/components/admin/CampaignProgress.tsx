@@ -1,0 +1,189 @@
+import { useEffect, useMemo, useRef } from "react";
+import { AlertTriangle, PartyPopper, Target, TrendingDown } from "lucide-react";
+import { toast } from "sonner";
+
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
+
+export type CampaignProgressRow = {
+  id: string;
+  name: string;
+  total: number;
+  goal: number;
+  status?: string | null;
+  createdAt?: string | null;
+  endsAt?: string | null;
+};
+
+const money = new Intl.NumberFormat("en-GB", {
+  style: "currency",
+  currency: "GBP",
+  maximumFractionDigits: 0,
+});
+
+const MILESTONES = [25, 50, 75, 100];
+
+/** How far behind the expected pace a campaign may fall before we flag it. */
+const BEHIND_TOLERANCE = 15;
+
+export type CampaignSignal = {
+  id: string;
+  name: string;
+  pct: number;
+  raised: number;
+  goal: number;
+  milestone: number | null;
+  expectedPct: number | null;
+  behindBy: number | null;
+  daysLeft: number | null;
+};
+
+export function analyseCampaigns(rows: CampaignProgressRow[]): CampaignSignal[] {
+  const now = Date.now();
+  return rows
+    .filter((row) => row.goal > 0)
+    .map((row) => {
+      const pct = Math.min(999, Math.round((row.total / row.goal) * 100));
+      const milestone = [...MILESTONES].reverse().find((m) => pct >= m) ?? null;
+
+      let expectedPct: number | null = null;
+      let daysLeft: number | null = null;
+      if (row.endsAt) {
+        const end = new Date(row.endsAt).getTime();
+        const start = row.createdAt ? new Date(row.createdAt).getTime() : end - 90 * 86400000;
+        daysLeft = Math.ceil((end - now) / 86400000);
+        if (end > start) {
+          expectedPct = Math.max(0, Math.min(100, Math.round(((now - start) / (end - start)) * 100)));
+        }
+      }
+
+      const behindBy =
+        expectedPct !== null && pct < 100 && expectedPct - pct > BEHIND_TOLERANCE
+          ? expectedPct - pct
+          : null;
+
+      return {
+        id: row.id,
+        name: row.name,
+        pct,
+        raised: row.total,
+        goal: row.goal,
+        milestone,
+        expectedPct,
+        behindBy,
+        daysLeft,
+      };
+    })
+    .sort((a, b) => b.pct - a.pct);
+}
+
+export function CampaignProgress({ rows }: { rows: CampaignProgressRow[] }) {
+  const signals = useMemo(() => analyseCampaigns(rows), [rows]);
+  const notified = useRef(false);
+
+  const reached = signals.filter((s) => s.pct >= 100);
+  const behind = signals.filter((s) => s.behindBy !== null);
+
+  useEffect(() => {
+    if (notified.current || !signals.length) return;
+    notified.current = true;
+    for (const s of reached) {
+      toast.success(`${s.name} hit its target`, {
+        description: `${money.format(s.raised)} raised of ${money.format(s.goal)} (${s.pct}%).`,
+      });
+    }
+    for (const s of behind) {
+      toast.warning(`${s.name} is behind schedule`, {
+        description: `${s.pct}% raised versus ${s.expectedPct}% expected by now${
+          s.daysLeft !== null && s.daysLeft > 0 ? ` — ${s.daysLeft} days left.` : "."
+        }`,
+      });
+    }
+  }, [signals, reached, behind]);
+
+  if (!signals.length) {
+    return (
+      <Card className="border-border/70">
+        <CardHeader>
+          <CardTitle className="text-base">Target progress</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-sm text-muted-foreground">
+            Add a goal amount to a campaign to track progress here.
+          </p>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  return (
+    <div className="space-y-4">
+      {reached.length > 0 && (
+        <Alert className="border-primary/40 bg-primary/5">
+          <PartyPopper className="h-4 w-4" />
+          <AlertTitle>Target reached</AlertTitle>
+          <AlertDescription>
+            {reached.map((s) => `${s.name} (${s.pct}%)`).join(", ")} — time to celebrate and thank
+            supporters.
+          </AlertDescription>
+        </Alert>
+      )}
+
+      {behind.length > 0 && (
+        <Alert variant="destructive">
+          <AlertTriangle className="h-4 w-4" />
+          <AlertDescription>
+            {behind
+              .map(
+                (s) =>
+                  `${s.name} is ${s.behindBy}% behind pace (${s.pct}% raised vs ${s.expectedPct}% expected)`,
+              )
+              .join("; ")}
+            .
+          </AlertDescription>
+        </Alert>
+      )}
+
+      <Card className="border-border/70">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-base">
+            <Target className="h-4 w-4" /> Target progress
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          {signals.map((s) => (
+            <div key={s.id} className="space-y-2">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <p className="font-medium">{s.name}</p>
+                <div className="flex items-center gap-2">
+                  {s.behindBy !== null && (
+                    <Badge variant="destructive" className="gap-1">
+                      <TrendingDown className="h-3 w-3" /> {s.behindBy}% behind
+                    </Badge>
+                  )}
+                  {s.milestone !== null && (
+                    <Badge variant="secondary">{s.milestone}% milestone</Badge>
+                  )}
+                  <span className="text-sm text-muted-foreground">
+                    {money.format(s.raised)} / {money.format(s.goal)}
+                  </span>
+                </div>
+              </div>
+              <Progress value={Math.min(100, s.pct)} className="h-2.5" />
+              <div className="flex flex-wrap justify-between gap-2 text-xs text-muted-foreground">
+                <span>{s.pct}% of target</span>
+                <span>
+                  {s.expectedPct !== null ? `Expected ${s.expectedPct}% by now` : "No end date set"}
+                  {s.daysLeft !== null &&
+                    (s.daysLeft > 0 ? ` · ${s.daysLeft} days left` : " · closed")}
+                </span>
+              </div>
+            </div>
+          ))}
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
