@@ -1,0 +1,271 @@
+import { createFileRoute } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
+import { useMemo, useState } from "react";
+import { CalendarDays, ChevronLeft, ChevronRight, Clock, MapPin, User } from "lucide-react";
+
+import { PageHeader } from "@/components/site/PageHeader";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { eventsQuery, formatDate, type EventRow } from "@/lib/queries";
+
+export const Route = createFileRoute("/events")({
+  head: () => ({
+    meta: [
+      { title: "Events — CCGMs Community Calendar" },
+      {
+        name: "description",
+        content:
+          "Coming events, past events and a monthly calendar of CCGMs events and other community events.",
+      },
+      { property: "og:title", content: "Events — CCGMs Community Calendar" },
+      {
+        property: "og:description",
+        content: "Browse coming and past events, or explore the monthly community calendar.",
+      },
+    ],
+  }),
+  component: EventsPage,
+});
+
+const WEEKDAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+
+function TypeBadge({ type }: { type: EventRow["event_type"] }) {
+  return (
+    <Badge className={type === "ccgms" ? "bg-primary text-primary-foreground" : "bg-terracotta text-terracotta-foreground"}>
+      {type === "ccgms" ? "CCGMs event" : "Other event"}
+    </Badge>
+  );
+}
+
+function EventCard({ event, onOpen }: { event: EventRow; onOpen: () => void }) {
+  return (
+    <Card
+      className="cursor-pointer border-border/70 transition-all hover:-translate-y-1 hover:shadow-[var(--shadow-lift)]"
+      onClick={onOpen}
+    >
+      <CardContent className="p-6">
+        <div className="flex items-start justify-between gap-3">
+          <p className="eyebrow text-primary">{formatDate(event.start_at)}</p>
+          <TypeBadge type={event.event_type} />
+        </div>
+        <h3 className="mt-3 text-lg">{event.title}</h3>
+        <p className="mt-2 line-clamp-3 text-sm text-muted-foreground">{event.description}</p>
+        <p className="mt-4 flex items-center gap-2 text-xs text-muted-foreground">
+          <MapPin className="size-3.5" /> {event.location}
+        </p>
+      </CardContent>
+    </Card>
+  );
+}
+
+function EventsPage() {
+  const { data: events = [] } = useQuery(eventsQuery);
+  const [selected, setSelected] = useState<EventRow | null>(null);
+  const [monthOffset, setMonthOffset] = useState(0);
+  const [selectedDay, setSelectedDay] = useState<string | null>(null);
+
+  const now = new Date();
+  const upcoming = events.filter((e) => new Date(e.start_at) >= now);
+  const past = events.filter((e) => new Date(e.start_at) < now).reverse();
+
+  const cursor = new Date(now.getFullYear(), now.getMonth() + monthOffset, 1);
+  const monthLabel = cursor.toLocaleDateString("en-GB", { month: "long", year: "numeric" });
+
+  const grid = useMemo(() => {
+    const firstDay = new Date(cursor.getFullYear(), cursor.getMonth(), 1);
+    const daysInMonth = new Date(cursor.getFullYear(), cursor.getMonth() + 1, 0).getDate();
+    const lead = (firstDay.getDay() + 6) % 7;
+    const cells: (Date | null)[] = Array.from({ length: lead }, () => null);
+    for (let day = 1; day <= daysInMonth; day += 1) {
+      cells.push(new Date(cursor.getFullYear(), cursor.getMonth(), day));
+    }
+    return cells;
+  }, [cursor.getFullYear(), cursor.getMonth()]);
+
+  function eventsOn(date: Date) {
+    return events.filter((e) => {
+      const start = new Date(e.start_at);
+      return (
+        start.getFullYear() === date.getFullYear() &&
+        start.getMonth() === date.getMonth() &&
+        start.getDate() === date.getDate()
+      );
+    });
+  }
+
+  const dayEvents = selectedDay
+    ? events.filter((e) => new Date(e.start_at).toDateString() === selectedDay)
+    : [];
+
+  return (
+    <>
+      <PageHeader
+        eyebrow="Events"
+        title="What's happening in the community"
+        description="CCGMs events and other community events — browse the lists or use the monthly calendar."
+      />
+
+      <section className="container-page py-14">
+        <Tabs defaultValue="coming">
+          <TabsList>
+            <TabsTrigger value="coming">Coming events</TabsTrigger>
+            <TabsTrigger value="past">Past events</TabsTrigger>
+            <TabsTrigger value="all">All events</TabsTrigger>
+            <TabsTrigger value="calendar">Calendar</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="coming" className="mt-8 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+            {upcoming.map((event) => (
+              <EventCard key={event.id} event={event} onOpen={() => setSelected(event)} />
+            ))}
+          </TabsContent>
+          <TabsContent value="past" className="mt-8 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+            {past.map((event) => (
+              <EventCard key={event.id} event={event} onOpen={() => setSelected(event)} />
+            ))}
+          </TabsContent>
+          <TabsContent value="all" className="mt-8 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+            {events.map((event) => (
+              <EventCard key={event.id} event={event} onOpen={() => setSelected(event)} />
+            ))}
+          </TabsContent>
+
+          <TabsContent value="calendar" className="mt-8">
+            <Card className="border-border/70">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <h2 className="text-xl">{monthLabel}</h2>
+                  <div className="flex gap-2">
+                    <Button
+                      variant="soft"
+                      size="icon"
+                      aria-label="Previous month"
+                      onClick={() => setMonthOffset((v) => v - 1)}
+                    >
+                      <ChevronLeft />
+                    </Button>
+                    <Button
+                      variant="soft"
+                      size="icon"
+                      aria-label="Next month"
+                      onClick={() => setMonthOffset((v) => v + 1)}
+                    >
+                      <ChevronRight />
+                    </Button>
+                  </div>
+                </div>
+
+                <div className="mt-6 grid grid-cols-7 gap-1 text-center text-xs text-muted-foreground">
+                  {WEEKDAYS.map((day) => (
+                    <div key={day} className="py-2 font-medium">
+                      {day}
+                    </div>
+                  ))}
+                  {grid.map((date, index) => {
+                    if (!date) return <div key={`empty-${index}`} />;
+                    const dayItems = eventsOn(date);
+                    const isSelected = selectedDay === date.toDateString();
+                    return (
+                      <button
+                        key={date.toISOString()}
+                        type="button"
+                        onClick={() => setSelectedDay(date.toDateString())}
+                        className={`min-h-20 rounded-lg border p-1.5 text-left transition-colors ${
+                          isSelected
+                            ? "border-primary bg-accent"
+                            : "border-border/60 hover:bg-secondary"
+                        }`}
+                      >
+                        <span className="text-sm font-medium text-foreground">
+                          {date.getDate()}
+                        </span>
+                        <span className="mt-1 block space-y-1">
+                          {dayItems.slice(0, 2).map((item) => (
+                            <span
+                              key={item.id}
+                              className={`block truncate rounded px-1 py-0.5 text-[10px] ${
+                                item.event_type === "ccgms"
+                                  ? "bg-primary text-primary-foreground"
+                                  : "bg-terracotta text-terracotta-foreground"
+                              }`}
+                            >
+                              {item.title}
+                            </span>
+                          ))}
+                          {dayItems.length > 2 ? (
+                            <span className="block text-[10px]">+{dayItems.length - 2} more</span>
+                          ) : null}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {selectedDay ? (
+                  <div className="mt-6 border-t border-border pt-6">
+                    <p className="eyebrow text-terracotta">{selectedDay}</p>
+                    {dayEvents.length === 0 ? (
+                      <p className="mt-2 text-sm text-muted-foreground">No events on this day.</p>
+                    ) : (
+                      <ul className="mt-3 space-y-2">
+                        {dayEvents.map((event) => (
+                          <li key={event.id}>
+                            <button
+                              type="button"
+                              onClick={() => setSelected(event)}
+                              className="w-full rounded-lg border border-border/70 px-4 py-3 text-left text-sm hover:bg-secondary"
+                            >
+                              <span className="font-medium">{event.title}</span>
+                              <span className="block text-xs text-muted-foreground">
+                                {event.location}
+                              </span>
+                            </button>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                ) : null}
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
+      </section>
+
+      <Dialog open={!!selected} onOpenChange={(open) => !open && setSelected(null)}>
+        <DialogContent className="sm:max-w-lg">
+          <DialogHeader>
+            <DialogTitle>{selected?.title}</DialogTitle>
+          </DialogHeader>
+          {selected ? (
+            <div className="space-y-4">
+              <TypeBadge type={selected.event_type} />
+              <p className="text-sm text-foreground/85">{selected.description}</p>
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                <li className="flex items-center gap-2">
+                  <CalendarDays className="size-4" /> {formatDate(selected.start_at, true)}
+                </li>
+                {selected.end_at ? (
+                  <li className="flex items-center gap-2">
+                    <Clock className="size-4" /> Ends {formatDate(selected.end_at, true)}
+                  </li>
+                ) : null}
+                <li className="flex items-center gap-2">
+                  <MapPin className="size-4" /> {selected.location}
+                </li>
+                {selected.organiser ? (
+                  <li className="flex items-center gap-2">
+                    <User className="size-4" /> {selected.organiser}
+                  </li>
+                ) : null}
+              </ul>
+            </div>
+          ) : null}
+        </DialogContent>
+      </Dialog>
+    </>
+  );
+}
