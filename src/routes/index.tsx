@@ -125,6 +125,47 @@ function Index() {
       </section>
 
       <section className="container-page py-16 md:py-20">
+        <div className="grid items-start gap-10 md:grid-cols-[0.9fr_1.1fr]">
+          <div>
+            <p className="eyebrow text-terracotta">Who we are</p>
+            <h2 className="mt-2 text-3xl md:text-4xl">A family of families</h2>
+          </div>
+          <div className="space-y-5">
+            <p className="text-base text-muted-foreground md:text-lg">
+              CCGMs brings together members of our community across generations — parents,
+              students, elders and children — around culture, faith, friendship and mutual
+              support. What began as a handful of families sharing meals and traditions is now an
+              association with a board, an events calendar and campaigns that back people when
+              life gets hard.
+            </p>
+            <p className="text-sm text-muted-foreground md:text-base">
+              We celebrate together, raise funds for causes that matter to our members, promote
+              businesses run by our community, and stand beside anyone who needs a hand.
+            </p>
+            <div className="grid gap-4 sm:grid-cols-3">
+              {[
+                { label: "Members & families", value: "One community" },
+                { label: "Events each year", value: "All year round" },
+                { label: "Causes supported", value: "Together" },
+              ].map((item) => (
+                <div key={item.label} className="rounded-2xl border border-border/70 bg-card p-5">
+                  <p className="text-lg font-semibold">{item.value}</p>
+                  <p className="mt-1 text-xs uppercase tracking-widest text-muted-foreground">
+                    {item.label}
+                  </p>
+                </div>
+              ))}
+            </div>
+            <Button asChild variant="soft">
+              <Link to="/about">
+                More about CCGMs <ArrowRight />
+              </Link>
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      <section className="container-page pb-16 md:pb-20">
         <div className="grid gap-5 md:grid-cols-3">
           {highlights.map((item) => (
             <Link key={item.to} to={item.to} className="group">
