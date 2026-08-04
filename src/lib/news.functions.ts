@@ -140,7 +140,6 @@ export const notifySubscribers = createServerFn({ method: 'POST' })
     if (!isAdmin) throw new Error('Forbidden')
 
     const { supabaseAdmin } = await import('@/integrations/supabase/client.server')
-    const { baseUrl, sendUnsubscribeConfirmation } = await import('./news-emails.server')
 
     const { data: item, error: itemError } = await supabaseAdmin
       .from('announcements')
