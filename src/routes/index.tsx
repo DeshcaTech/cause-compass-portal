@@ -149,26 +149,6 @@ function Index() {
                 <Link to="/fundraising">{t("Support Our Causes")}</Link>
               </Button>
             </div>
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-              {[
-                { icon: Smartphone, label: "Android" },
-                { icon: Apple, label: "iPhone" },
-              ].map(({ icon: Icon, label }) => (
-                <a
-                  key={label}
-                  href="#"
-                  className="inline-flex min-w-0 items-center gap-3 rounded-2xl border border-primary-foreground/25 px-5 py-3 text-left transition-colors hover:bg-primary-foreground/10"
-                >
-                  <Icon className="size-6 shrink-0" />
-                  <span className="min-w-0">
-                    <span className="block text-[11px] uppercase tracking-widest opacity-70">
-                      {t("Download for")}
-                    </span>
-                    <span className="block text-sm font-semibold">{t(label)}</span>
-                  </span>
-                </a>
-              ))}
-            </div>
           </div>
           <div className="relative">
             <Picture
