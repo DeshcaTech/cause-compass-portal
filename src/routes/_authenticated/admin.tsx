@@ -122,6 +122,7 @@ function AdminPage() {
         <Tabs defaultValue={defaultTab}>
           <TabsList>
             {isAdmin && <TabsTrigger value="events">Events</TabsTrigger>}
+            {isAdmin && <TabsTrigger value="news">News</TabsTrigger>}
             {isAdmin && <TabsTrigger value="gallery">Gallery</TabsTrigger>}
             {isAdmin && <TabsTrigger value="partners">Partners</TabsTrigger>}
             {can("fundraising") && <TabsTrigger value="campaigns">Campaigns</TabsTrigger>}
