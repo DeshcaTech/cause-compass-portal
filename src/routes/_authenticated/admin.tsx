@@ -306,6 +306,36 @@ function AdminPage() {
             />
           </TabsContent>}
 
+          {isAdmin && <TabsContent value="jobs" className="mt-8">
+            <RecordManager
+              table="jobs"
+              title="Jobs"
+              description="Job adverts and opportunities listed under Partners → Jobs."
+              orderBy={{ column: "created_at", ascending: false }}
+              primaryLabel={(row) => String(row['title'])}
+              secondaryLabel={(row) =>
+                `${row['company']} · ${row['job_type']}${row['is_published'] ? "" : " · hidden"}`
+              }
+              defaults={{ is_published: true, category: "General", job_type: "Full-time" }}
+              fields={[
+                { name: "title", label: "Job title", required: true },
+                { name: "company", label: "Company / employer", required: true },
+                { name: "category", label: "Category", required: true },
+                { name: "job_type", label: "Job type (Full-time, Part-time, Contract…)", required: true },
+                { name: "location", label: "Location" },
+                { name: "salary_range", label: "Salary range" },
+                { name: "short_description", label: "Short description" },
+                { name: "description", label: "Full description", type: "textarea" },
+                { name: "image_url", label: "Advert picture", type: "image", crop: { aspect: 16 / 9, outputWidth: 1400 } },
+                { name: "apply_url", label: "Apply link" },
+                { name: "contact_email", label: "Contact email" },
+                { name: "contact_phone", label: "Contact phone" },
+                { name: "closes_at", label: "Closing date", type: "date" },
+                { name: "is_published", label: "Published", type: "switch" },
+              ]}
+            />
+          </TabsContent>}
+
           {can("fundraising") && <TabsContent value="campaigns" className="mt-8">
             <RecordManager
               table="campaigns"
