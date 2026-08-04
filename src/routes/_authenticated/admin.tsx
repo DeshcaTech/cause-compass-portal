@@ -8,6 +8,7 @@ import { RecordManager } from "@/components/admin/RecordManager";
 import { FundraisingReport } from "@/components/admin/FundraisingReport";
 import { NewsNotifier } from "@/components/admin/NewsNotifier";
 import { RsvpManager } from "@/components/admin/RsvpManager";
+import { JobApplicationsManager } from "@/components/admin/JobApplicationsManager";
 import { SubscriberList } from "@/components/admin/SubscriberList";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -132,6 +133,7 @@ function AdminPage() {
             {isAdmin && <TabsTrigger value="gallery">Gallery</TabsTrigger>}
             {isAdmin && <TabsTrigger value="partners">Partners</TabsTrigger>}
             {isAdmin && <TabsTrigger value="jobs">Jobs</TabsTrigger>}
+            {isAdmin && <TabsTrigger value="job-applications">Applications</TabsTrigger>}
             {can("fundraising") && <TabsTrigger value="campaigns">Campaigns</TabsTrigger>}
             {can("fundraising") && <TabsTrigger value="reports">Reports</TabsTrigger>}
             {can("board") && <TabsTrigger value="board">Board</TabsTrigger>}
@@ -168,6 +170,10 @@ function AdminPage() {
 
           {can("event") && <TabsContent value="rsvps" className="mt-8">
             <RsvpManager />
+          </TabsContent>}
+
+          {isAdmin && <TabsContent value="job-applications" className="mt-8">
+            <JobApplicationsManager />
           </TabsContent>}
 
           {isAdmin && <TabsContent value="events" className="mt-8">
