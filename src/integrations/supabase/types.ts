@@ -1029,6 +1029,54 @@ export type Database = {
         }
         Relationships: []
       }
+      village_groups: {
+        Row: {
+          contact_email: string | null
+          contact_name: string | null
+          contact_phone: string | null
+          created_at: string
+          description: string | null
+          id: string
+          image_url: string | null
+          is_published: boolean
+          meeting_info: string | null
+          name: string
+          region: string
+          short_description: string | null
+          sort_order: number
+        }
+        Insert: {
+          contact_email?: string | null
+          contact_name?: string | null
+          contact_phone?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          is_published?: boolean
+          meeting_info?: string | null
+          name: string
+          region?: string
+          short_description?: string | null
+          sort_order?: number
+        }
+        Update: {
+          contact_email?: string | null
+          contact_name?: string | null
+          contact_phone?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          is_published?: boolean
+          meeting_info?: string | null
+          name?: string
+          region?: string
+          short_description?: string | null
+          sort_order?: number
+        }
+        Relationships: []
+      }
       volunteer_applications: {
         Row: {
           areas: string[]
