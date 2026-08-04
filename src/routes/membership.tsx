@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { z } from "zod";
 
 import { PageHeader } from "@/components/site/PageHeader";
+import { SidebarNavItem, SidebarPage } from "@/components/site/SidebarPage";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -19,6 +20,7 @@ import {
 import { formatMoney } from "@/lib/queries";
 import { submitMembership } from "@/lib/signup.functions";
 import { useT } from "@/lib/i18n";
+import membershipBanner from "@/assets/community-together.jpg";
 
 export const Route = createFileRoute("/membership")({
   head: () => ({
@@ -181,39 +183,33 @@ function MembershipPage() {
         description={t("Choose the membership that fits your household. Every member receives a unique registration number by email.")}
       />
 
-      <section className="container-page py-14">
-        <div className="grid gap-5 md:grid-cols-3">
-          {TIERS.map((item) => (
-            <button
-              key={item.key}
-              type="button"
-              onClick={() => setTier(item.key)}
-              className={`rounded-2xl border p-6 text-left transition-all ${
-                tier === item.key
-                  ? "border-primary bg-accent shadow-[var(--shadow-lift)]"
-                  : "border-border bg-card hover:-translate-y-1"
-              }`}
-            >
-              <p className="eyebrow text-terracotta">{t(item.name)}</p>
-              <p className="mt-2 text-3xl font-semibold">
-                {formatMoney(item.price)}
-                <span className="text-sm font-normal text-muted-foreground"> {t("/ year")}</span>
-              </p>
-              <p className="mt-2 text-sm text-muted-foreground">{t(item.blurb)}</p>
-              <ul className="mt-4 space-y-1.5 text-sm">
-                {item.perks.map((perk) => (
-                  <li key={perk} className="flex items-start gap-2">
-                    <Check className="mt-0.5 size-4 shrink-0 text-primary" />
-                    {t(perk)}
-                  </li>
-                ))}
-              </ul>
-            </button>
-          ))}
-        </div>
-
-        <Card className="mt-10 border-border/70">
+      <SidebarPage
+        banner={{
+          image: membershipBanner,
+          title: `${t(selectedTier.name)} — ${formatMoney(selectedTier.price)} ${t("/ year")}`,
+          description: t(selectedTier.blurb),
+        }}
+        sidebar={TIERS.map((item) => (
+          <SidebarNavItem
+            key={item.key}
+            icon={<Check className="size-5" />}
+            title={t(item.name)}
+            meta={`${formatMoney(item.price)} ${t("/ year")}`}
+            active={tier === item.key}
+            onClick={() => setTier(item.key)}
+          />
+        ))}
+      >
+        <Card className="border-border/70">
           <CardContent className="p-6 sm:p-8">
+            <ul className="mb-6 grid gap-1.5 text-sm sm:grid-cols-3">
+              {selectedTier.perks.map((perk) => (
+                <li key={perk} className="flex items-start gap-2">
+                  <Check className="mt-0.5 size-4 shrink-0 text-primary" />
+                  {t(perk)}
+                </li>
+              ))}
+            </ul>
             <h2 className="text-2xl">{t("Registration details")}</h2>
             <form onSubmit={onSubmit} className="mt-6 space-y-5">
               <div className="grid gap-4 sm:grid-cols-2">
@@ -402,7 +398,7 @@ function MembershipPage() {
             </form>
           </CardContent>
         </Card>
-      </section>
+      </SidebarPage>
     </>
   );
 }
