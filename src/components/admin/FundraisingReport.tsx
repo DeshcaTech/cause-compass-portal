@@ -1,5 +1,6 @@
-import { useMemo, useRef, useState } from "react";
+import { useMemo, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { useNavigate, useSearch } from "@tanstack/react-router";
 import {
   Bar,
   BarChart,
@@ -56,8 +57,20 @@ function monthLabel(key: string) {
 }
 
 export function FundraisingReport() {
-  const [openCampaignId, setOpenCampaignId] = useState<string | null>(null);
+  const navigate = useNavigate();
+  const search = useSearch({ strict: false }) as { campaign?: string };
+  const openCampaignId = search.campaign ?? null;
   const progressRef = useRef<HTMLDivElement>(null);
+
+  // Push a history entry when opening so Back closes the dialog again.
+  const setOpenCampaignId = (id: string | null) => {
+    void navigate({
+      to: ".",
+      search: (prev: Record<string, unknown>) => ({ ...prev, campaign: id ?? undefined }),
+      replace: false,
+      resetScroll: false,
+    });
+  };
   const { data, isLoading, error } = useQuery({
     queryKey: ["fundraising-report"],
     queryFn: async () => {
