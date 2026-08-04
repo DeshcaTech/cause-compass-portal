@@ -11,6 +11,7 @@ interface Props {
   applicantPhone?: string
   membershipNumber?: string
   message?: string
+  cvUrl?: string
 }
 
 const Email = ({
@@ -21,6 +22,7 @@ const Email = ({
   applicantPhone,
   membershipNumber,
   message,
+  cvUrl,
 }: Props) => (
   <Html lang="en" dir="ltr">
     <Head />
@@ -58,6 +60,12 @@ const Email = ({
             </Text>
             <Text style={paragraph}>{message}</Text>
           </>
+        ) : null}
+
+        {cvUrl ? (
+          <Text style={paragraph}>
+            <a href={cvUrl}>Download their CV</a> (link valid for 14 days)
+          </Text>
         ) : null}
 
         <Text style={mutedText}>
