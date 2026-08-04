@@ -336,7 +336,11 @@ function AdminPage() {
                 { name: "apply_url", label: "Apply link" },
                 { name: "contact_email", label: "Contact email" },
                 { name: "contact_phone", label: "Contact phone" },
-                { name: "closes_at", label: "Closing date", type: "date" },
+                {
+                  name: "closes_at",
+                  label: "Expiry date (advert hides from the Jobs board after this date, kept here in history)",
+                  type: "date",
+                },
                 {
                   name: "approval_status",
                   label: "Approval status (only approved adverts appear on the Jobs board)",
