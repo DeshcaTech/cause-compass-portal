@@ -204,6 +204,44 @@ export const documentsQuery = queryOptions({
     unwrap<DocumentRow[]>(await supabase.from("documents").select("*").order("category")),
 });
 
+export type Announcement = {
+  id: string;
+  title: string;
+  summary: string | null;
+  body: string | null;
+  image_url: string | null;
+  published_at: string;
+};
+
+export const announcementsQuery = queryOptions({
+  queryKey: ["announcements"],
+  queryFn: async () =>
+    unwrap<Announcement[]>(
+      await supabase
+        .from("announcements")
+        .select("id, title, summary, body, image_url, published_at")
+        .eq("is_published", true)
+        .order("published_at", { ascending: false }),
+    ),
+});
+
+export type HomeStats = {
+  members: number;
+  businesses: number;
+  upcoming_events: number;
+  board_members: number;
+  active_campaigns: number;
+};
+
+export const homeStatsQuery = queryOptions({
+  queryKey: ["home_stats"],
+  queryFn: async () => {
+    const { data, error } = await supabase.rpc("get_home_stats");
+    if (error) throw new Error(error.message);
+    return data as unknown as HomeStats;
+  },
+});
+
 export function formatMoney(value: number) {
   return new Intl.NumberFormat("en-GB", {
     style: "currency",
