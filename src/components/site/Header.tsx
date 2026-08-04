@@ -3,9 +3,9 @@ import { Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { Menu, ChevronDown } from "lucide-react";
 
-import logo from "@/assets/ccgms-logo.png?w=120&format=png";
-import logoAvif from "@/assets/ccgms-logo.png?w=120&quality=70&format=avif";
-import logoWebp from "@/assets/ccgms-logo.png?w=120&quality=80&format=webp";
+import logo from "@/assets/ccgms-wordmark.png?w=640&format=png";
+import logoAvif from "@/assets/ccgms-wordmark.png?w=640&quality=70&format=avif";
+import logoWebp from "@/assets/ccgms-wordmark.png?w=640&quality=80&format=webp";
 import { Picture } from "@/components/site/Picture";
 import { LanguageSwitcher } from "@/components/site/LanguageSwitcher";
 import { Button } from "@/components/ui/button";
@@ -68,12 +68,22 @@ export function Header() {
         <Link to="/" className="flex items-center gap-3">
           {showLogo ? (
             customLogo ? (
-              <img src={customLogo} alt="CCGMs logo" width={44} height={44} className="h-11 w-11 rounded-full object-contain" decoding="async" />
+              <img src={customLogo} alt="CCGMs logo" className="h-11 w-auto max-w-[15rem] object-contain" decoding="async" />
             ) : (
-              <Picture avif={logoAvif} webp={logoWebp} src={logo} alt="CCGMs logo" width={44} height={44} className="h-11 w-11" fetchPriority="high" decoding="async" />
+              <Picture
+                avif={logoAvif}
+                webp={logoWebp}
+                src={logo}
+                alt="CCGMs — Cameroon Community of Greater Manchester & Surrounding areas"
+                width={640}
+                height={162}
+                className="h-11 w-auto max-w-[15rem] object-contain sm:h-12 sm:max-w-[19rem]"
+                fetchPriority="high"
+                decoding="async"
+              />
             )
           ) : null}
-          <span className="leading-tight">
+          <span className={`leading-tight ${showLogo ? "sr-only" : ""}`}>
             <span className="block font-display text-lg font-semibold text-primary">CCGMs</span>
             <span className="block text-[11px] text-muted-foreground">
               {t("Community Association")}
