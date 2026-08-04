@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { ChevronLeft, ChevronRight, MapPin } from "lucide-react";
@@ -14,6 +14,21 @@ import { SmartImage } from "@/components/site/SmartImage";
 import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/events")({
+  // Filters, the open tab and the open event live in the URL so links can be shared.
+  validateSearch: (search: Record<string, unknown>) => ({
+    event: typeof search['event'] === "string" ? search['event'] : undefined,
+    type:
+      search['type'] === "ccgms" || search['type'] === "other" || search['type'] === "all"
+        ? (search['type'] as "all" | "ccgms" | "other")
+        : undefined,
+    tab:
+      search['tab'] === "coming" ||
+      search['tab'] === "past" ||
+      search['tab'] === "all" ||
+      search['tab'] === "calendar"
+        ? (search['tab'] as "coming" | "past" | "all" | "calendar")
+        : undefined,
+  }),
   head: () => ({
     meta: [
       { title: "Events — CCGMs Community Calendar" },
