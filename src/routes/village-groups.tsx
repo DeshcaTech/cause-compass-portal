@@ -19,26 +19,25 @@ const PAGE_URL = `${SITE_ORIGIN}/village-groups`;
 export const Route = createFileRoute("/village-groups")({
   head: () => ({
     meta: [
-      { title: "Our Village-based Groups — CCGMs Community" },
+      { title: "Our Groups — CCGMs Community" },
       {
         name: "description",
         content:
-          "Find the CCGMs village-based groups in Greater Manchester: meeting times, regions and contacts for families from each village and division.",
+          "Find the CCGMs groups in Greater Manchester: meeting times, regions and contacts for each community group.",
       },
-      { property: "og:title", content: "Our Village-based Groups — CCGMs Community" },
+      { property: "og:title", content: "Our Groups — CCGMs Community" },
       {
         property: "og:description",
-        content:
-          "Village and division groups within CCGMs, with meeting details and contacts.",
+        content: "Community groups within CCGMs, with meeting details and contacts.",
       },
       { property: "og:type", content: "website" },
       { property: "og:url", content: PAGE_URL },
       { property: "og:image", content: `${SITE_ORIGIN}/og-ccgms.jpg` },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "Our Village-based Groups — CCGMs Community" },
+      { name: "twitter:title", content: "Our Groups — CCGMs Community" },
       {
         name: "twitter:description",
-        content: "Village and division groups within CCGMs, with meeting details and contacts.",
+        content: "Community groups within CCGMs, with meeting details and contacts.",
       },
       { name: "twitter:image", content: `${SITE_ORIGIN}/og-ccgms.jpg` },
     ],
@@ -62,14 +61,14 @@ function VillageGroupsPage() {
     <>
       <PageHeader
         eyebrow={t("About CCGMs")}
-        title={t("Our Village-based Groups")}
-        description={t("Village and division groups within CCGMs. Click a group to see meeting details and contacts.")}
+        title={t("Our Groups")}
+        description={t("Community groups within CCGMs. Click a group to see meeting details and contacts.")}
       />
       <SidebarPage
         banner={{
           image: thumbFor(region),
           title: region === "All" ? t("All groups") : region,
-          description: t("Village and division groups within CCGMs."),
+          description: t("Community groups within CCGMs."),
         }}
         sidebar={regions.map((item) => (
           <SidebarNavItem
