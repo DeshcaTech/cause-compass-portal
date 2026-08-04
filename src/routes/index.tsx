@@ -111,6 +111,7 @@ function Index() {
                 alt="CCGMs logo"
                 width={140}
                 height={140}
+              decoding="async"
                 className="h-14 w-14 shrink-0 sm:h-16 sm:w-16 md:h-20 md:w-20"
               />
               <p className="eyebrow min-w-0 text-gold">Community association</p>
@@ -161,6 +162,8 @@ function Index() {
               alt="CCGMs members of all generations celebrating together"
               width={1920}
               height={1200}
+              fetchPriority="high"
+              decoding="async"
               className="aspect-[4/3] w-full rounded-3xl object-cover shadow-[var(--shadow-lift)]"
             />
           </div>
@@ -197,6 +200,7 @@ function Index() {
               loading="lazy"
               width={1280}
               height={960}
+              decoding="async"
               className="mt-6 aspect-[4/3] w-full rounded-3xl object-cover shadow-[var(--shadow-lift)]"
             />
           </div>
@@ -313,6 +317,9 @@ function Index() {
                   src={upcoming[0]!.image_url ?? eventFallback}
                   alt={upcoming[0]!.title}
                   loading="lazy"
+                  decoding="async"
+                  width={1280}
+                  height={720}
                   className="aspect-[16/9] w-full object-cover"
                 />
                 <CardContent className="flex h-full flex-col p-6 sm:p-8 md:p-10">
@@ -419,6 +426,9 @@ function Index() {
                           src={partner.logo_url}
                           alt={`${partner.business_name} logo`}
                           loading="lazy"
+                          decoding="async"
+                          width={112}
+                          height={112}
                           className="h-14 w-14 rounded-2xl object-cover"
                         />
                       ) : (
