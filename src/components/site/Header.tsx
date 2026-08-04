@@ -64,7 +64,7 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-border/70 bg-background/85 backdrop-blur-md">
-      <div className="container-page flex h-18 items-center justify-between gap-4 py-3">
+      <div className="container-page flex items-center justify-between gap-4 py-2.5">
         <Link to="/" className="flex items-center gap-3">
           {showLogo ? (
             customLogo ? (
@@ -91,7 +91,28 @@ export function Header() {
           </span>
         </Link>
 
-        <nav className="hidden items-center gap-0.5 lg:flex">
+        <div className="hidden items-center gap-2 lg:flex">
+          <LanguageSwitcher />
+          <Button asChild variant="soft" size="sm">
+            <Link to="/membership">{t("Join")}</Link>
+          </Button>
+          <Button asChild variant="hero" size="sm">
+            <Link to="/donate">{t("Donate")}</Link>
+          </Button>
+        </div>
+
+        <div className="flex items-center gap-2 lg:hidden">
+          <LanguageSwitcher />
+          <SheetTrigger asChild>
+            <Button variant="ghost" size="icon" className="lg:hidden" aria-label="Open menu">
+              <Menu />
+            </Button>
+          </SheetTrigger>
+        </div>
+      </div>
+
+      <div className="hidden border-t border-border/70 lg:block">
+        <nav className="container-page flex items-center gap-0.5 py-1.5">
           {NAV.map((group) =>
             group.items ? (
               <div key={group.label} className="group relative">
@@ -125,16 +146,7 @@ export function Header() {
             ),
           )}
         </nav>
-
-        <div className="hidden items-center gap-2 lg:flex">
-          <LanguageSwitcher />
-          <Button asChild variant="soft" size="sm">
-            <Link to="/membership">{t("Join")}</Link>
-          </Button>
-          <Button asChild variant="hero" size="sm">
-            <Link to="/donate">{t("Donate")}</Link>
-          </Button>
-        </div>
+      </div>
 
         <div className="flex items-center gap-2 lg:hidden">
           <LanguageSwitcher />
