@@ -2,6 +2,8 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import {
   ChevronLeft,
   ChevronRight,
+  Download,
+  Link2,
   Maximize2,
   Minimize2,
   Pause,
@@ -9,6 +11,8 @@ import {
   ZoomIn,
   ZoomOut,
 } from "lucide-react";
+
+import { toast } from "sonner";
 
 import { SmartImage } from "@/components/site/SmartImage";
 import { Button } from "@/components/ui/button";
@@ -283,6 +287,55 @@ export function Lightbox({
     return () => window.removeEventListener("keydown", onKey);
   }, [open, toggleFullscreen]);
 
+  /* --------------------------------------------------- download / share */
+
+  const [downloading, setDownloading] = useState(false);
+
+  function fileNameFor(tile: LightboxTile) {
+    const base = (tile.caption ?? fallbackTitle ?? "photo")
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-|-$/g, "")
+      .slice(0, 60) || "photo";
+    const ext = new URL(tile.src, window.location.origin).pathname.split(".").pop();
+    return `${base}.${ext && ext.length <= 5 ? ext : "jpg"}`;
+  }
+
+  async function downloadCurrent() {
+    if (!current) return;
+    setDownloading(true);
+    try {
+      // Fetch as a blob so the file saves instead of opening in a new tab.
+      const response = await fetch(current.src);
+      if (!response.ok) throw new Error("fetch failed");
+      const url = URL.createObjectURL(await response.blob());
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = fileNameFor(current);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+      toast.success(t("Photo downloaded."));
+    } catch {
+      // Cross-origin images can refuse the blob fetch; open it instead.
+      window.open(current.src, "_blank", "noopener");
+    } finally {
+      setDownloading(false);
+    }
+  }
+
+  async function copyLink() {
+    if (!current) return;
+    const url = new URL(current.src, window.location.origin).toString();
+    try {
+      await navigator.clipboard.writeText(url);
+      toast.success(t("Photo link copied to your clipboard."));
+    } catch {
+      window.prompt(t("Copy this photo link"), url);
+    }
+  }
+
   const position = `${(index ?? 0) + 1} ${t("of")} ${tiles.length}`;
   const caption = current?.caption ?? fallbackTitle;
 
@@ -419,9 +472,28 @@ export function Lightbox({
             aria-label={isFullscreen ? t("Exit full screen") : t("Full screen")}
             aria-pressed={isFullscreen}
             onClick={() => void toggleFullscreen()}
-            className="ml-auto min-h-11 min-w-11"
+            className="min-h-11 min-w-11"
           >
             {isFullscreen ? <Minimize2 /> : <Maximize2 />}
+          </Button>
+
+          <span className="mx-1 hidden h-6 w-px bg-border sm:block" aria-hidden="true" />
+
+          <Button
+            variant="soft"
+            onClick={() => void downloadCurrent()}
+            disabled={!current || downloading}
+            className="min-h-11"
+          >
+            <Download /> {downloading ? t("Preparing…") : t("Download image")}
+          </Button>
+          <Button
+            variant="ghost"
+            onClick={() => void copyLink()}
+            disabled={!current}
+            className="min-h-11"
+          >
+            <Link2 /> {t("Copy link")}
           </Button>
         </div>
 

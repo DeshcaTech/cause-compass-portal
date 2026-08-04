@@ -207,7 +207,7 @@ function AdminPage() {
             <RecordManager
               table="galleries"
               title="Gallery albums"
-              description="One album per event. The default album opens first on the gallery page."
+              description="One album per event. Set a main photo for each album — it leads the gallery page. The default album opens first."
               orderBy={{ column: "event_date", ascending: false }}
               primaryLabel={(row) => String(row['title'])}
               secondaryLabel={(row) =>
@@ -218,7 +218,7 @@ function AdminPage() {
                 { name: "title", label: "Album title", required: true },
                 { name: "description", label: "Description", type: "textarea" },
                 { name: "event_date", label: "Event date", type: "date" },
-                { name: "cover_url", label: "Cover picture", type: "image", crop: { aspect: 16 / 9, outputWidth: 1600 } },
+                { name: "cover_url", label: "Main photo (album cover)", type: "image", crop: { aspect: 16 / 9, outputWidth: 1600 } },
                 {
                   name: "is_default",
                   label: "Open by default",

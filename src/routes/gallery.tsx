@@ -67,17 +67,29 @@ function GalleryPage() {
   const active = galleries.find((g) => g.id === activeId) ?? null;
   const activePhotos = photos.filter((p) => p.gallery_id === activeId);
 
+  // Main photo: the album cover set in the admin panel, else its first photo,
+  // else a stable placeholder so every album still looks complete.
+  const mainPhoto = (galleryId: string, cover: string | null) =>
+    cover ??
+    photos.find((p) => p.gallery_id === galleryId)?.photo_url ??
+    placeholdersFor(galleryId)[0]!;
+
   const tiles = useMemo(() => {
     const real = activePhotos.map((photo) => ({
       key: photo.id,
       src: photo.photo_url,
       caption: photo.caption ?? null,
     }));
+    // The album's main photo leads the viewer when it isn't already a photo.
+    const cover = active?.cover_url;
+    if (cover && !real.some((tile) => tile.src === cover)) {
+      real.unshift({ key: `cover-${active!.id}`, src: cover, caption: active!.title });
+    }
     const fillers = placeholdersFor(activeId ?? "gallery")
       .slice(0, Math.max(0, 6 - real.length))
       .map((src, index) => ({ key: `placeholder-${index}`, src, caption: null }));
     return [...real, ...fillers];
-  }, [activePhotos, activeId]);
+  }, [activePhotos, activeId, active?.cover_url, active?.id, active?.title]);
 
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const triggerRef = useRef<HTMLButtonElement | null>(null);
@@ -100,12 +112,20 @@ function GalleryPage() {
               key={gallery.id}
               type="button"
               onClick={() => setActiveId(gallery.id)}
-              className={`w-full rounded-xl border px-4 py-3 text-left transition-colors ${
+              className={`flex w-full items-center gap-3 rounded-xl border p-2 text-left transition-colors ${
                 activeId === gallery.id
                   ? "border-primary bg-accent"
                   : "border-border bg-card hover:bg-secondary"
               }`}
             >
+              <SmartImage
+                src={mainPhoto(gallery.id, gallery.cover_url)}
+                alt=""
+                loading="lazy"
+                wrapperClassName="size-14 shrink-0 rounded-lg"
+                className="size-full object-cover"
+              />
+              <span className="min-w-0 flex-1">
               <span className="flex items-center justify-between gap-2">
                 <span className="font-medium">{gallery.title}</span>
                 {gallery.is_default ? <Badge variant="secondary">{t("Default")}</Badge> : null}
@@ -118,13 +138,31 @@ function GalleryPage() {
                     })
                   : t("Undated")}
               </span>
+              </span>
             </button>
           ))}
         </aside>
 
         <div>
-          <h2 className="text-2xl">{active?.title ?? t("Gallery")}</h2>
-          <p className="mt-2 text-sm text-muted-foreground">{active?.description}</p>
+          {active ? (
+            <div className="relative overflow-hidden rounded-2xl border border-border">
+              <SmartImage
+                src={mainPhoto(active.id, active.cover_url)}
+                alt={`${active.title} — ${t("main photo")}`}
+                loading="eager"
+                wrapperClassName="aspect-[16/7] w-full"
+                className="size-full object-cover"
+              />
+              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent p-5">
+                <h2 className="text-2xl text-white">{active.title}</h2>
+                {active.description ? (
+                  <p className="mt-1 max-w-2xl text-sm text-white/85">{active.description}</p>
+                ) : null}
+              </div>
+            </div>
+          ) : (
+            <h2 className="text-2xl">{t("Gallery")}</h2>
+          )}
 
           <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {tiles.map((tile, index) => (
