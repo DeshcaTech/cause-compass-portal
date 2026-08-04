@@ -249,7 +249,7 @@ export function EventDialog({
   event: EventRow | null;
   onOpenChange: (open: boolean) => void;
   /** Link copied by the share button — usually the events page with current filters. */
-  shareUrl?: string;
+  shareUrl?: string | undefined;
 }) {
   const t = useT();
   const isCcgms = event?.event_type === "ccgms";
