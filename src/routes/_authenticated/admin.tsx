@@ -178,6 +178,10 @@ function AdminPage() {
             <JobApplicationsManager />
           </TabsContent>}
 
+          {isAdmin && <TabsContent value="brand" className="mt-8">
+            <BrandSettings />
+          </TabsContent>}
+
           {isAdmin && <TabsContent value="events" className="mt-8">
             <RecordManager
               table="events"
