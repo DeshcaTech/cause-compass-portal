@@ -8,7 +8,6 @@ mkdir -p "$OUT_DIR"
 CHROME_BIN="$(ls -d "${PLAYWRIGHT_BROWSERS_PATH:-$HOME/.cache/ms-playwright}"/chromium*/chrome-linux/chrome 2>/dev/null | head -n1)"
 export CHROME_PATH="${CHROME_PATH:-$CHROME_BIN}"
 bunx --bun lighthouse@12 "$URL" \
-  --preset=desktop=false \
   --form-factor=mobile \
   --throttling-method=simulate \
   --only-categories=performance \
