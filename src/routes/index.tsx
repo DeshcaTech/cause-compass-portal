@@ -399,6 +399,12 @@ function Index() {
           </DialogHeader>
           {selectedEvent ? (
             <div className="space-y-4">
+              <img
+                src={selectedEvent.image_url ?? eventFallback}
+                alt={selectedEvent.title}
+                loading="lazy"
+                className="aspect-[16/9] w-full rounded-xl object-cover"
+              />
               <Badge
                 className={
                   selectedEvent.event_type === "ccgms"
