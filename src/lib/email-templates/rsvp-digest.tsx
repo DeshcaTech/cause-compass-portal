@@ -1,5 +1,5 @@
 import React from 'react'
-import { Body, Button, Container, Head, Heading, Html, Preview, Text } from '@react-email/components'
+import { Body, Button, Container, Head, Heading, Html, Link, Preview, Text } from '@react-email/components'
 import type { TemplateEntry } from './registry'
 import { brand, container, eyebrow, heading, main, mutedText, panel, paragraph } from './shared'
 
