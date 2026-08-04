@@ -31,7 +31,7 @@ export const NAV: NavGroup[] = [
   {
     label: "Partners",
     items: [
-      { label: "Businesses owned by our members", to: "/partners" },
+      { label: "Our Businesses", to: "/partners" },
       { label: "Jobs", to: "/jobs" },
     ],
   },
