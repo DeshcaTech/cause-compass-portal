@@ -1,7 +1,6 @@
 import { createServerFn } from '@tanstack/react-start'
 import { requireSupabaseAuth } from '@/integrations/supabase/auth-middleware'
 import { z } from 'zod'
-import { baseUrl, sendUnsubscribeConfirmation } from './news-emails.server'
 
 const subscribeSchema = z.object({
   email: z.string().trim().email().max(255),
@@ -13,6 +12,7 @@ export const subscribeToNews = createServerFn({ method: 'POST' })
   .inputValidator((input: unknown) => subscribeSchema.parse(input))
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import('@/integrations/supabase/client.server')
+    const { baseUrl, sendUnsubscribeConfirmation } = await import('./news-emails.server')
     const { data: row, error } = await supabaseAdmin
       .from('news_subscribers')
       .upsert(
@@ -53,6 +53,7 @@ export const unsubscribeFromNews = createServerFn({ method: 'POST' })
   .inputValidator((input: unknown) => unsubscribeSchema.parse(input))
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import('@/integrations/supabase/client.server')
+    const { baseUrl, sendUnsubscribeConfirmation } = await import('./news-emails.server')
     const { data: row, error } = await supabaseAdmin
       .from('news_subscribers')
       .update({ is_active: false, unsubscribed_at: new Date().toISOString() })
@@ -68,6 +69,7 @@ export const unsubscribeByToken = createServerFn({ method: 'POST' })
   .inputValidator((input: unknown) => z.object({ token: z.string().uuid() }).parse(input))
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import('@/integrations/supabase/client.server')
+    const { baseUrl, sendUnsubscribeConfirmation } = await import('./news-emails.server')
     const { data: row, error } = await supabaseAdmin
       .from('news_subscribers')
       .update({ is_active: false, unsubscribed_at: new Date().toISOString() })
@@ -84,6 +86,7 @@ export const resubscribeByToken = createServerFn({ method: 'POST' })
   .inputValidator((input: unknown) => z.object({ token: z.string().uuid() }).parse(input))
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import('@/integrations/supabase/client.server')
+    const { baseUrl, sendUnsubscribeConfirmation } = await import('./news-emails.server')
     const { data: row, error } = await supabaseAdmin
       .from('news_subscribers')
       .update({ is_active: true, unsubscribed_at: null })
@@ -117,6 +120,7 @@ export const listNewsSubscribers = createServerFn({ method: 'POST' })
     })
     if (!isAdmin) throw new Error('Forbidden')
     const { supabaseAdmin } = await import('@/integrations/supabase/client.server')
+    const { baseUrl, sendUnsubscribeConfirmation } = await import('./news-emails.server')
     const { data, error } = await supabaseAdmin
       .from('news_subscribers')
       .select('id, email, full_name, membership_number, is_active, created_at, unsubscribed_at')
@@ -136,6 +140,7 @@ export const notifySubscribers = createServerFn({ method: 'POST' })
     if (!isAdmin) throw new Error('Forbidden')
 
     const { supabaseAdmin } = await import('@/integrations/supabase/client.server')
+    const { baseUrl, sendUnsubscribeConfirmation } = await import('./news-emails.server')
 
     const { data: item, error: itemError } = await supabaseAdmin
       .from('announcements')
