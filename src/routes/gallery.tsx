@@ -105,10 +105,20 @@ function GalleryPage() {
           <h2 className="text-2xl">{active?.title ?? t("Gallery")}</h2>
           <p className="mt-2 text-sm text-muted-foreground">{active?.description}</p>
 
-          {activePhotos.length === 0 ? (
-            <>
-              <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                {placeholdersFor(activeId ?? "gallery").map((src, index) => (
+          <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {activePhotos.map((photo) => (
+              <figure key={photo.id} className="overflow-hidden rounded-xl border border-border">
+                <img
+                  src={photo.photo_url}
+                  alt={photo.caption ?? active?.title ?? t("Community photo")}
+                  loading="lazy"
+                  className="aspect-[4/3] h-56 w-full object-cover transition-transform hover:scale-105"
+                />
+              </figure>
+            ))}
+            {placeholdersFor(activeId ?? "gallery")
+              .slice(0, Math.max(0, 6 - activePhotos.length))
+              .map((src, index) => (
                   <figure
                     key={`${src}-${index}`}
                     className="overflow-hidden rounded-xl border border-border"
@@ -117,34 +127,21 @@ function GalleryPage() {
                       src={src}
                       alt={t("Community members celebrating together")}
                       loading="lazy"
-                      className="h-56 w-full object-cover transition-transform hover:scale-105"
+                      className="aspect-[4/3] h-56 w-full object-cover transition-transform hover:scale-105"
                     />
                   </figure>
                 ))}
-              </div>
-              <Card className="mt-4 border-dashed border-border">
-                <CardContent className="flex flex-col items-center gap-3 py-8 text-center">
-                  <ImageIcon className="size-8 text-muted-foreground" />
-                  <p className="text-sm text-muted-foreground">
-                    {t("No photos uploaded to this gallery yet. Photos added by the admin appear here.")}
-                  </p>
-                </CardContent>
-              </Card>
-            </>
-          ) : (
-            <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              {activePhotos.map((photo) => (
-                <figure key={photo.id} className="overflow-hidden rounded-xl border border-border">
-                  <img
-                    src={photo.photo_url}
-                    alt={photo.caption ?? active?.title ?? t("Community photo")}
-                    loading="lazy"
-                    className="h-56 w-full object-cover transition-transform hover:scale-105"
-                  />
-                </figure>
-              ))}
-            </div>
-          )}
+          </div>
+          {activePhotos.length === 0 ? (
+            <Card className="mt-4 border-dashed border-border">
+              <CardContent className="flex flex-col items-center gap-3 py-8 text-center">
+                <ImageIcon className="size-8 text-muted-foreground" />
+                <p className="text-sm text-muted-foreground">
+                  {t("No photos uploaded to this gallery yet. Photos added by the admin appear here.")}
+                </p>
+              </CardContent>
+            </Card>
+          ) : null}
         </div>
       </section>
     </>
