@@ -26,6 +26,7 @@ import { Route as MembershipRouteImport } from './routes/membership'
 import { Route as PartnersRouteImport } from './routes/partners'
 import { Route as ReferRouteImport } from './routes/refer'
 import { Route as SurveysRouteImport } from './routes/surveys'
+import { Route as TypographyRouteImport } from './routes/typography'
 import { Route as VillageGroupsRouteImport } from './routes/village-groups'
 import { Route as VolunteerRouteImport } from './routes/volunteer'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
@@ -121,6 +122,11 @@ const SurveysRoute = SurveysRouteImport.update({
   path: '/surveys',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TypographyRoute = TypographyRouteImport.update({
+  id: '/typography',
+  path: '/typography',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const VillageGroupsRoute = VillageGroupsRouteImport.update({
   id: '/village-groups',
   path: '/village-groups',
@@ -191,6 +197,7 @@ export interface FileRoutesByFullPath {
   '/partners': typeof PartnersRoute
   '/refer': typeof ReferRoute
   '/surveys': typeof SurveysRoute
+  '/typography': typeof TypographyRoute
   '/village-groups': typeof VillageGroupsRoute
   '/volunteer': typeof VolunteerRoute
   '/admin': typeof AuthenticatedAdminRoute
@@ -219,6 +226,7 @@ export interface FileRoutesByTo {
   '/partners': typeof PartnersRoute
   '/refer': typeof ReferRoute
   '/surveys': typeof SurveysRoute
+  '/typography': typeof TypographyRoute
   '/village-groups': typeof VillageGroupsRoute
   '/volunteer': typeof VolunteerRoute
   '/admin': typeof AuthenticatedAdminRoute
@@ -249,6 +257,7 @@ export interface FileRoutesById {
   '/partners': typeof PartnersRoute
   '/refer': typeof ReferRoute
   '/surveys': typeof SurveysRoute
+  '/typography': typeof TypographyRoute
   '/village-groups': typeof VillageGroupsRoute
   '/volunteer': typeof VolunteerRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
@@ -279,6 +288,7 @@ export interface FileRouteTypes {
     | '/partners'
     | '/refer'
     | '/surveys'
+    | '/typography'
     | '/village-groups'
     | '/volunteer'
     | '/admin'
@@ -307,6 +317,7 @@ export interface FileRouteTypes {
     | '/partners'
     | '/refer'
     | '/surveys'
+    | '/typography'
     | '/village-groups'
     | '/volunteer'
     | '/admin'
@@ -336,6 +347,7 @@ export interface FileRouteTypes {
     | '/partners'
     | '/refer'
     | '/surveys'
+    | '/typography'
     | '/village-groups'
     | '/volunteer'
     | '/_authenticated/admin'
@@ -366,6 +378,7 @@ export interface RootRouteChildren {
   PartnersRoute: typeof PartnersRoute
   ReferRoute: typeof ReferRoute
   SurveysRoute: typeof SurveysRoute
+  TypographyRoute: typeof TypographyRoute
   VillageGroupsRoute: typeof VillageGroupsRoute
   VolunteerRoute: typeof VolunteerRoute
   NewsIdRoute: typeof NewsIdRoute
@@ -498,6 +511,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SurveysRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/typography': {
+      id: '/typography'
+      path: '/typography'
+      fullPath: '/typography'
+      preLoaderRoute: typeof TypographyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/village-groups': {
       id: '/village-groups'
       path: '/village-groups'
@@ -600,6 +620,7 @@ const rootRouteChildren: RootRouteChildren = {
   PartnersRoute: PartnersRoute,
   ReferRoute: ReferRoute,
   SurveysRoute: SurveysRoute,
+  TypographyRoute: TypographyRoute,
   VillageGroupsRoute: VillageGroupsRoute,
   VolunteerRoute: VolunteerRoute,
   NewsIdRoute: NewsIdRoute,
@@ -613,3 +634,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
