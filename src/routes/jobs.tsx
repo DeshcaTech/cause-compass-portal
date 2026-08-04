@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/select";
 import { jobsQuery, type Job } from "@/lib/queries";
 import { submitJobApplication } from "@/lib/jobs.functions";
+import { supabase } from "@/integrations/supabase/client";
 import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/jobs")({
@@ -281,15 +282,29 @@ function ApplyDialog({ job, onClose }: { job: Job | null; onClose: () => void })
     message: "",
   });
   const [saving, setSaving] = useState(false);
+  const [cv, setCv] = useState<File | null>(null);
 
   const submit = async (event: React.FormEvent) => {
     event.preventDefault();
     if (!job) return;
     setSaving(true);
     try {
-      const result = await submitJobApplication({ data: { job_id: job.id, ...form } });
+      let cvPath = "";
+      if (cv) {
+        if (cv.size > 5 * 1024 * 1024) throw new Error(t("Your CV must be smaller than 5 MB"));
+        const ext = cv.name.split(".").pop()?.toLowerCase() ?? "pdf";
+        cvPath = `${job.id}/${crypto.randomUUID()}.${ext}`;
+        const { error } = await supabase.storage.from("job-cvs").upload(cvPath, cv, {
+          contentType: cv.type || "application/octet-stream",
+        });
+        if (error) throw new Error(t("We could not upload your CV. Please try again."));
+      }
+      const result = await submitJobApplication({
+        data: { job_id: job.id, ...form, cv_url: cvPath },
+      });
       toast.success(t("Your details have been sent to the employer."));
       setForm({ full_name: "", email: "", phone: "", membership_number: "", message: "" });
+      setCv(null);
       onClose();
       if (result.whatsappUrl) window.open(result.whatsappUrl, "_blank", "noopener");
       if (result.applyUrl) window.open(result.applyUrl, "_blank", "noopener");
@@ -349,6 +364,15 @@ function ApplyDialog({ job, onClose }: { job: Job | null; onClose: () => void })
                 onChange={(e) => setForm({ ...form, membership_number: e.target.value })}
               />
             </div>
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="job-cv">{t("Upload your CV (optional, PDF or Word, max 5 MB)")}</Label>
+            <Input
+              id="job-cv"
+              type="file"
+              accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+              onChange={(e) => setCv(e.target.files?.[0] ?? null)}
+            />
           </div>
           <div className="space-y-1.5">
             <Label htmlFor="job-message">{t("Message (optional)")}</Label>
