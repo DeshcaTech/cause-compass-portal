@@ -6,7 +6,7 @@ export const home: Record<string, string> = {
   "generation after generation": "génération après génération",
   "CCGMs is built on family, culture and mutual support. Join us, give to a cause, and be part of everything we build together.":
     "CCGMs se construit autour de la famille, de la culture et de l'entraide. Rejoignez-nous, soutenez une cause, et faites partie de tout ce que nous bâtissons ensemble.",
-  "Join the Community": "Rejoindre la communauté",
+  "Join": "Rejoindre",
   "Support Our Causes": "Soutenir nos causes",
   "Download for": "Télécharger pour",
   "CCGMs members of all generations celebrating together":
