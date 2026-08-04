@@ -2,13 +2,11 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import {
-  Apple,
   ArrowRight,
   Building2,
   CalendarDays,
   HandHeart,
   HeartHandshake,
-  Smartphone,
   UserRound,
   Users,
 } from "lucide-react";
@@ -23,6 +21,8 @@ import communityWebp from "@/assets/family-of-families.jpg?w=900&quality=70&form
 import eventFallback from "@/assets/event-fallback.jpg?w=1000&quality=72&format=jpg";
 import eventFallbackAvif from "@/assets/event-fallback.jpg?w=1000&quality=55&format=avif";
 import eventFallbackWebp from "@/assets/event-fallback.jpg?w=1000&quality=70&format=webp";
+import badgeAppStore from "@/assets/badge-app-store.png?w=640&format=png";
+import badgeGooglePlay from "@/assets/badge-google-play.png?w=640&format=png";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Picture } from "@/components/site/Picture";
