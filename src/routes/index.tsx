@@ -148,7 +148,7 @@ function Index() {
                 <Link to="/fundraising">{t("Support Our Causes")}</Link>
               </Button>
             </div>
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-4 sm:justify-start">
               <a
                 href="#"
                 className="inline-flex min-w-0 shrink-0 transition-transform hover:scale-[1.03]"
