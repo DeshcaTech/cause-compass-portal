@@ -15,8 +15,6 @@ import {
 import logo from "@/assets/ccgms-logo.png";
 import hero from "@/assets/hero-community.jpg";
 import communityTogether from "@/assets/community-together.jpg";
-import newsFallback from "@/assets/news-fallback.jpg";
-import campaignFallback from "@/assets/campaign-fallback.jpg";
 import eventFallback from "@/assets/event-fallback.jpg";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
