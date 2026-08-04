@@ -197,6 +197,8 @@ function AdminPage() {
                   ],
                 },
                 { name: "organiser", label: "Organiser" },
+                { name: "notify_email", label: "Report email (daily RSVP export)" },
+                { name: "notify_whatsapp", label: "WhatsApp number (event contact)" },
                 { name: "image_url", label: "Event picture", type: "image", crop: { aspect: 16 / 9, outputWidth: 1600 } },
                 { name: "ticket_url", label: "Ticket link" },
               ]}
