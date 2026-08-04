@@ -1,20 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { ChevronLeft, ChevronRight, ImageIcon } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { ImageIcon } from "lucide-react";
 
 import { PageHeader } from "@/components/site/PageHeader";
+import { Lightbox } from "@/components/site/Lightbox";
 import { SmartImage } from "@/components/site/SmartImage";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import { galleriesQuery, galleryPhotosQuery } from "@/lib/queries";
 import galleryFallback from "@/assets/gallery-fallback.jpg";
 import communityTogether from "@/assets/community-together.jpg";
@@ -87,37 +80,11 @@ function GalleryPage() {
   }, [activePhotos, activeId]);
 
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
-  const open = lightboxIndex !== null;
-  const currentTile = lightboxIndex !== null ? tiles[lightboxIndex] : undefined;
-
-  const step = useCallback(
-    (delta: number) =>
-      setLightboxIndex((index) =>
-        index === null || tiles.length === 0
-          ? index
-          : (index + delta + tiles.length) % tiles.length,
-      ),
-    [tiles.length],
-  );
+  const triggerRef = useRef<HTMLButtonElement | null>(null);
 
   useEffect(() => {
     setLightboxIndex(null);
   }, [activeId]);
-
-  useEffect(() => {
-    if (!open) return;
-    function onKey(event: KeyboardEvent) {
-      if (event.key === "ArrowLeft") {
-        event.preventDefault();
-        step(-1);
-      } else if (event.key === "ArrowRight") {
-        event.preventDefault();
-        step(1);
-      }
-    }
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [open, step]);
 
   return (
     <>
@@ -164,8 +131,12 @@ function GalleryPage() {
               <button
                 key={tile.key}
                 type="button"
-                onClick={() => setLightboxIndex(index)}
+                onClick={(event) => {
+                  triggerRef.current = event.currentTarget;
+                  setLightboxIndex(index);
+                }}
                 aria-label={`${t("View photo")} ${index + 1} ${t("of")} ${tiles.length}`}
+                aria-haspopup="dialog"
                 className="group overflow-hidden rounded-xl border border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
               >
                 <SmartImage
@@ -191,73 +162,18 @@ function GalleryPage() {
         </div>
       </section>
 
-      <Dialog open={open} onOpenChange={(next) => !next && setLightboxIndex(null)}>
-        <DialogContent className="max-h-[92dvh] gap-3 overflow-y-auto sm:max-w-3xl">
-          <DialogHeader>
-            <DialogTitle className="text-left text-base">
-              {currentTile?.caption ?? active?.title ?? t("Gallery")}
-            </DialogTitle>
-            <DialogDescription className="text-left">
-              {`${(lightboxIndex ?? 0) + 1} ${t("of")} ${tiles.length}`}
-            </DialogDescription>
-          </DialogHeader>
-
-          <div className="relative">
-            {currentTile ? (
-              <SmartImage
-                src={currentTile.src}
-                alt={currentTile.caption ?? active?.title ?? t("Community photo")}
-                loading="eager"
-                wrapperClassName="max-h-[60dvh] w-full rounded-xl border border-border"
-                className="max-h-[60dvh] w-full object-contain"
-              />
-            ) : null}
-            {tiles.length > 1 ? (
-              <>
-                <Button
-                  variant="soft"
-                  size="icon"
-                  aria-label={t("Previous photo")}
-                  onClick={() => step(-1)}
-                  className="absolute left-2 top-1/2 min-h-11 min-w-11 -translate-y-1/2 shadow-md"
-                >
-                  <ChevronLeft />
-                </Button>
-                <Button
-                  variant="soft"
-                  size="icon"
-                  aria-label={t("Next photo")}
-                  onClick={() => step(1)}
-                  className="absolute right-2 top-1/2 min-h-11 min-w-11 -translate-y-1/2 shadow-md"
-                >
-                  <ChevronRight />
-                </Button>
-              </>
-            ) : null}
-          </div>
-
-          {tiles.length > 1 ? (
-            <div className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-1">
-              {tiles.map((tile, index) => (
-                <button
-                  key={`thumb-${tile.key}`}
-                  type="button"
-                  onClick={() => setLightboxIndex(index)}
-                  aria-label={`${t("View photo")} ${index + 1}`}
-                  aria-current={index === lightboxIndex}
-                  className={`shrink-0 overflow-hidden rounded-lg border transition-opacity ${
-                    index === lightboxIndex
-                      ? "border-primary"
-                      : "border-border opacity-60 hover:opacity-100"
-                  }`}
-                >
-                  <img src={tile.src} alt="" className="h-14 w-20 object-cover" />
-                </button>
-              ))}
-            </div>
-          ) : null}
-        </DialogContent>
-      </Dialog>
+      <Lightbox
+        tiles={tiles}
+        index={lightboxIndex}
+        onIndexChange={setLightboxIndex}
+        onClose={() => {
+          setLightboxIndex(null);
+          // Radix restores focus to the last focused element; make it explicit
+          // so the originating thumbnail is always the one focused.
+          window.setTimeout(() => triggerRef.current?.focus(), 0);
+        }}
+        fallbackTitle={active?.title ?? t("Community photo")}
+      />
     </>
   );
 }
