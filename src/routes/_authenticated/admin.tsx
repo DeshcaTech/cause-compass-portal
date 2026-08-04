@@ -10,6 +10,7 @@ import { NewsNotifier } from "@/components/admin/NewsNotifier";
 import { RsvpManager } from "@/components/admin/RsvpManager";
 import { JobApplicationsManager } from "@/components/admin/JobApplicationsManager";
 import { SubscriberList } from "@/components/admin/SubscriberList";
+import { BrandSettings } from "@/components/admin/BrandSettings";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -134,6 +135,7 @@ function AdminPage() {
             {isAdmin && <TabsTrigger value="partners">Partners</TabsTrigger>}
             {isAdmin && <TabsTrigger value="jobs">Jobs</TabsTrigger>}
             {isAdmin && <TabsTrigger value="job-applications">Applications</TabsTrigger>}
+            {isAdmin && <TabsTrigger value="brand">Brand</TabsTrigger>}
             {can("fundraising") && <TabsTrigger value="campaigns">Campaigns</TabsTrigger>}
             {can("fundraising") && <TabsTrigger value="reports">Reports</TabsTrigger>}
             {can("board") && <TabsTrigger value="board">Board</TabsTrigger>}
