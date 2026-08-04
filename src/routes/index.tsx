@@ -120,13 +120,13 @@ function Index() {
         <div className="container-page grid items-center gap-10 py-14 sm:py-16 lg:grid-cols-[1.05fr_0.95fr] lg:py-24">
           <div className="min-w-0">
             <div className="flex items-center justify-between gap-3 sm:gap-4">
+              <p className="eyebrow min-w-0 text-right text-gold">
+                {t("Cameroonian Community in Greater Manchester and Surrounding area")}
+              </p>
               <span className="inline-flex shrink-0 items-center gap-1.5">
                 <CameroonFlag className="h-8 w-auto sm:h-10" />
                 <UkFlag className="h-8 w-auto sm:h-10" />
               </span>
-              <p className="eyebrow min-w-0 text-right text-gold">
-                {t("Cameroonian Community in Greater Manchester and Surrounding area")}
-              </p>
             </div>
             <h1 className="mt-6 text-[2.15rem] leading-[1.02] sm:mt-7 sm:text-[2.6rem] sm:leading-[0.98] lg:text-[4.2rem]">
               {t("Stronger together,")}
