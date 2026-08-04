@@ -58,12 +58,21 @@ export function Header() {
   const [open, setOpen] = useState(false);
   const [openGroup, setOpenGroup] = useState<string | null>(null);
   const t = useT();
+  const { data: brand } = useQuery(brandQuery);
+  const showLogo = brand?.show_logo_header ?? true;
+  const customLogo = brand?.logo_url ?? null;
 
   return (
     <header className="sticky top-0 z-50 border-b border-border/70 bg-background/85 backdrop-blur-md">
       <div className="container-page flex h-18 items-center justify-between gap-4 py-3">
         <Link to="/" className="flex items-center gap-3">
-          <Picture avif={logoAvif} webp={logoWebp} src={logo} alt="CCGMs logo" width={44} height={44} className="h-11 w-11" fetchPriority="high" decoding="async" />
+          {showLogo ? (
+            customLogo ? (
+              <img src={customLogo} alt="CCGMs logo" width={44} height={44} className="h-11 w-11 rounded-full object-contain" decoding="async" />
+            ) : (
+              <Picture avif={logoAvif} webp={logoWebp} src={logo} alt="CCGMs logo" width={44} height={44} className="h-11 w-11" fetchPriority="high" decoding="async" />
+            )
+          ) : null}
           <span className="leading-tight">
             <span className="block font-display text-lg font-semibold text-primary">CCGMs</span>
             <span className="block text-[11px] text-muted-foreground">
