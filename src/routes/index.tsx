@@ -88,10 +88,10 @@ function Index() {
 
   const upcoming = useMemo(() => {
     const now = Date.now();
-    return events.filter((e) => new Date(e.start_at).getTime() >= now).slice(0, 3);
+    return events.filter((e) => new Date(e.start_at).getTime() >= now).slice(0, 4);
   }, [events]);
   const activeCampaigns = useMemo(
-    () => campaigns.filter((c) => c.status === "active").slice(0, 3),
+    () => campaigns.filter((c) => c.status === "active"),
     [campaigns],
   );
   const latestNews = useMemo(() => announcements.slice(0, 3), [announcements]);
