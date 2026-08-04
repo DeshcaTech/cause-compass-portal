@@ -84,13 +84,73 @@ function AboutPage() {
         </div>
       </section>
 
+      <section className="container-page py-16">
+        <div className="grid gap-6 md:grid-cols-3">
+          <Card className="h-full border-border/70">
+            <CardContent className="p-7">
+              <span className="inline-flex size-11 items-center justify-center rounded-2xl bg-accent text-accent-foreground">
+                <Target className="size-5" />
+              </span>
+              <h2 className="mt-5 text-2xl">Our Mission</h2>
+              <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                To unite and uplift our community by bringing families together across
+                generations — celebrating our culture, supporting one another through hardship, and
+                building a future where every member feels valued, connected and never alone.
+              </p>
+            </CardContent>
+          </Card>
+          <Card className="h-full border-border/70">
+            <CardContent className="p-7">
+              <span className="inline-flex size-11 items-center justify-center rounded-2xl bg-accent text-accent-foreground">
+                <Eye className="size-5" />
+              </span>
+              <h2 className="mt-5 text-2xl">Our Vision</h2>
+              <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                A thriving, self-reliant community where heritage is preserved, businesses flourish,
+                and every family — parents, students and elders alike — can grow, give back and find
+                support, generation after generation.
+              </p>
+            </CardContent>
+          </Card>
+          <Card className="h-full border-border/70">
+            <CardContent className="p-7">
+              <span className="inline-flex size-11 items-center justify-center rounded-2xl bg-accent text-accent-foreground">
+                <Sparkles className="size-5" />
+              </span>
+              <h2 className="mt-5 text-2xl">Our Promise</h2>
+              <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                To lead with integrity and compassion, organising events, campaigns and support
+                networks that reflect the values our community holds dear — and to always be there
+                when one of our own needs a hand.
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+      </section>
+
       <section className="surface-panel border-y border-border py-16">
         <div className="container-page">
-          <div className="flex flex-wrap items-end justify-between gap-4">
-            <div>
-              <p className="eyebrow text-terracotta">Leadership</p>
-              <h2 className="mt-2 text-3xl md:text-4xl">The board team</h2>
-            </div>
+          <p className="eyebrow text-terracotta">What guides us</p>
+          <h2 className="mt-2 text-3xl md:text-4xl">Our core values</h2>
+          <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {coreValues.map((value) => (
+              <Card key={value.title} className="h-full border-border/70">
+                <CardContent className="p-6">
+                  <p className="font-display text-lg text-primary">{value.title}</p>
+                  <p className="mt-2 text-sm text-muted-foreground">{value.body}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="container-page py-16">
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <p className="eyebrow text-terracotta">Leadership</p>
+            <h2 className="mt-2 text-3xl md:text-4xl">The board team</h2>
+          </div>
             <Button asChild variant="hero">
               <Link to="/board">Meet the full board</Link>
             </Button>
