@@ -138,10 +138,10 @@ function Index() {
             <p className="mt-5 max-w-xl text-[0.95rem] text-primary-foreground/80 sm:text-base md:text-lg">
               {t("CCGMs is built on family, culture and mutual support. Join us, give to a cause, and be part of everything we build together.")}
             </p>
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+            <div className="mt-8 flex flex-row gap-3 sm:flex-wrap">
               <Button asChild variant="gold" size="xl">
                 <Link to="/membership">
-                  {t("Join the Community")} <ArrowRight />
+                  {t("Join")} <ArrowRight />
                 </Link>
               </Button>
               <Button asChild variant="onHero" size="xl">
