@@ -62,6 +62,20 @@ export type SurveyQuestion = {
   options?: string[];
 };
 
+export type VillageGroup = {
+  id: string;
+  name: string;
+  region: string;
+  short_description: string | null;
+  description: string | null;
+  image_url: string | null;
+  meeting_info: string | null;
+  contact_name: string | null;
+  contact_phone: string | null;
+  contact_email: string | null;
+  sort_order: number;
+};
+
 export type Survey = {
   id: string;
   title: string;
@@ -167,6 +181,20 @@ export const partnersQuery = queryOptions({
   queryFn: async () =>
     unwrap<Partner[]>(
       await supabase.from("partners").select(PARTNER_PUBLIC_COLUMNS).order("business_name"),
+    ),
+});
+
+export const villageGroupsQuery = queryOptions({
+  queryKey: ["village_groups"],
+  queryFn: async () =>
+    unwrap<VillageGroup[]>(
+      await supabase
+        .from("village_groups")
+        .select(
+          "id, name, region, short_description, description, image_url, meeting_info, contact_name, contact_phone, contact_email, sort_order",
+        )
+        .eq("is_published", true)
+        .order("sort_order"),
     ),
 });
 

@@ -26,6 +26,7 @@ import { Route as MembershipRouteImport } from './routes/membership'
 import { Route as PartnersRouteImport } from './routes/partners'
 import { Route as ReferRouteImport } from './routes/refer'
 import { Route as SurveysRouteImport } from './routes/surveys'
+import { Route as VillageGroupsRouteImport } from './routes/village-groups'
 import { Route as VolunteerRouteImport } from './routes/volunteer'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as NewsIndexRouteImport } from './routes/news.index'
@@ -120,6 +121,11 @@ const SurveysRoute = SurveysRouteImport.update({
   path: '/surveys',
   getParentRoute: () => rootRouteImport,
 } as any)
+const VillageGroupsRoute = VillageGroupsRouteImport.update({
+  id: '/village-groups',
+  path: '/village-groups',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const VolunteerRoute = VolunteerRouteImport.update({
   id: '/volunteer',
   path: '/volunteer',
@@ -185,6 +191,7 @@ export interface FileRoutesByFullPath {
   '/partners': typeof PartnersRoute
   '/refer': typeof ReferRoute
   '/surveys': typeof SurveysRoute
+  '/village-groups': typeof VillageGroupsRoute
   '/volunteer': typeof VolunteerRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/news/$id': typeof NewsIdRoute
@@ -212,6 +219,7 @@ export interface FileRoutesByTo {
   '/partners': typeof PartnersRoute
   '/refer': typeof ReferRoute
   '/surveys': typeof SurveysRoute
+  '/village-groups': typeof VillageGroupsRoute
   '/volunteer': typeof VolunteerRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/news/$id': typeof NewsIdRoute
@@ -241,6 +249,7 @@ export interface FileRoutesById {
   '/partners': typeof PartnersRoute
   '/refer': typeof ReferRoute
   '/surveys': typeof SurveysRoute
+  '/village-groups': typeof VillageGroupsRoute
   '/volunteer': typeof VolunteerRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/news/$id': typeof NewsIdRoute
@@ -270,6 +279,7 @@ export interface FileRouteTypes {
     | '/partners'
     | '/refer'
     | '/surveys'
+    | '/village-groups'
     | '/volunteer'
     | '/admin'
     | '/news/$id'
@@ -297,6 +307,7 @@ export interface FileRouteTypes {
     | '/partners'
     | '/refer'
     | '/surveys'
+    | '/village-groups'
     | '/volunteer'
     | '/admin'
     | '/news/$id'
@@ -325,6 +336,7 @@ export interface FileRouteTypes {
     | '/partners'
     | '/refer'
     | '/surveys'
+    | '/village-groups'
     | '/volunteer'
     | '/_authenticated/admin'
     | '/news/$id'
@@ -354,6 +366,7 @@ export interface RootRouteChildren {
   PartnersRoute: typeof PartnersRoute
   ReferRoute: typeof ReferRoute
   SurveysRoute: typeof SurveysRoute
+  VillageGroupsRoute: typeof VillageGroupsRoute
   VolunteerRoute: typeof VolunteerRoute
   NewsIdRoute: typeof NewsIdRoute
   NewsUnsubscribeRoute: typeof NewsUnsubscribeRoute
@@ -485,6 +498,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SurveysRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/village-groups': {
+      id: '/village-groups'
+      path: '/village-groups'
+      fullPath: '/village-groups'
+      preLoaderRoute: typeof VillageGroupsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/volunteer': {
       id: '/volunteer'
       path: '/volunteer'
@@ -580,6 +600,7 @@ const rootRouteChildren: RootRouteChildren = {
   PartnersRoute: PartnersRoute,
   ReferRoute: ReferRoute,
   SurveysRoute: SurveysRoute,
+  VillageGroupsRoute: VillageGroupsRoute,
   VolunteerRoute: VolunteerRoute,
   NewsIdRoute: NewsIdRoute,
   NewsUnsubscribeRoute: NewsUnsubscribeRoute,
