@@ -100,7 +100,9 @@ function AdminPage() {
       ? "board"
       : can("president")
         ? "president"
-        : "campaigns";
+        : can("fundraising")
+          ? "campaigns"
+          : "rsvps";
 
   return (
     <>
