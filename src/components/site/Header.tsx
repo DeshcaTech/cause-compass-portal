@@ -9,7 +9,7 @@ import logoWebp from "@/assets/ccgms-wordmark.png?w=640&quality=80&format=webp";
 import { Picture } from "@/components/site/Picture";
 import { LanguageSwitcher } from "@/components/site/LanguageSwitcher";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { useT } from "@/lib/i18n";
 import { brandQuery } from "@/lib/brand";
 
