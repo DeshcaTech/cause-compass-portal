@@ -30,6 +30,7 @@ import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/
 import { Route as NewsIndexRouteImport } from './routes/news.index'
 import { Route as NewsIdRouteImport } from './routes/news.$id'
 import { Route as NewsUnsubscribeRouteImport } from './routes/news.unsubscribe'
+import { Route as RsvpReportEventIdRouteImport } from './routes/rsvp-report.$eventId'
 import { Route as RsvpTokenRouteImport } from './routes/rsvp.$token'
 import { Route as ApiPublicHooksDailyRsvpDigestRouteImport } from './routes/api/public/hooks/daily-rsvp-digest'
 import { Route as LovableEmailTransactionalPreviewRouteImport } from './routes/lovable/email/transactional/preview'
@@ -138,6 +139,11 @@ const NewsUnsubscribeRoute = NewsUnsubscribeRouteImport.update({
   path: '/news/unsubscribe',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RsvpReportEventIdRoute = RsvpReportEventIdRouteImport.update({
+  id: '/rsvp-report/$eventId',
+  path: '/rsvp-report/$eventId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RsvpTokenRoute = RsvpTokenRouteImport.update({
   id: '/rsvp/$token',
   path: '/rsvp/$token',
@@ -176,6 +182,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AuthenticatedAdminRoute
   '/news/$id': typeof NewsIdRoute
   '/news/unsubscribe': typeof NewsUnsubscribeRoute
+  '/rsvp-report/$eventId': typeof RsvpReportEventIdRoute
   '/rsvp/$token': typeof RsvpTokenRoute
   '/news/': typeof NewsIndexRoute
   '/api/public/hooks/daily-rsvp-digest': typeof ApiPublicHooksDailyRsvpDigestRoute
@@ -201,6 +208,7 @@ export interface FileRoutesByTo {
   '/admin': typeof AuthenticatedAdminRoute
   '/news/$id': typeof NewsIdRoute
   '/news/unsubscribe': typeof NewsUnsubscribeRoute
+  '/rsvp-report/$eventId': typeof RsvpReportEventIdRoute
   '/rsvp/$token': typeof RsvpTokenRoute
   '/news': typeof NewsIndexRoute
   '/api/public/hooks/daily-rsvp-digest': typeof ApiPublicHooksDailyRsvpDigestRoute
@@ -228,6 +236,7 @@ export interface FileRoutesById {
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/news/$id': typeof NewsIdRoute
   '/news/unsubscribe': typeof NewsUnsubscribeRoute
+  '/rsvp-report/$eventId': typeof RsvpReportEventIdRoute
   '/rsvp/$token': typeof RsvpTokenRoute
   '/news/': typeof NewsIndexRoute
   '/api/public/hooks/daily-rsvp-digest': typeof ApiPublicHooksDailyRsvpDigestRoute
@@ -255,6 +264,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/news/$id'
     | '/news/unsubscribe'
+    | '/rsvp-report/$eventId'
     | '/rsvp/$token'
     | '/news/'
     | '/api/public/hooks/daily-rsvp-digest'
@@ -280,6 +290,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/news/$id'
     | '/news/unsubscribe'
+    | '/rsvp-report/$eventId'
     | '/rsvp/$token'
     | '/news'
     | '/api/public/hooks/daily-rsvp-digest'
@@ -306,6 +317,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin'
     | '/news/$id'
     | '/news/unsubscribe'
+    | '/rsvp-report/$eventId'
     | '/rsvp/$token'
     | '/news/'
     | '/api/public/hooks/daily-rsvp-digest'
@@ -332,6 +344,7 @@ export interface RootRouteChildren {
   VolunteerRoute: typeof VolunteerRoute
   NewsIdRoute: typeof NewsIdRoute
   NewsUnsubscribeRoute: typeof NewsUnsubscribeRoute
+  RsvpReportEventIdRoute: typeof RsvpReportEventIdRoute
   RsvpTokenRoute: typeof RsvpTokenRoute
   NewsIndexRoute: typeof NewsIndexRoute
   ApiPublicHooksDailyRsvpDigestRoute: typeof ApiPublicHooksDailyRsvpDigestRoute
@@ -487,6 +500,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof NewsUnsubscribeRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/rsvp-report/$eventId': {
+      id: '/rsvp-report/$eventId'
+      path: '/rsvp-report/$eventId'
+      fullPath: '/rsvp-report/$eventId'
+      preLoaderRoute: typeof RsvpReportEventIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/rsvp/$token': {
       id: '/rsvp/$token'
       path: '/rsvp/$token'
@@ -542,6 +562,7 @@ const rootRouteChildren: RootRouteChildren = {
   VolunteerRoute: VolunteerRoute,
   NewsIdRoute: NewsIdRoute,
   NewsUnsubscribeRoute: NewsUnsubscribeRoute,
+  RsvpReportEventIdRoute: RsvpReportEventIdRoute,
   RsvpTokenRoute: RsvpTokenRoute,
   NewsIndexRoute: NewsIndexRoute,
   ApiPublicHooksDailyRsvpDigestRoute: ApiPublicHooksDailyRsvpDigestRoute,

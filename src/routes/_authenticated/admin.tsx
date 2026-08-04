@@ -197,6 +197,16 @@ function AdminPage() {
                   ],
                 },
                 { name: "organiser", label: "Organiser" },
+                {
+                  name: "notify_email",
+                  label: "Event contact email",
+                  help: "Receives the daily RSVP status report for this event.",
+                },
+                {
+                  name: "notify_whatsapp",
+                  label: "Event contact WhatsApp",
+                  help: "Include the country code, e.g. +447700900123.",
+                },
                 { name: "image_url", label: "Event picture", type: "image", crop: { aspect: 16 / 9, outputWidth: 1600 } },
                 { name: "ticket_url", label: "Ticket link" },
               ]}
