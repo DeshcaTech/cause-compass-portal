@@ -95,7 +95,7 @@ export function Header() {
           {NAV.map((group) =>
             group.items ? (
               <div key={group.label} className="group relative">
-                <button className={`${linkClass} inline-flex items-center gap-1`} type="button">
+                <button className={`${linkClass} inline-flex items-center gap-1 font-bold`} type="button">
                   {t(group.label)}
                   <ChevronDown className="size-3.5" />
                 </button>
@@ -161,7 +161,7 @@ export function Header() {
                     onClick={() =>
                       setOpenGroup((g) => (g === group.label ? null : group.label))
                     }
-                    className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm font-medium"
+                    className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm font-bold"
                     aria-expanded={openGroup === group.label}
                   >
                     {t(group.label)}
