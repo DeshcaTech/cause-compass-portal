@@ -140,9 +140,7 @@ function Index() {
             </p>
             <div className="mt-8 flex flex-row gap-3 sm:flex-wrap">
               <Button asChild variant="gold" size="xl">
-                <Link to="/membership">
-                  {t("Join")} <ArrowRight />
-                </Link>
+                <Link to="/membership">{t("Join")}</Link>
               </Button>
               <Button asChild variant="onHero" size="xl">
                 <Link to="/fundraising">{t("Support Our Causes")}</Link>
