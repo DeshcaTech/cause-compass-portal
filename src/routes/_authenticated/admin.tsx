@@ -337,6 +337,16 @@ function AdminPage() {
                 { name: "contact_email", label: "Contact email" },
                 { name: "contact_phone", label: "Contact phone" },
                 {
+                  name: "notify_email",
+                  label: "Application email",
+                  help: "Receives the full application details when someone applies. Falls back to the contact email.",
+                },
+                {
+                  name: "notify_whatsapp",
+                  label: "Application WhatsApp number",
+                  help: "Include the country code, e.g. +447700900123. Applicants get a one-tap WhatsApp message with their details.",
+                },
+                {
                   name: "closes_at",
                   label: "Expiry date (advert hides from the Jobs board after this date, kept here in history)",
                   type: "date",
