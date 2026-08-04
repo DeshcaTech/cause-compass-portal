@@ -98,6 +98,12 @@ function EventCard({ event, onOpen }: { event: EventRow; onOpen: () => void }) {
   );
 }
 
+type EventsSearch = {
+  event?: string;
+  type?: "all" | "ccgms" | "other";
+  tab?: "coming" | "past" | "all" | "calendar";
+};
+
 function EventsPage() {
   const t = useT();
   const navigate = useNavigate({ from: "/events" });
@@ -111,16 +117,16 @@ function EventsPage() {
   const tab = search.tab ?? "coming";
 
   const setTypeFilter = (value: "all" | "ccgms" | "other") =>
-    navigate({ search: (prev) => ({ ...prev, type: value === "all" ? undefined : value }) });
+    navigate({ search: (prev: EventsSearch) => ({ ...prev, type: value === "all" ? undefined : value }) });
   const setTab = (value: string) =>
-    navigate({ search: (prev) => ({ ...prev, tab: value === "coming" ? undefined : (value as never) }) });
+    navigate({ search: (prev: EventsSearch) => ({ ...prev, tab: value === "coming" ? undefined : (value as never) }) });
 
   const selected = useMemo(
     () => events.find((e) => e.id === search.event) ?? null,
     [events, search.event],
   );
   const openEvent = (event: EventRow | null) =>
-    navigate({ search: (prev) => ({ ...prev, event: event?.id }) });
+    navigate({ search: (prev: EventsSearch) => ({ ...prev, event: event?.id }) });
 
   const now = new Date();
   const visible = useMemo(
@@ -215,7 +221,7 @@ function EventsPage() {
               <p className="text-sm text-muted-foreground">{t("No events match these filters.")}</p>
             ) : null}
             {upcoming.map((event) => (
-              <EventCard key={event.id} event={event} onOpen={() => setSelected(event)} />
+              <EventCard key={event.id} event={event} onOpen={() => openEvent(event)} />
             ))}
           </TabsContent>
           <TabsContent value="past" className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -223,7 +229,7 @@ function EventsPage() {
               <p className="text-sm text-muted-foreground">{t("No events match these filters.")}</p>
             ) : null}
             {past.map((event) => (
-              <EventCard key={event.id} event={event} onOpen={() => setSelected(event)} />
+              <EventCard key={event.id} event={event} onOpen={() => openEvent(event)} />
             ))}
           </TabsContent>
           <TabsContent value="all" className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -231,7 +237,7 @@ function EventsPage() {
               <p className="text-sm text-muted-foreground">{t("No events match these filters.")}</p>
             ) : null}
             {visible.map((event) => (
-              <EventCard key={event.id} event={event} onOpen={() => setSelected(event)} />
+              <EventCard key={event.id} event={event} onOpen={() => openEvent(event)} />
             ))}
           </TabsContent>
 
@@ -317,7 +323,7 @@ function EventsPage() {
                           <li key={event.id}>
                             <button
                               type="button"
-                              onClick={() => setSelected(event)}
+                              onClick={() => openEvent(event)}
                               className="w-full rounded-lg border border-border/70 px-4 py-3 text-left text-sm hover:bg-secondary"
                             >
                               <span className="font-medium">{event.title}</span>
