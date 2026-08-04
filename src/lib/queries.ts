@@ -216,21 +216,6 @@ export const jobsQuery = queryOptions({
     ),
 });
 
-const surveysQueryLegacy = queryOptions({
-  queryKey: ["surveys"],
-  queryFn: async () => {
-    const { data, error } = await supabase
-      .from("surveys")
-      .select("*")
-      .order("created_at", { ascending: false });
-    if (error) throw new Error(error.message);
-    return (data ?? []).map((row) => ({
-      ...row,
-      questions: (row.questions ?? []) as unknown as SurveyQuestion[],
-    })) as Survey[];
-  },
-});
-
 export const galleriesQuery = queryOptions({
   queryKey: ["galleries"],
   queryFn: async () =>
