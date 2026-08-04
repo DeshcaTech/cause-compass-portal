@@ -20,9 +20,13 @@ export interface TemplateEntry {
 import { template as membershipConfirmation } from './membership-confirmation'
 import { template as volunteerConfirmation } from './volunteer-confirmation'
 import { template as newsAnnouncement } from './news-announcement'
+import { template as newsSubscribed } from './news-subscribed'
+import { template as newsUnsubscribed } from './news-unsubscribed'
 
 export const TEMPLATES: Record<string, TemplateEntry> = {
   'membership-confirmation': membershipConfirmation,
   'volunteer-confirmation': volunteerConfirmation,
   'news-announcement': newsAnnouncement,
+  'news-subscribed': newsSubscribed,
+  'news-unsubscribed': newsUnsubscribed,
 }
