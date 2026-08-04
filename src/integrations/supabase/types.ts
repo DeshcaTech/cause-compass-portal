@@ -20,7 +20,9 @@ export type Database = {
           created_at: string
           id: string
           image_url: string | null
+          is_featured: boolean
           is_published: boolean
+          notified_at: string | null
           published_at: string
           summary: string | null
           title: string
@@ -30,7 +32,9 @@ export type Database = {
           created_at?: string
           id?: string
           image_url?: string | null
+          is_featured?: boolean
           is_published?: boolean
+          notified_at?: string | null
           published_at?: string
           summary?: string | null
           title: string
@@ -40,7 +44,9 @@ export type Database = {
           created_at?: string
           id?: string
           image_url?: string | null
+          is_featured?: boolean
           is_published?: boolean
+          notified_at?: string | null
           published_at?: string
           summary?: string | null
           title?: string
@@ -528,6 +534,39 @@ export type Database = {
           status?: string
           updated_at?: string
           user_id?: string | null
+        }
+        Relationships: []
+      }
+      news_subscribers: {
+        Row: {
+          created_at: string
+          email: string
+          full_name: string | null
+          id: string
+          is_active: boolean
+          membership_number: string | null
+          unsubscribed_at: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          full_name?: string | null
+          id?: string
+          is_active?: boolean
+          membership_number?: string | null
+          unsubscribed_at?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          full_name?: string | null
+          id?: string
+          is_active?: boolean
+          membership_number?: string | null
+          unsubscribed_at?: string | null
+          updated_at?: string
         }
         Relationships: []
       }
