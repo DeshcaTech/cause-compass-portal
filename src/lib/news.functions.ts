@@ -8,11 +8,19 @@ const subscribeSchema = z.object({
   membership_number: z.string().trim().max(30).optional(),
 })
 
+const SITE_URL = 'https://cause-compass-portal.lovable.app'
+
+function baseUrl() {
+  return process.env['PUBLIC_SITE_URL'] || SITE_URL
+}
+
 export const subscribeToNews = createServerFn({ method: 'POST' })
   .inputValidator((input: unknown) => subscribeSchema.parse(input))
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import('@/integrations/supabase/client.server')
-    const { error } = await supabaseAdmin.from('news_subscribers').upsert(
+    const { data: row, error } = await supabaseAdmin
+      .from('news_subscribers')
+      .upsert(
       {
         email: data.email.toLowerCase(),
         full_name: data.full_name || null,
@@ -21,8 +29,26 @@ export const subscribeToNews = createServerFn({ method: 'POST' })
         unsubscribed_at: null,
       },
       { onConflict: 'email' },
-    )
+      )
+      .select('email, full_name, unsubscribe_token')
+      .maybeSingle()
     if (error) throw new Error(error.message)
+
+    if (row) {
+      try {
+        const { sendTemplateEmail } = await import('./email-templates/send-email')
+        await sendTemplateEmail('news-subscribed', row.email, {
+          templateData: {
+            recipientName: row.full_name ?? undefined,
+            newsUrl: `${baseUrl()}/news`,
+            unsubscribeUrl: `${baseUrl()}/news/unsubscribe?token=${row.unsubscribe_token}`,
+          },
+          idempotencyKey: `news-sub-${row.unsubscribe_token}`,
+        })
+      } catch (err) {
+        console.error('Subscribe confirmation email failed', err)
+      }
+    }
     return { ok: true }
   })
 
@@ -32,13 +58,35 @@ export const unsubscribeFromNews = createServerFn({ method: 'POST' })
   .inputValidator((input: unknown) => unsubscribeSchema.parse(input))
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import('@/integrations/supabase/client.server')
-    const { error } = await supabaseAdmin
+    const { data: row, error } = await supabaseAdmin
       .from('news_subscribers')
       .update({ is_active: false, unsubscribed_at: new Date().toISOString() })
       .eq('email', data.email.toLowerCase())
+      .select('email, full_name, unsubscribe_token')
+      .maybeSingle()
     if (error) throw new Error(error.message)
+    if (row) await sendUnsubscribeConfirmation(row)
     return { ok: true }
   })
+
+async function sendUnsubscribeConfirmation(row: {
+  email: string
+  full_name: string | null
+  unsubscribe_token: string
+}) {
+  try {
+    const { sendTemplateEmail } = await import('./email-templates/send-email')
+    await sendTemplateEmail('news-unsubscribed', row.email, {
+      templateData: {
+        recipientName: row.full_name ?? undefined,
+        resubscribeUrl: `${baseUrl()}/news/unsubscribe?token=${row.unsubscribe_token}&action=resubscribe`,
+      },
+      idempotencyKey: `news-unsub-${row.unsubscribe_token}-${Date.now()}`,
+    })
+  } catch (err) {
+    console.error('Unsubscribe confirmation email failed', err)
+  }
+}
 
 export const unsubscribeByToken = createServerFn({ method: 'POST' })
   .inputValidator((input: unknown) => z.object({ token: z.string().uuid() }).parse(input))
@@ -48,11 +96,57 @@ export const unsubscribeByToken = createServerFn({ method: 'POST' })
       .from('news_subscribers')
       .update({ is_active: false, unsubscribed_at: new Date().toISOString() })
       .eq('unsubscribe_token', data.token)
-      .select('email')
+      .select('email, full_name, unsubscribe_token')
       .maybeSingle()
     if (error) throw new Error(error.message)
     if (!row) return { ok: false as const, email: null }
+    await sendUnsubscribeConfirmation(row)
     return { ok: true as const, email: row.email as string }
+  })
+
+export const resubscribeByToken = createServerFn({ method: 'POST' })
+  .inputValidator((input: unknown) => z.object({ token: z.string().uuid() }).parse(input))
+  .handler(async ({ data }) => {
+    const { supabaseAdmin } = await import('@/integrations/supabase/client.server')
+    const { data: row, error } = await supabaseAdmin
+      .from('news_subscribers')
+      .update({ is_active: true, unsubscribed_at: null })
+      .eq('unsubscribe_token', data.token)
+      .select('email, full_name, unsubscribe_token')
+      .maybeSingle()
+    if (error) throw new Error(error.message)
+    if (!row) return { ok: false as const, email: null }
+    try {
+      const { sendTemplateEmail } = await import('./email-templates/send-email')
+      await sendTemplateEmail('news-subscribed', row.email, {
+        templateData: {
+          recipientName: row.full_name ?? undefined,
+          newsUrl: `${baseUrl()}/news`,
+          unsubscribeUrl: `${baseUrl()}/news/unsubscribe?token=${row.unsubscribe_token}`,
+        },
+        idempotencyKey: `news-resub-${row.unsubscribe_token}-${Date.now()}`,
+      })
+    } catch (err) {
+      console.error('Resubscribe confirmation email failed', err)
+    }
+    return { ok: true as const, email: row.email as string }
+  })
+
+export const listNewsSubscribers = createServerFn({ method: 'POST' })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { data: isAdmin } = await context.supabase.rpc('has_role', {
+      _user_id: context.userId,
+      _role: 'admin',
+    })
+    if (!isAdmin) throw new Error('Forbidden')
+    const { supabaseAdmin } = await import('@/integrations/supabase/client.server')
+    const { data, error } = await supabaseAdmin
+      .from('news_subscribers')
+      .select('id, email, full_name, membership_number, is_active, created_at, unsubscribed_at')
+      .order('created_at', { ascending: false })
+    if (error) throw new Error(error.message)
+    return data ?? []
   })
 
 export const notifySubscribers = createServerFn({ method: 'POST' })
