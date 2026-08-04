@@ -126,9 +126,9 @@ const NewsIndexRoute = NewsIndexRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const NewsIdRoute = NewsIdRouteImport.update({
-  id: '/news/$id',
-  path: '/news/$id',
-  getParentRoute: () => rootRouteImport,
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => NewsRoute,
 } as any)
 const LovableEmailTransactionalPreviewRoute =
   LovableEmailTransactionalPreviewRouteImport.update({
@@ -293,7 +293,6 @@ export interface RootRouteChildren {
   ReferRoute: typeof ReferRoute
   SurveysRoute: typeof SurveysRoute
   VolunteerRoute: typeof VolunteerRoute
-  NewsIdRoute: typeof NewsIdRoute
   NewsIndexRoute: typeof NewsIndexRoute
   LovableEmailTransactionalPreviewRoute: typeof LovableEmailTransactionalPreviewRoute
 }
@@ -435,10 +434,10 @@ declare module '@tanstack/react-router' {
     }
     '/news/$id': {
       id: '/news/$id'
-      path: '/news/$id'
+      path: '/$id'
       fullPath: '/news/$id'
       preLoaderRoute: typeof NewsIdRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof NewsRoute
     }
     '/lovable/email/transactional/preview': {
       id: '/lovable/email/transactional/preview'
@@ -479,10 +478,19 @@ const rootRouteChildren: RootRouteChildren = {
   ReferRoute: ReferRoute,
   SurveysRoute: SurveysRoute,
   VolunteerRoute: VolunteerRoute,
-  NewsIdRoute: NewsIdRoute,
   NewsIndexRoute: NewsIndexRoute,
   LovableEmailTransactionalPreviewRoute: LovableEmailTransactionalPreviewRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
