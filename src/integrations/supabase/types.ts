@@ -145,6 +145,51 @@ export type Database = {
         }
         Relationships: []
       }
+      brand_settings: {
+        Row: {
+          accent_color: string
+          body_font: string
+          created_at: string
+          heading_font: string
+          id: number
+          logo_url: string | null
+          og_image_url: string | null
+          primary_color: string
+          show_logo_footer: boolean
+          show_logo_header: boolean
+          updated_at: string
+          use_logo_favicon: boolean
+        }
+        Insert: {
+          accent_color?: string
+          body_font?: string
+          created_at?: string
+          heading_font?: string
+          id?: number
+          logo_url?: string | null
+          og_image_url?: string | null
+          primary_color?: string
+          show_logo_footer?: boolean
+          show_logo_header?: boolean
+          updated_at?: string
+          use_logo_favicon?: boolean
+        }
+        Update: {
+          accent_color?: string
+          body_font?: string
+          created_at?: string
+          heading_font?: string
+          id?: number
+          logo_url?: string | null
+          og_image_url?: string | null
+          primary_color?: string
+          show_logo_footer?: boolean
+          show_logo_header?: boolean
+          updated_at?: string
+          use_logo_favicon?: boolean
+        }
+        Relationships: []
+      }
       campaigns: {
         Row: {
           created_at: string
