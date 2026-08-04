@@ -302,8 +302,55 @@ export function RsvpManager() {
         </CardContent>
       </Card>
 
+      <Card className="border-border/70">
+        <CardContent className="space-y-4 p-6">
+          <div className="flex items-center justify-between gap-4">
+            <div>
+              <p className="font-medium">PDF cover sheet</p>
+              <p className="text-sm text-muted-foreground">
+                Add a title page with the event manager, organisation and a custom note.
+              </p>
+            </div>
+            <Switch
+              checked={coverSheet}
+              onCheckedChange={setCoverSheet}
+              aria-label="Include cover sheet in PDF export"
+            />
+          </div>
+          {coverSheet ? (
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div className="space-y-1.5">
+                <Label htmlFor="cover-manager">Event manager name</Label>
+                <Input
+                  id="cover-manager"
+                  value={managerName}
+                  onChange={(e) => setManagerName(e.target.value)}
+                  placeholder="e.g. Marie Nkemba"
+                />
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="cover-org">Organisation</Label>
+                <Input
+                  id="cover-org"
+                  value={organisation}
+                  onChange={(e) => setOrganisation(e.target.value)}
+                />
+              </div>
+              <div className="space-y-1.5 sm:col-span-2">
+                <Label htmlFor="cover-note">Custom note</Label>
+                <Textarea
+                  id="cover-note"
+                  value={coverNote}
+                  onChange={(e) => setCoverNote(e.target.value)}
+                  placeholder="Context for the people receiving this report"
+                />
+              </div>
+            </div>
+          ) : null}
+        </CardContent>
+      </Card>
+
       <div className="grid gap-4 sm:grid-cols-4">
-        {null}
         {[
           { label: "Responses", value: totals.responses },
           { label: "Going", value: totals.going },
