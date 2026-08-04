@@ -57,12 +57,12 @@ export function Footer() {
   const customLogo = brand?.logo_url ?? null;
   return (
     <footer className="mt-24 border-t border-border bg-primary text-primary-foreground">
-      <div className="container-page grid gap-10 py-14 md:grid-cols-2 lg:grid-cols-5">
+      <div className="container-page grid gap-8 py-12 sm:gap-10 md:grid-cols-2 lg:grid-cols-6">
         <div className="lg:col-span-2">
-          <div className="flex flex-wrap items-center gap-3">
+          <div className="flex flex-wrap items-center justify-between gap-4">
             {showLogo ? (
               customLogo ? (
-                <img src={customLogo} alt="" className="h-12 w-auto max-w-[16rem] object-contain" loading="lazy" decoding="async" />
+                <img src={customLogo} alt="" className="h-12 w-auto max-w-[12rem] shrink-0 object-contain sm:max-w-[16rem]" loading="lazy" decoding="async" />
               ) : (
                 <Picture
                   avif={logoAvif}
@@ -71,7 +71,7 @@ export function Footer() {
                   alt=""
                   width={640}
                   height={162}
-                  className="h-12 w-auto max-w-[16rem] rounded-md bg-background/95 px-2 py-1 object-contain"
+                  className="h-12 w-auto max-w-[12rem] shrink-0 rounded-md bg-background/95 px-2 py-1 object-contain sm:max-w-[16rem]"
                   loading="lazy"
                   decoding="async"
                 />
@@ -83,7 +83,7 @@ export function Footer() {
               alt="Cameroon and United Kingdom flags"
               loading="lazy"
               decoding="async"
-              className="ml-auto h-10 w-auto rounded-md object-cover"
+              className="ml-auto h-10 w-auto max-w-[5rem] shrink-0 rounded-md object-cover sm:max-w-[6rem]"
             />
           </div>
           <p className="mt-4 max-w-sm text-sm text-primary-foreground/75">
