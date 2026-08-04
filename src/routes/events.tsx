@@ -128,6 +128,15 @@ function EventsPage() {
   const openEvent = (event: EventRow | null) =>
     navigate({ search: (prev: EventsSearch) => ({ ...prev, event: event?.id }) });
 
+  // Shared link keeps the open event plus the current type filter and tab.
+  const shareUrl = useMemo(() => {
+    if (typeof window === "undefined" || !selected) return undefined;
+    const params = new URLSearchParams({ event: selected.id });
+    if (typeFilter !== "all") params.set("type", typeFilter);
+    if (tab !== "coming") params.set("tab", tab);
+    return `${window.location.origin}/events?${params.toString()}`;
+  }, [selected, typeFilter, tab]);
+
   const now = new Date();
   const visible = useMemo(
     () => (typeFilter === "all" ? events : events.filter((e) => e.event_type === typeFilter)),
