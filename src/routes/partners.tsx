@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { Globe, Mail, MapPin, Phone, Store } from "lucide-react";
+import { Globe, Mail, MapPin, Phone } from "lucide-react";
 
 import { PageHeader } from "@/components/site/PageHeader";
 import { Badge } from "@/components/ui/badge";
@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { partnersQuery, type Partner } from "@/lib/queries";
+import businessFallback from "@/assets/business-fallback.jpg";
 
 export const Route = createFileRoute("/partners")({
   head: () => ({

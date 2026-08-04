@@ -59,13 +59,11 @@ function NewsDetailPage() {
           {item.summary && (
             <p className="mt-4 text-lg text-muted-foreground">{item.summary}</p>
           )}
-          {item.image_url && (
-            <img
-              src={item.image_url}
-              alt={item.title}
-              className="mt-8 aspect-[16/9] w-full rounded-xl object-cover"
-            />
-          )}
+          <img
+            src={item.image_url ?? newsFallback}
+            alt={item.title}
+            className="mt-8 aspect-[16/9] w-full rounded-xl object-cover"
+          />
           {item.body && (
             <div className="mt-8 whitespace-pre-line text-base leading-relaxed text-foreground/85">
               {item.body}
