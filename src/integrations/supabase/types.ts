@@ -14,6 +14,39 @@ export type Database = {
   }
   public: {
     Tables: {
+      announcements: {
+        Row: {
+          body: string | null
+          created_at: string
+          id: string
+          image_url: string | null
+          is_published: boolean
+          published_at: string
+          summary: string | null
+          title: string
+        }
+        Insert: {
+          body?: string | null
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          is_published?: boolean
+          published_at?: string
+          summary?: string | null
+          title: string
+        }
+        Update: {
+          body?: string | null
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          is_published?: boolean
+          published_at?: string
+          summary?: string | null
+          title?: string
+        }
+        Relationships: []
+      }
       asset_requests: {
         Row: {
           asset_id: string | null
@@ -785,6 +818,7 @@ export type Database = {
         Args: { _area: string; _user_id: string }
         Returns: boolean
       }
+      get_home_stats: { Args: never; Returns: Json }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
