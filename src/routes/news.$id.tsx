@@ -4,6 +4,7 @@ import { ArrowLeft } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { announcementQuery } from "@/lib/queries";
+import newsFallback from "@/assets/news-fallback.jpg";
 
 export const Route = createFileRoute("/news/$id")({
   head: () => ({
