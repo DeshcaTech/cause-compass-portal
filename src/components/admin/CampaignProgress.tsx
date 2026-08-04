@@ -91,13 +91,24 @@ export function analyseCampaigns(rows: CampaignProgressRow[]): CampaignSignal[] 
 export function CampaignProgress({
   rows,
   donationsByCampaign = {},
+  openCampaignId,
+  onOpenCampaignChange,
 }: {
   rows: CampaignProgressRow[];
   donationsByCampaign?: Record<string, DrilldownDonation[]>;
+  /** Controlled campaign id for the drilldown dialog (used by deep links). */
+  openCampaignId?: string | null;
+  onOpenCampaignChange?: (id: string | null) => void;
 }) {
   const signals = useMemo(() => analyseCampaigns(rows), [rows]);
   const notified = useRef(false);
-  const [openId, setOpenId] = useState<string | null>(null);
+  const [internalId, setInternalId] = useState<string | null>(null);
+  const controlled = openCampaignId !== undefined;
+  const openId = controlled ? (openCampaignId ?? null) : internalId;
+  const setOpenId = (id: string | null) => {
+    if (!controlled) setInternalId(id);
+    onOpenCampaignChange?.(id);
+  };
   const active = signals.find((s) => s.id === openId) ?? null;
 
   const reached = signals.filter((s) => s.pct >= 100);
@@ -204,7 +215,7 @@ export function CampaignProgress({
         </CardContent>
       </Card>
 
-      <Dialog open={openId !== null} onOpenChange={(open) => !open && setOpenId(null)}>
+      <Dialog open={active !== null} onOpenChange={(open) => !open && setOpenId(null)}>
         <DialogContent className="max-w-3xl">
           <DialogHeader>
             <DialogTitle>{active?.name ?? "Campaign"}</DialogTitle>

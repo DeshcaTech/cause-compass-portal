@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import {
   Bar,
@@ -56,6 +56,8 @@ function monthLabel(key: string) {
 }
 
 export function FundraisingReport() {
+  const [openCampaignId, setOpenCampaignId] = useState<string | null>(null);
+  const progressRef = useRef<HTMLDivElement>(null);
   const { data, isLoading, error } = useQuery({
     queryKey: ["fundraising-report"],
     queryFn: async () => {
@@ -208,12 +210,21 @@ export function FundraisingReport() {
         ))}
       </div>
 
-      <CampaignProgress
-        rows={report.campaignRows}
-        donationsByCampaign={report.donationsByCampaign}
-      />
+      <div ref={progressRef}>
+        <CampaignProgress
+          rows={report.campaignRows}
+          donationsByCampaign={report.donationsByCampaign}
+          openCampaignId={openCampaignId}
+          onOpenCampaignChange={setOpenCampaignId}
+        />
+      </div>
 
-      <NotificationCenter />
+      <NotificationCenter
+        onOpenCampaign={(id) => {
+          setOpenCampaignId(id);
+          progressRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+        }}
+      />
 
       <div className="grid gap-6 lg:grid-cols-2">
         <Card className="border-border/70">
