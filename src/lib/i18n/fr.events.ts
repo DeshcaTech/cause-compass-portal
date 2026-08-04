@@ -21,4 +21,12 @@ export const events: Record<string, string> = {
   "Ends": "Fin",
   "CCGMs event": "Événement CCGMs",
   "Other event": "Autre événement",
+  "Event details": "Détails de l'événement",
+  "View event details": "Voir les détails de l'événement",
+  "Date & time": "Date et heure",
+  "Location": "Lieu",
+  "Organiser": "Organisateur",
+  "Type": "Type",
+  "To be confirmed": "À confirmer",
+  "Community members celebrating together": "Des membres de la communauté célébrant ensemble",
 };
