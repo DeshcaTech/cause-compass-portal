@@ -4,10 +4,10 @@ import { useMemo, useState } from "react";
 import { ChevronLeft, ChevronRight, MapPin } from "lucide-react";
 
 import { PageHeader } from "@/components/site/PageHeader";
+import { SidebarNavItem, SidebarPage, SidebarSection } from "@/components/site/SidebarPage";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { eventsQuery, formatDate, type EventRow } from "@/lib/queries";
 import { EventDialog, eventFallbackImage } from "@/components/site/EventDialog";
 import { SmartImage } from "@/components/site/SmartImage";
@@ -150,6 +150,16 @@ function EventsPage() {
   const cursor = new Date(now.getFullYear(), now.getMonth() + monthOffset, 1);
   const monthLabel = cursor.toLocaleDateString("en-GB", { month: "long", year: "numeric" });
 
+  const listForTab: EventRow[] = tab === "coming" ? upcoming : tab === "past" ? past : visible;
+  const tabLabel =
+    tab === "coming"
+      ? t("Coming events")
+      : tab === "past"
+        ? t("Past events")
+        : tab === "all"
+          ? t("All events")
+          : t("Calendar");
+
   const grid = useMemo(() => {
     const firstDay = new Date(cursor.getFullYear(), cursor.getMonth(), 1);
     const daysInMonth = new Date(cursor.getFullYear(), cursor.getMonth() + 1, 0).getDate();
@@ -191,68 +201,65 @@ function EventsPage() {
         description={t("CCGMs events and other community events — browse the lists or use the monthly calendar.")}
       />
 
-      <section className="container-page py-14">
-        <div className="mb-6 flex flex-wrap items-center gap-2">
-          <span className="text-xs uppercase tracking-wider text-muted-foreground">
-            {t("Filter by type")}
-          </span>
-          {(["all", "ccgms", "other"] as const).map((value) => (
-            <button
-              key={value}
-              type="button"
-              onClick={() => setTypeFilter(value)}
-              aria-pressed={typeFilter === value}
-              className={`min-h-9 rounded-full border px-4 text-sm transition-colors ${
-                typeFilter === value
-                  ? "border-transparent bg-primary text-primary-foreground"
-                  : "border-border hover:bg-secondary"
-              }`}
-            >
-              {value === "all"
-                ? t("All types")
-                : value === "ccgms"
-                  ? t("CCGMs event")
-                  : t("Other event")}
-            </button>
-          ))}
-        </div>
-
-        <Tabs value={tab} onValueChange={setTab}>
-          <div className="-mx-4 overflow-x-auto px-4 sm:mx-0 sm:px-0">
-            <TabsList className="w-max min-w-full justify-start">
-              <TabsTrigger value="coming">{t("Coming events")}</TabsTrigger>
-              <TabsTrigger value="past">{t("Past events")}</TabsTrigger>
-              <TabsTrigger value="all">{t("All events")}</TabsTrigger>
-              <TabsTrigger value="calendar">{t("Calendar")}</TabsTrigger>
-            </TabsList>
-          </div>
-
-          <TabsContent value="coming" className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {upcoming.length === 0 ? (
-              <p className="text-sm text-muted-foreground">{t("No events match these filters.")}</p>
-            ) : null}
-            {upcoming.map((event) => (
-              <EventCard key={event.id} event={event} onOpen={() => openEvent(event)} />
-            ))}
-          </TabsContent>
-          <TabsContent value="past" className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {past.length === 0 ? (
-              <p className="text-sm text-muted-foreground">{t("No events match these filters.")}</p>
-            ) : null}
-            {past.map((event) => (
-              <EventCard key={event.id} event={event} onOpen={() => openEvent(event)} />
-            ))}
-          </TabsContent>
-          <TabsContent value="all" className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {visible.length === 0 ? (
-              <p className="text-sm text-muted-foreground">{t("No events match these filters.")}</p>
-            ) : null}
-            {visible.map((event) => (
-              <EventCard key={event.id} event={event} onOpen={() => openEvent(event)} />
-            ))}
-          </TabsContent>
-
-          <TabsContent value="calendar" className="mt-8">
+      <SidebarPage
+        banner={{
+          image: listForTab[0]?.image_url ?? eventFallbackImage(tab),
+          title: tabLabel,
+          description: t("CCGMs events and other community events — browse the lists or use the monthly calendar."),
+        }}
+        sidebar={(
+          <>
+            <SidebarSection label={t("Browse")}>
+              {(["coming", "past", "all", "calendar"] as const).map((value) => (
+                <SidebarNavItem
+                  key={value}
+                  image={
+                    (value === "coming" ? upcoming : value === "past" ? past : visible)[0]
+                      ?.image_url ?? eventFallbackImage(value)
+                  }
+                  title={
+                    value === "coming"
+                      ? t("Coming events")
+                      : value === "past"
+                        ? t("Past events")
+                        : value === "all"
+                          ? t("All events")
+                          : t("Calendar")
+                  }
+                  meta={
+                    value === "coming"
+                      ? `${upcoming.length}`
+                      : value === "past"
+                        ? `${past.length}`
+                        : value === "all"
+                          ? `${visible.length}`
+                          : monthLabel
+                  }
+                  active={tab === value}
+                  onClick={() => setTab(value)}
+                />
+              ))}
+            </SidebarSection>
+            <SidebarSection label={t("Filter by type")}>
+              {(["all", "ccgms", "other"] as const).map((value) => (
+                <SidebarNavItem
+                  key={value}
+                  title={
+                    value === "all"
+                      ? t("All types")
+                      : value === "ccgms"
+                        ? t("CCGMs event")
+                        : t("Other event")
+                  }
+                  active={typeFilter === value}
+                  onClick={() => setTypeFilter(value)}
+                />
+              ))}
+            </SidebarSection>
+          </>
+        )}
+      >
+        {tab === "calendar" ? (
             <Card className="border-border/70">
               <CardContent className="p-4 sm:p-6">
                 <div className="flex items-center justify-between">
@@ -383,9 +390,19 @@ function EventsPage() {
                 ) : null}
               </CardContent>
             </Card>
-          </TabsContent>
-        </Tabs>
-      </section>
+        ) : (
+          <>
+            {listForTab.length === 0 ? (
+              <p className="text-sm text-muted-foreground">{t("No events match these filters.")}</p>
+            ) : null}
+            <div className="grid gap-5 sm:grid-cols-2">
+              {listForTab.map((event) => (
+                <EventCard key={event.id} event={event} onOpen={() => openEvent(event)} />
+              ))}
+            </div>
+          </>
+        )}
+      </SidebarPage>
 
       <EventDialog
         event={selected}

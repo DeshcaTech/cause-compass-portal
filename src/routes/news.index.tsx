@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { Search, Star } from "lucide-react";
 
 import { PageHeader } from "@/components/site/PageHeader";
+import { SidebarNavItem, SidebarPage } from "@/components/site/SidebarPage";
 import newsFallback from "@/assets/news-fallback.jpg";
 import { NewsSubscribe } from "@/components/site/NewsSubscribe";
 import { Card, CardContent } from "@/components/ui/card";
@@ -71,7 +72,31 @@ function NewsPage() {
         title={t("News & announcements")}
         description={t("Updates, notices and community news from the CCGMs board.")}
       />
-      <section className="container-page pb-16 md:pb-20">
+      <SidebarPage
+        banner={{
+          image: filtered[0]?.image_url ?? newsFallback,
+          title: featuredOnly ? t("Featured") : t("All news"),
+          description: t("Updates, notices and community news from the CCGMs board."),
+        }}
+        sidebar={(
+          <>
+            <SidebarNavItem
+              image={news[0]?.image_url ?? newsFallback}
+              title={t("All news")}
+              meta={`${news.length}`}
+              active={!featuredOnly}
+              onClick={() => setFeaturedOnly(false)}
+            />
+            <SidebarNavItem
+              image={news.find((n) => n.is_featured)?.image_url ?? newsFallback}
+              title={t("Featured")}
+              meta={`${featuredCount}`}
+              active={featuredOnly}
+              onClick={() => setFeaturedOnly(true)}
+            />
+          </>
+        )}
+      >
         <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-center">
           <div className="relative flex-1">
             <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
@@ -83,15 +108,6 @@ function NewsPage() {
               className="pl-9"
             />
           </div>
-          <Button
-            type="button"
-            variant={featuredOnly ? "default" : "outline"}
-            onClick={() => setFeaturedOnly((value) => !value)}
-            aria-pressed={featuredOnly}
-          >
-            <Star className={featuredOnly ? "size-4 fill-current" : "size-4"} />
-            {t("Featured")}{featuredCount ? ` (${featuredCount})` : ""}
-          </Button>
         </div>
 
         {filtered.length === 0 ? (
@@ -101,7 +117,7 @@ function NewsPage() {
               : t("No news matches your search.")}
           </p>
         ) : (
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-6 md:grid-cols-2">
             {filtered.map((item) => (
               <Link key={item.id} to="/news/$id" params={{ id: item.id }} className="block">
                 <Card className="h-full overflow-hidden border-border/70 transition-shadow hover:shadow-lg">
@@ -139,7 +155,7 @@ function NewsPage() {
         <div className="mt-12">
           <NewsSubscribe />
         </div>
-      </section>
+      </SidebarPage>
     </div>
   );
 }

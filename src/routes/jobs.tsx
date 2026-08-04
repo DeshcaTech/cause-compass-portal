@@ -5,6 +5,7 @@ import { Banknote, Briefcase, CalendarClock, ExternalLink, Mail, MapPin, Phone }
 import { toast } from "sonner";
 
 import { PageHeader } from "@/components/site/PageHeader";
+import { SidebarNavItem, SidebarPage, SidebarSection } from "@/components/site/SidebarPage";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -93,6 +94,11 @@ function JobsPage() {
 
   const hasFilters = category !== ALL || location !== ALL || jobType !== ALL;
 
+  const allCategories = useMemo(
+    () => Array.from(new Set(jobs.map((job) => job.category).filter(Boolean))).sort(),
+    [jobs],
+  );
+
   return (
     <>
       <PageHeader
@@ -100,15 +106,30 @@ function JobsPage() {
         title={t("Jobs")}
         description={t("Opportunities shared by our members and partner businesses. Click a role to see full details.")}
       />
-      <section className="container-page py-14">
-        <div className="grid gap-3 sm:grid-cols-3">
-          <FilterSelect
-            label={t("Category")}
-            value={category}
-            onChange={setCategory}
-            allLabel={t("All categories")}
-            options={options.categories}
-          />
+      <SidebarPage
+        sidebar={(
+          <SidebarSection label={t("Category")}>
+            <SidebarNavItem
+              icon={<Briefcase className="size-5" />}
+              title={t("All categories")}
+              meta={`${jobs.length} ${t("roles")}`}
+              active={category === ALL}
+              onClick={() => setCategory(ALL)}
+            />
+            {allCategories.map((item) => (
+              <SidebarNavItem
+                key={item}
+                icon={<Briefcase className="size-5" />}
+                title={item}
+                meta={`${jobs.filter((job) => job.category === item).length} ${t("roles")}`}
+                active={category === item}
+                onClick={() => setCategory(item)}
+              />
+            ))}
+          </SidebarSection>
+        )}
+      >
+        <div className="grid gap-3 sm:grid-cols-2">
           <FilterSelect
             label={t("Location")}
             value={location}
@@ -143,7 +164,7 @@ function JobsPage() {
             {t("No job adverts at the moment. Please check back soon.")}
           </p>
         ) : (
-          <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-10 grid gap-5 sm:grid-cols-2">
             {filtered.map((job) => (
               <Card
                 key={job.id}
@@ -170,7 +191,7 @@ function JobsPage() {
             ))}
           </div>
         )}
-      </section>
+      </SidebarPage>
 
       <Dialog open={!!selected} onOpenChange={(open) => !open && setSelected(null)}>
         <DialogContent className="sm:max-w-lg">

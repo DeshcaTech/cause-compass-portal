@@ -2,13 +2,14 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 
 import { PageHeader } from "@/components/site/PageHeader";
+import { SidebarNavItem, SidebarPage } from "@/components/site/SidebarPage";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { campaignsQuery, formatDate, formatMoney, type Campaign } from "@/lib/queries";
 import campaignFallback from "@/assets/campaign-fallback.jpg";
 import { useT } from "@/lib/i18n";
+import { useState } from "react";
 
 export const Route = createFileRoute("/fundraising")({
   head: () => ({
@@ -91,6 +92,8 @@ function FundraisingPage() {
   const { data: campaigns = [] } = useQuery(campaignsQuery);
   const active = campaigns.filter((c) => c.status === "active");
   const past = campaigns.filter((c) => c.status !== "active");
+  const [view, setView] = useState<"active" | "past">("active");
+  const list = view === "active" ? active : past;
 
   return (
     <>
@@ -99,24 +102,39 @@ function FundraisingPage() {
         title={t("Support our causes")}
         description={t("Every campaign is proposed, voted on and reported back to the membership.")}
       />
-      <section className="container-page py-14">
-        <Tabs defaultValue="active">
-          <TabsList>
-            <TabsTrigger value="active">{t("Active campaigns")}</TabsTrigger>
-            <TabsTrigger value="past">{t("Past campaigns")}</TabsTrigger>
-          </TabsList>
-          <TabsContent value="active" className="mt-8 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-            {active.map((campaign) => (
-              <CampaignCard key={campaign.id} campaign={campaign} />
-            ))}
-          </TabsContent>
-          <TabsContent value="past" className="mt-8 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-            {past.map((campaign) => (
-              <CampaignCard key={campaign.id} campaign={campaign} />
-            ))}
-          </TabsContent>
-        </Tabs>
-
+      <SidebarPage
+        banner={{
+          image: list[0]?.image_url ?? campaignFallback,
+          title: view === "active" ? t("Active campaigns") : t("Past campaigns"),
+          description: t("Every campaign is proposed, voted on and reported back to the membership."),
+        }}
+        sidebar={(
+          <>
+            <SidebarNavItem
+              image={active[0]?.image_url ?? campaignFallback}
+              title={t("Active campaigns")}
+              meta={`${active.length} ${t("campaigns")}`}
+              active={view === "active"}
+              onClick={() => setView("active")}
+            />
+            <SidebarNavItem
+              image={past[0]?.image_url ?? campaignFallback}
+              title={t("Past campaigns")}
+              meta={`${past.length} ${t("campaigns")}`}
+              active={view === "past"}
+              onClick={() => setView("past")}
+            />
+          </>
+        )}
+      >
+        <div className="grid gap-5 md:grid-cols-2">
+          {list.map((campaign) => (
+            <CampaignCard key={campaign.id} campaign={campaign} />
+          ))}
+        </div>
+        {list.length === 0 ? (
+          <p className="text-sm text-muted-foreground">{t("No campaigns to show yet.")}</p>
+        ) : null}
         <Card className="mt-12 border-border/70 bg-[image:var(--gradient-hero)]">
           <CardContent className="flex flex-wrap items-center justify-between gap-5 p-8">
             <div>
@@ -130,7 +148,7 @@ function FundraisingPage() {
             </Button>
           </CardContent>
         </Card>
-      </section>
+      </SidebarPage>
     </>
   );
 }
