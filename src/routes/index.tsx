@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
+import { useMemo } from "react";
 import {
   Apple,
   ArrowRight,
@@ -76,18 +77,27 @@ function Index() {
   const { data: partners = [] } = useQuery(partnersQuery);
   const { data: stats } = useQuery(homeStatsQuery);
 
-  const upcoming = events.filter((e) => new Date(e.start_at) >= new Date()).slice(0, 3);
-  const activeCampaigns = campaigns.filter((c) => c.status === "active").slice(0, 3);
-  const latestNews = announcements.slice(0, 3);
-  const featuredPartners = partners.slice(0, 4);
+  const upcoming = useMemo(() => {
+    const now = Date.now();
+    return events.filter((e) => new Date(e.start_at).getTime() >= now).slice(0, 3);
+  }, [events]);
+  const activeCampaigns = useMemo(
+    () => campaigns.filter((c) => c.status === "active").slice(0, 3),
+    [campaigns],
+  );
+  const latestNews = useMemo(() => announcements.slice(0, 3), [announcements]);
+  const featuredPartners = useMemo(() => partners.slice(0, 4), [partners]);
 
-  const statTiles = [
-    { icon: Users, label: "Members", value: stats?.members ?? 0 },
-    { icon: Building2, label: "Member businesses", value: stats?.businesses ?? 0 },
-    { icon: CalendarDays, label: "Coming events", value: stats?.upcoming_events ?? 0 },
-    { icon: UserRound, label: "Board members", value: stats?.board_members ?? 0 },
-    { icon: HeartHandshake, label: "Active campaigns", value: stats?.active_campaigns ?? 0 },
-  ];
+  const statTiles = useMemo(
+    () => [
+      { icon: Users, label: "Members", value: stats?.members ?? 0 },
+      { icon: Building2, label: "Member businesses", value: stats?.businesses ?? 0 },
+      { icon: CalendarDays, label: "Coming events", value: stats?.upcoming_events ?? 0 },
+      { icon: UserRound, label: "Board members", value: stats?.board_members ?? 0 },
+      { icon: HeartHandshake, label: "Active campaigns", value: stats?.active_campaigns ?? 0 },
+    ],
+    [stats],
+  );
 
   return (
     <>
@@ -101,6 +111,7 @@ function Index() {
                 alt="CCGMs logo"
                 width={140}
                 height={140}
+              decoding="async"
                 className="h-14 w-14 shrink-0 sm:h-16 sm:w-16 md:h-20 md:w-20"
               />
               <p className="eyebrow min-w-0 text-gold">Community association</p>
@@ -151,6 +162,8 @@ function Index() {
               alt="CCGMs members of all generations celebrating together"
               width={1920}
               height={1200}
+              fetchPriority="high"
+              decoding="async"
               className="aspect-[4/3] w-full rounded-3xl object-cover shadow-[var(--shadow-lift)]"
             />
           </div>
@@ -187,6 +200,7 @@ function Index() {
               loading="lazy"
               width={1280}
               height={960}
+              decoding="async"
               className="mt-6 aspect-[4/3] w-full rounded-3xl object-cover shadow-[var(--shadow-lift)]"
             />
           </div>
@@ -303,6 +317,9 @@ function Index() {
                   src={upcoming[0]!.image_url ?? eventFallback}
                   alt={upcoming[0]!.title}
                   loading="lazy"
+                  decoding="async"
+                  width={1280}
+                  height={720}
                   className="aspect-[16/9] w-full object-cover"
                 />
                 <CardContent className="flex h-full flex-col p-6 sm:p-8 md:p-10">
@@ -409,6 +426,9 @@ function Index() {
                           src={partner.logo_url}
                           alt={`${partner.business_name} logo`}
                           loading="lazy"
+                          decoding="async"
+                          width={112}
+                          height={112}
                           className="h-14 w-14 rounded-2xl object-cover"
                         />
                       ) : (
