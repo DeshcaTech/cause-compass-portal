@@ -28,6 +28,7 @@ import { Route as ReferRouteImport } from './routes/refer'
 import { Route as SurveysRouteImport } from './routes/surveys'
 import { Route as VolunteerRouteImport } from './routes/volunteer'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
+import { Route as NewsIdRouteImport } from './routes/news.$id'
 import { Route as LovableEmailTransactionalPreviewRouteImport } from './routes/lovable/email/transactional/preview'
 
 const IndexRoute = IndexRouteImport.update({
@@ -124,6 +125,11 @@ const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const NewsIdRoute = NewsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => NewsRoute,
+} as any)
 const LovableEmailTransactionalPreviewRoute =
   LovableEmailTransactionalPreviewRouteImport.update({
     id: '/lovable/email/transactional/preview',
@@ -144,12 +150,13 @@ export interface FileRoutesByFullPath {
   '/fundraising': typeof FundraisingRoute
   '/gallery': typeof GalleryRoute
   '/membership': typeof MembershipRoute
-  '/news': typeof NewsRoute
+  '/news': typeof NewsRouteWithChildren
   '/partners': typeof PartnersRoute
   '/refer': typeof ReferRoute
   '/surveys': typeof SurveysRoute
   '/volunteer': typeof VolunteerRoute
   '/admin': typeof AuthenticatedAdminRoute
+  '/news/$id': typeof NewsIdRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
 }
 export interface FileRoutesByTo {
@@ -165,12 +172,13 @@ export interface FileRoutesByTo {
   '/fundraising': typeof FundraisingRoute
   '/gallery': typeof GalleryRoute
   '/membership': typeof MembershipRoute
-  '/news': typeof NewsRoute
+  '/news': typeof NewsRouteWithChildren
   '/partners': typeof PartnersRoute
   '/refer': typeof ReferRoute
   '/surveys': typeof SurveysRoute
   '/volunteer': typeof VolunteerRoute
   '/admin': typeof AuthenticatedAdminRoute
+  '/news/$id': typeof NewsIdRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
 }
 export interface FileRoutesById {
@@ -188,12 +196,13 @@ export interface FileRoutesById {
   '/fundraising': typeof FundraisingRoute
   '/gallery': typeof GalleryRoute
   '/membership': typeof MembershipRoute
-  '/news': typeof NewsRoute
+  '/news': typeof NewsRouteWithChildren
   '/partners': typeof PartnersRoute
   '/refer': typeof ReferRoute
   '/surveys': typeof SurveysRoute
   '/volunteer': typeof VolunteerRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
+  '/news/$id': typeof NewsIdRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
 }
 export interface FileRouteTypes {
@@ -217,6 +226,7 @@ export interface FileRouteTypes {
     | '/surveys'
     | '/volunteer'
     | '/admin'
+    | '/news/$id'
     | '/lovable/email/transactional/preview'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -238,6 +248,7 @@ export interface FileRouteTypes {
     | '/surveys'
     | '/volunteer'
     | '/admin'
+    | '/news/$id'
     | '/lovable/email/transactional/preview'
   id:
     | '__root__'
@@ -260,6 +271,7 @@ export interface FileRouteTypes {
     | '/surveys'
     | '/volunteer'
     | '/_authenticated/admin'
+    | '/news/$id'
     | '/lovable/email/transactional/preview'
   fileRoutesById: FileRoutesById
 }
@@ -277,7 +289,7 @@ export interface RootRouteChildren {
   FundraisingRoute: typeof FundraisingRoute
   GalleryRoute: typeof GalleryRoute
   MembershipRoute: typeof MembershipRoute
-  NewsRoute: typeof NewsRoute
+  NewsRoute: typeof NewsRouteWithChildren
   PartnersRoute: typeof PartnersRoute
   ReferRoute: typeof ReferRoute
   SurveysRoute: typeof SurveysRoute
@@ -420,6 +432,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/news/$id': {
+      id: '/news/$id'
+      path: '/$id'
+      fullPath: '/news/$id'
+      preLoaderRoute: typeof NewsIdRouteImport
+      parentRoute: typeof NewsRoute
+    }
     '/lovable/email/transactional/preview': {
       id: '/lovable/email/transactional/preview'
       path: '/lovable/email/transactional/preview'
@@ -441,6 +460,16 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
 const AuthenticatedRouteRouteWithChildren =
   AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
+interface NewsRouteChildren {
+  NewsIdRoute: typeof NewsIdRoute
+}
+
+const NewsRouteChildren: NewsRouteChildren = {
+  NewsIdRoute: NewsIdRoute,
+}
+
+const NewsRouteWithChildren = NewsRoute._addFileChildren(NewsRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
@@ -455,7 +484,7 @@ const rootRouteChildren: RootRouteChildren = {
   FundraisingRoute: FundraisingRoute,
   GalleryRoute: GalleryRoute,
   MembershipRoute: MembershipRoute,
-  NewsRoute: NewsRoute,
+  NewsRoute: NewsRouteWithChildren,
   PartnersRoute: PartnersRoute,
   ReferRoute: ReferRoute,
   SurveysRoute: SurveysRoute,

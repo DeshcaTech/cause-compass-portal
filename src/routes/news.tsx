@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 
 import { PageHeader } from "@/components/site/PageHeader";
@@ -52,7 +52,8 @@ function NewsPage() {
         ) : (
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {news.map((item) => (
-              <Card key={item.id} className="overflow-hidden border-border/70">
+              <Link key={item.id} to="/news/$id" params={{ id: item.id }} className="block">
+              <Card className="h-full overflow-hidden border-border/70 transition-shadow hover:shadow-lg">
                 {item.image_url && (
                   <img
                     src={item.image_url}
@@ -68,12 +69,13 @@ function NewsPage() {
                     <p className="mt-2 text-sm text-muted-foreground">{item.summary}</p>
                   )}
                   {item.body && (
-                    <p className="mt-3 whitespace-pre-line text-sm text-foreground/80">
+                    <p className="mt-3 line-clamp-3 whitespace-pre-line text-sm text-foreground/80">
                       {item.body}
                     </p>
                   )}
                 </CardContent>
               </Card>
+              </Link>
             ))}
           </div>
         )}
