@@ -1,4 +1,6 @@
 import { Link } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
+import { brandQuery } from "@/lib/brand";
 import { Mail, MapPin, Phone } from "lucide-react";
 
 import logo from "@/assets/ccgms-logo.png?w=120&format=png";
