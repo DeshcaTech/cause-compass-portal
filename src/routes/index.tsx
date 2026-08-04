@@ -13,12 +13,21 @@ import {
   Users,
 } from "lucide-react";
 
-import logo from "@/assets/ccgms-logo.png";
-import hero from "@/assets/hero-community.jpg";
-import communityTogether from "@/assets/community-together.jpg";
-import eventFallback from "@/assets/event-fallback.jpg";
+import logo from "@/assets/ccgms-logo.png?w=200&format=png";
+import logoAvif from "@/assets/ccgms-logo.png?w=200&format=avif&quality=70";
+import logoWebp from "@/assets/ccgms-logo.png?w=200&format=webp&quality=80";
+import hero from "@/assets/hero-community.jpg?w=1200&format=jpg&quality=72";
+import heroAvif from "@/assets/hero-community.jpg?w=1200&format=avif&quality=55";
+import heroWebp from "@/assets/hero-community.jpg?w=1200&format=webp&quality=70";
+import communityTogether from "@/assets/community-together.jpg?w=900&format=jpg&quality=72";
+import communityAvif from "@/assets/community-together.jpg?w=900&format=avif&quality=55";
+import communityWebp from "@/assets/community-together.jpg?w=900&format=webp&quality=70";
+import eventFallback from "@/assets/event-fallback.jpg?w=1000&format=jpg&quality=72";
+import eventFallbackAvif from "@/assets/event-fallback.jpg?w=1000&format=avif&quality=55";
+import eventFallbackWebp from "@/assets/event-fallback.jpg?w=1000&format=webp&quality=70";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Picture } from "@/components/site/Picture";
 import {
   announcementsQuery,
   campaignsQuery,
