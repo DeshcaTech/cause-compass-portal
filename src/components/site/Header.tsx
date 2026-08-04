@@ -148,77 +148,68 @@ export function Header() {
         </nav>
       </div>
 
-        <div className="flex items-center gap-2 lg:hidden">
-          <LanguageSwitcher />
-          <Sheet open={open} onOpenChange={(v) => { setOpen(v); if (!v) setOpenGroup(null); }}>
-          <SheetTrigger asChild>
-            <Button variant="ghost" size="icon" className="lg:hidden" aria-label="Open menu">
-              <Menu />
-            </Button>
-          </SheetTrigger>
-          <SheetContent side="right" className="w-80 overflow-y-auto">
-            <div className="mt-8 flex flex-col gap-1">
-              {NAV.map((group) =>
-                group.items ? (
-                  <div key={group.label}>
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setOpenGroup((g) => (g === group.label ? null : group.label))
-                      }
-                      className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm font-medium"
-                      aria-expanded={openGroup === group.label}
-                    >
-                      {t(group.label)}
-                      <ChevronDown
-                        className={`size-4 transition-transform ${
-                          openGroup === group.label ? "rotate-180" : ""
-                        }`}
-                      />
-                    </button>
-                    {openGroup === group.label && (
-                      <div className="mt-0.5 flex flex-col gap-0.5 pl-3">
-                        {group.items.map((item) => (
-                          <Link
-                            key={item.to}
-                            to={item.to}
-                            onClick={() => setOpen(false)}
-                            className="block rounded-lg px-3 py-2 text-sm text-foreground/80 hover:bg-accent hover:text-accent-foreground"
-                          >
-                            {t(item.label)}
-                          </Link>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                ) : (
-                  <Link
-                    key={group.to}
-                    to={group.to!}
-                    onClick={() => setOpen(false)}
-                    className="rounded-lg px-3 py-2 text-sm font-medium"
+      <Sheet open={open} onOpenChange={(v) => { setOpen(v); if (!v) setOpenGroup(null); }}>
+        <SheetContent side="right" className="w-80 overflow-y-auto">
+          <div className="mt-8 flex flex-col gap-1">
+            {NAV.map((group) =>
+              group.items ? (
+                <div key={group.label}>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setOpenGroup((g) => (g === group.label ? null : group.label))
+                    }
+                    className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm font-medium"
+                    aria-expanded={openGroup === group.label}
                   >
                     {t(group.label)}
-                  </Link>
-                ),
-              )}
-              <div className="mt-6 flex gap-2 px-3">
-                <Button asChild variant="soft" className="flex-1">
-                  <Link to="/membership" onClick={() => setOpen(false)}>
-                    {t("Join")}
-                  </Link>
-                </Button>
-                <Button asChild variant="hero" className="flex-1">
-                  <Link to="/donate" onClick={() => setOpen(false)}>
-                    {t("Donate")}
-                  </Link>
-                </Button>
-              </div>
+                    <ChevronDown
+                      className={`size-4 transition-transform ${
+                        openGroup === group.label ? "rotate-180" : ""
+                      }`}
+                    />
+                  </button>
+                  {openGroup === group.label && (
+                    <div className="mt-0.5 flex flex-col gap-0.5 pl-3">
+                      {group.items.map((item) => (
+                        <Link
+                          key={item.to}
+                          to={item.to}
+                          onClick={() => setOpen(false)}
+                          className="block rounded-lg px-3 py-2 text-sm text-foreground/80 hover:bg-accent hover:text-accent-foreground"
+                        >
+                          {t(item.label)}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <Link
+                  key={group.to}
+                  to={group.to!}
+                  onClick={() => setOpen(false)}
+                  className="rounded-lg px-3 py-2 text-sm font-medium"
+                >
+                  {t(group.label)}
+                </Link>
+              ),
+            )}
+            <div className="mt-6 flex gap-2 px-3">
+              <Button asChild variant="soft" className="flex-1">
+                <Link to="/membership" onClick={() => setOpen(false)}>
+                  {t("Join")}
+                </Link>
+              </Button>
+              <Button asChild variant="hero" className="flex-1">
+                <Link to="/donate" onClick={() => setOpen(false)}>
+                  {t("Donate")}
+                </Link>
+              </Button>
             </div>
-          </SheetContent>
-          </Sheet>
-        </div>
-      </div>
+          </div>
+        </SheetContent>
+      </Sheet>
     </header>
   );
 }
