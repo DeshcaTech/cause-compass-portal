@@ -3,9 +3,9 @@ import { useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 
 import { PageHeader } from "@/components/site/PageHeader";
+import { SidebarNavItem, SidebarPage } from "@/components/site/SidebarPage";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { boardQuery, type BoardMember } from "@/lib/queries";
 import { useT } from "@/lib/i18n";
 import personFallback from "@/assets/person-fallback.jpg";
@@ -71,8 +71,11 @@ function BoardPage() {
     () => Array.from(new Set(past.map((m) => m.term_label))).sort().reverse(),
     [past],
   );
-  const [term, setTerm] = useState<string | null>(null);
-  const activeTerm = term ?? pastTerms[0] ?? null;
+  // "current" or a past term label.
+  const [term, setTerm] = useState<string>("current");
+  const showing = term === "current" ? current : past.filter((m) => m.term_label === term);
+  const bannerPhoto =
+    showing.find((m) => m.photo_url)?.photo_url ?? personFallback;
 
   return (
     <>
@@ -81,36 +84,39 @@ function BoardPage() {
         title={t("Our board")}
         description={t("The current executive team is shown by default. Switch to past teams to see who served before.")}
       />
-      <section className="container-page py-14">
-        <Tabs defaultValue="current">
-          <TabsList>
-            <TabsTrigger value="current">{t("Current team")}</TabsTrigger>
-            <TabsTrigger value="past">{t("Past teams")}</TabsTrigger>
-          </TabsList>
-          <TabsContent value="current" className="mt-8">
-            <MemberGrid members={current} />
-          </TabsContent>
-          <TabsContent value="past" className="mt-8">
-            <div className="mb-6 flex flex-wrap gap-2">
-              {pastTerms.map((label) => (
-                <button
-                  key={label}
-                  type="button"
-                  onClick={() => setTerm(label)}
-                  className={`rounded-full border px-4 py-1.5 text-sm transition-colors ${
-                    activeTerm === label
-                      ? "border-transparent bg-primary text-primary-foreground"
-                      : "border-border bg-card hover:bg-accent"
-                  }`}
-                >
-                  {label}
-                </button>
-              ))}
-            </div>
-            <MemberGrid members={past.filter((m) => m.term_label === activeTerm)} />
-          </TabsContent>
-        </Tabs>
-      </section>
+      <SidebarPage
+        banner={{
+          image: bannerPhoto,
+          title: term === "current" ? t("Current team") : term,
+          description: t("The current executive team is shown by default. Switch to past teams to see who served before."),
+        }}
+        sidebar={(
+          <>
+            <SidebarNavItem
+              image={current.find((m) => m.photo_url)?.photo_url ?? personFallback}
+              title={t("Current team")}
+              meta={`${current.length} ${t("members")}`}
+              active={term === "current"}
+              onClick={() => setTerm("current")}
+            />
+            {pastTerms.map((label) => (
+              <SidebarNavItem
+                key={label}
+                image={
+                  past.find((m) => m.term_label === label && m.photo_url)?.photo_url ??
+                  personFallback
+                }
+                title={label}
+                meta={`${past.filter((m) => m.term_label === label).length} ${t("members")}`}
+                active={term === label}
+                onClick={() => setTerm(label)}
+              />
+            ))}
+          </>
+        )}
+      >
+        <MemberGrid members={showing} />
+      </SidebarPage>
     </>
   );
 }
