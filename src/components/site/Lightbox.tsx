@@ -140,6 +140,8 @@ export function Lightbox({
   /* ------------------------------------------------- pointers: swipe/pan */
 
   function onPointerDown(event: React.PointerEvent<HTMLDivElement>) {
+    if (event.button !== 0 && event.pointerType === "mouse") return;
+    event.preventDefault();
     (event.target as Element).setPointerCapture?.(event.pointerId);
     pointers.current.set(event.pointerId, { x: event.clientX, y: event.clientY });
     if (pointers.current.size === 2) {
@@ -301,10 +303,11 @@ export function Lightbox({
           onPointerUp={endPointer}
           onPointerCancel={endPointer}
           onDoubleClick={() => zoomAt(zoom > 1 ? 1 : 2)}
+          onDragStart={(event) => event.preventDefault()}
           role="group"
           aria-roledescription={t("Photo viewer")}
           aria-label={`${caption}, ${position}`}
-          className="relative touch-none overflow-hidden rounded-xl border border-border bg-secondary"
+          className="relative touch-none select-none overflow-hidden rounded-xl border border-border bg-secondary [&_img]:pointer-events-none"
         >
           {current ? (
             <div
