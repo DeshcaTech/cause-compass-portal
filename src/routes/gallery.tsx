@@ -67,6 +67,13 @@ function GalleryPage() {
   const active = galleries.find((g) => g.id === activeId) ?? null;
   const activePhotos = photos.filter((p) => p.gallery_id === activeId);
 
+  // Main photo: the album cover set in the admin panel, else its first photo,
+  // else a stable placeholder so every album still looks complete.
+  const mainPhoto = (galleryId: string, cover: string | null) =>
+    cover ??
+    photos.find((p) => p.gallery_id === galleryId)?.photo_url ??
+    placeholdersFor(galleryId)[0]!;
+
   const tiles = useMemo(() => {
     const real = activePhotos.map((photo) => ({
       key: photo.id,
