@@ -14,6 +14,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { supabase } from "@/integrations/supabase/client";
 import { campaignsQuery, formatMoney } from "@/lib/queries";
+import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/donate")({
   validateSearch: (search: Record<string, unknown>): { campaign?: string | undefined } => ({
@@ -45,6 +46,7 @@ const schema = z.object({
 });
 
 function DonatePage() {
+  const t = useT();
   const { campaign: campaignParam } = Route.useSearch();
   const { data: campaigns = [] } = useQuery(campaignsQuery);
   const active = campaigns.filter((c) => c.status === "active");
@@ -60,7 +62,7 @@ function DonatePage() {
     const values = Object.fromEntries(new FormData(event.currentTarget));
     const parsed = schema.safeParse({ ...values, amount });
     if (!parsed.success) {
-      toast.error(parsed.error.issues[0]?.message ?? "Please check the form");
+      toast.error(t(parsed.error.issues[0]?.message ?? "Please check the form"));
       return;
     }
     setSaving(true);
@@ -75,7 +77,7 @@ function DonatePage() {
     });
     setSaving(false);
     if (error) {
-      toast.error("We couldn't record your donation. Please try again.");
+      toast.error(t("We couldn't record your donation. Please try again."));
       return;
     }
     setDone(true);
@@ -84,17 +86,16 @@ function DonatePage() {
   if (done) {
     return (
       <>
-        <PageHeader eyebrow="Donate" title="Thank you" />
+        <PageHeader eyebrow={t("Donate")} title={t("Thank you")} />
         <section className="container-page py-16">
           <Card className="mx-auto max-w-xl border-border/70 text-center">
             <CardContent className="p-10">
               <span className="mx-auto flex size-14 items-center justify-center rounded-full bg-[image:var(--gradient-gold)] text-gold-foreground">
                 <Heart className="size-7" />
               </span>
-              <h2 className="mt-6 text-2xl">Your pledge of {formatMoney(Number(amount))} is recorded</h2>
+              <h2 className="mt-6 text-2xl">{t("Your pledge of {amount} is recorded").replace("{amount}", formatMoney(Number(amount)))}</h2>
               <p className="mt-3 text-sm text-muted-foreground">
-                The treasurer will email you payment instructions and a receipt. Thank you for
-                standing with the community.
+                {t("The treasurer will email you payment instructions and a receipt. Thank you for standing with the community.")}
               </p>
             </CardContent>
           </Card>
@@ -106,16 +107,16 @@ function DonatePage() {
   return (
     <>
       <PageHeader
-        eyebrow="Get involved"
-        title="Make a donation"
-        description="Give freely, or direct your gift to one of our active fundraising campaigns."
+        eyebrow={t("Get involved")}
+        title={t("Make a donation")}
+        description={t("Give freely, or direct your gift to one of our active fundraising campaigns.")}
       />
       <section className="container-page py-14">
         <Card className="mx-auto max-w-2xl border-border/70">
           <CardContent className="p-6 sm:p-8">
             <form onSubmit={onSubmit} className="space-y-6">
               <div className="space-y-2">
-                <Label>Where should your gift go?</Label>
+                <Label>{t("Where should your gift go?")}</Label>
                 <div className="grid gap-2">
                   <button
                     type="button"
@@ -126,7 +127,7 @@ function DonatePage() {
                         : "border-border hover:bg-secondary"
                     }`}
                   >
-                    General community fund (random donation)
+                    {t("General community fund (random donation)")}
                   </button>
                   {active.map((campaign) => (
                     <button
@@ -146,7 +147,7 @@ function DonatePage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="amount">Amount (GBP)</Label>
+                <Label htmlFor="amount">{t("Amount (GBP)")}</Label>
                 <div className="flex flex-wrap gap-2">
                   {PRESETS.map((preset) => (
                     <button
@@ -176,18 +177,18 @@ function DonatePage() {
 
               <div className="space-y-2">
                 <Label htmlFor="membership_number">
-                  Membership number (optional, but recommended)
+                  {t("Membership number (optional, but recommended)")}
                 </Label>
                 <Input id="membership_number" name="membership_number" placeholder="CCGM-1000" />
               </div>
 
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="space-y-2">
-                  <Label htmlFor="donor_name">Your name</Label>
+                  <Label htmlFor="donor_name">{t("Your name")}</Label>
                   <Input id="donor_name" name="donor_name" disabled={anonymous} maxLength={120} />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
+                  <Label htmlFor="email">{t("Email")}</Label>
                   <Input id="email" name="email" type="email" required maxLength={255} />
                 </div>
               </div>
@@ -199,21 +200,20 @@ function DonatePage() {
                   onCheckedChange={(value) => setAnonymous(value === true)}
                 />
                 <Label htmlFor="anonymous" className="font-normal">
-                  Give anonymously
+                  {t("Give anonymously")}
                 </Label>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="message">Message (optional)</Label>
+                <Label htmlFor="message">{t("Message (optional)")}</Label>
                 <Textarea id="message" name="message" rows={3} maxLength={500} />
               </div>
 
               <Button type="submit" variant="hero" size="lg" className="w-full" disabled={saving}>
-                {saving ? "Submitting…" : `Donate ${formatMoney(Number(amount) || 0)}`}
+                {saving ? t("Submitting…") : `${t("Donate")} ${formatMoney(Number(amount) || 0)}`}
               </Button>
               <p className="text-center text-xs text-muted-foreground">
-                Donations are recorded here and confirmed by the treasurer, who will send payment
-                instructions and a receipt by email.
+                {t("Donations are recorded here and confirmed by the treasurer, who will send payment instructions and a receipt by email.")}
               </p>
             </form>
           </CardContent>

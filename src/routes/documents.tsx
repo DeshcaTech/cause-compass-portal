@@ -9,6 +9,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { documentsQuery } from "@/lib/queries";
+import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/documents")({
   head: () => ({
@@ -30,6 +31,7 @@ export const Route = createFileRoute("/documents")({
 });
 
 function DocumentsPage() {
+  const t = useT();
   const { data: documents = [] } = useQuery(documentsQuery);
   const categories = Array.from(new Set(documents.map((d) => d.category)));
   const [active, setActive] = useState<string>("All");
@@ -40,9 +42,9 @@ function DocumentsPage() {
   return (
     <>
       <PageHeader
-        eyebrow="About CCGMs"
-        title="Download centre"
-        description="Official documents, forms and reports, free to download for members and the public."
+        eyebrow={t("About CCGMs")}
+        title={t("Download centre")}
+        description={t("Official documents, forms and reports, free to download for members and the public.")}
       />
       <section className="container-page py-14">
         <div className="flex flex-wrap gap-2">
@@ -58,7 +60,7 @@ function DocumentsPage() {
                   : "border-border/70 bg-background text-muted-foreground hover:text-foreground",
               )}
             >
-              {category}
+              {category === "All" ? t("All") : category}
             </button>
           ))}
         </div>
@@ -78,7 +80,7 @@ function DocumentsPage() {
                   <Badge variant="secondary">{doc.category}</Badge>
                   <Button asChild variant="soft" size="sm">
                     <a href={doc.file_url} download>
-                      <Download /> {doc.file_type ?? "Download"}
+                      <Download /> {doc.file_type ?? t("Download")}
                     </a>
                   </Button>
                 </div>
@@ -88,7 +90,7 @@ function DocumentsPage() {
         </div>
 
         {visible.length === 0 ? (
-          <p className="mt-10 text-sm text-muted-foreground">No documents in this category yet.</p>
+          <p className="mt-10 text-sm text-muted-foreground">{t("No documents in this category yet.")}</p>
         ) : null}
       </section>
     </>

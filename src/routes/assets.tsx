@@ -16,6 +16,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { supabase } from "@/integrations/supabase/client";
 import { assetsQuery, formatMoney, type CommunityAsset } from "@/lib/queries";
 import assetFallback from "@/assets/asset-fallback.jpg";
+import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/assets")({
   head: () => ({
@@ -48,6 +49,7 @@ const schema = z.object({
 });
 
 function AssetsPage() {
+  const t = useT();
   const { data: assets = [] } = useQuery(assetsQuery);
   const [selected, setSelected] = useState<CommunityAsset | null>(null);
   const [saving, setSaving] = useState(false);
@@ -57,7 +59,7 @@ function AssetsPage() {
     const form = event.currentTarget;
     const parsed = schema.safeParse(Object.fromEntries(new FormData(form)));
     if (!parsed.success) {
-      toast.error(parsed.error.issues[0]?.message ?? "Please check the form");
+      toast.error(t(parsed.error.issues[0]?.message ?? "Please check the form"));
       return;
     }
     setSaving(true);
@@ -74,19 +76,19 @@ function AssetsPage() {
     });
     setSaving(false);
     if (error) {
-      toast.error("Your request could not be sent. Please try again.");
+      toast.error(t("Your request could not be sent. Please try again."));
       return;
     }
-    toast.success("Request received — the assets team will confirm availability by email.");
+    toast.success(t("Request received — the assets team will confirm availability by email."));
     setSelected(null);
   }
 
   return (
     <>
       <PageHeader
-        eyebrow="About CCGMs"
-        title="Rent community assets"
-        description="Equipment bought and maintained by the community, available to members at reduced rates."
+        eyebrow={t("About CCGMs")}
+        title={t("Rent community assets")}
+        description={t("Equipment bought and maintained by the community, available to members at reduced rates.")}
       />
       <section className="container-page py-14">
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -102,22 +104,22 @@ function AssetsPage() {
                 <div className="mt-4 flex items-start justify-between gap-3">
                   <h2 className="text-lg">{asset.name}</h2>
                   <Badge variant={asset.is_available ? "secondary" : "outline"}>
-                    {asset.quantity} available
+                    {asset.quantity} {t("available")}
                   </Badge>
                 </div>
                 <p className="mt-2 flex-1 text-sm text-muted-foreground">{asset.description}</p>
                 <dl className="mt-4 space-y-1 text-sm">
                   <div className="flex justify-between">
-                    <dt className="text-muted-foreground">Member rate</dt>
+                    <dt className="text-muted-foreground">{t("Member rate")}</dt>
                     <dd className="font-medium">{formatMoney(asset.member_price ?? 0)}</dd>
                   </div>
                   <div className="flex justify-between">
-                    <dt className="text-muted-foreground">Non-member</dt>
+                    <dt className="text-muted-foreground">{t("Non-member")}</dt>
                     <dd>{formatMoney(asset.non_member_price ?? 0)}</dd>
                   </div>
                 </dl>
                 <Button variant="hero" className="mt-5" onClick={() => setSelected(asset)}>
-                  Request this asset
+                  {t("Request this asset")}
                 </Button>
               </CardContent>
             </Card>
@@ -128,45 +130,45 @@ function AssetsPage() {
       <Dialog open={!!selected} onOpenChange={(open) => !open && setSelected(null)}>
         <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-lg">
           <DialogHeader>
-            <DialogTitle>Request: {selected?.name}</DialogTitle>
+            <DialogTitle>{t("Request:")} {selected?.name}</DialogTitle>
           </DialogHeader>
           <form onSubmit={onSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="membership_number">Membership number (optional, recommended)</Label>
+              <Label htmlFor="membership_number">{t("Membership number (optional, recommended)")}</Label>
               <Input id="membership_number" name="membership_number" placeholder="CCGM-1000" />
             </div>
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="space-y-2">
-                <Label htmlFor="full_name">Full name</Label>
+                <Label htmlFor="full_name">{t("Full name")}</Label>
                 <Input id="full_name" name="full_name" required />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email">{t("Email")}</Label>
                 <Input id="email" name="email" type="email" required />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="phone">Phone</Label>
+                <Label htmlFor="phone">{t("Phone")}</Label>
                 <Input id="phone" name="phone" required />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="quantity">Quantity</Label>
+                <Label htmlFor="quantity">{t("Quantity")}</Label>
                 <Input id="quantity" name="quantity" type="number" min={1} defaultValue={1} />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="start_date">Collection date</Label>
+                <Label htmlFor="start_date">{t("Collection date")}</Label>
                 <Input id="start_date" name="start_date" type="date" required />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="end_date">Return date</Label>
+                <Label htmlFor="end_date">{t("Return date")}</Label>
                 <Input id="end_date" name="end_date" type="date" required />
               </div>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="purpose">What is it for?</Label>
+              <Label htmlFor="purpose">{t("What is it for?")}</Label>
               <Textarea id="purpose" name="purpose" rows={3} maxLength={500} />
             </div>
             <Button type="submit" variant="hero" className="w-full" disabled={saving}>
-              {saving ? "Sending…" : "Send request"}
+              {saving ? t("Sending…") : t("Send request")}
             </Button>
           </form>
         </DialogContent>

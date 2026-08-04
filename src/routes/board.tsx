@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { boardQuery, type BoardMember } from "@/lib/queries";
+import { useT } from "@/lib/i18n";
 import personFallback from "@/assets/person-fallback.jpg";
 
 export const Route = createFileRoute("/board")({
@@ -29,8 +30,9 @@ export const Route = createFileRoute("/board")({
 });
 
 function MemberGrid({ members }: { members: BoardMember[] }) {
+  const t = useT();
   if (members.length === 0) {
-    return <p className="text-sm text-muted-foreground">No members recorded for this term yet.</p>;
+    return <p className="text-sm text-muted-foreground">{t("No members recorded for this term yet.")}</p>;
   }
   return (
     <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -59,6 +61,7 @@ function MemberGrid({ members }: { members: BoardMember[] }) {
 }
 
 function BoardPage() {
+  const t = useT();
   const { data: board = [] } = useQuery(boardQuery);
   const current = board.filter((m) => m.is_current);
   const past = useMemo(() => board.filter((m) => !m.is_current), [board]);
@@ -72,15 +75,15 @@ function BoardPage() {
   return (
     <>
       <PageHeader
-        eyebrow="About CCGMs"
-        title="Our board"
-        description="The current executive team is shown by default. Switch to past teams to see who served before."
+        eyebrow={t("About CCGMs")}
+        title={t("Our board")}
+        description={t("The current executive team is shown by default. Switch to past teams to see who served before.")}
       />
       <section className="container-page py-14">
         <Tabs defaultValue="current">
           <TabsList>
-            <TabsTrigger value="current">Current team</TabsTrigger>
-            <TabsTrigger value="past">Past teams</TabsTrigger>
+            <TabsTrigger value="current">{t("Current team")}</TabsTrigger>
+            <TabsTrigger value="past">{t("Past teams")}</TabsTrigger>
           </TabsList>
           <TabsContent value="current" className="mt-8">
             <MemberGrid members={current} />
