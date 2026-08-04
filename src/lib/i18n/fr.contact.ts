@@ -1,1 +1,22 @@
-export const contact: Record<string, string> = {};
+export const contact: Record<string, string> = {
+  "Please enter your name": "Veuillez saisir votre nom",
+  "Enter a valid email": "Saisissez une adresse e-mail valide",
+  "Please add a subject": "Veuillez ajouter un objet",
+  "Please write a little more": "Merci d'écrire un peu plus",
+  "Please check the form": "Veuillez vérifier le formulaire",
+  "Sorry, your message could not be sent. Please try again.": "Désolé, votre message n'a pas pu être envoyé. Veuillez réessayer.",
+  "Thank you — we have received your message.": "Merci — nous avons bien reçu votre message.",
+  "Contact": "Contact",
+  "Talk to the CCGMs team": "Échangez avec l'équipe CCGMs",
+  "Questions about membership, events, renting community assets or getting support? We're here.": "Des questions sur l'adhésion, les événements, la location de nos équipements ou l'obtention d'un soutien ? Nous sommes là.",
+  "Full name": "Nom complet",
+  "Email": "E-mail",
+  "Phone (optional)": "Téléphone (facultatif)",
+  "Subject": "Objet",
+  "Message": "Message",
+  "Sending…": "Envoi en cours…",
+  "Send message": "Envoyer le message",
+  "Community office": "Bureau de la communauté",
+  "CCGMs Centre, 24 Unity Road": "Centre CCGMs, 24 Unity Road",
+  "Office hours: Tuesday to Saturday, 10:00 – 17:00. Urgent welfare requests are reviewed within 72 hours.": "Heures d'ouverture : du mardi au samedi, de 10h00 à 17h00. Les demandes d'aide urgentes sont examinées sous 72 heures.",
+};
