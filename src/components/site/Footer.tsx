@@ -50,7 +50,7 @@ export function Footer() {
     <footer className="mt-24 border-t border-border bg-primary text-primary-foreground">
       <div className="container-page grid gap-10 py-14 md:grid-cols-2 lg:grid-cols-5">
         <div className="lg:col-span-2">
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-3">
             {showLogo ? (
               customLogo ? (
                 <img src={customLogo} alt="" className="h-12 w-auto max-w-[16rem] object-contain" loading="lazy" decoding="async" />
@@ -69,14 +69,14 @@ export function Footer() {
               )
             ) : null}
             <span className={`font-display text-xl font-semibold ${showLogo ? "sr-only" : ""}`}>CCGMs</span>
+            <img
+              src={flagsAsset.url}
+              alt="Cameroon and United Kingdom flags"
+              loading="lazy"
+              decoding="async"
+              className="h-10 w-auto rounded-md object-cover"
+            />
           </div>
-          <img
-            src={flagsAsset.url}
-            alt="Cameroon and United Kingdom flags"
-            loading="lazy"
-            decoding="async"
-            className="mt-4 h-10 w-auto rounded-md object-cover"
-          />
           <p className="mt-4 max-w-sm text-sm text-primary-foreground/75">
             {t(
               "A community association bringing families together — supporting one another, celebrating our culture and building a stronger future for the next generation.",
