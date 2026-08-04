@@ -159,31 +159,22 @@ function GalleryPage() {
           <p className="mt-2 text-sm text-muted-foreground">{active?.description}</p>
 
           <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {activePhotos.map((photo) => (
-              <figure key={photo.id} className="overflow-hidden rounded-xl border border-border">
+            {tiles.map((tile, index) => (
+              <button
+                key={tile.key}
+                type="button"
+                onClick={() => setLightboxIndex(index)}
+                aria-label={`${t("View photo")} ${index + 1} ${t("of")} ${tiles.length}`}
+                className="group overflow-hidden rounded-xl border border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+              >
                 <img
-                  src={photo.photo_url}
-                  alt={photo.caption ?? active?.title ?? t("Community photo")}
+                  src={tile.src}
+                  alt={tile.caption ?? active?.title ?? t("Community photo")}
                   loading="lazy"
-                  className="aspect-[4/3] h-56 w-full object-cover transition-transform hover:scale-105"
+                  className="aspect-[4/3] h-56 w-full object-cover transition-transform group-hover:scale-105"
                 />
-              </figure>
+              </button>
             ))}
-            {placeholdersFor(activeId ?? "gallery")
-              .slice(0, Math.max(0, 6 - activePhotos.length))
-              .map((src, index) => (
-                  <figure
-                    key={`${src}-${index}`}
-                    className="overflow-hidden rounded-xl border border-border"
-                  >
-                    <img
-                      src={src}
-                      alt={t("Community members celebrating together")}
-                      loading="lazy"
-                      className="aspect-[4/3] h-56 w-full object-cover transition-transform hover:scale-105"
-                    />
-                  </figure>
-                ))}
           </div>
           {activePhotos.length === 0 ? (
             <Card className="mt-4 border-dashed border-border">
@@ -197,6 +188,72 @@ function GalleryPage() {
           ) : null}
         </div>
       </section>
+
+      <Dialog open={open} onOpenChange={(next) => !next && setLightboxIndex(null)}>
+        <DialogContent className="max-h-[92dvh] gap-3 overflow-y-auto sm:max-w-3xl">
+          <DialogHeader>
+            <DialogTitle className="text-left text-base">
+              {currentTile?.caption ?? active?.title ?? t("Gallery")}
+            </DialogTitle>
+            <DialogDescription className="text-left">
+              {`${(lightboxIndex ?? 0) + 1} ${t("of")} ${tiles.length}`}
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="relative">
+            {currentTile ? (
+              <img
+                src={currentTile.src}
+                alt={currentTile.caption ?? active?.title ?? t("Community photo")}
+                className="max-h-[60dvh] w-full rounded-xl border border-border bg-secondary object-contain"
+              />
+            ) : null}
+            {tiles.length > 1 ? (
+              <>
+                <Button
+                  variant="soft"
+                  size="icon"
+                  aria-label={t("Previous photo")}
+                  onClick={() => step(-1)}
+                  className="absolute left-2 top-1/2 min-h-11 min-w-11 -translate-y-1/2 shadow-md"
+                >
+                  <ChevronLeft />
+                </Button>
+                <Button
+                  variant="soft"
+                  size="icon"
+                  aria-label={t("Next photo")}
+                  onClick={() => step(1)}
+                  className="absolute right-2 top-1/2 min-h-11 min-w-11 -translate-y-1/2 shadow-md"
+                >
+                  <ChevronRight />
+                </Button>
+              </>
+            ) : null}
+          </div>
+
+          {tiles.length > 1 ? (
+            <div className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-1">
+              {tiles.map((tile, index) => (
+                <button
+                  key={`thumb-${tile.key}`}
+                  type="button"
+                  onClick={() => setLightboxIndex(index)}
+                  aria-label={`${t("View photo")} ${index + 1}`}
+                  aria-current={index === lightboxIndex}
+                  className={`shrink-0 overflow-hidden rounded-lg border transition-opacity ${
+                    index === lightboxIndex
+                      ? "border-primary"
+                      : "border-border opacity-60 hover:opacity-100"
+                  }`}
+                >
+                  <img src={tile.src} alt="" className="h-14 w-20 object-cover" />
+                </button>
+              ))}
+            </div>
+          ) : null}
+        </DialogContent>
+      </Dialog>
     </>
   );
 }
