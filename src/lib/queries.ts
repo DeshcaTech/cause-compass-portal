@@ -226,6 +226,7 @@ export const announcementsQuery = queryOptions({
 });
 
 export type HomeStats = {
+  // eslint-disable-next-line
   members: number;
   businesses: number;
   upcoming_events: number;
