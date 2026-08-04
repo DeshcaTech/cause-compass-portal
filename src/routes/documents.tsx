@@ -50,11 +50,6 @@ function DocumentsPage() {
         description={t("Official documents, forms and reports, free to download for members and the public.")}
       />
       <SidebarPage
-        banner={{
-          image: documentsBanner,
-          title: active === "All" ? t("All documents") : active,
-          description: t("Official documents, forms and reports, free to download."),
-        }}
         sidebar={filters.map((category) => (
           <SidebarNavItem
             key={category}

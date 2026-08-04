@@ -53,11 +53,6 @@ function PartnersPage() {
         description={t("Shop, hire and refer within the community. Click a business to see full details.")}
       />
       <SidebarPage
-        banner={{
-          image: thumbFor(category),
-          title: category === "All" ? t("All businesses") : category,
-          description: t("Shop, hire and refer within the community."),
-        }}
         sidebar={categories.map((item) => (
           <SidebarNavItem
             key={item}

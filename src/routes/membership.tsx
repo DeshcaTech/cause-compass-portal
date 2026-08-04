@@ -185,11 +185,6 @@ function MembershipPage() {
       />
 
       <SidebarPage
-        banner={{
-          image: membershipBanner,
-          title: `${t(selectedTier.name)} — ${formatMoney(selectedTier.price)} ${t("/ year")}`,
-          description: t(selectedTier.blurb),
-        }}
         sidebar={TIERS.map((item) => (
           <SidebarNavItem
             key={item.key}

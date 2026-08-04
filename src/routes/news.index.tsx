@@ -73,11 +73,6 @@ function NewsPage() {
         description={t("Updates, notices and community news from the CCGMs board.")}
       />
       <SidebarPage
-        banner={{
-          image: filtered[0]?.image_url ?? newsFallback,
-          title: featuredOnly ? t("Featured") : t("All news"),
-          description: t("Updates, notices and community news from the CCGMs board."),
-        }}
         sidebar={(
           <>
             <SidebarNavItem

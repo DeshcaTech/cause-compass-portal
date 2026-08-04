@@ -74,11 +74,6 @@ function VillageGroupsPage() {
         description={t("Community groups within CCGMs. Click a group to see meeting details and contacts.")}
       />
       <SidebarPage
-        banner={{
-          image: thumbFor(category),
-          title: activeLabel,
-          description: t("Community groups within CCGMs."),
-        }}
         sidebar={
           <SidebarSection label={t("Categories")}>
             {categories.map((item) => (

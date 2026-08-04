@@ -85,11 +85,6 @@ function BoardPage() {
         description={t("The current executive team is shown by default. Switch to past teams to see who served before.")}
       />
       <SidebarPage
-        banner={{
-          image: bannerPhoto,
-          title: term === "current" ? t("Current team") : term,
-          description: t("The current executive team is shown by default. Switch to past teams to see who served before."),
-        }}
         sidebar={(
           <>
             <SidebarNavItem
