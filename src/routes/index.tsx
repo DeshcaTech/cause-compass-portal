@@ -1,12 +1,30 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { Apple, ArrowRight, CalendarDays, HandHeart, Smartphone, Users } from "lucide-react";
+import {
+  Apple,
+  ArrowRight,
+  Building2,
+  CalendarDays,
+  HandHeart,
+  HeartHandshake,
+  Smartphone,
+  UserRound,
+  Users,
+} from "lucide-react";
 
 import logo from "@/assets/ccgms-logo.png";
 import hero from "@/assets/hero-community.jpg";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { campaignsQuery, eventsQuery, formatDate, formatMoney } from "@/lib/queries";
+import {
+  announcementsQuery,
+  campaignsQuery,
+  eventsQuery,
+  formatDate,
+  formatMoney,
+  homeStatsQuery,
+  partnersQuery,
+} from "@/lib/queries";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -52,9 +70,22 @@ const highlights = [
 function Index() {
   const { data: events = [] } = useQuery(eventsQuery);
   const { data: campaigns = [] } = useQuery(campaignsQuery);
+  const { data: announcements = [] } = useQuery(announcementsQuery);
+  const { data: partners = [] } = useQuery(partnersQuery);
+  const { data: stats } = useQuery(homeStatsQuery);
 
   const upcoming = events.filter((e) => new Date(e.start_at) >= new Date()).slice(0, 3);
   const activeCampaigns = campaigns.filter((c) => c.status === "active").slice(0, 3);
+  const latestNews = announcements.slice(0, 3);
+  const featuredPartners = partners.slice(0, 4);
+
+  const statTiles = [
+    { icon: Users, label: "Members", value: stats?.members ?? 0 },
+    { icon: Building2, label: "Member businesses", value: stats?.businesses ?? 0 },
+    { icon: CalendarDays, label: "Coming events", value: stats?.upcoming_events ?? 0 },
+    { icon: UserRound, label: "Board members", value: stats?.board_members ?? 0 },
+    { icon: HeartHandshake, label: "Active campaigns", value: stats?.active_campaigns ?? 0 },
+  ];
 
   return (
     <>
