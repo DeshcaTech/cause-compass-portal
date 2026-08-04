@@ -225,8 +225,21 @@ export const announcementsQuery = queryOptions({
     ),
 });
 
+export const announcementQuery = (id: string) =>
+  queryOptions({
+    queryKey: ["announcement", id],
+    queryFn: async () =>
+      unwrap<Announcement>(
+        await supabase
+          .from("announcements")
+          .select("id, title, summary, body, image_url, published_at")
+          .eq("is_published", true)
+          .eq("id", id)
+          .maybeSingle(),
+      ),
+  });
+
 export type HomeStats = {
-  // eslint-disable-next-line
   members: number;
   businesses: number;
   upcoming_events: number;
