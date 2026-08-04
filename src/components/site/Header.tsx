@@ -52,7 +52,7 @@ export const NAV: NavGroup[] = [
 ];
 
 const linkClass =
-  "rounded-md px-2.5 py-2 text-sm font-medium text-foreground/80 transition-colors hover:bg-accent hover:text-accent-foreground whitespace-nowrap";
+  "rounded-md px-2.5 py-2 text-sm font-bold text-foreground/80 transition-colors hover:bg-accent hover:text-accent-foreground whitespace-nowrap";
 
 export function Header() {
   const [open, setOpen] = useState(false);
@@ -191,7 +191,7 @@ export function Header() {
                   key={group.to}
                   to={group.to!}
                   onClick={() => setOpen(false)}
-                  className="rounded-lg px-3 py-2 text-sm font-medium"
+                  className="rounded-lg px-3 py-2 text-sm font-bold"
                 >
                   {t(group.label)}
                 </Link>
