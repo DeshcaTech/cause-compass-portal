@@ -7,6 +7,7 @@ import { PageHeader } from "@/components/site/PageHeader";
 import { RecordManager } from "@/components/admin/RecordManager";
 import { FundraisingReport } from "@/components/admin/FundraisingReport";
 import { NewsNotifier } from "@/components/admin/NewsNotifier";
+import { RsvpManager } from "@/components/admin/RsvpManager";
 import { SubscriberList } from "@/components/admin/SubscriberList";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -58,9 +59,9 @@ function AdminPage() {
   });
 
   const isAdmin = roles.includes("admin");
-  const can = (area: "board" | "president" | "fundraising") =>
+  const can = (area: "board" | "president" | "fundraising" | "event") =>
     isAdmin || roles.includes(`${area}_manager`);
-  const hasAnyAccess = isAdmin || can("board") || can("president") || can("fundraising");
+  const hasAnyAccess = isAdmin || can("board") || can("president") || can("fundraising") || can("event");
 
   async function signOut() {
     await queryClient.cancelQueries();
@@ -125,6 +126,7 @@ function AdminPage() {
           <TabsList>
             {isAdmin && <TabsTrigger value="events">Events</TabsTrigger>}
             {isAdmin && <TabsTrigger value="news">News</TabsTrigger>}
+            {can("event") && <TabsTrigger value="rsvps">RSVPs</TabsTrigger>}
             {isAdmin && <TabsTrigger value="gallery">Gallery</TabsTrigger>}
             {isAdmin && <TabsTrigger value="partners">Partners</TabsTrigger>}
             {can("fundraising") && <TabsTrigger value="campaigns">Campaigns</TabsTrigger>}
@@ -159,6 +161,10 @@ function AdminPage() {
                 { name: "is_featured", label: "Featured", type: "switch" },
               ]}
             />
+          </TabsContent>}
+
+          {can("event") && <TabsContent value="rsvps" className="mt-8">
+            <RsvpManager />
           </TabsContent>}
 
           {isAdmin && <TabsContent value="events" className="mt-8">
@@ -430,6 +436,7 @@ function AdminPage() {
                   <li><span className="text-foreground">Administrator</span> — every area of the site.</li>
                   <li><span className="text-foreground">Board manager</span> — board & team members only.</li>
                   <li><span className="text-foreground">President manager</span> — the president's message only.</li>
+                  <li><span className="text-foreground">Event manager</span> — event RSVP and interest lists only.</li>
                   <li><span className="text-foreground">Fundraising manager</span> — fundraising campaigns only.</li>
                 </ul>
                 <p>
