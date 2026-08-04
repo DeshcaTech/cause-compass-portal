@@ -545,6 +545,7 @@ export type Database = {
           id: string
           is_active: boolean
           membership_number: string | null
+          unsubscribe_token: string
           unsubscribed_at: string | null
           updated_at: string
         }
@@ -555,6 +556,7 @@ export type Database = {
           id?: string
           is_active?: boolean
           membership_number?: string | null
+          unsubscribe_token?: string
           unsubscribed_at?: string | null
           updated_at?: string
         }
@@ -565,6 +567,7 @@ export type Database = {
           id?: string
           is_active?: boolean
           membership_number?: string | null
+          unsubscribe_token?: string
           unsubscribed_at?: string | null
           updated_at?: string
         }

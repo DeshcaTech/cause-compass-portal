@@ -40,6 +40,21 @@ export const unsubscribeFromNews = createServerFn({ method: 'POST' })
     return { ok: true }
   })
 
+export const unsubscribeByToken = createServerFn({ method: 'POST' })
+  .inputValidator((input: unknown) => z.object({ token: z.string().uuid() }).parse(input))
+  .handler(async ({ data }) => {
+    const { supabaseAdmin } = await import('@/integrations/supabase/client.server')
+    const { data: row, error } = await supabaseAdmin
+      .from('news_subscribers')
+      .update({ is_active: false, unsubscribed_at: new Date().toISOString() })
+      .eq('unsubscribe_token', data.token)
+      .select('email')
+      .maybeSingle()
+    if (error) throw new Error(error.message)
+    if (!row) return { ok: false as const, email: null }
+    return { ok: true as const, email: row.email as string }
+  })
+
 export const notifySubscribers = createServerFn({ method: 'POST' })
   .middleware([requireSupabaseAuth])
   .inputValidator((input: unknown) => z.object({ id: z.string().uuid() }).parse(input))
@@ -63,7 +78,7 @@ export const notifySubscribers = createServerFn({ method: 'POST' })
 
     const { data: subscribers, error: subError } = await supabaseAdmin
       .from('news_subscribers')
-      .select('email')
+      .select('email, full_name, unsubscribe_token')
       .eq('is_active', true)
     if (subError) throw new Error(subError.message)
 
@@ -81,12 +96,14 @@ export const notifySubscribers = createServerFn({ method: 'POST' })
       try {
         const result = await sendTemplateEmail('news-announcement', sub.email, {
           templateData: {
+            recipientName: sub.full_name ?? undefined,
             title: item.title,
             summary: item.summary ?? undefined,
             body: item.body ?? undefined,
             imageUrl: item.image_url ?? undefined,
             url: `${baseUrl}/news/${item.id}`,
             publishedAt,
+            unsubscribeUrl: `${baseUrl}/news/unsubscribe?token=${sub.unsubscribe_token}`,
           },
           idempotencyKey: `news-${item.id}-${sub.email}`,
         })
