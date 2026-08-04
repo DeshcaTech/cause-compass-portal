@@ -303,6 +303,7 @@ export function RsvpManager() {
       </Card>
 
       <div className="grid gap-4 sm:grid-cols-4">
+        {null}
         {[
           { label: "Responses", value: totals.responses },
           { label: "Going", value: totals.going },
