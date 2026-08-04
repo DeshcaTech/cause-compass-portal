@@ -13,7 +13,7 @@ import {
   Users,
 } from "lucide-react";
 
-import { CameroonFlag, UkFlag } from "@/components/site/Flags";
+import flagsAsset from "@/assets/cm-uk-flags.jpg.asset.json";
 import hero from "@/assets/hero-community.jpg?w=1200&quality=72&format=jpg";
 import heroAvif from "@/assets/hero-community.jpg?w=1200&quality=55&format=avif";
 import heroWebp from "@/assets/hero-community.jpg?w=1200&quality=70&format=webp";
@@ -123,10 +123,12 @@ function Index() {
               <p className="eyebrow min-w-0 text-right text-gold">
                 {t("Cameroonian Community in Greater Manchester and Surrounding area")}
               </p>
-              <span className="inline-flex shrink-0 items-center gap-1.5">
-                <CameroonFlag className="h-8 w-auto sm:h-10" />
-                <UkFlag className="h-8 w-auto sm:h-10" />
-              </span>
+              <img
+                src={flagsAsset.url}
+                alt="Cameroon and United Kingdom flags"
+                loading="eager"
+                className="h-8 w-auto shrink-0 rounded-md object-cover sm:h-10"
+              />
             </div>
             <h1 className="mt-6 text-[2.15rem] leading-[1.02] sm:mt-7 sm:text-[2.6rem] sm:leading-[0.98] lg:text-[4.2rem]">
               {t("Stronger together,")}
