@@ -62,6 +62,20 @@ export type SurveyQuestion = {
   options?: string[];
 };
 
+export type VillageGroup = {
+  id: string;
+  name: string;
+  region: string;
+  short_description: string | null;
+  description: string | null;
+  image_url: string | null;
+  meeting_info: string | null;
+  contact_name: string | null;
+  contact_phone: string | null;
+  contact_email: string | null;
+  sort_order: number;
+};
+
 export type Survey = {
   id: string;
   title: string;
