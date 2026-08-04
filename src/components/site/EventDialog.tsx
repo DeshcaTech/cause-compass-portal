@@ -88,10 +88,13 @@ function RsvpForm({ event }: { event: EventRow }) {
   const [status, setStatus] = useState<"going" | "interested">("going");
   const [saving, setSaving] = useState(false);
   const [done, setDone] = useState(false);
+  const [editUrl, setEditUrl] = useState<string | null>(null);
+  const sendRsvp = useServerFn(submitEventRsvp);
 
   useEffect(() => {
     setDone(false);
     setStatus("going");
+    setEditUrl(null);
   }, [event.id]);
 
   async function onSubmit(formEvent: React.FormEvent<HTMLFormElement>) {
@@ -105,35 +108,55 @@ function RsvpForm({ event }: { event: EventRow }) {
     }
     setSaving(true);
     const { data: session } = await supabase.auth.getSession();
-    const { error } = await supabase.from("event_rsvps").insert({
-      event_id: event.id,
-      user_id: session.session?.user.id ?? null,
-      full_name: parsed.data.full_name,
-      email: parsed.data.email,
-      phone: parsed.data.phone || null,
-      membership_number: parsed.data.membership_number || null,
-      guests: parsed.data.guests,
-      note: parsed.data.note || null,
-      status,
-    });
-    setSaving(false);
-    if (error) {
+    try {
+      const result = await sendRsvp({
+        data: {
+          event_id: event.id,
+          user_id: session.session?.user.id ?? null,
+          full_name: parsed.data.full_name,
+          email: parsed.data.email,
+          phone: parsed.data.phone ?? "",
+          membership_number: parsed.data.membership_number ?? "",
+          guests: parsed.data.guests,
+          note: parsed.data.note ?? "",
+          status,
+        },
+      });
+      setEditUrl(`${window.location.origin}/rsvp/${result.editToken}`);
+    } catch {
+      setSaving(false);
       toast.error(t("Your RSVP could not be sent. Please try again."));
       return;
     }
+    setSaving(false);
     setDone(true);
-    toast.success(t("Thanks — we've noted your RSVP."));
+    toast.success(t("Thanks — we've emailed you a confirmation."));
   }
 
   if (done) {
     return (
-      <div className="flex items-start gap-3 rounded-xl border border-primary/40 bg-accent px-4 py-3">
-        <Check className="mt-0.5 size-4 shrink-0 text-primary" aria-hidden="true" />
-        <p className="text-sm">
-          {status === "going"
-            ? t("You're on the list. See you there!")
-            : t("Thanks for registering your interest.")}
+      <div className="space-y-3 rounded-xl border border-primary/40 bg-accent px-4 py-3">
+        <div className="flex items-start gap-3">
+          <Check className="mt-0.5 size-4 shrink-0 text-primary" aria-hidden="true" />
+          <p className="text-sm">
+            {status === "going"
+              ? t("You're on the list. See you there!")
+              : t("Thanks for registering your interest.")}
+          </p>
+        </div>
+        <p className="text-xs text-muted-foreground">
+          {t("We've emailed a confirmation with the event details and a link to edit your response.")}
         </p>
+        {editUrl ? (
+          <Button
+            type="button"
+            variant="soft"
+            size="sm"
+            onClick={() => window.open(editUrl, "_self")}
+          >
+            {t("Edit my response")}
+          </Button>
+        ) : null}
       </div>
     );
   }
