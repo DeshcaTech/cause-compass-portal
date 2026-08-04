@@ -73,6 +73,51 @@ function GalleryPage() {
   const active = galleries.find((g) => g.id === activeId) ?? null;
   const activePhotos = photos.filter((p) => p.gallery_id === activeId);
 
+  const tiles = useMemo(() => {
+    const real = activePhotos.map((photo) => ({
+      key: photo.id,
+      src: photo.photo_url,
+      caption: photo.caption ?? null,
+    }));
+    const fillers = placeholdersFor(activeId ?? "gallery")
+      .slice(0, Math.max(0, 6 - real.length))
+      .map((src, index) => ({ key: `placeholder-${index}`, src, caption: null }));
+    return [...real, ...fillers];
+  }, [activePhotos, activeId]);
+
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const open = lightboxIndex !== null;
+  const currentTile = lightboxIndex !== null ? tiles[lightboxIndex] : undefined;
+
+  const step = useCallback(
+    (delta: number) =>
+      setLightboxIndex((index) =>
+        index === null || tiles.length === 0
+          ? index
+          : (index + delta + tiles.length) % tiles.length,
+      ),
+    [tiles.length],
+  );
+
+  useEffect(() => {
+    setLightboxIndex(null);
+  }, [activeId]);
+
+  useEffect(() => {
+    if (!open) return;
+    function onKey(event: KeyboardEvent) {
+      if (event.key === "ArrowLeft") {
+        event.preventDefault();
+        step(-1);
+      } else if (event.key === "ArrowRight") {
+        event.preventDefault();
+        step(1);
+      }
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open, step]);
+
   return (
     <>
       <PageHeader
