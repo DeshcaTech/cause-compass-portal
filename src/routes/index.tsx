@@ -236,6 +236,39 @@ function Index() {
         </div>
       </section>
 
+      {/* Latest news & announcements */}
+      {latestNews.length > 0 && (
+        <section className="container-page pb-16 md:pb-20">
+          <div className="flex flex-wrap items-end justify-between gap-4">
+            <div>
+              <p className="eyebrow text-terracotta">Noticeboard</p>
+              <h2 className="mt-2 text-3xl md:text-4xl">Latest news &amp; announcements</h2>
+            </div>
+          </div>
+          <div className="mt-8 grid gap-5 md:grid-cols-3">
+            {latestNews.map((item) => (
+              <Card key={item.id} className="overflow-hidden border-border/70">
+                {item.image_url && (
+                  <img
+                    src={item.image_url}
+                    alt={item.title}
+                    loading="lazy"
+                    className="aspect-[16/9] w-full object-cover"
+                  />
+                )}
+                <CardContent className="p-6">
+                  <p className="eyebrow text-terracotta">{formatDate(item.published_at)}</p>
+                  <h3 className="mt-2 text-lg">{item.title}</h3>
+                  <p className="mt-2 line-clamp-3 text-sm text-muted-foreground">
+                    {item.summary ?? item.body}
+                  </p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </section>
+      )}
+
       <section className="surface-panel border-y border-border py-16 md:py-20">
         <div className="container-page">
           <div className="flex flex-wrap items-end justify-between gap-4">
