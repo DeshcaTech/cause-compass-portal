@@ -216,7 +216,8 @@ export function CampaignProgress({
       </Card>
 
       <Dialog open={active !== null} onOpenChange={(open) => !open && setOpenId(null)}>
-        <DialogContent className="max-w-3xl">
+        {/* key by campaign id so back/forward fully remounts the dialog content */}
+        <DialogContent key={active?.id ?? "none"} className="max-w-3xl">
           <DialogHeader>
             <DialogTitle>{active?.name ?? "Campaign"}</DialogTitle>
             <DialogDescription>
@@ -225,7 +226,12 @@ export function CampaignProgress({
                 : null}
             </DialogDescription>
           </DialogHeader>
-          {active && <CampaignDrilldown donations={donationsByCampaign[active.id] ?? []} />}
+          {active && (
+            <CampaignDrilldown
+              key={active.id}
+              donations={donationsByCampaign[active.id] ?? []}
+            />
+          )}
         </DialogContent>
       </Dialog>
     </div>
