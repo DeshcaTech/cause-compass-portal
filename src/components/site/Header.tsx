@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
 import { Menu, ChevronDown } from "lucide-react";
 
 import logo from "@/assets/ccgms-logo.png?w=120&format=png";
@@ -10,6 +11,7 @@ import { LanguageSwitcher } from "@/components/site/LanguageSwitcher";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useT } from "@/lib/i18n";
+import { brandQuery } from "@/lib/brand";
 
 type NavItem = { label: string; to: string };
 type NavGroup = { label: string; to?: string; items?: NavItem[] };
