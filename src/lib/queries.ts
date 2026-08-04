@@ -184,6 +184,20 @@ export const partnersQuery = queryOptions({
     ),
 });
 
+export const villageGroupsQuery = queryOptions({
+  queryKey: ["village_groups"],
+  queryFn: async () =>
+    unwrap<VillageGroup[]>(
+      await supabase
+        .from("village_groups")
+        .select(
+          "id, name, region, short_description, description, image_url, meeting_info, contact_name, contact_phone, contact_email, sort_order",
+        )
+        .eq("is_published", true)
+        .order("sort_order"),
+    ),
+});
+
 export const surveysQuery = queryOptions({
   queryKey: ["surveys"],
   queryFn: async () => {
