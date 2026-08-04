@@ -4,10 +4,10 @@ import { useMemo, useState } from "react";
 import { ChevronLeft, ChevronRight, MapPin } from "lucide-react";
 
 import { PageHeader } from "@/components/site/PageHeader";
+import { SidebarNavItem, SidebarPage, SidebarSection } from "@/components/site/SidebarPage";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { eventsQuery, formatDate, type EventRow } from "@/lib/queries";
 import { EventDialog, eventFallbackImage } from "@/components/site/EventDialog";
 import { SmartImage } from "@/components/site/SmartImage";
