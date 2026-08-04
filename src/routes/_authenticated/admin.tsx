@@ -282,7 +282,6 @@ function AdminPage() {
                 { name: "website", label: "Website" },
                 { name: "address", label: "Address" },
                 { name: "is_published", label: "Published", type: "switch" },
-                { name: "is_featured", label: "Featured", type: "switch" },
               ]}
             />
           </TabsContent>}
@@ -368,7 +367,6 @@ function AdminPage() {
                 { name: "message", label: "Message", type: "textarea", required: true },
                 { name: "photo_url", label: "Photo", type: "image", crop: { aspect: 4 / 3, outputWidth: 1200 } },
                 { name: "is_published", label: "Published", type: "switch" },
-                { name: "is_featured", label: "Featured", type: "switch" },
               ]}
             />
           </TabsContent>}
