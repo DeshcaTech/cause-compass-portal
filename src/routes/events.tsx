@@ -1,16 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
-import { CalendarDays, ChevronLeft, ChevronRight, Clock, MapPin, User } from "lucide-react";
+import { ChevronLeft, ChevronRight, MapPin } from "lucide-react";
 
 import { PageHeader } from "@/components/site/PageHeader";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { eventsQuery, formatDate, type EventRow } from "@/lib/queries";
-import eventFallback from "@/assets/event-fallback.jpg";
+import { EventDialog, eventFallbackImage } from "@/components/site/EventDialog";
 import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/events")({
@@ -44,16 +43,28 @@ function TypeBadge({ type }: { type: EventRow["event_type"] }) {
 }
 
 function EventCard({ event, onOpen }: { event: EventRow; onOpen: () => void }) {
+  const t = useT();
   return (
     <Card
       className="cursor-pointer border-border/70 transition-all hover:-translate-y-1 hover:shadow-[var(--shadow-lift)]"
       onClick={onOpen}
+      role="button"
+      tabIndex={0}
+      aria-label={`${t("View event details")}: ${event.title}`}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          onOpen();
+        }
+      }}
     >
       <CardContent className="p-6">
         <img
-          src={event.image_url ?? eventFallback}
-          alt={event.title}
+          src={event.image_url ?? eventFallbackImage(event.id)}
+          alt={event.image_url ? event.title : t("Community members celebrating together")}
           loading="lazy"
+          width={1280}
+          height={720}
           className="mb-4 aspect-[16/9] w-full rounded-xl object-cover"
         />
         <div className="flex items-start justify-between gap-3">
@@ -247,42 +258,7 @@ function EventsPage() {
         </Tabs>
       </section>
 
-      <Dialog open={!!selected} onOpenChange={(open) => !open && setSelected(null)}>
-        <DialogContent className="sm:max-w-lg">
-          <DialogHeader>
-            <DialogTitle>{selected?.title}</DialogTitle>
-          </DialogHeader>
-          {selected ? (
-            <div className="space-y-4">
-              <img
-                src={selected.image_url ?? eventFallback}
-                alt={selected.title}
-                className="aspect-[16/9] w-full rounded-xl object-cover"
-              />
-              <TypeBadge type={selected.event_type} />
-              <p className="text-sm text-foreground/85">{selected.description}</p>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li className="flex items-center gap-2">
-                  <CalendarDays className="size-4" /> {formatDate(selected.start_at, true)}
-                </li>
-                {selected.end_at ? (
-                  <li className="flex items-center gap-2">
-                    <Clock className="size-4" /> {t("Ends")} {formatDate(selected.end_at, true)}
-                  </li>
-                ) : null}
-                <li className="flex items-center gap-2">
-                  <MapPin className="size-4" /> {selected.location}
-                </li>
-                {selected.organiser ? (
-                  <li className="flex items-center gap-2">
-                    <User className="size-4" /> {selected.organiser}
-                  </li>
-                ) : null}
-              </ul>
-            </div>
-          ) : null}
-        </DialogContent>
-      </Dialog>
+      <EventDialog event={selected} onOpenChange={(open) => !open && setSelected(null)} />
     </>
   );
 }

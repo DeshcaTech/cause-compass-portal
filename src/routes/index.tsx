@@ -6,10 +6,8 @@ import {
   ArrowRight,
   Building2,
   CalendarDays,
-  Clock,
   HandHeart,
   HeartHandshake,
-  MapPin,
   Smartphone,
   UserRound,
   Users,
@@ -29,9 +27,8 @@ import eventFallbackAvif from "@/assets/event-fallback.jpg?w=1000&quality=55&for
 import eventFallbackWebp from "@/assets/event-fallback.jpg?w=1000&quality=70&format=webp";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Picture } from "@/components/site/Picture";
+import { EventDialog } from "@/components/site/EventDialog";
 import { useT } from "@/lib/i18n";
 import {
   announcementsQuery,
@@ -392,51 +389,10 @@ function Index() {
         </div>
       </section>
 
-      <Dialog open={!!selectedEvent} onOpenChange={(open) => !open && setSelectedEvent(null)}>
-        <DialogContent className="sm:max-w-lg">
-          <DialogHeader>
-            <DialogTitle>{selectedEvent?.title}</DialogTitle>
-          </DialogHeader>
-          {selectedEvent ? (
-            <div className="space-y-4">
-              <img
-                src={selectedEvent.image_url ?? eventFallback}
-                alt={selectedEvent.title}
-                loading="lazy"
-                className="aspect-[16/9] w-full rounded-xl object-cover"
-              />
-              <Badge
-                className={
-                  selectedEvent.event_type === "ccgms"
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-terracotta text-terracotta-foreground"
-                }
-              >
-                {selectedEvent.event_type === "ccgms" ? t("CCGMs event") : t("Other event")}
-              </Badge>
-              <p className="text-sm text-foreground/85">{selectedEvent.description}</p>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li className="flex items-center gap-2">
-                  <CalendarDays className="size-4" /> {formatDate(selectedEvent.start_at, true)}
-                </li>
-                {selectedEvent.end_at ? (
-                  <li className="flex items-center gap-2">
-                    <Clock className="size-4" /> {t("Ends")} {formatDate(selectedEvent.end_at, true)}
-                  </li>
-                ) : null}
-                <li className="flex items-center gap-2">
-                  <MapPin className="size-4" /> {selectedEvent.location}
-                </li>
-                {selectedEvent.organiser ? (
-                  <li className="flex items-center gap-2">
-                    <UserRound className="size-4" /> {selectedEvent.organiser}
-                  </li>
-                ) : null}
-              </ul>
-            </div>
-          ) : null}
-        </DialogContent>
-      </Dialog>
+      <EventDialog
+        event={selectedEvent}
+        onOpenChange={(open) => !open && setSelectedEvent(null)}
+      />
 
       <section className="container-page py-14 sm:py-16 md:py-20">
         <div className="flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-end sm:justify-between">
