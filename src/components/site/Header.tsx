@@ -191,7 +191,7 @@ export function Header() {
                   key={group.to}
                   to={group.to!}
                   onClick={() => setOpen(false)}
-                  className="rounded-lg px-3 py-2 text-sm font-medium"
+                  className="rounded-lg px-3 py-2 text-sm font-bold"
                 >
                   {t(group.label)}
                 </Link>
