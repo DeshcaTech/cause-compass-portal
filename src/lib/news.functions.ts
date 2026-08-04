@@ -1,0 +1,107 @@
+import { createServerFn } from '@tanstack/react-start'
+import { requireSupabaseAuth } from '@/integrations/supabase/auth-middleware'
+import { z } from 'zod'
+
+const subscribeSchema = z.object({
+  email: z.string().trim().email().max(255),
+  full_name: z.string().trim().max(120).optional(),
+  membership_number: z.string().trim().max(30).optional(),
+})
+
+export const subscribeToNews = createServerFn({ method: 'POST' })
+  .inputValidator((input: unknown) => subscribeSchema.parse(input))
+  .handler(async ({ data }) => {
+    const { supabaseAdmin } = await import('@/integrations/supabase/client.server')
+    const { error } = await supabaseAdmin.from('news_subscribers').upsert(
+      {
+        email: data.email.toLowerCase(),
+        full_name: data.full_name || null,
+        membership_number: data.membership_number || null,
+        is_active: true,
+        unsubscribed_at: null,
+      },
+      { onConflict: 'email' },
+    )
+    if (error) throw new Error(error.message)
+    return { ok: true }
+  })
+
+const unsubscribeSchema = z.object({ email: z.string().trim().email().max(255) })
+
+export const unsubscribeFromNews = createServerFn({ method: 'POST' })
+  .inputValidator((input: unknown) => unsubscribeSchema.parse(input))
+  .handler(async ({ data }) => {
+    const { supabaseAdmin } = await import('@/integrations/supabase/client.server')
+    const { error } = await supabaseAdmin
+      .from('news_subscribers')
+      .update({ is_active: false, unsubscribed_at: new Date().toISOString() })
+      .eq('email', data.email.toLowerCase())
+    if (error) throw new Error(error.message)
+    return { ok: true }
+  })
+
+export const notifySubscribers = createServerFn({ method: 'POST' })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: unknown) => z.object({ id: z.string().uuid() }).parse(input))
+  .handler(async ({ data, context }) => {
+    const { data: isAdmin } = await context.supabase.rpc('has_role', {
+      _user_id: context.userId,
+      _role: 'admin',
+    })
+    if (!isAdmin) throw new Error('Forbidden')
+
+    const { supabaseAdmin } = await import('@/integrations/supabase/client.server')
+
+    const { data: item, error: itemError } = await supabaseAdmin
+      .from('announcements')
+      .select('id, title, summary, body, image_url, published_at, is_published')
+      .eq('id', data.id)
+      .maybeSingle()
+    if (itemError) throw new Error(itemError.message)
+    if (!item) throw new Error('News item not found')
+    if (!item.is_published) throw new Error('Publish the news item before notifying subscribers')
+
+    const { data: subscribers, error: subError } = await supabaseAdmin
+      .from('news_subscribers')
+      .select('email')
+      .eq('is_active', true)
+    if (subError) throw new Error(subError.message)
+
+    const { sendTemplateEmail } = await import('./email-templates/send-email')
+    const baseUrl = process.env['PUBLIC_SITE_URL'] || 'https://cause-compass-portal.lovable.app'
+    const publishedAt = new Date(item.published_at).toLocaleDateString('en-GB', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    })
+
+    let sent = 0
+    let skipped = 0
+    for (const sub of subscribers ?? []) {
+      try {
+        const result = await sendTemplateEmail('news-announcement', sub.email, {
+          templateData: {
+            title: item.title,
+            summary: item.summary ?? undefined,
+            body: item.body ?? undefined,
+            imageUrl: item.image_url ?? undefined,
+            url: `${baseUrl}/news/${item.id}`,
+            publishedAt,
+          },
+          idempotencyKey: `news-${item.id}-${sub.email}`,
+        })
+        if (result.sent) sent += 1
+        else skipped += 1
+      } catch (err) {
+        skipped += 1
+        console.error('News notification failed for', sub.email, err)
+      }
+    }
+
+    await supabaseAdmin
+      .from('announcements')
+      .update({ notified_at: new Date().toISOString() })
+      .eq('id', item.id)
+
+    return { sent, skipped, total: (subscribers ?? []).length }
+  })
