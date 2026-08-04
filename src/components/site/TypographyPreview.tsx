@@ -8,7 +8,7 @@ const FRAMES = [
   { key: "desktop", label: "Desktop", width: 1280, note: "1280px" },
 ] as const;
 
-function Sample() {
+function Sample({ id }: { id: string }) {
   return (
     <div className="@container">
       <div className="space-y-5 p-6">
@@ -41,8 +41,8 @@ function Sample() {
         </div>
 
         <div className="space-y-1.5">
-          <Label htmlFor={`sample-${Math.random()}`}>Full name</Label>
-          <Input placeholder="Jane Doe" readOnly />
+          <Label htmlFor={`sample-${id}`}>Full name</Label>
+          <Input id={`sample-${id}`} placeholder="Jane Doe" readOnly />
         </div>
       </div>
     </div>
@@ -60,7 +60,7 @@ export function TypographyPreview() {
           </div>
           <div className="overflow-x-auto rounded-2xl border border-border bg-card shadow-[var(--shadow-soft)]">
             <div style={{ width: frame.width, maxWidth: "100%" }}>
-              <Sample />
+              <Sample id={frame.key} />
             </div>
           </div>
         </div>
