@@ -10,7 +10,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { documentsQuery } from "@/lib/queries";
 import { useT } from "@/lib/i18n";
-import documentsBanner from "@/assets/community-together.jpg";
 
 export const Route = createFileRoute("/documents")({
   head: () => ({

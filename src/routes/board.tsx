@@ -74,9 +74,6 @@ function BoardPage() {
   // "current" or a past term label.
   const [term, setTerm] = useState<string>("current");
   const showing = term === "current" ? current : past.filter((m) => m.term_label === term);
-  const bannerPhoto =
-    showing.find((m) => m.photo_url)?.photo_url ?? personFallback;
-
   return (
     <>
       <PageHeader
