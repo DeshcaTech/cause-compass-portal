@@ -15,6 +15,7 @@ import {
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CampaignProgress } from "@/components/admin/CampaignProgress";
+import { NotificationCenter } from "@/components/admin/NotificationCenter";
 import {
   Table,
   TableBody,
@@ -211,6 +212,8 @@ export function FundraisingReport() {
         rows={report.campaignRows}
         donationsByCampaign={report.donationsByCampaign}
       />
+
+      <NotificationCenter />
 
       <div className="grid gap-6 lg:grid-cols-2">
         <Card className="border-border/70">
