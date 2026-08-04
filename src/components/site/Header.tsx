@@ -15,7 +15,8 @@ export const NAV: NavGroup[] = [
     label: "About CCGMs",
     items: [
       { label: "President's message", to: "/about" },
-      { label: "Board", to: "/board" },
+      { label: "Board Members", to: "/board" },
+      { label: "News", to: "/news" },
       { label: "Downloads", to: "/documents" },
       { label: "Assets rent", to: "/assets" },
     ],
