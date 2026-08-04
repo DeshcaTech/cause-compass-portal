@@ -8,6 +8,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
 import { eventsQuery } from "@/lib/queries";
+import { downloadRsvpPdf } from "@/lib/rsvp-pdf";
+import { Textarea } from "@/components/ui/textarea";
+import { Switch } from "@/components/ui/switch";
 
 type RsvpRow = {
   id: string;
@@ -42,6 +45,12 @@ export function RsvpManager() {
   const [search, setSearch] = useState("");
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
+  const [coverSheet, setCoverSheet] = useState(false);
+  const [managerName, setManagerName] = useState("");
+  const [organisation, setOrganisation] = useState(
+    "Cameroonian Community of Greater Manchester",
+  );
+  const [coverNote, setCoverNote] = useState("");
 
   const { data: rsvps = [], isLoading } = useQuery({
     queryKey: ["admin-rsvps"],
@@ -160,78 +169,36 @@ export function RsvpManager() {
     .join("   |   ");
 
   async function exportPdf() {
-    const [{ jsPDF }, autoTableModule] = await Promise.all([
-      import("jspdf"),
-      import("jspdf-autotable"),
-    ]);
-    const autoTable = autoTableModule.default;
-    const doc = new jsPDF({ orientation: "landscape", unit: "pt", format: "a4" });
-
-    doc.setFontSize(16);
-    doc.text("CCGMs — RSVPs & interest", 40, 40);
-    doc.setFontSize(9);
-    doc.text(filterSummary, 40, 58);
-    doc.text(
-      `Responses: ${totals.responses}   |   Going: ${totals.going}   |   Interested: ${totals.interested}   |   Expected attendees: ${totals.attendees}`,
-      40,
-      72,
-    );
-    doc.text(`Generated ${formatStamp(new Date().toISOString())}`, 40, 86);
-
-    autoTable(doc, {
-      startY: 100,
-      styles: { fontSize: 8, cellPadding: 4, overflow: "linebreak" },
-      headStyles: { fillColor: [16, 94, 74], textColor: 255 },
-      head: [
-        [
-          "Event",
-          "Event date",
-          "Name",
-          "Email",
-          "Phone",
-          "Membership",
-          "Response",
-          "Extra guests",
-          "Total attendees",
-          "Note",
-          "Submitted",
-          "Last updated",
-        ],
-      ],
-      body: filtered.map((row) => {
-        const event = eventById(row.event_id);
-        return [
-          eventTitle(row.event_id),
-          event?.start_at ? formatStamp(event.start_at) : "—",
-          row.full_name,
-          row.email,
-          row.phone ?? "—",
-          row.membership_number ?? "—",
-          row.status,
-          String(row.guests),
-          String(1 + row.guests),
-          row.note ?? "—",
-          formatStamp(row.created_at),
-          formatStamp(row.updated_at) || "—",
-        ];
-      }),
-      didDrawPage: () => {
-        const page = doc.getNumberOfPages();
-        doc.setFontSize(8);
-        doc.text(
-          `Page ${page}`,
-          doc.internal.pageSize.getWidth() - 60,
-          doc.internal.pageSize.getHeight() - 20,
-        );
-      },
-    });
-
     const scope = [
       status === "all" ? "all" : status,
       fromDate || "start",
       toDate || new Date().toISOString().slice(0, 10),
     ].join("_");
-    doc.save(`ccgms-rsvps-${scope}.pdf`);
+
+    await downloadRsvpPdf({
+      title: "CCGMs — RSVPs & interest",
+      filterSummary,
+      totals,
+      generatedAt: formatStamp(new Date().toISOString()),
+      fileName: `ccgms-rsvps-${scope}.pdf`,
+      coverSheet: coverSheet ? { managerName, organisation, note: coverNote } : null,
+      rows: filtered.map((row) => {
+        const event = eventById(row.event_id);
+        return {
+          eventTitle: eventTitle(row.event_id),
+          eventDate: event?.start_at ? formatStamp(event.start_at) : "",
+          fullName: row.full_name,
+          email: row.email,
+          phone: row.phone ?? "",
+          membership: row.membership_number ?? "",
+          status: row.status,
+          guests: row.guests,
+          note: row.note ?? "",
+          submitted: formatStamp(row.created_at),
+          updated: formatStamp(row.updated_at),
+        };
+      }),
+    });
   }
 
   return (
