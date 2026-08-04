@@ -1,7 +1,20 @@
 import { useEffect, useState } from "react";
-import { CalendarDays, CalendarPlus, Check, Clock, MapPin, Tag, UserRound } from "lucide-react";
+import {
+  Apple,
+  CalendarDays,
+  CalendarPlus,
+  Check,
+  Clock,
+  Download,
+  Link2,
+  MapPin,
+  Share2,
+  Tag,
+  UserRound,
+} from "lucide-react";
 import { toast } from "sonner";
 import { z } from "zod";
+import { useServerFn } from "@tanstack/react-start";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -15,9 +28,17 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { SmartImage } from "@/components/site/SmartImage";
 import { supabase } from "@/integrations/supabase/client";
 import { downloadEventIcs } from "@/lib/ics";
+import { appleCalendarUrl, googleCalendarUrl, outlookCalendarUrl } from "@/lib/calendar-links";
+import { submitEventRsvp } from "@/lib/rsvp.functions";
 import { formatDate, type EventRow } from "@/lib/queries";
 import { useT } from "@/lib/i18n";
 import eventFallback from "@/assets/event-fallback.jpg";
