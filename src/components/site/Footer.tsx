@@ -3,9 +3,9 @@ import { useQuery } from "@tanstack/react-query";
 import { brandQuery } from "@/lib/brand";
 import { Mail, MapPin, Phone } from "lucide-react";
 
-import logo from "@/assets/ccgms-logo.png?w=120&format=png";
-import logoAvif from "@/assets/ccgms-logo.png?w=120&quality=70&format=avif";
-import logoWebp from "@/assets/ccgms-logo.png?w=120&quality=80&format=webp";
+import logo from "@/assets/ccgms-wordmark.png?w=640&format=png";
+import logoAvif from "@/assets/ccgms-wordmark.png?w=640&quality=70&format=avif";
+import logoWebp from "@/assets/ccgms-wordmark.png?w=640&quality=80&format=webp";
 import { Picture } from "@/components/site/Picture";
 import { useT } from "@/lib/i18n";
 
@@ -52,12 +52,22 @@ export function Footer() {
           <div className="flex items-center gap-3">
             {showLogo ? (
               customLogo ? (
-                <img src={customLogo} alt="" width={44} height={44} className="h-11 w-11 rounded-full object-contain" loading="lazy" decoding="async" />
+                <img src={customLogo} alt="" className="h-12 w-auto max-w-[16rem] object-contain" loading="lazy" decoding="async" />
               ) : (
-                <Picture avif={logoAvif} webp={logoWebp} src={logo} alt="" width={44} height={44} className="h-11 w-11" loading="lazy" decoding="async" />
+                <Picture
+                  avif={logoAvif}
+                  webp={logoWebp}
+                  src={logo}
+                  alt=""
+                  width={640}
+                  height={162}
+                  className="h-12 w-auto max-w-[16rem] rounded-md bg-background/95 px-2 py-1 object-contain"
+                  loading="lazy"
+                  decoding="async"
+                />
               )
             ) : null}
-            <span className="font-display text-xl font-semibold">CCGMs</span>
+            <span className={`font-display text-xl font-semibold ${showLogo ? "sr-only" : ""}`}>CCGMs</span>
           </div>
           <p className="mt-4 max-w-sm text-sm text-primary-foreground/75">
             {t(
