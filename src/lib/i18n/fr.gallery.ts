@@ -13,4 +13,16 @@ export const gallery: Record<string, string> = {
   "of": "sur",
   "Previous photo": "Photo précédente",
   "Next photo": "Photo suivante",
+  "Photo viewer": "Visionneuse de photos",
+  "Photo thumbnails": "Miniatures des photos",
+  "Use arrow keys to browse, +/− to zoom, F for full screen, space to play":
+    "Utilisez les flèches pour naviguer, +/− pour zoomer, F pour le plein écran, espace pour lancer le diaporama",
+  "Zoom in": "Zoom avant",
+  "Zoom out": "Zoom arrière",
+  "Reset": "Réinitialiser",
+  "Full screen": "Plein écran",
+  "Exit full screen": "Quitter le plein écran",
+  "Play slideshow": "Lancer le diaporama",
+  "Pause slideshow": "Mettre le diaporama en pause",
+  "Slideshow interval": "Intervalle du diaporama",
 };
