@@ -96,7 +96,8 @@ function MembershipPage() {
   const [saving, setSaving] = useState(false);
   const [number, setNumber] = useState<string | null>(null);
 
-  const price = TIERS.find((t) => t.key === tier)!.price;
+  const selectedTier = TIERS.find((item) => item.key === tier)!;
+  const price = selectedTier.price;
 
   function updateFamily(index: number, patch: Partial<FamilyMember>) {
     setFamily((prev) => prev.map((item, i) => (i === index ? { ...item, ...patch } : item)));
