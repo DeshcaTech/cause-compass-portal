@@ -117,24 +117,26 @@ function EventsPage() {
 
       <section className="container-page py-14">
         <Tabs defaultValue="coming">
-          <TabsList>
-            <TabsTrigger value="coming">Coming events</TabsTrigger>
-            <TabsTrigger value="past">Past events</TabsTrigger>
-            <TabsTrigger value="all">All events</TabsTrigger>
-            <TabsTrigger value="calendar">Calendar</TabsTrigger>
-          </TabsList>
+          <div className="-mx-4 overflow-x-auto px-4 sm:mx-0 sm:px-0">
+            <TabsList className="w-max min-w-full justify-start">
+              <TabsTrigger value="coming">Coming events</TabsTrigger>
+              <TabsTrigger value="past">Past events</TabsTrigger>
+              <TabsTrigger value="all">All events</TabsTrigger>
+              <TabsTrigger value="calendar">Calendar</TabsTrigger>
+            </TabsList>
+          </div>
 
-          <TabsContent value="coming" className="mt-8 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+          <TabsContent value="coming" className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {upcoming.map((event) => (
               <EventCard key={event.id} event={event} onOpen={() => setSelected(event)} />
             ))}
           </TabsContent>
-          <TabsContent value="past" className="mt-8 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+          <TabsContent value="past" className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {past.map((event) => (
               <EventCard key={event.id} event={event} onOpen={() => setSelected(event)} />
             ))}
           </TabsContent>
-          <TabsContent value="all" className="mt-8 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+          <TabsContent value="all" className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {events.map((event) => (
               <EventCard key={event.id} event={event} onOpen={() => setSelected(event)} />
             ))}
@@ -142,7 +144,7 @@ function EventsPage() {
 
           <TabsContent value="calendar" className="mt-8">
             <Card className="border-border/70">
-              <CardContent className="p-6">
+              <CardContent className="p-4 sm:p-6">
                 <div className="flex items-center justify-between">
                   <h2 className="text-xl">{monthLabel}</h2>
                   <div className="flex gap-2">
