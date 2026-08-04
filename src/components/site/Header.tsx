@@ -17,7 +17,6 @@ type NavItem = { label: string; to: string };
 type NavGroup = { label: string; to?: string; items?: NavItem[] };
 
 export const NAV: NavGroup[] = [
-  { label: "Home", to: "/" },
   {
     label: "About CCGMs",
     items: [
