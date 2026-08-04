@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/dialog";
 import { Progress } from "@/components/ui/progress";
 import { CampaignDrilldown, type DrilldownDonation } from "@/components/admin/CampaignDrilldown";
+import { recordAlerts } from "@/lib/notifications";
 
 export type CampaignProgressRow = {
   id: string;
@@ -105,19 +106,12 @@ export function CampaignProgress({
   useEffect(() => {
     if (notified.current || !signals.length) return;
     notified.current = true;
-    for (const s of reached) {
-      toast.success(`${s.name} hit its target`, {
-        description: `${money.format(s.raised)} raised of ${money.format(s.goal)} (${s.pct}%).`,
-      });
+    // Only alert on events not already logged in the notification centre.
+    for (const alert of recordAlerts(signals)) {
+      if (alert.kind === "milestone") toast.success(alert.title, { description: alert.body });
+      else toast.warning(alert.title, { description: alert.body });
     }
-    for (const s of behind) {
-      toast.warning(`${s.name} is behind schedule`, {
-        description: `${s.pct}% raised versus ${s.expectedPct}% expected by now${
-          s.daysLeft !== null && s.daysLeft > 0 ? ` — ${s.daysLeft} days left.` : "."
-        }`,
-      });
-    }
-  }, [signals, reached, behind]);
+  }, [signals]);
 
   if (!signals.length) {
     return (
