@@ -6,10 +6,8 @@ import {
   ArrowRight,
   Building2,
   CalendarDays,
-  Clock,
   HandHeart,
   HeartHandshake,
-  MapPin,
   Smartphone,
   UserRound,
   Users,
@@ -29,7 +27,6 @@ import eventFallbackAvif from "@/assets/event-fallback.jpg?w=1000&quality=55&for
 import eventFallbackWebp from "@/assets/event-fallback.jpg?w=1000&quality=70&format=webp";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Picture } from "@/components/site/Picture";
 import { EventDialog } from "@/components/site/EventDialog";
 import { useT } from "@/lib/i18n";
