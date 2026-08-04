@@ -141,7 +141,14 @@ export const presidentQuery = queryOptions({
 export const eventsQuery = queryOptions({
   queryKey: ["events"],
   queryFn: async () =>
-    unwrap<EventRow[]>(await supabase.from("events").select("*").order("start_at")),
+    unwrap<EventRow[]>(
+      await supabase
+        .from("events")
+        .select(
+          "id, title, description, start_at, end_at, location, image_url, event_type, organiser, ticket_url",
+        )
+        .order("start_at"),
+    ),
 });
 
 export const campaignsQuery = queryOptions({
