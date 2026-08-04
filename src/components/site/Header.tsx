@@ -103,11 +103,15 @@ export function Header() {
 
         <div className="flex items-center gap-2 lg:hidden">
           <LanguageSwitcher />
-          <SheetTrigger asChild>
-            <Button variant="ghost" size="icon" className="lg:hidden" aria-label="Open menu">
-              <Menu />
-            </Button>
-          </SheetTrigger>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="lg:hidden"
+            aria-label="Open menu"
+            onClick={() => setOpen(true)}
+          >
+            <Menu />
+          </Button>
         </div>
       </div>
 
