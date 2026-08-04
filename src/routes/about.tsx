@@ -113,7 +113,7 @@ function AboutPage() {
               src={president?.photo_url ?? presidentFallback}
               alt={president?.president_name ?? t("CCGMs President")}
               loading="lazy"
-              className="aspect-[4/3] w-full object-cover"
+              className="aspect-[3/4] w-full object-cover object-top"
             />
             <CardContent className="p-7">
               <Quote className="size-8 text-gold" />
