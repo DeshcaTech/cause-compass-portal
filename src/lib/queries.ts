@@ -185,6 +185,52 @@ export const surveysQuery = queryOptions({
   },
 });
 
+export type Job = {
+  id: string;
+  title: string;
+  company: string;
+  category: string;
+  job_type: string;
+  location: string | null;
+  salary_range: string | null;
+  short_description: string | null;
+  description: string | null;
+  image_url: string | null;
+  apply_url: string | null;
+  closes_at: string | null;
+  created_at: string;
+};
+
+const JOB_PUBLIC_COLUMNS =
+  "id, title, company, category, job_type, location, salary_range, short_description, description, image_url, apply_url, closes_at, created_at";
+
+export const jobsQuery = queryOptions({
+  queryKey: ["jobs"],
+  queryFn: async () =>
+    unwrap<Job[]>(
+      await supabase
+        .from("jobs")
+        .select(JOB_PUBLIC_COLUMNS)
+        .eq("is_published", true)
+        .order("created_at", { ascending: false }),
+    ),
+});
+
+const surveysQueryLegacy = queryOptions({
+  queryKey: ["surveys"],
+  queryFn: async () => {
+    const { data, error } = await supabase
+      .from("surveys")
+      .select("*")
+      .order("created_at", { ascending: false });
+    if (error) throw new Error(error.message);
+    return (data ?? []).map((row) => ({
+      ...row,
+      questions: (row.questions ?? []) as unknown as SurveyQuestion[],
+    })) as Survey[];
+  },
+});
+
 export const galleriesQuery = queryOptions({
   queryKey: ["galleries"],
   queryFn: async () =>
