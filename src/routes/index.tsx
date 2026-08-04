@@ -331,13 +331,16 @@ function Index() {
             <div className="mt-6 grid gap-5 sm:mt-8 sm:gap-6 lg:grid-cols-[1.4fr_1fr]">
               {/* Lead story */}
               <Card className="overflow-hidden border-border/70 bg-primary text-primary-foreground">
-                <img
-                  src={upcoming[0]!.image_url ?? eventFallback}
+                <Picture
+                  {...(upcoming[0]!.image_url
+                    ? { src: upcoming[0]!.image_url }
+                    : { src: eventFallback, avif: eventFallbackAvif, webp: eventFallbackWebp })}
                   alt={upcoming[0]!.title}
                   loading="lazy"
                   decoding="async"
                   width={1280}
                   height={720}
+                  pictureClassName="block"
                   className="aspect-[16/9] w-full object-cover"
                 />
                 <CardContent className="flex h-full flex-col p-6 sm:p-8 md:p-10">
