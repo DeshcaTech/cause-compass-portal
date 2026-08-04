@@ -211,6 +211,7 @@ export type Announcement = {
   body: string | null;
   image_url: string | null;
   published_at: string;
+  is_featured: boolean;
 };
 
 export const announcementsQuery = queryOptions({
@@ -219,7 +220,7 @@ export const announcementsQuery = queryOptions({
     unwrap<Announcement[]>(
       await supabase
         .from("announcements")
-        .select("id, title, summary, body, image_url, published_at")
+        .select("id, title, summary, body, image_url, published_at, is_featured")
         .eq("is_published", true)
         .order("published_at", { ascending: false }),
     ),
@@ -232,7 +233,7 @@ export const announcementQuery = (id: string) =>
       unwrap<Announcement>(
         await supabase
           .from("announcements")
-          .select("id, title, summary, body, image_url, published_at")
+          .select("id, title, summary, body, image_url, published_at, is_featured")
           .eq("is_published", true)
           .eq("id", id)
           .maybeSingle(),
