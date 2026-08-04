@@ -134,8 +134,29 @@ function AdminPage() {
             {isAdmin && <TabsTrigger value="roles">Roles</TabsTrigger>}
           </TabsList>
 
+          {isAdmin && <TabsContent value="news" className="mt-8">
+            <RecordManager
+              table="announcements"
+              title="News & announcements"
+              description="Shown in the Latest news section on the home page."
+              orderBy={{ column: "published_at", ascending: false }}
+              primaryLabel={(row) => String(row['title'])}
+              secondaryLabel={(row) =>
+                `${new Date(String(row['published_at'])).toLocaleDateString("en-GB")}${row['is_published'] ? "" : " · draft"}`
+              }
+              defaults={{ is_published: true }}
+              fields={[
+                { name: "title", label: "Title", required: true },
+                { name: "summary", label: "Short summary", type: "textarea" },
+                { name: "body", label: "Full text", type: "textarea" },
+                { name: "published_at", label: "Published", type: "datetime" },
+                { name: "image_url", label: "Picture", type: "image", crop: { aspect: 16 / 9, outputWidth: 1600 } },
+                { name: "is_published", label: "Published", type: "switch" },
+              ]}
+            />
+          </TabsContent>}
+
           {isAdmin && <TabsContent value="events" className="mt-8">
-            {null}
             <RecordManager
               table="events"
               title="Events"
