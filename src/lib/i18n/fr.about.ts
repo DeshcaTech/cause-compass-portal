@@ -36,7 +36,7 @@ export const about: Record<string, string> = {
   "Leadership": "Direction",
   "The board team": "L'équipe du conseil",
   "Meet the full board": "Découvrir tout le conseil",
-  "Our Village-based Groups": "Nos groupes de village",
+  "Our Groups": "Nos groupes",
   "Village and division groups within CCGMs. Click a group to see meeting details and contacts.":
     "Groupes de village et de département au sein des CCGMs. Cliquez sur un groupe pour voir les réunions et les contacts.",
   "Village and division groups within CCGMs.":
