@@ -264,13 +264,7 @@ function Index() {
           <div className="mt-8 grid gap-5 md:grid-cols-3">
             {latestNews.map((item) => (
               <Link key={item.id} to="/news/$id" params={{ id: item.id }} className="block">
-              <Card className="h-full overflow-hidden border-border/70 transition-shadow hover:shadow-lg">
-                <img
-                  src={item.image_url ?? newsFallback}
-                  alt={item.title}
-                  loading="lazy"
-                  className="aspect-[16/9] w-full object-cover"
-                />
+              <Card className="h-full border-border/70 transition-shadow hover:shadow-lg">
                 <CardContent className="p-6">
                   <p className="eyebrow text-terracotta">{formatDate(item.published_at)}</p>
                   <h3 className="mt-2 text-lg">{item.title}</h3>
