@@ -13,6 +13,10 @@ import { supabase } from "@/integrations/supabase/client";
 import { galleriesQuery } from "@/lib/queries";
 
 export const Route = createFileRoute("/_authenticated/admin")({
+  // Drilldown dialog state lives in the URL so back/forward reopen it.
+  validateSearch: (search: Record<string, unknown>) => ({
+    campaign: typeof search['campaign'] === "string" ? search['campaign'] : undefined,
+  }),
   head: () => ({
     meta: [
       { title: "Admin panel — Manage CCGMs Content" },
