@@ -95,7 +95,7 @@ export function Header() {
           {NAV.map((group) =>
             group.items ? (
               <div key={group.label} className="group relative">
-                <button className={`${linkClass} inline-flex items-center gap-1`} type="button">
+                <button className={`${linkClass} inline-flex items-center gap-1 font-bold`} type="button">
                   {t(group.label)}
                   <ChevronDown className="size-3.5" />
                 </button>
