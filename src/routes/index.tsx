@@ -23,6 +23,7 @@ import communityWebp from "@/assets/community-together.jpg?w=900&quality=70&form
 import eventFallback from "@/assets/event-fallback.jpg?w=1000&quality=72&format=jpg";
 import eventFallbackAvif from "@/assets/event-fallback.jpg?w=1000&quality=55&format=avif";
 import eventFallbackWebp from "@/assets/event-fallback.jpg?w=1000&quality=70&format=webp";
+import appMockup from "@/assets/app-mockup.png?w=600&quality=80&format=webp";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Picture } from "@/components/site/Picture";
@@ -148,26 +149,6 @@ function Index() {
                 <Link to="/fundraising">{t("Support Our Causes")}</Link>
               </Button>
             </div>
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-              {[
-                { icon: Smartphone, label: "Android" },
-                { icon: Apple, label: "iPhone" },
-              ].map(({ icon: Icon, label }) => (
-                <a
-                  key={label}
-                  href="#"
-                  className="inline-flex min-w-0 items-center gap-3 rounded-2xl border border-primary-foreground/25 px-5 py-3 text-left transition-colors hover:bg-primary-foreground/10"
-                >
-                  <Icon className="size-6 shrink-0" />
-                  <span className="min-w-0">
-                    <span className="block text-[11px] uppercase tracking-widest opacity-70">
-                      {t("Download for")}
-                    </span>
-                    <span className="block text-sm font-semibold">{t(label)}</span>
-                  </span>
-                </a>
-              ))}
-            </div>
           </div>
           <div className="relative">
             <Picture
@@ -201,6 +182,52 @@ function Index() {
               </span>
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* Download the app */}
+      <section className="bg-primary text-primary-foreground">
+        <div className="container-page grid items-center gap-10 py-14 sm:py-16 lg:grid-cols-[1fr_0.9fr] lg:py-20">
+          <div className="order-2 flex justify-center lg:order-1">
+            <img
+              src={appMockup}
+              alt={t("CCGMs mobile app showing welcome message")}
+              loading="lazy"
+              decoding="async"
+              width={600}
+              height={600}
+              className="max-h-[420px] w-auto drop-shadow-[0_25px_50px_rgba(0,0,0,0.35)] sm:max-h-[480px]"
+            />
+          </div>
+          <div className="order-1 lg:order-2">
+            <p className="eyebrow text-gold">{t("Carry the community with you")}</p>
+            <h2 className="mt-2 text-2xl sm:text-3xl md:text-4xl">
+              {t("Welcome to CCGMs")}
+            </h2>
+            <p className="mt-4 max-w-lg text-sm text-primary-foreground/80 sm:text-base md:text-lg">
+              {t("Download the CCGMs app to stay connected with your community. Get instant notifications for events, manage your membership, support campaigns, and reach out — all from your phone.")}
+            </p>
+            <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+              {[
+                { icon: Smartphone, label: "Android" },
+                { icon: Apple, label: "iPhone" },
+              ].map(({ icon: Icon, label }) => (
+                <a
+                  key={label}
+                  href="#"
+                  className="inline-flex min-w-0 items-center gap-3 rounded-2xl border border-primary-foreground/25 px-5 py-3 text-left transition-colors hover:bg-primary-foreground/10"
+                >
+                  <Icon className="size-6 shrink-0" />
+                  <span className="min-w-0">
+                    <span className="block text-[11px] uppercase tracking-widest opacity-70">
+                      {t("Download for")}
+                    </span>
+                    <span className="block text-sm font-semibold">{t(label)}</span>
+                  </span>
+                </a>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
 
