@@ -1,6 +1,13 @@
-import { CalendarDays, Clock, MapPin, Tag, UserRound } from "lucide-react";
+import { useEffect, useState } from "react";
+import { CalendarDays, CalendarPlus, Check, Clock, MapPin, Tag, UserRound } from "lucide-react";
+import { toast } from "sonner";
+import { z } from "zod";
 
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Dialog,
   DialogContent,
@@ -8,6 +15,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { SmartImage } from "@/components/site/SmartImage";
+import { supabase } from "@/integrations/supabase/client";
+import { downloadEventIcs } from "@/lib/ics";
 import { formatDate, type EventRow } from "@/lib/queries";
 import { useT } from "@/lib/i18n";
 import eventFallback from "@/assets/event-fallback.jpg";
@@ -43,6 +53,151 @@ function DetailRow({
   );
 }
 
+const rsvpSchema = z.object({
+  full_name: z.string().trim().min(2, "Enter your name").max(120),
+  email: z.string().trim().email("Enter a valid email").max(255),
+  phone: z.string().trim().max(30).optional(),
+  membership_number: z.string().trim().max(30).optional(),
+  guests: z.coerce.number().int().min(0).max(20).default(0),
+  note: z.string().trim().max(500).optional(),
+});
+
+function RsvpForm({ event }: { event: EventRow }) {
+  const t = useT();
+  const [status, setStatus] = useState<"going" | "interested">("going");
+  const [saving, setSaving] = useState(false);
+  const [done, setDone] = useState(false);
+
+  useEffect(() => {
+    setDone(false);
+    setStatus("going");
+  }, [event.id]);
+
+  async function onSubmit(formEvent: React.FormEvent<HTMLFormElement>) {
+    formEvent.preventDefault();
+    const parsed = rsvpSchema.safeParse(
+      Object.fromEntries(new FormData(formEvent.currentTarget)),
+    );
+    if (!parsed.success) {
+      toast.error(t(parsed.error.issues[0]?.message ?? "Please check the form"));
+      return;
+    }
+    setSaving(true);
+    const { data: session } = await supabase.auth.getSession();
+    const { error } = await supabase.from("event_rsvps").insert({
+      event_id: event.id,
+      user_id: session.session?.user.id ?? null,
+      full_name: parsed.data.full_name,
+      email: parsed.data.email,
+      phone: parsed.data.phone || null,
+      membership_number: parsed.data.membership_number || null,
+      guests: parsed.data.guests,
+      note: parsed.data.note || null,
+      status,
+    });
+    setSaving(false);
+    if (error) {
+      toast.error(t("Your RSVP could not be sent. Please try again."));
+      return;
+    }
+    setDone(true);
+    toast.success(t("Thanks — we've noted your RSVP."));
+  }
+
+  if (done) {
+    return (
+      <div className="flex items-start gap-3 rounded-xl border border-primary/40 bg-accent px-4 py-3">
+        <Check className="mt-0.5 size-4 shrink-0 text-primary" aria-hidden="true" />
+        <p className="text-sm">
+          {status === "going"
+            ? t("You're on the list. See you there!")
+            : t("Thanks for registering your interest.")}
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <form onSubmit={onSubmit} className="space-y-4 rounded-xl border border-border/70 p-4">
+      <div>
+        <h3 className="text-sm font-semibold">{t("RSVP for this event")}</h3>
+        <p className="mt-1 text-xs text-muted-foreground">
+          {t("Let us know you're coming so we can plan seating and catering.")}
+        </p>
+      </div>
+
+      <div className="flex flex-wrap gap-2" role="group" aria-label={t("Your response")}>
+        {(["going", "interested"] as const).map((value) => (
+          <button
+            key={value}
+            type="button"
+            onClick={() => setStatus(value)}
+            aria-pressed={status === value}
+            className={`min-h-9 rounded-full border px-4 text-sm transition-colors ${
+              status === value
+                ? "border-transparent bg-primary text-primary-foreground"
+                : "border-border hover:bg-secondary"
+            }`}
+          >
+            {value === "going" ? t("I'm going") : t("Interested")}
+          </button>
+        ))}
+      </div>
+
+      <div className="grid gap-3 sm:grid-cols-2">
+        <div className="space-y-1.5">
+          <Label htmlFor={`rsvp-name-${event.id}`}>{t("Your name")}</Label>
+          <Input id={`rsvp-name-${event.id}`} name="full_name" required maxLength={120} />
+        </div>
+        <div className="space-y-1.5">
+          <Label htmlFor={`rsvp-email-${event.id}`}>{t("Your email")}</Label>
+          <Input
+            id={`rsvp-email-${event.id}`}
+            name="email"
+            type="email"
+            required
+            maxLength={255}
+          />
+        </div>
+        <div className="space-y-1.5">
+          <Label htmlFor={`rsvp-phone-${event.id}`}>{t("Your phone (optional)")}</Label>
+          <Input id={`rsvp-phone-${event.id}`} name="phone" maxLength={30} />
+        </div>
+        <div className="space-y-1.5">
+          <Label htmlFor={`rsvp-guests-${event.id}`}>{t("Extra guests")}</Label>
+          <Input
+            id={`rsvp-guests-${event.id}`}
+            name="guests"
+            type="number"
+            min={0}
+            max={20}
+            defaultValue={0}
+          />
+        </div>
+        <div className="space-y-1.5 sm:col-span-2">
+          <Label htmlFor={`rsvp-member-${event.id}`}>
+            {t("Membership number (optional, but recommended)")}
+          </Label>
+          <Input
+            id={`rsvp-member-${event.id}`}
+            name="membership_number"
+            placeholder="CCGM-1000"
+            maxLength={30}
+          />
+        </div>
+        <div className="space-y-1.5 sm:col-span-2">
+          <Label htmlFor={`rsvp-note-${event.id}`}>{t("Anything we should know? (optional)")}</Label>
+          <Textarea id={`rsvp-note-${event.id}`} name="note" rows={2} maxLength={500} />
+        </div>
+      </div>
+
+      <Button type="submit" variant="hero" className="w-full" disabled={saving}>
+        {saving ? t("Sending…") : t("Send RSVP")}
+      </Button>
+    </form>
+  );
+}
+
 export function EventDialog({
   event,
   onOpenChange,
@@ -66,15 +221,24 @@ export function EventDialog({
         </DialogHeader>
         {event ? (
           <div className="space-y-4">
-            <img
+            <SmartImage
               src={event.image_url ?? eventFallbackImage(event.id)}
               alt={event.image_url ? event.title : t("Community members celebrating together")}
               loading="lazy"
               width={1280}
               height={720}
-              className="aspect-[16/9] w-full rounded-xl border border-border/70 bg-secondary object-cover"
+              wrapperClassName="aspect-[16/9] w-full rounded-xl border border-border/70"
+              className="size-full object-cover"
             />
             <p className="text-sm text-foreground/85">{event.description}</p>
+            <Button
+              type="button"
+              variant="soft"
+              className="w-full"
+              onClick={() => downloadEventIcs(event)}
+            >
+              <CalendarPlus aria-hidden="true" /> {t("Add to calendar")}
+            </Button>
             <ul className="grid gap-2 sm:grid-cols-2">
               <DetailRow
                 icon={CalendarDays}
@@ -110,6 +274,7 @@ export function EventDialog({
                 </span>
               </li>
             </ul>
+            <RsvpForm key={event.id} event={event} />
           </div>
         ) : null}
       </DialogContent>

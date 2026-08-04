@@ -28,5 +28,25 @@ export const events: Record<string, string> = {
   "Organiser": "Organisateur",
   "Type": "Type",
   "To be confirmed": "À confirmer",
+  "Add to calendar": "Ajouter au calendrier",
+  "Filter by type": "Filtrer par type",
+  "All types": "Tous les types",
+  "No events match these filters.": "Aucun événement ne correspond à ces filtres.",
+  "RSVP for this event": "Confirmer sa présence à cet événement",
+  "Let us know you're coming so we can plan seating and catering.":
+    "Dites-nous si vous venez afin que nous puissions prévoir les places et la restauration.",
+  "Your response": "Votre réponse",
+  "I'm going": "Je participe",
+  "Interested": "Intéressé(e)",
+  "Extra guests": "Invités supplémentaires",
+  "Membership number (optional, but recommended)":
+    "Numéro de membre (facultatif, mais recommandé)",
+  "Anything we should know? (optional)": "Quelque chose à nous signaler ? (facultatif)",
+  "Send RSVP": "Envoyer ma réponse",
+  "Your RSVP could not be sent. Please try again.":
+    "Votre réponse n'a pas pu être envoyée. Veuillez réessayer.",
+  "Thanks — we've noted your RSVP.": "Merci — votre réponse a bien été enregistrée.",
+  "You're on the list. See you there!": "Vous êtes sur la liste. À bientôt !",
+  "Thanks for registering your interest.": "Merci d'avoir manifesté votre intérêt.",
   "Community members celebrating together": "Des membres de la communauté célébrant ensemble",
 };

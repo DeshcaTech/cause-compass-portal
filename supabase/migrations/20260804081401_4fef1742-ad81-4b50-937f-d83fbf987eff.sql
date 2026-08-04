@@ -1,0 +1,1 @@
+DELETE FROM public.event_rsvps WHERE email = 'test@example.com';

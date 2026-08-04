@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { ChevronLeft, ChevronRight, ImageIcon } from "lucide-react";
 
 import { PageHeader } from "@/components/site/PageHeader";
+import { SmartImage } from "@/components/site/SmartImage";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -167,11 +168,12 @@ function GalleryPage() {
                 aria-label={`${t("View photo")} ${index + 1} ${t("of")} ${tiles.length}`}
                 className="group overflow-hidden rounded-xl border border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
               >
-                <img
+                <SmartImage
                   src={tile.src}
                   alt={tile.caption ?? active?.title ?? t("Community photo")}
                   loading="lazy"
-                  className="aspect-[4/3] h-56 w-full object-cover transition-transform group-hover:scale-105"
+                  wrapperClassName="aspect-[4/3] h-56 w-full"
+                  className="size-full object-cover transition-transform group-hover:scale-105"
                 />
               </button>
             ))}
@@ -202,10 +204,12 @@ function GalleryPage() {
 
           <div className="relative">
             {currentTile ? (
-              <img
+              <SmartImage
                 src={currentTile.src}
                 alt={currentTile.caption ?? active?.title ?? t("Community photo")}
-                className="max-h-[60dvh] w-full rounded-xl border border-border bg-secondary object-contain"
+                loading="eager"
+                wrapperClassName="max-h-[60dvh] w-full rounded-xl border border-border"
+                className="max-h-[60dvh] w-full object-contain"
               />
             ) : null}
             {tiles.length > 1 ? (

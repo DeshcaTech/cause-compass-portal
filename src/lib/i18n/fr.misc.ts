@@ -1,4 +1,6 @@
 export const misc: Record<string, string> = {
+  "Image could not be loaded.": "L'image n'a pas pu être chargée.",
+  "Retry": "Réessayer",
   "About CCGMs": "À propos du CCGMs",
   "Download centre": "Centre de téléchargement",
   "Official documents, forms and reports, free to download for members and the public.": "Documents officiels, formulaires et rapports, à télécharger gratuitement pour les membres et le public.",
