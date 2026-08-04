@@ -59,7 +59,9 @@ export function EventDialog({
         <DialogHeader>
           <DialogTitle className="text-left">{event?.title}</DialogTitle>
           <DialogDescription className="text-left">
-            {event ? `${formatDate(event.start_at, true)} · ${event.location}` : null}
+            {event
+              ? `${formatDate(event.start_at, true)}${event.location ? ` · ${event.location}` : ""}`
+              : null}
           </DialogDescription>
         </DialogHeader>
         {event ? (
@@ -82,7 +84,11 @@ export function EventDialog({
               {event.end_at ? (
                 <DetailRow icon={Clock} label={t("Ends")} value={formatDate(event.end_at, true)} />
               ) : null}
-              <DetailRow icon={MapPin} label={t("Location")} value={event.location} />
+              <DetailRow
+                icon={MapPin}
+                label={t("Location")}
+                value={event.location ?? t("To be confirmed")}
+              />
               {event.organiser ? (
                 <DetailRow icon={UserRound} label={t("Organiser")} value={event.organiser} />
               ) : null}
