@@ -157,6 +157,7 @@ function Index() {
 
       <section className="container-page py-16 md:py-20">
         <div className="grid items-start gap-10 md:grid-cols-[0.9fr_1.1fr]">
+</section>
           <div>
             <p className="eyebrow text-terracotta">Who we are</p>
             <h2 className="mt-2 text-3xl md:text-4xl">A family of families</h2>
