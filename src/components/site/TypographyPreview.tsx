@@ -17,19 +17,19 @@ function Sample({ id }: { id: string }) {
           A family of families
         </h2>
         <h3 className="text-2xl @md:text-[1.75rem] @2xl:text-[2rem]">Section heading</h3>
-        <p className="text-[16px] leading-relaxed text-muted-foreground">
+        <p className="text-body-sm text-muted-foreground">
           Body copy set in Figtree at the base scale. Supporting one another, celebrating our
           culture and building a stronger future for the next generation.
         </p>
 
         <div className="flex flex-wrap items-center gap-2 border-t border-border pt-4">
-          <span className="rounded-md px-2.5 py-2 text-[14px] leading-[20px] font-bold text-foreground/80">
+          <span className="rounded-md px-2.5 py-2 text-nav font-bold text-foreground/80">
             About CCGMs
           </span>
-          <span className="rounded-md px-2.5 py-2 text-[14px] leading-[20px] font-bold text-foreground/80">
+          <span className="rounded-md px-2.5 py-2 text-nav font-bold text-foreground/80">
             Events
           </span>
-          <span className="rounded-md px-2.5 py-2 text-[14px] leading-[20px] font-bold text-foreground/80">
+          <span className="rounded-md px-2.5 py-2 text-nav font-bold text-foreground/80">
             Contact
           </span>
         </div>

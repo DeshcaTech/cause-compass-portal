@@ -52,7 +52,7 @@ export const NAV: NavGroup[] = [
 ];
 
 const linkClass =
-  "rounded-md px-2.5 py-2 text-[14px] leading-[20px] font-bold text-foreground/80 transition-colors hover:bg-accent hover:text-accent-foreground whitespace-nowrap";
+  "rounded-md px-2.5 py-2 text-nav font-bold text-foreground/80 transition-colors hover:bg-accent hover:text-accent-foreground whitespace-nowrap";
 
 export function Header() {
   const [open, setOpen] = useState(false);
@@ -104,7 +104,7 @@ export function Header() {
                     <Link
                       key={item.to}
                       to={item.to}
-                      className="block rounded-lg px-3 py-2 text-[14px] leading-[20px] text-foreground/85 hover:bg-accent hover:text-accent-foreground"
+                      className="block rounded-lg px-3 py-2 text-nav text-foreground/85 hover:bg-accent hover:text-accent-foreground"
                       activeProps={{ className: "bg-accent text-accent-foreground" }}
                     >
                       {t(item.label)}
@@ -161,7 +161,7 @@ export function Header() {
                     onClick={() =>
                       setOpenGroup((g) => (g === group.label ? null : group.label))
                     }
-                    className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-[14px] leading-[20px] font-bold"
+                    className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-nav font-bold"
                     aria-expanded={openGroup === group.label}
                   >
                     {t(group.label)}
@@ -178,7 +178,7 @@ export function Header() {
                           key={item.to}
                           to={item.to}
                           onClick={() => setOpen(false)}
-                          className="block rounded-lg px-3 py-2 text-[14px] leading-[20px] text-foreground/80 hover:bg-accent hover:text-accent-foreground"
+                          className="block rounded-lg px-3 py-2 text-nav text-foreground/80 hover:bg-accent hover:text-accent-foreground"
                         >
                           {t(item.label)}
                         </Link>
@@ -191,7 +191,7 @@ export function Header() {
                   key={group.to}
                   to={group.to!}
                   onClick={() => setOpen(false)}
-                  className="rounded-lg px-3 py-2 text-[14px] leading-[20px] font-bold"
+                  className="rounded-lg px-3 py-2 text-nav font-bold"
                 >
                   {t(group.label)}
                 </Link>
