@@ -507,9 +507,51 @@ export type Database = {
           },
         ]
       }
+      job_applications: {
+        Row: {
+          created_at: string
+          email: string
+          full_name: string
+          id: string
+          job_id: string
+          membership_number: string | null
+          message: string | null
+          phone: string | null
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          full_name: string
+          id?: string
+          job_id: string
+          membership_number?: string | null
+          message?: string | null
+          phone?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          full_name?: string
+          id?: string
+          job_id?: string
+          membership_number?: string | null
+          message?: string | null
+          phone?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "job_applications_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "jobs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       jobs: {
         Row: {
           apply_url: string | null
+          approval_status: string
           category: string
           closes_at: string | null
           company: string
@@ -522,12 +564,14 @@ export type Database = {
           is_published: boolean
           job_type: string
           location: string | null
+          reviewed_at: string | null
           salary_range: string | null
           short_description: string | null
           title: string
         }
         Insert: {
           apply_url?: string | null
+          approval_status?: string
           category?: string
           closes_at?: string | null
           company: string
@@ -540,12 +584,14 @@ export type Database = {
           is_published?: boolean
           job_type?: string
           location?: string | null
+          reviewed_at?: string | null
           salary_range?: string | null
           short_description?: string | null
           title: string
         }
         Update: {
           apply_url?: string | null
+          approval_status?: string
           category?: string
           closes_at?: string | null
           company?: string
@@ -558,6 +604,7 @@ export type Database = {
           is_published?: boolean
           job_type?: string
           location?: string | null
+          reviewed_at?: string | null
           salary_range?: string | null
           short_description?: string | null
           title?: string
