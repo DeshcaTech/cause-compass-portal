@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
+import { memo, useMemo } from "react";
 import {
   Apple,
   ArrowRight,
@@ -76,18 +77,27 @@ function Index() {
   const { data: partners = [] } = useQuery(partnersQuery);
   const { data: stats } = useQuery(homeStatsQuery);
 
-  const upcoming = events.filter((e) => new Date(e.start_at) >= new Date()).slice(0, 3);
-  const activeCampaigns = campaigns.filter((c) => c.status === "active").slice(0, 3);
-  const latestNews = announcements.slice(0, 3);
-  const featuredPartners = partners.slice(0, 4);
+  const upcoming = useMemo(() => {
+    const now = Date.now();
+    return events.filter((e) => new Date(e.start_at).getTime() >= now).slice(0, 3);
+  }, [events]);
+  const activeCampaigns = useMemo(
+    () => campaigns.filter((c) => c.status === "active").slice(0, 3),
+    [campaigns],
+  );
+  const latestNews = useMemo(() => announcements.slice(0, 3), [announcements]);
+  const featuredPartners = useMemo(() => partners.slice(0, 4), [partners]);
 
-  const statTiles = [
-    { icon: Users, label: "Members", value: stats?.members ?? 0 },
-    { icon: Building2, label: "Member businesses", value: stats?.businesses ?? 0 },
-    { icon: CalendarDays, label: "Coming events", value: stats?.upcoming_events ?? 0 },
-    { icon: UserRound, label: "Board members", value: stats?.board_members ?? 0 },
-    { icon: HeartHandshake, label: "Active campaigns", value: stats?.active_campaigns ?? 0 },
-  ];
+  const statTiles = useMemo(
+    () => [
+      { icon: Users, label: "Members", value: stats?.members ?? 0 },
+      { icon: Building2, label: "Member businesses", value: stats?.businesses ?? 0 },
+      { icon: CalendarDays, label: "Coming events", value: stats?.upcoming_events ?? 0 },
+      { icon: UserRound, label: "Board members", value: stats?.board_members ?? 0 },
+      { icon: HeartHandshake, label: "Active campaigns", value: stats?.active_campaigns ?? 0 },
+    ],
+    [stats],
+  );
 
   return (
     <>
