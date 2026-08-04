@@ -148,7 +148,20 @@ function Index() {
                 <Link to="/fundraising">{t("Support Our Causes")}</Link>
               </Button>
             </div>
-            <div className="mt-8 flex flex-wrap items-center justify-center gap-4 sm:justify-start">
+          </div>
+          <div className="relative">
+            <Picture
+              avif={heroAvif}
+              webp={heroWebp}
+              src={hero}
+              alt={t("CCGMs members of all generations celebrating together")}
+              width={1920}
+              height={1200}
+              fetchPriority="high"
+              decoding="async"
+              className="aspect-[4/3] w-full rounded-3xl object-cover shadow-[var(--shadow-lift)]"
+            />
+            <div className="mt-6 flex flex-wrap items-center justify-center gap-4 sm:justify-start">
               <a
                 href="#"
                 className="inline-flex min-w-0 shrink-0 transition-transform hover:scale-[1.03]"
@@ -180,19 +193,6 @@ function Index() {
                 />
               </a>
             </div>
-          </div>
-          <div className="relative">
-            <Picture
-              avif={heroAvif}
-              webp={heroWebp}
-              src={hero}
-              alt={t("CCGMs members of all generations celebrating together")}
-              width={1920}
-              height={1200}
-              fetchPriority="high"
-              decoding="async"
-              className="aspect-[4/3] w-full rounded-3xl object-cover shadow-[var(--shadow-lift)]"
-            />
           </div>
         </div>
       </section>
