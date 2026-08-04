@@ -258,42 +258,7 @@ function EventsPage() {
         </Tabs>
       </section>
 
-      <Dialog open={!!selected} onOpenChange={(open) => !open && setSelected(null)}>
-        <DialogContent className="sm:max-w-lg">
-          <DialogHeader>
-            <DialogTitle>{selected?.title}</DialogTitle>
-          </DialogHeader>
-          {selected ? (
-            <div className="space-y-4">
-              <img
-                src={selected.image_url ?? eventFallback}
-                alt={selected.title}
-                className="aspect-[16/9] w-full rounded-xl object-cover"
-              />
-              <TypeBadge type={selected.event_type} />
-              <p className="text-sm text-foreground/85">{selected.description}</p>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li className="flex items-center gap-2">
-                  <CalendarDays className="size-4" /> {formatDate(selected.start_at, true)}
-                </li>
-                {selected.end_at ? (
-                  <li className="flex items-center gap-2">
-                    <Clock className="size-4" /> {t("Ends")} {formatDate(selected.end_at, true)}
-                  </li>
-                ) : null}
-                <li className="flex items-center gap-2">
-                  <MapPin className="size-4" /> {selected.location}
-                </li>
-                {selected.organiser ? (
-                  <li className="flex items-center gap-2">
-                    <User className="size-4" /> {selected.organiser}
-                  </li>
-                ) : null}
-              </ul>
-            </div>
-          ) : null}
-        </DialogContent>
-      </Dialog>
+      <EventDialog event={selected} onOpenChange={(open) => !open && setSelected(null)} />
     </>
   );
 }
