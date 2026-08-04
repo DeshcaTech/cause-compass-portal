@@ -8,6 +8,7 @@ const applicationSchema = z.object({
   phone: z.string().trim().max(30).optional().default(''),
   membership_number: z.string().trim().max(40).optional().default(''),
   message: z.string().trim().max(2000).optional().default(''),
+  cv_url: z.string().trim().max(500).optional().default(''),
 })
 
 export const submitJobApplication = createServerFn({ method: 'POST' })
@@ -35,12 +36,20 @@ export const submitJobApplication = createServerFn({ method: 'POST' })
         phone: data.phone || null,
         membership_number: data.membership_number || null,
         message: data.message || null,
+        cv_url: data.cv_url || null,
       })
       .select('id')
       .single()
     if (error || !row) throw new Error(error?.message ?? 'Could not record your interest')
 
     const notifyEmail = job.notify_email || job.contact_email
+    let cvLink: string | null = null
+    if (data.cv_url) {
+      const { data: signed } = await supabaseAdmin.storage
+        .from('job-cvs')
+        .createSignedUrl(data.cv_url, 60 * 60 * 24 * 14)
+      cvLink = signed?.signedUrl ?? null
+    }
     if (notifyEmail) {
       try {
         const { sendTemplateEmail } = await import('./email-templates/send-email')
@@ -53,6 +62,7 @@ export const submitJobApplication = createServerFn({ method: 'POST' })
             applicantPhone: data.phone || '',
             membershipNumber: data.membership_number || '',
             message: data.message || '',
+            cvUrl: cvLink ?? '',
           },
           idempotencyKey: `job-application-${row.id}`,
           replyTo: data.email,
@@ -75,6 +85,7 @@ export const submitJobApplication = createServerFn({ method: 'POST' })
             data.phone ? `Phone: ${data.phone}` : '',
             data.membership_number ? `Membership number: ${data.membership_number}` : '',
             data.message ? `Message: ${data.message}` : '',
+            cvLink ? `CV: ${cvLink}` : '',
           ]
             .filter(Boolean)
             .join('\n'),
