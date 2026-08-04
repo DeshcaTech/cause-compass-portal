@@ -4,7 +4,6 @@ import { useState } from "react";
 import { CalendarDays, Mail, Phone, Users } from "lucide-react";
 
 import { PageHeader } from "@/components/site/PageHeader";
-import { SidebarNavItem, SidebarPage, SidebarSection } from "@/components/site/SidebarPage";
 import { SmartImage } from "@/components/site/SmartImage";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
@@ -62,9 +61,6 @@ function VillageGroupsPage() {
       ? groups
       : groups.filter((g) => (g.group_category === "other" ? "other" : "village") === key);
   const visible = inCategory(category);
-  const activeLabel = categories.find((c) => c.key === category)?.label ?? t("All groups");
-  const thumbFor = (key: "all" | "village" | "other") =>
-    inCategory(key).find((g) => g.image_url)?.image_url ?? groupsBanner;
 
   return (
     <>
@@ -73,22 +69,32 @@ function VillageGroupsPage() {
         title={t("Our Groups")}
         description={t("Community groups within CCGMs. Click a group to see meeting details and contacts.")}
       />
-      <SidebarPage
-        sidebar={
-          <SidebarSection label={t("Categories")}>
-            {categories.map((item) => (
-              <SidebarNavItem
-                key={item.key}
-                icon={<Users className="size-5" />}
-                title={item.label}
-                meta={`${inCategory(item.key).length} ${t("groups")}`}
-                active={category === item.key}
-                onClick={() => setCategory(item.key)}
-              />
-            ))}
-          </SidebarSection>
-        }
-      >
+      <section className="container-page py-14">
+        <div className="grid gap-5 md:grid-cols-3">
+          {categories.map((item) => (
+            <button
+              key={item.key}
+              type="button"
+              aria-pressed={category === item.key}
+              onClick={() => setCategory(item.key)}
+              className={`rounded-2xl border bg-card p-6 text-left transition-colors ${
+                category === item.key
+                  ? "border-primary shadow-[var(--shadow-lift)]"
+                  : "border-border/70 hover:border-primary/50"
+              }`}
+            >
+              <span className="flex size-10 items-center justify-center rounded-full bg-secondary text-primary">
+                <Users className="size-5" />
+              </span>
+              <h2 className="mt-4 text-xl">{item.label}</h2>
+              <p className="mt-1 text-sm text-muted-foreground">
+                {inCategory(item.key).length} {t("groups")}
+              </p>
+            </button>
+          ))}
+        </div>
+
+        <div className="mt-10">
         {(category === "all" ? (["village", "other"] as const) : [category]).map((key) => {
           const rows = inCategory(key);
           if (rows.length === 0) return null;
@@ -130,7 +136,8 @@ function VillageGroupsPage() {
         {visible.length === 0 ? (
           <p className="mt-10 text-sm text-muted-foreground">{t("No groups listed yet.")}</p>
         ) : null}
-      </SidebarPage>
+        </div>
+      </section>
 
       <Dialog open={!!selected} onOpenChange={(open) => !open && setSelected(null)}>
         <DialogContent className="max-w-lg">
