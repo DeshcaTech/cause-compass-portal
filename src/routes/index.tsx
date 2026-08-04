@@ -30,8 +30,8 @@ import eventFallbackWebp from "@/assets/event-fallback.jpg?w=1000&quality=70&for
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Picture } from "@/components/site/Picture";
+import { EventDialog } from "@/components/site/EventDialog";
 import { useT } from "@/lib/i18n";
 import {
   announcementsQuery,
