@@ -1,13 +1,15 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import {
   Apple,
   ArrowRight,
   Building2,
   CalendarDays,
+  Clock,
   HandHeart,
   HeartHandshake,
+  MapPin,
   Smartphone,
   UserRound,
   Users,
@@ -27,6 +29,8 @@ import eventFallbackAvif from "@/assets/event-fallback.jpg?w=1000&quality=55&for
 import eventFallbackWebp from "@/assets/event-fallback.jpg?w=1000&quality=70&format=webp";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Picture } from "@/components/site/Picture";
 import { useT } from "@/lib/i18n";
 import {
@@ -37,6 +41,7 @@ import {
   formatMoney,
   homeStatsQuery,
   partnersQuery,
+  type EventRow,
 } from "@/lib/queries";
 
 export const Route = createFileRoute("/")({
