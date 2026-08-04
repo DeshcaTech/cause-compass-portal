@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { galleriesQuery, galleryPhotosQuery } from "@/lib/queries";
 import galleryFallback from "@/assets/gallery-fallback.jpg";
+import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/gallery")({
   head: () => ({
@@ -25,6 +26,7 @@ export const Route = createFileRoute("/gallery")({
 });
 
 function GalleryPage() {
+  const t = useT();
   const { data: rawGalleries = [] } = useQuery(galleriesQuery);
   const galleries = [...rawGalleries].sort(
     (a, b) => Number(b.is_default) - Number(a.is_default),
@@ -44,9 +46,9 @@ function GalleryPage() {
   return (
     <>
       <PageHeader
-        eyebrow="Gallery"
-        title="Moments from our community"
-        description="Photos are grouped per event. The gallery marked as default opens first."
+        eyebrow={t("Gallery")}
+        title={t("Moments from our community")}
+        description={t("Photos are grouped per event. The gallery marked as default opens first.")}
       />
       <section className="container-page grid gap-8 py-14 lg:grid-cols-[280px_1fr]">
         <aside className="space-y-2">
@@ -63,7 +65,7 @@ function GalleryPage() {
             >
               <span className="flex items-center justify-between gap-2">
                 <span className="font-medium">{gallery.title}</span>
-                {gallery.is_default ? <Badge variant="secondary">Default</Badge> : null}
+                {gallery.is_default ? <Badge variant="secondary">{t("Default")}</Badge> : null}
               </span>
               <span className="mt-1 block text-xs text-muted-foreground">
                 {gallery.event_date
@@ -71,28 +73,28 @@ function GalleryPage() {
                       month: "long",
                       year: "numeric",
                     })
-                  : "Undated"}
+                  : t("Undated")}
               </span>
             </button>
           ))}
         </aside>
 
         <div>
-          <h2 className="text-2xl">{active?.title ?? "Gallery"}</h2>
+          <h2 className="text-2xl">{active?.title ?? t("Gallery")}</h2>
           <p className="mt-2 text-sm text-muted-foreground">{active?.description}</p>
 
           {activePhotos.length === 0 ? (
             <Card className="mt-6 overflow-hidden border-dashed border-border">
               <img
                 src={galleryFallback}
-                alt="Community members celebrating together"
+                alt={t("Community members celebrating together")}
                 loading="lazy"
                 className="aspect-[16/9] w-full object-cover"
               />
               <CardContent className="flex flex-col items-center gap-3 py-10 text-center">
                 <ImageIcon className="size-8 text-muted-foreground" />
                 <p className="text-sm text-muted-foreground">
-                  No photos uploaded to this gallery yet. Photos added by the admin appear here.
+                  {t("No photos uploaded to this gallery yet. Photos added by the admin appear here.")}
                 </p>
               </CardContent>
             </Card>
@@ -102,7 +104,7 @@ function GalleryPage() {
                 <figure key={photo.id} className="overflow-hidden rounded-xl border border-border">
                   <img
                     src={photo.photo_url}
-                    alt={photo.caption ?? active?.title ?? "Community photo"}
+                    alt={photo.caption ?? active?.title ?? t("Community photo")}
                     loading="lazy"
                     className="h-56 w-full object-cover transition-transform hover:scale-105"
                   />

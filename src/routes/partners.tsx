@@ -10,6 +10,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { partnersQuery, type Partner } from "@/lib/queries";
 import businessFallback from "@/assets/business-fallback.jpg";
+import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/partners")({
   head: () => ({
@@ -31,6 +32,7 @@ export const Route = createFileRoute("/partners")({
 });
 
 function PartnersPage() {
+  const t = useT();
   const { data: partners = [] } = useQuery(partnersQuery);
   const [selected, setSelected] = useState<Partner | null>(null);
   const [category, setCategory] = useState("All");
@@ -40,9 +42,9 @@ function PartnersPage() {
   return (
     <>
       <PageHeader
-        eyebrow="Partners"
-        title="Businesses owned by our members"
-        description="Shop, hire and refer within the community. Click a business to see full details."
+        eyebrow={t("Partners")}
+        title={t("Businesses owned by our members")}
+        description={t("Shop, hire and refer within the community. Click a business to see full details.")}
       />
       <section className="container-page py-14">
         <div className="flex flex-wrap gap-2">
@@ -57,7 +59,7 @@ function PartnersPage() {
                   : "border-border bg-card hover:bg-accent"
               }`}
             >
-              {item}
+              {item === "All" ? t("All") : item}
             </button>
           ))}
         </div>
@@ -121,7 +123,7 @@ function PartnersPage() {
               {selected.website ? (
                 <Button asChild variant="hero" className="w-full">
                   <a href={selected.website} target="_blank" rel="noreferrer">
-                    <Globe /> Visit website
+                    <Globe /> {t("Visit website")}
                   </a>
                 </Button>
               ) : null}

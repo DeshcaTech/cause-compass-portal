@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/select";
 import { formatMoney } from "@/lib/queries";
 import { submitMembership } from "@/lib/signup.functions";
+import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/membership")({
   head: () => ({
@@ -85,6 +86,7 @@ const schema = z.object({
 });
 
 function MembershipPage() {
+  const t = useT();
   const [tier, setTier] = useState<(typeof TIERS)[number]["key"]>("individual");
   const [family, setFamily] = useState<FamilyMember[]>([]);
   const [saving, setSaving] = useState(false);
@@ -100,7 +102,7 @@ function MembershipPage() {
     event.preventDefault();
     const parsed = schema.safeParse(Object.fromEntries(new FormData(event.currentTarget)));
     if (!parsed.success) {
-      toast.error(parsed.error.issues[0]?.message ?? "Please check the form");
+      toast.error(t(parsed.error.issues[0]?.message ?? "Please check the form"));
       return;
     }
     if (tier === "family") {
@@ -109,7 +111,7 @@ function MembershipPage() {
           member.full_name.trim().length < 2 || !member.birth_month || !member.birth_year,
       );
       if (invalid) {
-        toast.error("Complete the name and birth month/year for every family member");
+        toast.error(t("Complete the name and birth month/year for every family member"));
         return;
       }
     }
@@ -139,9 +141,9 @@ function MembershipPage() {
         },
       });
       setNumber(result.membershipNumber);
-      toast.success("Welcome to CCGMs!");
+      toast.success(t("Welcome to CCGMs!"));
     } catch {
-      toast.error("Registration failed. Please check your details and try again.");
+      toast.error(t("Registration failed. Please check your details and try again."));
     } finally {
       setSaving(false);
     }
@@ -150,19 +152,17 @@ function MembershipPage() {
   if (number) {
     return (
       <>
-        <PageHeader eyebrow="Membership" title="You're registered" />
+        <PageHeader eyebrow={t("Membership")} title={t("You're registered")} />
         <section className="container-page py-16">
           <Card className="mx-auto max-w-xl border-border/70 text-center">
             <CardContent className="p-10">
               <span className="mx-auto flex size-14 items-center justify-center rounded-full bg-[image:var(--gradient-gold)] text-gold-foreground">
                 <Check className="size-7" />
               </span>
-              <h2 className="mt-6 text-2xl">Your registration number</h2>
+              <h2 className="mt-6 text-2xl">{t("Your registration number")}</h2>
               <p className="mt-3 font-mono text-3xl tracking-widest text-primary">{number}</p>
               <p className="mt-4 text-sm text-muted-foreground">
-                A confirmation email with your registration details is on its way. Keep this number
-                — you'll be asked for it when donating, volunteering, renting assets or referring
-                someone.
+                {t("A confirmation email with your registration details is on its way. Keep this number — you'll be asked for it when donating, volunteering, renting assets or referring someone.")}
               </p>
             </CardContent>
           </Card>
@@ -174,9 +174,9 @@ function MembershipPage() {
   return (
     <>
       <PageHeader
-        eyebrow="Membership"
-        title="Become a member of CCGMs"
-        description="Choose the membership that fits your household. Every member receives a unique registration number by email."
+        eyebrow={t("Membership")}
+        title={t("Become a member of CCGMs")}
+        description={t("Choose the membership that fits your household. Every member receives a unique registration number by email.")}
       />
 
       <section className="container-page py-14">
@@ -192,17 +192,17 @@ function MembershipPage() {
                   : "border-border bg-card hover:-translate-y-1"
               }`}
             >
-              <p className="eyebrow text-terracotta">{item.name}</p>
+              <p className="eyebrow text-terracotta">{t(item.name)}</p>
               <p className="mt-2 text-3xl font-semibold">
                 {formatMoney(item.price)}
-                <span className="text-sm font-normal text-muted-foreground"> / year</span>
+                <span className="text-sm font-normal text-muted-foreground"> {t("/ year")}</span>
               </p>
-              <p className="mt-2 text-sm text-muted-foreground">{item.blurb}</p>
+              <p className="mt-2 text-sm text-muted-foreground">{t(item.blurb)}</p>
               <ul className="mt-4 space-y-1.5 text-sm">
                 {item.perks.map((perk) => (
                   <li key={perk} className="flex items-start gap-2">
                     <Check className="mt-0.5 size-4 shrink-0 text-primary" />
-                    {perk}
+                    {t(perk)}
                   </li>
                 ))}
               </ul>
@@ -212,43 +212,43 @@ function MembershipPage() {
 
         <Card className="mt-10 border-border/70">
           <CardContent className="p-6 sm:p-8">
-            <h2 className="text-2xl">Registration details</h2>
+            <h2 className="text-2xl">{t("Registration details")}</h2>
             <form onSubmit={onSubmit} className="mt-6 space-y-5">
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="space-y-2">
-                  <Label htmlFor="full_name">Full name</Label>
+                  <Label htmlFor="full_name">{t("Full name")}</Label>
                   <Input id="full_name" name="full_name" required maxLength={120} />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
+                  <Label htmlFor="email">{t("Email")}</Label>
                   <Input id="email" name="email" type="email" required maxLength={255} />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="phone">Phone number</Label>
+                  <Label htmlFor="phone">{t("Phone number")}</Label>
                   <Input id="phone" name="phone" required maxLength={30} />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="address">Address</Label>
+                  <Label htmlFor="address">{t("Address")}</Label>
                   <Input id="address" name="address" required maxLength={300} />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="birth_month">Month of birth</Label>
+                  <Label htmlFor="birth_month">{t("Month of birth")}</Label>
                   <select
                     id="birth_month"
                     name="birth_month"
                     required
                     className="h-9 w-full rounded-md border border-input bg-transparent px-3 text-sm"
                   >
-                    <option value="">Select month</option>
+                    <option value="">{t("Select month")}</option>
                     {MONTHS.map((month, index) => (
                       <option key={month} value={index + 1}>
-                        {month}
+                        {t(month)}
                       </option>
                     ))}
                   </select>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="birth_year">Year of birth</Label>
+                  <Label htmlFor="birth_year">{t("Year of birth")}</Label>
                   <Input
                     id="birth_year"
                     name="birth_year"
@@ -264,9 +264,9 @@ function MembershipPage() {
                 <div className="rounded-xl border border-border/70 bg-secondary/50 p-5">
                   <div className="flex flex-wrap items-center justify-between gap-3">
                     <div>
-                      <h3 className="text-lg">Family members</h3>
+                      <h3 className="text-lg">{t("Family members")}</h3>
                       <p className="text-sm text-muted-foreground">
-                        Add your partner and dependents up to 21 years old.
+                        {t("Add your partner and dependents up to 21 years old.")}
                       </p>
                     </div>
                     <Button
@@ -285,7 +285,7 @@ function MembershipPage() {
                         ])
                       }
                     >
-                      <Plus /> Add member
+                      <Plus /> {t("Add member")}
                     </Button>
                   </div>
 
@@ -296,12 +296,12 @@ function MembershipPage() {
                         className="rounded-lg border border-border bg-card p-4"
                       >
                         <div className="flex items-center justify-between">
-                          <p className="text-sm font-medium">Member {index + 1}</p>
+                          <p className="text-sm font-medium">{t("Member")} {index + 1}</p>
                           <Button
                             type="button"
                             variant="ghost"
                             size="icon"
-                            aria-label="Remove member"
+                            aria-label={t("Remove member")}
                             onClick={() =>
                               setFamily((prev) => prev.filter((_, i) => i !== index))
                             }
@@ -311,7 +311,7 @@ function MembershipPage() {
                         </div>
                         <div className="mt-3 grid gap-3 sm:grid-cols-2">
                           <div className="space-y-2">
-                            <Label>Relation</Label>
+                            <Label>{t("Relation")}</Label>
                             <Select
                               value={member.relation}
                               onValueChange={(value) =>
@@ -324,13 +324,13 @@ function MembershipPage() {
                                 <SelectValue />
                               </SelectTrigger>
                               <SelectContent>
-                                <SelectItem value="partner">Partner</SelectItem>
-                                <SelectItem value="dependent">Dependent</SelectItem>
+                                <SelectItem value="partner">{t("Partner")}</SelectItem>
+                                <SelectItem value="dependent">{t("Dependent")}</SelectItem>
                               </SelectContent>
                             </Select>
                           </div>
                           <div className="space-y-2">
-                            <Label>Full name</Label>
+                            <Label>{t("Full name")}</Label>
                             <Input
                               value={member.full_name}
                               maxLength={120}
@@ -340,7 +340,7 @@ function MembershipPage() {
                             />
                           </div>
                           <div className="space-y-2">
-                            <Label>Month of birth</Label>
+                            <Label>{t("Month of birth")}</Label>
                             <select
                               value={member.birth_month}
                               onChange={(e) =>
@@ -348,16 +348,16 @@ function MembershipPage() {
                               }
                               className="h-9 w-full rounded-md border border-input bg-transparent px-3 text-sm"
                             >
-                              <option value="">Select month</option>
+                              <option value="">{t("Select month")}</option>
                               {MONTHS.map((month, monthIndex) => (
                                 <option key={month} value={monthIndex + 1}>
-                                  {month}
+                                  {t(month)}
                                 </option>
                               ))}
                             </select>
                           </div>
                           <div className="space-y-2">
-                            <Label>Year of birth</Label>
+                            <Label>{t("Year of birth")}</Label>
                             <Input
                               type="number"
                               min={1900}
@@ -370,7 +370,7 @@ function MembershipPage() {
                           </div>
                           {member.relation === "partner" ? (
                             <div className="space-y-2 sm:col-span-2">
-                              <Label>Partner phone number</Label>
+                              <Label>{t("Partner phone number")}</Label>
                               <Input
                                 value={member.phone}
                                 maxLength={30}
@@ -387,14 +387,14 @@ function MembershipPage() {
 
               <div className="flex flex-wrap items-center justify-between gap-4 border-t border-border pt-5">
                 <p className="text-sm text-muted-foreground">
-                  Total due:{" "}
+                  {t("Total due:")}{" "}
                   <span className="text-base font-semibold text-foreground">
                     {formatMoney(price)}
                   </span>{" "}
-                  per year
+                  {t("per year")}
                 </p>
                 <Button type="submit" variant="hero" size="lg" disabled={saving}>
-                  {saving ? "Registering…" : "Complete registration"}
+                  {saving ? t("Registering…") : t("Complete registration")}
                 </Button>
               </div>
             </form>

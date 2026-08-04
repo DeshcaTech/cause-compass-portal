@@ -6,6 +6,7 @@ import { PageHeader } from "@/components/site/PageHeader";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { boardQuery, presidentQuery } from "@/lib/queries";
+import { useT } from "@/lib/i18n";
 import presidentFallback from "@/assets/president-fallback.jpg";
 
 const coreValues = [
@@ -90,6 +91,7 @@ export const Route = createFileRoute("/about")({
 });
 
 function AboutPage() {
+  const t = useT();
   const { data: president } = useQuery(presidentQuery);
   const { data: board = [] } = useQuery(boardQuery);
   const current = board.filter((m) => m.is_current).slice(0, 6);
@@ -97,9 +99,9 @@ function AboutPage() {
   return (
     <>
       <PageHeader
-        eyebrow="About CCGMs"
-        title="A message from our President"
-        description="Who we are, what we stand for, and the people who serve the community."
+        eyebrow={t("About CCGMs")}
+        title={t("A message from our President")}
+        description={t("Who we are, what we stand for, and the people who serve the community.")}
       />
 
       <section className="container-page py-16">
@@ -107,7 +109,7 @@ function AboutPage() {
           <Card className="h-fit overflow-hidden border-border/70 bg-primary text-primary-foreground">
             <img
               src={president?.photo_url ?? presidentFallback}
-              alt={president?.president_name ?? "CCGMs President"}
+              alt={president?.president_name ?? t("CCGMs President")}
               loading="lazy"
               className="aspect-[4/3] w-full object-cover"
             />
@@ -133,11 +135,9 @@ function AboutPage() {
               <span className="inline-flex size-11 items-center justify-center rounded-2xl bg-accent text-accent-foreground">
                 <Target className="size-5" />
               </span>
-              <h2 className="mt-5 text-2xl">Our Mission</h2>
+              <h2 className="mt-5 text-2xl">{t("Our Mission")}</h2>
               <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                To unite and uplift our community by bringing families together across
-                generations — celebrating our culture, supporting one another through hardship, and
-                building a future where every member feels valued, connected and never alone.
+                {t("To unite and uplift our community by bringing families together across generations — celebrating our culture, supporting one another through hardship, and building a future where every member feels valued, connected and never alone.")}
               </p>
             </CardContent>
           </Card>
@@ -146,11 +146,9 @@ function AboutPage() {
               <span className="inline-flex size-11 items-center justify-center rounded-2xl bg-accent text-accent-foreground">
                 <Eye className="size-5" />
               </span>
-              <h2 className="mt-5 text-2xl">Our Vision</h2>
+              <h2 className="mt-5 text-2xl">{t("Our Vision")}</h2>
               <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                A thriving, self-reliant community where heritage is preserved, businesses flourish,
-                and every family — parents, students and elders alike — can grow, give back and find
-                support, generation after generation.
+                {t("A thriving, self-reliant community where heritage is preserved, businesses flourish, and every family — parents, students and elders alike — can grow, give back and find support, generation after generation.")}
               </p>
             </CardContent>
           </Card>
@@ -159,11 +157,9 @@ function AboutPage() {
               <span className="inline-flex size-11 items-center justify-center rounded-2xl bg-accent text-accent-foreground">
                 <Sparkles className="size-5" />
               </span>
-              <h2 className="mt-5 text-2xl">Our Promise</h2>
+              <h2 className="mt-5 text-2xl">{t("Our Promise")}</h2>
               <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                To lead with integrity and compassion, organising events, campaigns and support
-                networks that reflect the values our community holds dear — and to always be there
-                when one of our own needs a hand.
+                {t("To lead with integrity and compassion, organising events, campaigns and support networks that reflect the values our community holds dear — and to always be there when one of our own needs a hand.")}
               </p>
             </CardContent>
           </Card>
@@ -172,14 +168,14 @@ function AboutPage() {
 
       <section className="surface-panel border-y border-border py-16">
         <div className="container-page">
-          <p className="eyebrow text-terracotta">What guides us</p>
-          <h2 className="mt-2 text-3xl md:text-4xl">Our core values</h2>
+          <p className="eyebrow text-terracotta">{t("What guides us")}</p>
+          <h2 className="mt-2 text-3xl md:text-4xl">{t("Our core values")}</h2>
           <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {coreValues.map((value) => (
               <Card key={value.title} className="h-full border-border/70">
                 <CardContent className="p-6">
-                  <p className="font-display text-lg text-primary">{value.title}</p>
-                  <p className="mt-2 text-sm text-muted-foreground">{value.body}</p>
+                  <p className="font-display text-lg text-primary">{t(value.title)}</p>
+                  <p className="mt-2 text-sm text-muted-foreground">{t(value.body)}</p>
                 </CardContent>
               </Card>
             ))}
@@ -190,11 +186,11 @@ function AboutPage() {
       <section className="container-page py-16">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
-            <p className="eyebrow text-terracotta">Leadership</p>
-            <h2 className="mt-2 text-3xl md:text-4xl">The board team</h2>
+            <p className="eyebrow text-terracotta">{t("Leadership")}</p>
+            <h2 className="mt-2 text-3xl md:text-4xl">{t("The board team")}</h2>
           </div>
           <Button asChild variant="hero">
-            <Link to="/board">Meet the full board</Link>
+            <Link to="/board">{t("Meet the full board")}</Link>
           </Button>
         </div>
         <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">

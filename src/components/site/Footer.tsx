@@ -5,6 +5,7 @@ import logo from "@/assets/ccgms-logo.png?w=120&format=png";
 import logoAvif from "@/assets/ccgms-logo.png?w=120&quality=70&format=avif";
 import logoWebp from "@/assets/ccgms-logo.png?w=120&quality=80&format=webp";
 import { Picture } from "@/components/site/Picture";
+import { useT } from "@/lib/i18n";
 
 const columns = [
   {
@@ -38,6 +39,7 @@ const columns = [
 ];
 
 export function Footer() {
+  const t = useT();
   return (
     <footer className="mt-24 border-t border-border bg-primary text-primary-foreground">
       <div className="container-page grid gap-10 py-14 md:grid-cols-2 lg:grid-cols-5">
@@ -47,8 +49,9 @@ export function Footer() {
             <span className="font-display text-xl font-semibold">CCGMs</span>
           </div>
           <p className="mt-4 max-w-sm text-sm text-primary-foreground/75">
-            A community association bringing families together — supporting one another,
-            celebrating our culture and building a stronger future for the next generation.
+            {t(
+              "A community association bringing families together — supporting one another, celebrating our culture and building a stronger future for the next generation.",
+            )}
           </p>
           <ul className="mt-6 space-y-2 text-sm text-primary-foreground/75">
             <li className="flex items-center gap-2">
@@ -65,7 +68,7 @@ export function Footer() {
 
         {columns.map((column) => (
           <div key={column.title}>
-            <p className="eyebrow text-gold">{column.title}</p>
+            <p className="eyebrow text-gold">{t(column.title)}</p>
             <ul className="mt-4 space-y-2 text-sm">
               {column.links.map((link) => (
                 <li key={link.to}>
@@ -73,7 +76,7 @@ export function Footer() {
                     to={link.to}
                     className="text-primary-foreground/75 transition-colors hover:text-gold"
                   >
-                    {link.label}
+                    {t(link.label)}
                   </Link>
                 </li>
               ))}
@@ -83,16 +86,19 @@ export function Footer() {
       </div>
       <div className="border-t border-primary-foreground/15">
         <div className="container-page flex flex-col gap-2 py-5 text-xs text-primary-foreground/60 sm:flex-row sm:items-center sm:justify-between">
-          <p>© {new Date().getFullYear()} CCGMs Community Association. All rights reserved.</p>
+          <p>
+            © {new Date().getFullYear()} CCGMs Community Association.{" "}
+            {t("All rights reserved.")}
+          </p>
           <p className="text-primary-foreground/70">
-            Powered by <span className="font-semibold text-gold">DeshcaTech</span>
+            {t("Powered by")} <span className="font-semibold text-gold">DeshcaTech</span>
           </p>
           <span className="flex gap-4">
             <Link to="/contact" className="hover:text-gold">
-              Contact us
+              {t("Contact us")}
             </Link>
             <Link to="/admin" className="hover:text-gold">
-              Admin
+              {t("Admin")}
             </Link>
           </span>
         </div>

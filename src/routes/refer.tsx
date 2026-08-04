@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { supabase } from "@/integrations/supabase/client";
+import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/refer")({
   head: () => ({
@@ -49,6 +50,7 @@ const schema = z.object({
 });
 
 function ReferPage() {
+  const t = useT();
   const [supportType, setSupportType] = useState(SUPPORT_TYPES[0]!);
   const [consent, setConsent] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -58,7 +60,7 @@ function ReferPage() {
     event.preventDefault();
     const parsed = schema.safeParse(Object.fromEntries(new FormData(event.currentTarget)));
     if (!parsed.success) {
-      toast.error(parsed.error.issues[0]?.message ?? "Please check the form");
+      toast.error(t(parsed.error.issues[0]?.message ?? "Please check the form"));
       return;
     }
     setSaving(true);
@@ -75,7 +77,7 @@ function ReferPage() {
     });
     setSaving(false);
     if (error) {
-      toast.error("Your referral could not be sent. Please try again.");
+      toast.error(t("Your referral could not be sent. Please try again."));
       return;
     }
     setDone(true);
@@ -84,17 +86,16 @@ function ReferPage() {
   if (done) {
     return (
       <>
-        <PageHeader eyebrow="Get involved" title="Referral received" />
+        <PageHeader eyebrow={t("Get involved")} title={t("Referral received")} />
         <section className="container-page py-16">
           <Card className="mx-auto max-w-xl border-border/70 text-center">
             <CardContent className="p-10">
               <span className="mx-auto flex size-14 items-center justify-center rounded-full bg-[image:var(--gradient-gold)] text-gold-foreground">
                 <LifeBuoy className="size-7" />
               </span>
-              <h2 className="mt-6 text-2xl">Thank you for looking out for them</h2>
+              <h2 className="mt-6 text-2xl">{t("Thank you for looking out for them")}</h2>
               <p className="mt-3 text-sm text-muted-foreground">
-                The welfare team handles every referral confidentially and will follow up
-                sensitively.
+                {t("The welfare team handles every referral confidentially and will follow up sensitively.")}
               </p>
             </CardContent>
           </Card>
@@ -106,9 +107,9 @@ function ReferPage() {
   return (
     <>
       <PageHeader
-        eyebrow="Get involved"
-        title="Refer someone for support"
-        description="If you know a member of our community going through a difficult time, tell us confidentially."
+        eyebrow={t("Get involved")}
+        title={t("Refer someone for support")}
+        description={t("If you know a member of our community going through a difficult time, tell us confidentially.")}
       />
       <section className="container-page py-14">
         <Card className="mx-auto max-w-2xl border-border/70">
@@ -116,18 +117,18 @@ function ReferPage() {
             <form onSubmit={onSubmit} className="space-y-5">
               <div className="space-y-2">
                 <Label htmlFor="membership_number">
-                  Your membership number (optional, but recommended)
+                  {t("Your membership number (optional, but recommended)")}
                 </Label>
                 <Input id="membership_number" name="membership_number" placeholder="CCGM-1000" />
               </div>
 
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="space-y-2">
-                  <Label htmlFor="referrer_name">Your name</Label>
+                  <Label htmlFor="referrer_name">{t("Your name")}</Label>
                   <Input id="referrer_name" name="referrer_name" required maxLength={120} />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="referrer_email">Your email</Label>
+                  <Label htmlFor="referrer_email">{t("Your email")}</Label>
                   <Input
                     id="referrer_email"
                     name="referrer_email"
@@ -137,13 +138,13 @@ function ReferPage() {
                   />
                 </div>
                 <div className="space-y-2 sm:col-span-2">
-                  <Label htmlFor="referrer_phone">Your phone (optional)</Label>
+                  <Label htmlFor="referrer_phone">{t("Your phone (optional)")}</Label>
                   <Input id="referrer_phone" name="referrer_phone" maxLength={30} />
                 </div>
               </div>
 
               <div className="space-y-3 border-t border-border pt-5">
-                <Label>Type of support needed</Label>
+                <Label>{t("Type of support needed")}</Label>
                 <div className="flex flex-wrap gap-2">
                   {SUPPORT_TYPES.map((type) => (
                     <button
@@ -156,7 +157,7 @@ function ReferPage() {
                           : "border-border hover:bg-secondary"
                       }`}
                     >
-                      {type}
+                      {t(type)}
                     </button>
                   ))}
                 </div>
@@ -164,17 +165,17 @@ function ReferPage() {
 
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="space-y-2">
-                  <Label htmlFor="person_name">Their name</Label>
+                  <Label htmlFor="person_name">{t("Their name")}</Label>
                   <Input id="person_name" name="person_name" required maxLength={120} />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="person_contact">Their contact (if known)</Label>
+                  <Label htmlFor="person_contact">{t("Their contact (if known)")}</Label>
                   <Input id="person_contact" name="person_contact" maxLength={200} />
                 </div>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="details">How can we help?</Label>
+                <Label htmlFor="details">{t("How can we help?")}</Label>
                 <Textarea id="details" name="details" rows={4} maxLength={1000} />
               </div>
 
@@ -183,11 +184,11 @@ function ReferPage() {
                   checked={consent}
                   onCheckedChange={(value) => setConsent(value === true)}
                 />
-                They know about this referral and are happy to be contacted.
+                {t("They know about this referral and are happy to be contacted.")}
               </label>
 
               <Button type="submit" variant="hero" size="lg" className="w-full" disabled={saving}>
-                {saving ? "Sending…" : "Send referral"}
+                {saving ? t("Sending…") : t("Send referral")}
               </Button>
             </form>
           </CardContent>

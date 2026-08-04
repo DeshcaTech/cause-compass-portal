@@ -28,6 +28,7 @@ import eventFallbackWebp from "@/assets/event-fallback.jpg?w=1000&quality=70&for
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Picture } from "@/components/site/Picture";
+import { useT } from "@/lib/i18n";
 import {
   announcementsQuery,
   campaignsQuery,
@@ -80,6 +81,7 @@ const highlights = [
 ];
 
 function Index() {
+  const t = useT();
   const { data: events = [] } = useQuery(eventsQuery);
   const { data: campaigns = [] } = useQuery(campaignsQuery);
   const { data: announcements = [] } = useQuery(announcementsQuery);
@@ -99,11 +101,11 @@ function Index() {
 
   const statTiles = useMemo(
     () => [
-      { icon: Users, label: "Members", value: stats?.members ?? 0 },
-      { icon: Building2, label: "Member businesses", value: stats?.businesses ?? 0 },
-      { icon: CalendarDays, label: "Coming events", value: stats?.upcoming_events ?? 0 },
-      { icon: UserRound, label: "Board members", value: stats?.board_members ?? 0 },
-      { icon: HeartHandshake, label: "Active campaigns", value: stats?.active_campaigns ?? 0 },
+      { icon: Users, label: t("Members"), value: stats?.members ?? 0 },
+      { icon: Building2, label: t("Member businesses"), value: stats?.businesses ?? 0 },
+      { icon: CalendarDays, label: t("Coming events"), value: stats?.upcoming_events ?? 0 },
+      { icon: UserRound, label: t("Board members"), value: stats?.board_members ?? 0 },
+      { icon: HeartHandshake, label: t("Active campaigns"), value: stats?.active_campaigns ?? 0 },
     ],
     [stats],
   );
@@ -127,25 +129,24 @@ function Index() {
                 pictureClassName="shrink-0"
                 className="h-14 w-14 sm:h-16 sm:w-16 md:h-20 md:w-20"
               />
-              <p className="eyebrow min-w-0 text-gold">Community association</p>
+              <p className="eyebrow min-w-0 text-gold">{t("Community association")}</p>
             </div>
             <h1 className="mt-6 text-[2.15rem] leading-[1.02] sm:mt-7 sm:text-[2.6rem] sm:leading-[0.98] lg:text-[4.2rem]">
-              Stronger together,
+              {t("Stronger together,")}
               <br />
-              <span className="text-gold">generation after generation</span>
+              <span className="text-gold">{t("generation after generation")}</span>
             </h1>
             <p className="mt-5 max-w-xl text-[0.95rem] text-primary-foreground/80 sm:text-base md:text-lg">
-              CCGMs is built on family, culture and mutual support. Join us, give to a cause, and
-              be part of everything we build together.
+              {t("CCGMs is built on family, culture and mutual support. Join us, give to a cause, and be part of everything we build together.")}
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
               <Button asChild variant="gold" size="xl">
                 <Link to="/membership">
-                  Join the Community <ArrowRight />
+                  {t("Join the Community")} <ArrowRight />
                 </Link>
               </Button>
               <Button asChild variant="onHero" size="xl">
-                <Link to="/fundraising">Support Our Causes</Link>
+                <Link to="/fundraising">{t("Support Our Causes")}</Link>
               </Button>
             </div>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
@@ -161,9 +162,9 @@ function Index() {
                   <Icon className="size-6 shrink-0" />
                   <span className="min-w-0">
                     <span className="block text-[11px] uppercase tracking-widest opacity-70">
-                      Download for
+                      {t("Download for")}
                     </span>
-                    <span className="block text-sm font-semibold">{label}</span>
+                    <span className="block text-sm font-semibold">{t(label)}</span>
                   </span>
                 </a>
               ))}
@@ -174,7 +175,7 @@ function Index() {
               avif={heroAvif}
               webp={heroWebp}
               src={hero}
-              alt="CCGMs members of all generations celebrating together"
+              alt={t("CCGMs members of all generations celebrating together")}
               width={1920}
               height={1200}
               fetchPriority="high"
@@ -207,13 +208,13 @@ function Index() {
       <section className="container-page py-14 sm:py-16 md:py-20">
         <div className="grid items-start gap-8 md:gap-10 lg:grid-cols-[0.9fr_1.1fr]">
           <div>
-            <p className="eyebrow text-terracotta">Who we are</p>
-            <h2 className="mt-2 text-2xl sm:text-3xl md:text-4xl">A family of families</h2>
+            <p className="eyebrow text-terracotta">{t("Who we are")}</p>
+            <h2 className="mt-2 text-2xl sm:text-3xl md:text-4xl">{t("A family of families")}</h2>
             <Picture
               avif={communityAvif}
               webp={communityWebp}
               src={communityTogether}
-              alt="CCGMs members of all ages gathered together"
+              alt={t("CCGMs members of all ages gathered together")}
               loading="lazy"
               width={1280}
               height={960}
@@ -224,15 +225,10 @@ function Index() {
           </div>
           <div className="space-y-5">
             <p className="text-base text-muted-foreground md:text-lg">
-              CCGMs brings together members of our community across generations — parents,
-              students, elders and children — around culture, faith, friendship and mutual
-              support. What began as a handful of families sharing meals and traditions is now an
-              association with a board, an events calendar and campaigns that back people when
-              life gets hard.
+              {t("CCGMs brings together members of our community across generations — parents, students, elders and children — around culture, faith, friendship and mutual support. What began as a handful of families sharing meals and traditions is now an association with a board, an events calendar and campaigns that back people when life gets hard.")}
             </p>
             <p className="text-sm text-muted-foreground md:text-base">
-              We celebrate together, raise funds for causes that matter to our members, promote
-              businesses run by our community, and stand beside anyone who needs a hand.
+              {t("We celebrate together, raise funds for causes that matter to our members, promote businesses run by our community, and stand beside anyone who needs a hand.")}
             </p>
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {[
@@ -244,16 +240,16 @@ function Index() {
                   key={item.label}
                   className="min-w-0 rounded-2xl border border-border/70 bg-card p-4 sm:p-5"
                 >
-                  <p className="text-base font-semibold sm:text-lg">{item.value}</p>
+                  <p className="text-base font-semibold sm:text-lg">{t(item.value)}</p>
                   <p className="mt-1 text-[11px] uppercase tracking-wider text-muted-foreground sm:text-xs">
-                    {item.label}
+                    {t(item.label)}
                   </p>
                 </div>
               ))}
             </div>
             <Button asChild variant="soft" className="w-full sm:w-auto">
               <Link to="/about">
-                More about CCGMs <ArrowRight />
+                {t("More about CCGMs")} <ArrowRight />
               </Link>
             </Button>
           </div>
@@ -269,10 +265,10 @@ function Index() {
                   <span className="inline-flex size-11 shrink-0 items-center justify-center rounded-2xl bg-accent text-accent-foreground">
                     <item.icon className="size-5" />
                   </span>
-                  <h2 className="mt-5 text-lg sm:text-xl">{item.title}</h2>
-                  <p className="mt-2 text-sm text-muted-foreground">{item.body}</p>
+                  <h2 className="mt-5 text-lg sm:text-xl">{t(item.title)}</h2>
+                  <p className="mt-2 text-sm text-muted-foreground">{t(item.body)}</p>
                   <span className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-primary">
-                    Learn more <ArrowRight className="size-4" />
+                    {t("Learn more")} <ArrowRight className="size-4" />
                   </span>
                 </CardContent>
               </Card>
@@ -285,15 +281,15 @@ function Index() {
       <section className="container-page pb-14 sm:pb-16 md:pb-20">
           <div className="flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-end sm:justify-between">
             <div>
-              <p className="eyebrow text-terracotta">Noticeboard</p>
+              <p className="eyebrow text-terracotta">{t("Noticeboard")}</p>
               <h2 className="mt-2 text-2xl sm:text-3xl md:text-4xl">
-                Latest news &amp; announcements
+                {t("Latest news & announcements")}
               </h2>
             </div>
           </div>
           {latestNews.length === 0 ? (
             <p className="mt-8 text-sm text-muted-foreground">
-              No announcements yet — check back soon for community news and updates.
+              {t("No announcements yet — check back soon for community news and updates.")}
             </p>
           ) : (
           <div className="mt-6 grid gap-4 sm:mt-8 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3">
@@ -318,15 +314,15 @@ function Index() {
         <div className="container-page">
           <div className="flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-end sm:justify-between">
             <div>
-              <p className="eyebrow text-terracotta">What&apos;s on</p>
-              <h2 className="mt-2 text-2xl sm:text-3xl md:text-4xl">Coming events</h2>
+              <p className="eyebrow text-terracotta">{t("What's on")}</p>
+              <h2 className="mt-2 text-2xl sm:text-3xl md:text-4xl">{t("Coming events")}</h2>
             </div>
             <Button asChild variant="soft" className="w-full sm:w-auto">
-              <Link to="/events">All events</Link>
+              <Link to="/events">{t("All events")}</Link>
             </Button>
           </div>
           {upcoming.length === 0 ? (
-            <p className="mt-8 text-sm text-muted-foreground">New events are being planned.</p>
+            <p className="mt-8 text-sm text-muted-foreground">{t("New events are being planned.")}</p>
           ) : (
             <div className="mt-6 grid gap-5 sm:mt-8 sm:gap-6 lg:grid-cols-[1.4fr_1fr]">
               {/* Lead story */}
@@ -377,11 +373,11 @@ function Index() {
       <section className="container-page py-14 sm:py-16 md:py-20">
         <div className="flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-end sm:justify-between">
           <div>
-            <p className="eyebrow text-terracotta">Fundraising</p>
-            <h2 className="mt-2 text-2xl sm:text-3xl md:text-4xl">Active campaigns</h2>
+            <p className="eyebrow text-terracotta">{t("Fundraising")}</p>
+            <h2 className="mt-2 text-2xl sm:text-3xl md:text-4xl">{t("Active campaigns")}</h2>
           </div>
           <Button asChild variant="soft" className="w-full sm:w-auto">
-            <Link to="/fundraising">See all campaigns</Link>
+            <Link to="/fundraising">{t("See all campaigns")}</Link>
           </Button>
         </div>
         <div className="mt-6 grid gap-4 sm:mt-8 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3">
@@ -407,12 +403,12 @@ function Index() {
                     <span className="font-semibold">{formatMoney(campaign.raised_amount)}</span>
                     <span className="text-muted-foreground">
                       {" "}
-                      raised of {formatMoney(campaign.goal_amount)}
+                      {t("raised of")} {formatMoney(campaign.goal_amount)}
                     </span>
                   </p>
                   <Button asChild variant="hero" size="sm" className="mt-5 w-full sm:w-auto">
                     <Link to="/donate" search={{ campaign: campaign.id }}>
-                      Donate
+                      {t("Donate")}
                     </Link>
                   </Button>
                 </CardContent>
@@ -428,13 +424,13 @@ function Index() {
           <div className="container-page">
             <div className="flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-end sm:justify-between">
               <div>
-                <p className="eyebrow text-terracotta">Our members at work</p>
+                <p className="eyebrow text-terracotta">{t("Our members at work")}</p>
                 <h2 className="mt-2 text-2xl sm:text-3xl md:text-4xl">
-                  Selected community businesses
+                  {t("Selected community businesses")}
                 </h2>
               </div>
               <Button asChild variant="soft" className="w-full sm:w-auto">
-                <Link to="/partners">All businesses</Link>
+                <Link to="/partners">{t("All businesses")}</Link>
               </Button>
             </div>
             <div className="mt-6 grid gap-4 sm:mt-8 sm:grid-cols-2 sm:gap-5 lg:grid-cols-4">

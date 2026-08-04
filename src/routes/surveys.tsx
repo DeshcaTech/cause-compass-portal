@@ -14,6 +14,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { supabase } from "@/integrations/supabase/client";
 import { formatDate, surveysQuery, type Survey } from "@/lib/queries";
 import surveyFallback from "@/assets/survey-fallback.jpg";
+import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/surveys")({
   head: () => ({
@@ -32,6 +33,7 @@ export const Route = createFileRoute("/surveys")({
 });
 
 function SurveyForm({ survey }: { survey: Survey }) {
+  const t = useT();
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [membership, setMembership] = useState("");
   const [saving, setSaving] = useState(false);
@@ -41,7 +43,7 @@ function SurveyForm({ survey }: { survey: Survey }) {
     event.preventDefault();
     const unanswered = survey.questions.filter((q) => !answers[q.id]?.trim());
     if (unanswered.length > 0) {
-      toast.error("Please answer every question");
+      toast.error(t("Please answer every question"));
       return;
     }
     setSaving(true);
@@ -52,20 +54,20 @@ function SurveyForm({ survey }: { survey: Survey }) {
     });
     setSaving(false);
     if (error) {
-      toast.error("Your response could not be saved. Please try again.");
+      toast.error(t("Your response could not be saved. Please try again."));
       return;
     }
     setDone(true);
-    toast.success("Thank you — your response has been recorded.");
+    toast.success(t("Thank you — your response has been recorded."));
   }
 
   if (done) {
     return (
       <Card className="border-border/70">
         <CardContent className="p-8 text-center">
-          <h3 className="text-lg">Response recorded</h3>
+          <h3 className="text-lg">{t("Response recorded")}</h3>
           <p className="mt-2 text-sm text-muted-foreground">
-            Thank you for helping shape "{survey.title}".
+            {t('Thank you for helping shape "{title}".').replace("{title}", survey.title)}
           </p>
         </CardContent>
       </Card>
@@ -84,7 +86,7 @@ function SurveyForm({ survey }: { survey: Survey }) {
         <div className="flex flex-wrap items-start justify-between gap-3">
           <h3 className="text-xl">{survey.title}</h3>
           {survey.closes_at ? (
-            <Badge variant="secondary">Closes {formatDate(survey.closes_at)}</Badge>
+            <Badge variant="secondary">{t("Closes")} {formatDate(survey.closes_at)}</Badge>
           ) : null}
         </div>
         <p className="mt-2 text-sm text-muted-foreground">{survey.description}</p>
@@ -92,7 +94,7 @@ function SurveyForm({ survey }: { survey: Survey }) {
         <form onSubmit={submit} className="mt-6 space-y-6">
           <div className="space-y-2">
             <Label htmlFor={`m-${survey.id}`}>
-              Membership number (optional, but recommended)
+              {t("Membership number (optional, but recommended)")}
             </Label>
             <Input
               id={`m-${survey.id}`}
@@ -139,7 +141,7 @@ function SurveyForm({ survey }: { survey: Survey }) {
           ))}
 
           <Button type="submit" variant="hero" disabled={saving}>
-            {saving ? "Submitting…" : "Submit response"}
+            {saving ? t("Submitting…") : t("Submit response")}
           </Button>
         </form>
       </CardContent>
@@ -148,6 +150,7 @@ function SurveyForm({ survey }: { survey: Survey }) {
 }
 
 function SurveysPage() {
+  const t = useT();
   const { data: surveys = [] } = useQuery(surveysQuery);
   const active = surveys.filter((s) => s.is_active);
   const closed = surveys.filter((s) => !s.is_active);
@@ -155,26 +158,26 @@ function SurveysPage() {
   return (
     <>
       <PageHeader
-        eyebrow="Get involved"
-        title="Surveys"
-        description="Your answers shape what we fund, where we meet and how we support each other."
+        eyebrow={t("Get involved")}
+        title={t("Surveys")}
+        description={t("Your answers shape what we fund, where we meet and how we support each other.")}
       />
       <section className="container-page py-14">
         <Tabs defaultValue="active">
           <TabsList>
-            <TabsTrigger value="active">Active surveys</TabsTrigger>
-            <TabsTrigger value="closed">Closed surveys</TabsTrigger>
+            <TabsTrigger value="active">{t("Active surveys")}</TabsTrigger>
+            <TabsTrigger value="closed">{t("Closed surveys")}</TabsTrigger>
           </TabsList>
           <TabsContent value="active" className="mt-8 space-y-6">
             {active.length === 0 ? (
-              <p className="text-sm text-muted-foreground">No active surveys right now.</p>
+              <p className="text-sm text-muted-foreground">{t("No active surveys right now.")}</p>
             ) : (
               active.map((survey) => <SurveyForm key={survey.id} survey={survey} />)
             )}
           </TabsContent>
           <TabsContent value="closed" className="mt-8 space-y-4">
             {closed.length === 0 ? (
-              <p className="text-sm text-muted-foreground">No closed surveys yet.</p>
+              <p className="text-sm text-muted-foreground">{t("No closed surveys yet.")}</p>
             ) : (
               closed.map((survey) => (
                 <Card key={survey.id} className="border-border/70">
@@ -188,7 +191,7 @@ function SurveysPage() {
                     <h3 className="text-lg">{survey.title}</h3>
                     <p className="mt-2 text-sm text-muted-foreground">{survey.description}</p>
                     <Badge variant="secondary" className="mt-3">
-                      Closed
+                      {t("Closed")}
                     </Badge>
                   </CardContent>
                 </Card>

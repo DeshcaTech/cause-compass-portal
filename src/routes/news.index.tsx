@@ -10,6 +10,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { announcementsQuery } from "@/lib/queries";
+import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/news/")({
   head: () => ({
@@ -41,6 +42,7 @@ function formatDate(value: string) {
 }
 
 function NewsPage() {
+  const t = useT();
   const { data: news = [] } = useQuery(announcementsQuery);
   const [search, setSearch] = useState("");
   const [featuredOnly, setFeaturedOnly] = useState(false);
@@ -63,9 +65,9 @@ function NewsPage() {
   return (
     <div>
       <PageHeader
-        eyebrow="Noticeboard"
-        title="News & announcements"
-        description="Updates, notices and community news from the CCGMs board."
+        eyebrow={t("Noticeboard")}
+        title={t("News & announcements")}
+        description={t("Updates, notices and community news from the CCGMs board.")}
       />
       <section className="container-page pb-16 md:pb-20">
         <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -74,8 +76,8 @@ function NewsPage() {
             <Input
               value={search}
               onChange={(event) => setSearch(event.target.value)}
-              placeholder="Search news by title, summary or text"
-              aria-label="Search news"
+              placeholder={t("Search news by title, summary or text")}
+              aria-label={t("Search news")}
               className="pl-9"
             />
           </div>
@@ -86,15 +88,15 @@ function NewsPage() {
             aria-pressed={featuredOnly}
           >
             <Star className={featuredOnly ? "size-4 fill-current" : "size-4"} />
-            Featured{featuredCount ? ` (${featuredCount})` : ""}
+            {t("Featured")}{featuredCount ? ` (${featuredCount})` : ""}
           </Button>
         </div>
 
         {filtered.length === 0 ? (
           <p className="text-sm text-muted-foreground">
             {news.length === 0
-              ? "No announcements yet — check back soon for community news and updates."
-              : "No news matches your search."}
+              ? t("No announcements yet — check back soon for community news and updates.")
+              : t("No news matches your search.")}
           </p>
         ) : (
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -112,7 +114,7 @@ function NewsPage() {
                       <p className="eyebrow text-terracotta">{formatDate(item.published_at)}</p>
                       {item.is_featured && (
                         <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-primary">
-                          <Star className="size-3 fill-current" /> Featured
+                          <Star className="size-3 fill-current" /> {t("Featured")}
                         </span>
                       )}
                     </div>

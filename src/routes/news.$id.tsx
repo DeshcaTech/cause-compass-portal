@@ -5,6 +5,7 @@ import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { announcementQuery } from "@/lib/queries";
 import newsFallback from "@/assets/news-fallback.jpg";
+import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/news/$id")({
   head: () => ({
@@ -35,6 +36,7 @@ function formatDate(value: string) {
 }
 
 function NewsDetailPage() {
+  const t = useT();
   const { id } = Route.useParams();
   const { data: item, isPending } = useQuery(announcementQuery(id));
 
@@ -43,15 +45,15 @@ function NewsDetailPage() {
       <Button asChild variant="soft" size="sm">
         <Link to="/news">
           <ArrowLeft className="mr-2 h-4 w-4" />
-          All news
+          {t("All news")}
         </Link>
       </Button>
 
       {isPending ? (
-        <p className="mt-10 text-sm text-muted-foreground">Loading article…</p>
+        <p className="mt-10 text-sm text-muted-foreground">{t("Loading article…")}</p>
       ) : !item ? (
         <p className="mt-10 text-sm text-muted-foreground">
-          This announcement is no longer available.
+          {t("This announcement is no longer available.")}
         </p>
       ) : (
         <div className="mt-8 max-w-3xl">

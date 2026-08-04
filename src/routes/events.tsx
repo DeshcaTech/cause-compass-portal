@@ -11,6 +11,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { eventsQuery, formatDate, type EventRow } from "@/lib/queries";
 import eventFallback from "@/assets/event-fallback.jpg";
+import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/events")({
   head: () => ({
@@ -34,9 +35,10 @@ export const Route = createFileRoute("/events")({
 const WEEKDAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
 function TypeBadge({ type }: { type: EventRow["event_type"] }) {
+  const t = useT();
   return (
     <Badge className={type === "ccgms" ? "bg-primary text-primary-foreground" : "bg-terracotta text-terracotta-foreground"}>
-      {type === "ccgms" ? "CCGMs event" : "Other event"}
+      {type === "ccgms" ? t("CCGMs event") : t("Other event")}
     </Badge>
   );
 }
@@ -69,6 +71,7 @@ function EventCard({ event, onOpen }: { event: EventRow; onOpen: () => void }) {
 }
 
 function EventsPage() {
+  const t = useT();
   const { data: events = [] } = useQuery(eventsQuery);
   const [selected, setSelected] = useState<EventRow | null>(null);
   const [monthOffset, setMonthOffset] = useState(0);
@@ -110,19 +113,19 @@ function EventsPage() {
   return (
     <>
       <PageHeader
-        eyebrow="Events"
-        title="What's happening in the community"
-        description="CCGMs events and other community events — browse the lists or use the monthly calendar."
+        eyebrow={t("Events")}
+        title={t("What's happening in the community")}
+        description={t("CCGMs events and other community events — browse the lists or use the monthly calendar.")}
       />
 
       <section className="container-page py-14">
         <Tabs defaultValue="coming">
           <div className="-mx-4 overflow-x-auto px-4 sm:mx-0 sm:px-0">
             <TabsList className="w-max min-w-full justify-start">
-              <TabsTrigger value="coming">Coming events</TabsTrigger>
-              <TabsTrigger value="past">Past events</TabsTrigger>
-              <TabsTrigger value="all">All events</TabsTrigger>
-              <TabsTrigger value="calendar">Calendar</TabsTrigger>
+              <TabsTrigger value="coming">{t("Coming events")}</TabsTrigger>
+              <TabsTrigger value="past">{t("Past events")}</TabsTrigger>
+              <TabsTrigger value="all">{t("All events")}</TabsTrigger>
+              <TabsTrigger value="calendar">{t("Calendar")}</TabsTrigger>
             </TabsList>
           </div>
 
@@ -151,7 +154,7 @@ function EventsPage() {
                     <Button
                       variant="soft"
                       size="icon"
-                      aria-label="Previous month"
+                      aria-label={t("Previous month")}
                       onClick={() => setMonthOffset((v) => v - 1)}
                     >
                       <ChevronLeft />
@@ -159,7 +162,7 @@ function EventsPage() {
                     <Button
                       variant="soft"
                       size="icon"
-                      aria-label="Next month"
+                      aria-label={t("Next month")}
                       onClick={() => setMonthOffset((v) => v + 1)}
                     >
                       <ChevronRight />
@@ -170,7 +173,7 @@ function EventsPage() {
                 <div className="mt-6 grid grid-cols-7 gap-1 text-center text-xs text-muted-foreground">
                   {WEEKDAYS.map((day) => (
                     <div key={day} className="py-2 font-medium">
-                      {day}
+                      {t(day)}
                     </div>
                   ))}
                   {grid.map((date, index) => {
@@ -205,7 +208,7 @@ function EventsPage() {
                             </span>
                           ))}
                           {dayItems.length > 2 ? (
-                            <span className="block text-[10px]">+{dayItems.length - 2} more</span>
+                            <span className="block text-[10px]">{`+${dayItems.length - 2} ${t("more")}`}</span>
                           ) : null}
                         </span>
                       </button>
@@ -217,7 +220,7 @@ function EventsPage() {
                   <div className="mt-6 border-t border-border pt-6">
                     <p className="eyebrow text-terracotta">{selectedDay}</p>
                     {dayEvents.length === 0 ? (
-                      <p className="mt-2 text-sm text-muted-foreground">No events on this day.</p>
+                      <p className="mt-2 text-sm text-muted-foreground">{t("No events on this day.")}</p>
                     ) : (
                       <ul className="mt-3 space-y-2">
                         {dayEvents.map((event) => (
@@ -259,7 +262,7 @@ function EventsPage() {
                 </li>
                 {selected.end_at ? (
                   <li className="flex items-center gap-2">
-                    <Clock className="size-4" /> Ends {formatDate(selected.end_at, true)}
+                    <Clock className="size-4" /> {t("Ends")} {formatDate(selected.end_at, true)}
                   </li>
                 ) : null}
                 <li className="flex items-center gap-2">

@@ -6,8 +6,10 @@ import logo from "@/assets/ccgms-logo.png?w=120&format=png";
 import logoAvif from "@/assets/ccgms-logo.png?w=120&quality=70&format=avif";
 import logoWebp from "@/assets/ccgms-logo.png?w=120&quality=80&format=webp";
 import { Picture } from "@/components/site/Picture";
+import { LanguageSwitcher } from "@/components/site/LanguageSwitcher";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { useT } from "@/lib/i18n";
 
 type NavItem = { label: string; to: string };
 type NavGroup = { label: string; to?: string; items?: NavItem[] };
@@ -47,6 +49,7 @@ const linkClass =
 export function Header() {
   const [open, setOpen] = useState(false);
   const [openGroup, setOpenGroup] = useState<string | null>(null);
+  const t = useT();
 
   return (
     <header className="sticky top-0 z-50 border-b border-border/70 bg-background/85 backdrop-blur-md">
@@ -55,7 +58,9 @@ export function Header() {
           <Picture avif={logoAvif} webp={logoWebp} src={logo} alt="CCGMs logo" width={44} height={44} className="h-11 w-11" fetchPriority="high" decoding="async" />
           <span className="leading-tight">
             <span className="block font-display text-lg font-semibold text-primary">CCGMs</span>
-            <span className="block text-[11px] text-muted-foreground">Community Association</span>
+            <span className="block text-[11px] text-muted-foreground">
+              {t("Community Association")}
+            </span>
           </span>
         </Link>
 
@@ -64,7 +69,7 @@ export function Header() {
             group.items ? (
               <div key={group.label} className="group relative">
                 <button className={`${linkClass} inline-flex items-center gap-1`} type="button">
-                  {group.label}
+                  {t(group.label)}
                   <ChevronDown className="size-3.5" />
                 </button>
                 <div className="invisible absolute left-0 top-full w-56 translate-y-1 rounded-xl border border-border bg-popover p-1.5 opacity-0 shadow-[var(--shadow-lift)] transition-all group-hover:visible group-hover:translate-y-0 group-hover:opacity-100">
@@ -75,7 +80,7 @@ export function Header() {
                       className="block rounded-lg px-3 py-2 text-sm text-foreground/85 hover:bg-accent hover:text-accent-foreground"
                       activeProps={{ className: "bg-accent text-accent-foreground" }}
                     >
-                      {item.label}
+                      {t(item.label)}
                     </Link>
                   ))}
                 </div>
@@ -88,22 +93,25 @@ export function Header() {
                 activeOptions={{ exact: group.to === "/" }}
                 activeProps={{ className: "bg-accent text-accent-foreground" }}
               >
-                {group.label}
+                {t(group.label)}
               </Link>
             ),
           )}
         </nav>
 
         <div className="hidden items-center gap-2 lg:flex">
+          <LanguageSwitcher />
           <Button asChild variant="soft" size="sm">
-            <Link to="/membership">Join</Link>
+            <Link to="/membership">{t("Join")}</Link>
           </Button>
           <Button asChild variant="hero" size="sm">
-            <Link to="/donate">Donate</Link>
+            <Link to="/donate">{t("Donate")}</Link>
           </Button>
         </div>
 
-        <Sheet open={open} onOpenChange={(v) => { setOpen(v); if (!v) setOpenGroup(null); }}>
+        <div className="flex items-center gap-2 lg:hidden">
+          <LanguageSwitcher />
+          <Sheet open={open} onOpenChange={(v) => { setOpen(v); if (!v) setOpenGroup(null); }}>
           <SheetTrigger asChild>
             <Button variant="ghost" size="icon" className="lg:hidden" aria-label="Open menu">
               <Menu />
@@ -122,7 +130,7 @@ export function Header() {
                       className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm font-medium"
                       aria-expanded={openGroup === group.label}
                     >
-                      {group.label}
+                      {t(group.label)}
                       <ChevronDown
                         className={`size-4 transition-transform ${
                           openGroup === group.label ? "rotate-180" : ""
@@ -138,7 +146,7 @@ export function Header() {
                             onClick={() => setOpen(false)}
                             className="block rounded-lg px-3 py-2 text-sm text-foreground/80 hover:bg-accent hover:text-accent-foreground"
                           >
-                            {item.label}
+                            {t(item.label)}
                           </Link>
                         ))}
                       </div>
@@ -151,25 +159,26 @@ export function Header() {
                     onClick={() => setOpen(false)}
                     className="rounded-lg px-3 py-2 text-sm font-medium"
                   >
-                    {group.label}
+                    {t(group.label)}
                   </Link>
                 ),
               )}
               <div className="mt-6 flex gap-2 px-3">
                 <Button asChild variant="soft" className="flex-1">
                   <Link to="/membership" onClick={() => setOpen(false)}>
-                    Join
+                    {t("Join")}
                   </Link>
                 </Button>
                 <Button asChild variant="hero" className="flex-1">
                   <Link to="/donate" onClick={() => setOpen(false)}>
-                    Donate
+                    {t("Donate")}
                   </Link>
                 </Button>
               </div>
             </div>
           </SheetContent>
-        </Sheet>
+          </Sheet>
+        </div>
       </div>
     </header>
   );

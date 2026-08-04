@@ -8,6 +8,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { campaignsQuery, formatDate, formatMoney, type Campaign } from "@/lib/queries";
 import campaignFallback from "@/assets/campaign-fallback.jpg";
+import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/fundraising")({
   head: () => ({
@@ -29,6 +30,7 @@ export const Route = createFileRoute("/fundraising")({
 });
 
 function CampaignCard({ campaign }: { campaign: Campaign }) {
+  const t = useT();
   const pct = campaign.goal_amount
     ? Math.min(100, Math.round((campaign.raised_amount / campaign.goal_amount) * 100))
     : 0;
@@ -44,7 +46,7 @@ function CampaignCard({ campaign }: { campaign: Campaign }) {
         <div className="flex items-start justify-between gap-3">
           <h2 className="text-lg">{campaign.title}</h2>
           <Badge variant={campaign.status === "active" ? "default" : "secondary"}>
-            {campaign.status === "active" ? "Active" : "Completed"}
+            {campaign.status === "active" ? t("Active") : t("Completed")}
           </Badge>
         </div>
         <p className="mt-2 flex-1 text-sm text-muted-foreground">
@@ -61,19 +63,19 @@ function CampaignCard({ campaign }: { campaign: Campaign }) {
             <span className="font-semibold">{formatMoney(campaign.raised_amount)}</span>
             <span className="text-muted-foreground">
               {" "}
-              raised of {formatMoney(campaign.goal_amount)} ({pct}%)
+              {t("raised of")} {formatMoney(campaign.goal_amount)} ({pct}%)
             </span>
           </p>
           {campaign.ends_at ? (
             <p className="mt-1 text-xs text-muted-foreground">
-              {campaign.status === "active" ? "Closes" : "Closed"} {formatDate(campaign.ends_at)}
+              {campaign.status === "active" ? t("Closes") : t("Closed")} {formatDate(campaign.ends_at)}
             </p>
           ) : null}
         </div>
         {campaign.status === "active" ? (
           <Button asChild variant="hero" className="mt-5">
             <Link to="/donate" search={{ campaign: campaign.id }}>
-              Donate to this campaign
+              {t("Donate to this campaign")}
             </Link>
           </Button>
         ) : null}
@@ -83,6 +85,7 @@ function CampaignCard({ campaign }: { campaign: Campaign }) {
 }
 
 function FundraisingPage() {
+  const t = useT();
   const { data: campaigns = [] } = useQuery(campaignsQuery);
   const active = campaigns.filter((c) => c.status === "active");
   const past = campaigns.filter((c) => c.status !== "active");
@@ -90,15 +93,15 @@ function FundraisingPage() {
   return (
     <>
       <PageHeader
-        eyebrow="Get involved"
-        title="Support our causes"
-        description="Every campaign is proposed, voted on and reported back to the membership."
+        eyebrow={t("Get involved")}
+        title={t("Support our causes")}
+        description={t("Every campaign is proposed, voted on and reported back to the membership.")}
       />
       <section className="container-page py-14">
         <Tabs defaultValue="active">
           <TabsList>
-            <TabsTrigger value="active">Active campaigns</TabsTrigger>
-            <TabsTrigger value="past">Past campaigns</TabsTrigger>
+            <TabsTrigger value="active">{t("Active campaigns")}</TabsTrigger>
+            <TabsTrigger value="past">{t("Past campaigns")}</TabsTrigger>
           </TabsList>
           <TabsContent value="active" className="mt-8 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
             {active.map((campaign) => (
@@ -115,14 +118,13 @@ function FundraisingPage() {
         <Card className="mt-12 border-border/70 bg-[image:var(--gradient-hero)]">
           <CardContent className="flex flex-wrap items-center justify-between gap-5 p-8">
             <div>
-              <h2 className="text-2xl text-primary-foreground">Prefer to give freely?</h2>
+              <h2 className="text-2xl text-primary-foreground">{t("Prefer to give freely?")}</h2>
               <p className="mt-2 max-w-xl text-sm text-primary-foreground/85">
-                Make a random donation of any amount and we'll direct it to where the community
-                needs it most.
+                {t("Make a random donation of any amount and we'll direct it to where the community needs it most.")}
               </p>
             </div>
             <Button asChild variant="onHero" size="lg">
-              <Link to="/donate">Make a donation</Link>
+              <Link to="/donate">{t("Make a donation")}</Link>
             </Button>
           </CardContent>
         </Card>
