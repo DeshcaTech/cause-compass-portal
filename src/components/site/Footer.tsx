@@ -81,6 +81,9 @@ export function Footer() {
       <div className="border-t border-primary-foreground/15">
         <div className="container-page flex flex-col gap-2 py-5 text-xs text-primary-foreground/60 sm:flex-row sm:items-center sm:justify-between">
           <p>© {new Date().getFullYear()} CCGMs Community Association. All rights reserved.</p>
+          <p className="text-primary-foreground/70">
+            Powered by <span className="font-semibold text-gold">DeshcaTech</span>
+          </p>
           <span className="flex gap-4">
             <Link to="/contact" className="hover:text-gold">
               Contact us
