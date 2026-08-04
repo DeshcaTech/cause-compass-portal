@@ -93,28 +93,28 @@ function Index() {
     <>
       {/* Magazine masthead hero: editorial split */}
       <section className="relative isolate overflow-hidden bg-primary text-primary-foreground">
-        <div className="container-page grid items-center gap-10 py-16 md:grid-cols-[1.05fr_0.95fr] md:py-24">
+        <div className="container-page grid items-center gap-10 py-14 sm:py-16 lg:grid-cols-[1.05fr_0.95fr] lg:py-24">
           <div className="min-w-0">
-            <div className="flex items-center gap-4">
+            <div className="flex min-w-0 items-center gap-3 sm:gap-4">
               <img
                 src={logo}
                 alt="CCGMs logo"
                 width={140}
                 height={140}
-                className="h-16 w-16 shrink-0 md:h-20 md:w-20"
+                className="h-14 w-14 shrink-0 sm:h-16 sm:w-16 md:h-20 md:w-20"
               />
-              <p className="eyebrow text-gold">Community association</p>
+              <p className="eyebrow min-w-0 text-gold">Community association</p>
             </div>
-            <h1 className="mt-7 text-[2.6rem] leading-[0.98] md:text-[4.2rem]">
+            <h1 className="mt-6 text-[2.15rem] leading-[1.02] sm:mt-7 sm:text-[2.6rem] sm:leading-[0.98] lg:text-[4.2rem]">
               Stronger together,
               <br />
               <span className="text-gold">generation after generation</span>
             </h1>
-            <p className="mt-6 max-w-xl text-base text-primary-foreground/80 md:text-lg">
+            <p className="mt-5 max-w-xl text-[0.95rem] text-primary-foreground/80 sm:text-base md:text-lg">
               CCGMs is built on family, culture and mutual support. Join us, give to a cause, and
               be part of everything we build together.
             </p>
-            <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
               <Button asChild variant="gold" size="xl">
                 <Link to="/membership">
                   Join the Community <ArrowRight />
@@ -124,7 +124,7 @@ function Index() {
                 <Link to="/fundraising">Support Our Causes</Link>
               </Button>
             </div>
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
               {[
                 { icon: Smartphone, label: "Android" },
                 { icon: Apple, label: "iPhone" },
@@ -132,10 +132,10 @@ function Index() {
                 <a
                   key={label}
                   href="#"
-                  className="inline-flex items-center gap-3 rounded-2xl border border-primary-foreground/25 px-5 py-3 text-left transition-colors hover:bg-primary-foreground/10"
+                  className="inline-flex min-w-0 items-center gap-3 rounded-2xl border border-primary-foreground/25 px-5 py-3 text-left transition-colors hover:bg-primary-foreground/10"
                 >
                   <Icon className="size-6 shrink-0" />
-                  <span>
+                  <span className="min-w-0">
                     <span className="block text-[11px] uppercase tracking-widest opacity-70">
                       Download for
                     </span>
