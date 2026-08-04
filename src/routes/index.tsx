@@ -362,6 +362,52 @@ function Index() {
           })}
         </div>
       </section>
+
+      {/* Selected community businesses */}
+      {featuredPartners.length > 0 && (
+        <section className="surface-panel border-t border-border py-16 md:py-20">
+          <div className="container-page">
+            <div className="flex flex-wrap items-end justify-between gap-4">
+              <div>
+                <p className="eyebrow text-terracotta">Our members at work</p>
+                <h2 className="mt-2 text-3xl md:text-4xl">Selected community businesses</h2>
+              </div>
+              <Button asChild variant="soft">
+                <Link to="/partners">All businesses</Link>
+              </Button>
+            </div>
+            <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+              {featuredPartners.map((partner) => (
+                <Link key={partner.id} to="/partners" className="group">
+                  <Card className="h-full border-border/70 transition-all group-hover:-translate-y-1 group-hover:shadow-[var(--shadow-lift)]">
+                    <CardContent className="p-6">
+                      {partner.logo_url ? (
+                        <img
+                          src={partner.logo_url}
+                          alt={`${partner.business_name} logo`}
+                          loading="lazy"
+                          className="h-14 w-14 rounded-2xl object-cover"
+                        />
+                      ) : (
+                        <span className="inline-flex size-14 items-center justify-center rounded-2xl bg-accent text-accent-foreground">
+                          <Building2 className="size-6" />
+                        </span>
+                      )}
+                      <p className="mt-4 text-xs uppercase tracking-widest text-muted-foreground">
+                        {partner.category}
+                      </p>
+                      <h3 className="mt-1 text-lg">{partner.business_name}</h3>
+                      <p className="mt-2 line-clamp-3 text-sm text-muted-foreground">
+                        {partner.short_description ?? partner.description}
+                      </p>
+                    </CardContent>
+                  </Card>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
     </>
   );
 }
