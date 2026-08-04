@@ -109,7 +109,7 @@ export function Footer() {
             <p className="eyebrow text-gold">{t(column.title)}</p>
             <ul className="mt-4 space-y-2 text-sm">
               {column.links.map((link) => (
-                <li key={link.to}>
+                <li key={`${link.to}-${link.label}`}>
                   <Link
                     to={link.to}
                     className="text-primary-foreground/75 transition-colors hover:text-gold"
