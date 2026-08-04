@@ -66,6 +66,7 @@ export type VillageGroup = {
   id: string;
   name: string;
   region: string;
+  group_category: string;
   short_description: string | null;
   description: string | null;
   image_url: string | null;
@@ -191,7 +192,7 @@ export const villageGroupsQuery = queryOptions({
       await supabase
         .from("village_groups")
         .select(
-          "id, name, region, short_description, description, image_url, meeting_info, contact_name, contact_phone, contact_email, sort_order",
+          "id, name, region, group_category, short_description, description, image_url, meeting_info, contact_name, contact_phone, contact_email, sort_order",
         )
         .eq("is_published", true)
         .order("sort_order"),
