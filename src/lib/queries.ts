@@ -197,12 +197,14 @@ export type Job = {
   description: string | null;
   image_url: string | null;
   apply_url: string | null;
+  contact_email: string | null;
+  contact_phone: string | null;
   closes_at: string | null;
   created_at: string;
 };
 
 const JOB_PUBLIC_COLUMNS =
-  "id, title, company, category, job_type, location, salary_range, short_description, description, image_url, apply_url, closes_at, created_at";
+  "id, title, company, category, job_type, location, salary_range, short_description, description, image_url, apply_url, contact_email, contact_phone, closes_at, created_at";
 
 export const jobsQuery = queryOptions({
   queryKey: ["jobs"],
@@ -212,6 +214,7 @@ export const jobsQuery = queryOptions({
         .from("jobs")
         .select(JOB_PUBLIC_COLUMNS)
         .eq("is_published", true)
+        .eq("approval_status", "approved")
         .order("created_at", { ascending: false }),
     ),
 });

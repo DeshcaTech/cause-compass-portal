@@ -315,9 +315,14 @@ function AdminPage() {
               orderBy={{ column: "created_at", ascending: false }}
               primaryLabel={(row) => String(row['title'])}
               secondaryLabel={(row) =>
-                `${row['company']} · ${row['job_type']}${row['is_published'] ? "" : " · hidden"}`
+                `${row['company']} · ${row['job_type']} · ${String(row['approval_status'] ?? 'pending')}${row['is_published'] ? "" : " · hidden"}`
               }
-              defaults={{ is_published: true, category: "General", job_type: "Full-time" }}
+              defaults={{
+                is_published: true,
+                category: "General",
+                job_type: "Full-time",
+                approval_status: "pending",
+              }}
               fields={[
                 { name: "title", label: "Job title", required: true },
                 { name: "company", label: "Company / employer", required: true },
@@ -332,6 +337,16 @@ function AdminPage() {
                 { name: "contact_email", label: "Contact email" },
                 { name: "contact_phone", label: "Contact phone" },
                 { name: "closes_at", label: "Closing date", type: "date" },
+                {
+                  name: "approval_status",
+                  label: "Approval status (only approved adverts appear on the Jobs board)",
+                  type: "select",
+                  options: [
+                    { value: "pending", label: "Pending review" },
+                    { value: "approved", label: "Approved" },
+                    { value: "rejected", label: "Rejected" },
+                  ],
+                },
                 { name: "is_published", label: "Published", type: "switch" },
               ]}
             />
