@@ -20,6 +20,7 @@ type RsvpRow = {
   status: string;
   note: string | null;
   created_at: string;
+  updated_at: string;
 };
 
 function csvCell(value: unknown) {
@@ -27,11 +28,20 @@ function csvCell(value: unknown) {
   return `"${text.replace(/"/g, '""')}"`;
 }
 
+function formatStamp(value: string | null) {
+  if (!value) return "";
+  const d = new Date(value);
+  if (Number.isNaN(d.getTime())) return "";
+  return d.toLocaleString("en-GB", { timeZone: "Europe/London" });
+}
+
 export function RsvpManager() {
   const { data: events = [] } = useQuery(eventsQuery);
   const [eventId, setEventId] = useState<string>("all");
   const [status, setStatus] = useState<"all" | "going" | "interested">("all");
   const [search, setSearch] = useState("");
+  const [fromDate, setFromDate] = useState("");
+  const [toDate, setToDate] = useState("");
 
   const { data: rsvps = [], isLoading } = useQuery({
     queryKey: ["admin-rsvps"],
@@ -39,7 +49,7 @@ export function RsvpManager() {
       const { data, error } = await supabase
         .from("event_rsvps")
         .select(
-          "id, event_id, full_name, email, phone, membership_number, guests, status, note, created_at",
+          "id, event_id, full_name, email, phone, membership_number, guests, status, note, created_at, updated_at",
         )
         .order("created_at", { ascending: false });
       if (error) throw new Error(error.message);
@@ -47,20 +57,24 @@ export function RsvpManager() {
     },
   });
 
-  const eventTitle = (id: string) => events.find((e) => e.id === id)?.title ?? "Unknown event";
+  const eventById = (id: string) => events.find((e) => e.id === id);
+  const eventTitle = (id: string) => eventById(id)?.title ?? "Unknown event";
 
   const filtered = useMemo(() => {
     const needle = search.trim().toLowerCase();
     return rsvps.filter((row) => {
       if (eventId !== "all" && row.event_id !== eventId) return false;
       if (status !== "all" && row.status !== status) return false;
+      const submitted = new Date(row.created_at).getTime();
+      if (fromDate && submitted < new Date(`${fromDate}T00:00:00`).getTime()) return false;
+      if (toDate && submitted > new Date(`${toDate}T23:59:59.999`).getTime()) return false;
       if (!needle) return true;
       return [row.full_name, row.email, row.membership_number ?? "", row.phone ?? ""]
         .join(" ")
         .toLowerCase()
         .includes(needle);
     });
-  }, [rsvps, eventId, status, search]);
+  }, [rsvps, eventId, status, search, fromDate, toDate]);
 
   const totals = filtered.reduce(
     (acc, row) => {
@@ -76,32 +90,47 @@ export function RsvpManager() {
   function exportCsv() {
     const header = [
       "Event",
+      "Event date",
+      "Event type",
+      "Event location",
       "Name",
       "Email",
       "Phone",
       "Membership number",
       "Response",
       "Extra guests",
+      "Total attendees",
       "Note",
-      "Submitted",
+      "Submitted (local)",
+      "Submitted (ISO)",
+      "Last updated (local)",
+      "Last updated (ISO)",
     ];
     const lines = [
       header.map(csvCell).join(","),
-      ...filtered.map((row) =>
-        [
+      ...filtered.map((row) => {
+        const event = eventById(row.event_id);
+        return [
           eventTitle(row.event_id),
+          event?.start_at ? formatStamp(event.start_at) : "",
+          event?.event_type ?? "",
+          event?.location ?? "",
           row.full_name,
           row.email,
           row.phone ?? "",
           row.membership_number ?? "",
           row.status,
           row.guests,
+          1 + row.guests,
           row.note ?? "",
+          formatStamp(row.created_at),
           new Date(row.created_at).toISOString(),
+          formatStamp(row.updated_at),
+          row.updated_at ? new Date(row.updated_at).toISOString() : "",
         ]
           .map(csvCell)
-          .join(","),
-      ),
+          .join(",");
+      }),
     ];
     const blob = new Blob([`\uFEFF${lines.join("\r\n")}`], {
       type: "text/csv;charset=utf-8",
@@ -109,7 +138,12 @@ export function RsvpManager() {
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = `ccgms-rsvps-${new Date().toISOString().slice(0, 10)}.csv`;
+    const scope = [
+      status === "all" ? "all" : status,
+      fromDate || "start",
+      toDate || new Date().toISOString().slice(0, 10),
+    ].join("_");
+    link.download = `ccgms-rsvps-${scope}.csv`;
     document.body.appendChild(link);
     link.click();
     link.remove();
@@ -127,7 +161,7 @@ export function RsvpManager() {
       </div>
 
       <Card className="border-border/70">
-        <CardContent className="grid gap-4 p-6 sm:grid-cols-2 lg:grid-cols-4">
+        <CardContent className="grid gap-4 p-6 sm:grid-cols-2 lg:grid-cols-3">
           <div className="space-y-1.5">
             <Label htmlFor="rsvp-filter-event">Event</Label>
             <select
@@ -158,6 +192,24 @@ export function RsvpManager() {
             </select>
           </div>
           <div className="space-y-1.5">
+            <Label htmlFor="rsvp-filter-from">Submitted from</Label>
+            <Input
+              id="rsvp-filter-from"
+              type="date"
+              value={fromDate}
+              onChange={(e) => setFromDate(e.target.value)}
+            />
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="rsvp-filter-to">Submitted to</Label>
+            <Input
+              id="rsvp-filter-to"
+              type="date"
+              value={toDate}
+              onChange={(e) => setToDate(e.target.value)}
+            />
+          </div>
+          <div className="space-y-1.5">
             <Label htmlFor="rsvp-filter-search">Search</Label>
             <Input
               id="rsvp-filter-search"
@@ -166,14 +218,26 @@ export function RsvpManager() {
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
-          <div className="flex items-end">
+          <div className="flex items-end gap-2">
+            <Button
+              variant="outline"
+              onClick={() => {
+                setEventId("all");
+                setStatus("all");
+                setSearch("");
+                setFromDate("");
+                setToDate("");
+              }}
+            >
+              Reset
+            </Button>
             <Button
               variant="soft"
               className="w-full"
               onClick={exportCsv}
               disabled={filtered.length === 0}
             >
-              <Download /> Export CSV
+              <Download /> Export CSV ({filtered.length})
             </Button>
           </div>
         </CardContent>
