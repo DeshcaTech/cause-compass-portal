@@ -254,6 +254,11 @@ function EventsPage() {
           </DialogHeader>
           {selected ? (
             <div className="space-y-4">
+              <img
+                src={selected.image_url ?? eventFallback}
+                alt={selected.title}
+                className="aspect-[16/9] w-full rounded-xl object-cover"
+              />
               <TypeBadge type={selected.event_type} />
               <p className="text-sm text-foreground/85">{selected.description}</p>
               <ul className="space-y-2 text-sm text-muted-foreground">
