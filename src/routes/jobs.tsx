@@ -1,14 +1,26 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
-import { Banknote, Briefcase, CalendarClock, ExternalLink, MapPin } from "lucide-react";
+import { useMemo, useState } from "react";
+import { Banknote, Briefcase, CalendarClock, ExternalLink, Mail, MapPin, Phone } from "lucide-react";
+import { toast } from "sonner";
 
 import { PageHeader } from "@/components/site/PageHeader";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { jobsQuery, type Job } from "@/lib/queries";
+import { submitJobApplication } from "@/lib/jobs.functions";
 import businessFallback from "@/assets/business-fallback.jpg";
 import { useT } from "@/lib/i18n";
 
@@ -33,13 +45,53 @@ export const Route = createFileRoute("/jobs")({
   component: JobsPage,
 });
 
+const ALL = "all";
+
 function JobsPage() {
   const t = useT();
   const { data: jobs = [] } = useQuery(jobsQuery);
   const [selected, setSelected] = useState<Job | null>(null);
-  const [category, setCategory] = useState("All");
-  const categories = ["All", ...Array.from(new Set(jobs.map((j) => j.category)))];
-  const filtered = category === "All" ? jobs : jobs.filter((j) => j.category === category);
+  const [applyFor, setApplyFor] = useState<Job | null>(null);
+  const [category, setCategory] = useState(ALL);
+  const [location, setLocation] = useState(ALL);
+  const [jobType, setJobType] = useState(ALL);
+
+  const filtered = useMemo(
+    () =>
+      jobs.filter(
+        (job) =>
+          (category === ALL || job.category === category) &&
+          (location === ALL || (job.location ?? "") === location) &&
+          (jobType === ALL || job.job_type === jobType),
+      ),
+    [jobs, category, location, jobType],
+  );
+
+  // Options reflect the other active filters so dropdowns never offer empty results.
+  const options = useMemo(() => {
+    const match = (job: Job, skip: "category" | "location" | "jobType") =>
+      (skip === "category" || category === ALL || job.category === category) &&
+      (skip === "location" || location === ALL || (job.location ?? "") === location) &&
+      (skip === "jobType" || jobType === ALL || job.job_type === jobType);
+    const uniq = (values: string[]) => Array.from(new Set(values.filter(Boolean))).sort();
+    return {
+      categories: uniq(jobs.filter((j) => match(j, "category")).map((j) => j.category)),
+      locations: uniq(jobs.filter((j) => match(j, "location")).map((j) => j.location ?? "")),
+      jobTypes: uniq(jobs.filter((j) => match(j, "jobType")).map((j) => j.job_type)),
+    };
+  }, [jobs, category, location, jobType]);
+
+  const grouped = useMemo(() => {
+    const map = new Map<string, Job[]>();
+    for (const job of filtered) {
+      const list = map.get(job.category) ?? [];
+      list.push(job);
+      map.set(job.category, list);
+    }
+    return Array.from(map.entries()).sort((a, b) => a[0].localeCompare(b[0]));
+  }, [filtered]);
+
+  const hasFilters = category !== ALL || location !== ALL || jobType !== ALL;
 
   return (
     <>
@@ -49,51 +101,83 @@ function JobsPage() {
         description={t("Opportunities shared by our members and partner businesses. Click a role to see full details.")}
       />
       <section className="container-page py-14">
-        <div className="flex flex-wrap gap-2">
-          {categories.map((item) => (
-            <button
-              key={item}
-              type="button"
-              onClick={() => setCategory(item)}
-              className={`rounded-full border px-4 py-1.5 text-sm transition-colors ${
-                category === item
-                  ? "border-transparent bg-primary text-primary-foreground"
-                  : "border-border bg-card hover:bg-accent"
-              }`}
-            >
-              {item === "All" ? t("All") : item}
-            </button>
-          ))}
+        <div className="grid gap-3 sm:grid-cols-3">
+          <FilterSelect
+            label={t("Category")}
+            value={category}
+            onChange={setCategory}
+            allLabel={t("All categories")}
+            options={options.categories}
+          />
+          <FilterSelect
+            label={t("Location")}
+            value={location}
+            onChange={setLocation}
+            allLabel={t("All locations")}
+            options={options.locations}
+          />
+          <FilterSelect
+            label={t("Job type")}
+            value={jobType}
+            onChange={setJobType}
+            allLabel={t("All job types")}
+            options={options.jobTypes}
+          />
         </div>
+        {hasFilters ? (
+          <button
+            type="button"
+            className="mt-3 text-sm text-muted-foreground underline underline-offset-4"
+            onClick={() => {
+              setCategory(ALL);
+              setLocation(ALL);
+              setJobType(ALL);
+            }}
+          >
+            {t("Clear filters")}
+          </button>
+        ) : null}
 
-        {filtered.length === 0 ? (
+        {grouped.length === 0 ? (
           <p className="mt-10 text-sm text-muted-foreground">
             {t("No job adverts at the moment. Please check back soon.")}
           </p>
         ) : (
-          <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {filtered.map((job) => (
-              <Card
-                key={job.id}
-                onClick={() => setSelected(job)}
-                className="cursor-pointer border-border/70 transition-all hover:-translate-y-1 hover:shadow-[var(--shadow-lift)]"
-              >
-                <CardContent className="p-6">
-                  <img
-                    src={job.image_url ?? businessFallback}
-                    alt={job.title}
-                    loading="lazy"
-                    className="mb-4 aspect-[16/9] w-full rounded-xl object-cover"
-                  />
-                  <h2 className="mt-4 text-lg">{job.title}</h2>
-                  <p className="text-sm text-muted-foreground">{job.company}</p>
-                  <div className="mt-2 flex flex-wrap gap-2">
-                    <Badge variant="secondary">{job.category}</Badge>
-                    <Badge variant="outline">{job.job_type}</Badge>
-                  </div>
-                  <p className="mt-3 text-sm text-muted-foreground">{job.short_description}</p>
-                </CardContent>
-              </Card>
+          <div className="mt-10 space-y-12">
+            {grouped.map(([groupName, groupJobs]) => (
+              <div key={groupName}>
+                <div className="flex items-baseline justify-between border-b border-border pb-3">
+                  <h2 className="text-xl">{groupName}</h2>
+                  <span className="text-sm text-muted-foreground">
+                    {groupJobs.length} {groupJobs.length === 1 ? t("role") : t("roles")}
+                  </span>
+                </div>
+                <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                  {groupJobs.map((job) => (
+                    <Card
+                      key={job.id}
+                      onClick={() => setSelected(job)}
+                      className="cursor-pointer border-border/70 transition-all hover:-translate-y-1 hover:shadow-[var(--shadow-lift)]"
+                    >
+                      <CardContent className="p-6">
+                        <img
+                          src={job.image_url ?? businessFallback}
+                          alt={job.title}
+                          loading="lazy"
+                          className="mb-4 aspect-[16/9] w-full rounded-xl object-cover"
+                        />
+                        <h3 className="mt-4 text-lg">{job.title}</h3>
+                        <p className="text-sm text-muted-foreground">{job.company}</p>
+                        <div className="mt-2 flex flex-wrap gap-2">
+                          <Badge variant="outline">{job.job_type}</Badge>
+                          {job.location ? <Badge variant="secondary">{job.location}</Badge> : null}
+                        </div>
+                        <p className="mt-3 text-sm text-muted-foreground">{job.short_description}</p>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </div>
             ))}
           </div>
         )}
@@ -136,18 +220,174 @@ function JobsPage() {
                     {new Date(selected.closes_at).toLocaleDateString()}
                   </li>
                 ) : null}
+                {selected.contact_email ? (
+                  <li className="flex items-center gap-2">
+                    <Mail className="size-4" />
+                    <a className="underline underline-offset-4" href={`mailto:${selected.contact_email}`}>
+                      {selected.contact_email}
+                    </a>
+                  </li>
+                ) : null}
+                {selected.contact_phone ? (
+                  <li className="flex items-center gap-2">
+                    <Phone className="size-4" />
+                    <a className="underline underline-offset-4" href={`tel:${selected.contact_phone}`}>
+                      {selected.contact_phone}
+                    </a>
+                  </li>
+                ) : null}
               </ul>
-              {selected.apply_url ? (
-                <Button asChild variant="hero" className="w-full">
-                  <a href={selected.apply_url} target="_blank" rel="noreferrer">
-                    <ExternalLink /> {t("Apply now")}
-                  </a>
-                </Button>
-              ) : null}
+              <Button
+                variant="hero"
+                className="w-full"
+                onClick={() => {
+                  setApplyFor(selected);
+                  setSelected(null);
+                }}
+              >
+                <ExternalLink /> {t("Apply now")}
+              </Button>
             </div>
           ) : null}
         </DialogContent>
       </Dialog>
+
+      <ApplyDialog job={applyFor} onClose={() => setApplyFor(null)} />
     </>
+  );
+}
+
+function FilterSelect({
+  label,
+  value,
+  onChange,
+  allLabel,
+  options,
+}: {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  allLabel: string;
+  options: string[];
+}) {
+  return (
+    <div className="space-y-1.5">
+      <Label>{label}</Label>
+      <Select value={value} onValueChange={onChange}>
+        <SelectTrigger>
+          <SelectValue placeholder={allLabel} />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value={ALL}>{allLabel}</SelectItem>
+          {options.map((item) => (
+            <SelectItem key={item} value={item}>
+              {item}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+    </div>
+  );
+}
+
+function ApplyDialog({ job, onClose }: { job: Job | null; onClose: () => void }) {
+  const t = useT();
+  const [form, setForm] = useState({
+    full_name: "",
+    email: "",
+    phone: "",
+    membership_number: "",
+    message: "",
+  });
+  const [saving, setSaving] = useState(false);
+
+  const submit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    if (!job) return;
+    setSaving(true);
+    try {
+      const result = await submitJobApplication({ data: { job_id: job.id, ...form } });
+      toast.success(t("Your details have been sent to the employer."));
+      setForm({ full_name: "", email: "", phone: "", membership_number: "", message: "" });
+      onClose();
+      if (result.applyUrl) window.open(result.applyUrl, "_blank", "noopener");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : t("Something went wrong"));
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <Dialog open={!!job} onOpenChange={(open) => !open && onClose()}>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle>
+            {t("Apply")}: {job?.title}
+          </DialogTitle>
+        </DialogHeader>
+        <form className="space-y-3" onSubmit={submit}>
+          <div className="space-y-1.5">
+            <Label htmlFor="job-name">{t("Full name")}</Label>
+            <Input
+              id="job-name"
+              required
+              maxLength={120}
+              value={form.full_name}
+              onChange={(e) => setForm({ ...form, full_name: e.target.value })}
+            />
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="job-email">{t("Email")}</Label>
+            <Input
+              id="job-email"
+              type="email"
+              required
+              maxLength={255}
+              value={form.email}
+              onChange={(e) => setForm({ ...form, email: e.target.value })}
+            />
+          </div>
+          <div className="grid gap-3 sm:grid-cols-2">
+            <div className="space-y-1.5">
+              <Label htmlFor="job-phone">{t("Phone (optional)")}</Label>
+              <Input
+                id="job-phone"
+                maxLength={30}
+                value={form.phone}
+                onChange={(e) => setForm({ ...form, phone: e.target.value })}
+              />
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="job-membership">{t("Membership number (optional)")}</Label>
+              <Input
+                id="job-membership"
+                maxLength={40}
+                value={form.membership_number}
+                onChange={(e) => setForm({ ...form, membership_number: e.target.value })}
+              />
+            </div>
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="job-message">{t("Message (optional)")}</Label>
+            <Textarea
+              id="job-message"
+              rows={4}
+              maxLength={2000}
+              value={form.message}
+              onChange={(e) => setForm({ ...form, message: e.target.value })}
+            />
+          </div>
+          <Button type="submit" variant="hero" className="w-full" disabled={saving}>
+            {saving ? t("Sending…") : t("Send and continue")}
+          </Button>
+          {job?.apply_url ? (
+            <p className="text-xs text-muted-foreground">
+              {t("We will email the employer and then open their application page.")}
+            </p>
+          ) : null}
+        </form>
+      </DialogContent>
+    </Dialog>
   );
 }
