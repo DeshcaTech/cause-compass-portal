@@ -402,7 +402,7 @@ function MembershipPage() {
             </form>
           </CardContent>
         </Card>
-      </SidebarPage>
+      </section>
     </>
   );
 }
