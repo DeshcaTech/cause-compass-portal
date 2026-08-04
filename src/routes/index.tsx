@@ -130,12 +130,12 @@ function Index() {
                 className="h-8 w-auto shrink-0 rounded-md object-cover sm:h-10"
               />
             </div>
-            <h1 className="mt-6 text-[2.15rem] leading-[1.02] sm:mt-7 sm:text-[2.6rem] sm:leading-[0.98] lg:text-[4.2rem]">
+            <h1 className="mt-6 text-[1.91rem] leading-[1.02] sm:mt-7 sm:text-[2.31rem] sm:leading-[0.98] lg:text-[3.73rem]">
               {t("Stronger together,")}
               <br />
               <span className="text-gold">{t("generation after generation")}</span>
             </h1>
-            <p className="mt-5 max-w-xl text-[0.95rem] text-primary-foreground/80 sm:text-base md:text-lg">
+            <p className="mt-5 max-w-xl text-[0.78rem] text-primary-foreground/80">
               {t("CCGMs is built on family, culture and mutual support. Join us, give to a cause, and be part of everything we build together.")}
             </p>
             <div className="mt-8 flex flex-row gap-3 sm:flex-wrap">
@@ -208,7 +208,7 @@ function Index() {
         <div className="grid items-start gap-8 md:gap-10 lg:grid-cols-[0.9fr_1.1fr]">
           <div>
             <p className="eyebrow text-terracotta">{t("Who we are")}</p>
-            <h2 className="mt-2 text-2xl sm:text-3xl md:text-4xl">{t("A family of families")}</h2>
+            <h2 className="mt-2 text-2xl sm:text-3xl md:text-[2rem]">{t("A family of families")}</h2>
             <Picture
               avif={communityAvif}
               webp={communityWebp}
@@ -281,7 +281,7 @@ function Index() {
           <div className="flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-end sm:justify-between">
             <div>
               <p className="eyebrow text-terracotta">{t("Noticeboard")}</p>
-              <h2 className="mt-2 text-2xl sm:text-3xl md:text-4xl">
+              <h2 className="mt-2 text-2xl sm:text-3xl md:text-[2rem]">
                 {t("Latest news & announcements")}
               </h2>
             </div>
@@ -314,7 +314,7 @@ function Index() {
           <div className="flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-end sm:justify-between">
             <div>
               <p className="eyebrow text-terracotta">{t("What's on")}</p>
-              <h2 className="mt-2 text-2xl sm:text-3xl md:text-4xl">{t("Coming events")}</h2>
+              <h2 className="mt-2 text-2xl sm:text-3xl md:text-[2rem]">{t("Coming events")}</h2>
             </div>
             <Button asChild variant="soft" className="w-full sm:w-auto">
               <Link to="/events">{t("All events")}</Link>
@@ -394,7 +394,7 @@ function Index() {
         <div className="flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-end sm:justify-between">
           <div>
             <p className="eyebrow text-terracotta">{t("Fundraising")}</p>
-            <h2 className="mt-2 text-2xl sm:text-3xl md:text-4xl">{t("Active campaigns")}</h2>
+            <h2 className="mt-2 text-2xl sm:text-3xl md:text-[2rem]">{t("Active campaigns")}</h2>
           </div>
           <Button asChild variant="soft" className="w-full sm:w-auto">
             <Link to="/fundraising">{t("See all campaigns")}</Link>
@@ -445,7 +445,7 @@ function Index() {
             <div className="flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-end sm:justify-between">
               <div>
                 <p className="eyebrow text-terracotta">{t("Our members at work")}</p>
-                <h2 className="mt-2 text-2xl sm:text-3xl md:text-4xl">
+                <h2 className="mt-2 text-2xl sm:text-3xl md:text-[2rem]">
                   {t("Selected community businesses")}
                 </h2>
               </div>
