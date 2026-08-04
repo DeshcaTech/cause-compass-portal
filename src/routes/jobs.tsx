@@ -88,16 +88,6 @@ function JobsPage() {
     };
   }, [jobs, category, location, jobType]);
 
-  const grouped = useMemo(() => {
-    const map = new Map<string, Job[]>();
-    for (const job of filtered) {
-      const list = map.get(job.category) ?? [];
-      list.push(job);
-      map.set(job.category, list);
-    }
-    return Array.from(map.entries()).sort((a, b) => a[0].localeCompare(b[0]));
-  }, [filtered]);
-
   const hasFilters = category !== ALL || location !== ALL || jobType !== ALL;
 
   return (
@@ -145,46 +135,35 @@ function JobsPage() {
           </button>
         ) : null}
 
-        {grouped.length === 0 ? (
+        {filtered.length === 0 ? (
           <p className="mt-10 text-sm text-muted-foreground">
             {t("No job adverts at the moment. Please check back soon.")}
           </p>
         ) : (
-          <div className="mt-10 space-y-12">
-            {grouped.map(([groupName, groupJobs]) => (
-              <div key={groupName}>
-                <div className="flex items-baseline justify-between border-b border-border pb-3">
-                  <h2 className="text-xl">{groupName}</h2>
-                  <span className="text-sm text-muted-foreground">
-                    {groupJobs.length} {groupJobs.length === 1 ? t("role") : t("roles")}
-                  </span>
-                </div>
-                <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-                  {groupJobs.map((job) => (
-                    <Card
-                      key={job.id}
-                      onClick={() => setSelected(job)}
-                      className="cursor-pointer border-border/70 transition-all hover:-translate-y-1 hover:shadow-[var(--shadow-lift)]"
-                    >
-                      <CardContent className="p-6">
-                        <h3 className="text-lg">{job.title}</h3>
-                        <p className="text-sm text-muted-foreground">{job.company}</p>
-                        <div className="mt-2 flex flex-wrap gap-2">
-                          <Badge variant="outline">{job.job_type}</Badge>
-                          {job.location ? <Badge variant="secondary">{job.location}</Badge> : null}
-                        </div>
-                        <p className="mt-3 text-sm text-muted-foreground">{job.short_description}</p>
-                        {job.closes_at ? (
-                          <p className="mt-3 flex items-center gap-2 text-xs text-muted-foreground">
-                            <CalendarClock className="size-3.5" /> {t("Closing date")}:{" "}
-                            {new Date(job.closes_at).toLocaleDateString()}
-                          </p>
-                        ) : null}
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              </div>
+          <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {filtered.map((job) => (
+              <Card
+                key={job.id}
+                onClick={() => setSelected(job)}
+                className="cursor-pointer border-border/70 transition-all hover:-translate-y-1 hover:shadow-[var(--shadow-lift)]"
+              >
+                <CardContent className="p-6">
+                  <h3 className="text-lg">{job.title}</h3>
+                  <p className="text-sm text-muted-foreground">{job.company}</p>
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    <Badge variant="outline">{job.job_type}</Badge>
+                    <Badge variant="secondary">{job.category}</Badge>
+                    {job.location ? <Badge variant="secondary">{job.location}</Badge> : null}
+                  </div>
+                  <p className="mt-3 text-sm text-muted-foreground">{job.short_description}</p>
+                  {job.closes_at ? (
+                    <p className="mt-3 flex items-center gap-2 text-xs text-muted-foreground">
+                      <CalendarClock className="size-3.5" /> {t("Closing date")}:{" "}
+                      {new Date(job.closes_at).toLocaleDateString()}
+                    </p>
+                  ) : null}
+                </CardContent>
+              </Card>
             ))}
           </div>
         )}
