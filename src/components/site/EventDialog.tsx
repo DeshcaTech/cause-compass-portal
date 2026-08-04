@@ -245,12 +245,34 @@ function RsvpForm({ event }: { event: EventRow }) {
 export function EventDialog({
   event,
   onOpenChange,
+  shareUrl,
 }: {
   event: EventRow | null;
   onOpenChange: (open: boolean) => void;
+  /** Link copied by the share button — usually the events page with current filters. */
+  shareUrl?: string;
 }) {
   const t = useT();
   const isCcgms = event?.event_type === "ccgms";
+
+  async function share() {
+    if (!event) return;
+    const url =
+      shareUrl ??
+      (typeof window !== "undefined"
+        ? `${window.location.origin}/events?event=${event.id}`
+        : "");
+    try {
+      if (navigator.share) {
+        await navigator.share({ title: event.title, url });
+        return;
+      }
+      await navigator.clipboard.writeText(url);
+      toast.success(t("Event link copied — paste it to invite others."));
+    } catch {
+      /* user dismissed the share sheet */
+    }
+  }
 
   return (
     <Dialog open={!!event} onOpenChange={onOpenChange}>
@@ -275,14 +297,52 @@ export function EventDialog({
               className="size-full object-cover"
             />
             <p className="text-sm text-foreground/85">{event.description}</p>
-            <Button
-              type="button"
-              variant="soft"
-              className="w-full"
-              onClick={() => downloadEventIcs(event)}
-            >
-              <CalendarPlus aria-hidden="true" /> {t("Add to calendar")}
-            </Button>
+            <div className="flex flex-wrap gap-2">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button type="button" variant="soft" className="flex-1">
+                    <CalendarPlus aria-hidden="true" /> {t("Add to calendar")}
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start" className="w-56">
+                  <DropdownMenuItem asChild>
+                    <a
+                      href={googleCalendarUrl(event)}
+                      target="_blank"
+                      rel="noreferrer noopener"
+                    >
+                      <CalendarDays aria-hidden="true" /> {t("Google Calendar")}
+                    </a>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <a href={appleCalendarUrl(event)} download={`${event.title}.ics`}>
+                      <Apple aria-hidden="true" /> {t("Apple Calendar")}
+                    </a>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <a
+                      href={outlookCalendarUrl(event)}
+                      target="_blank"
+                      rel="noreferrer noopener"
+                    >
+                      <CalendarDays aria-hidden="true" /> {t("Outlook")}
+                    </a>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => downloadEventIcs(event)}>
+                    <Download aria-hidden="true" /> {t("Download .ics file")}
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+              <Button
+                type="button"
+                variant="soft"
+                className="flex-1"
+                onClick={share}
+                aria-label={t("Share this event")}
+              >
+                <Share2 aria-hidden="true" /> {t("Share event")}
+              </Button>
+            </div>
             <ul className="grid gap-2 sm:grid-cols-2">
               <DetailRow
                 icon={CalendarDays}
