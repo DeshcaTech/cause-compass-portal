@@ -159,15 +159,15 @@ function Index() {
 
       {/* Community at a glance */}
       <section className="border-b border-border bg-card">
-        <div className="container-page grid grid-cols-2 divide-border py-10 sm:grid-cols-3 lg:grid-cols-5">
+        <div className="container-page grid grid-cols-2 gap-x-2 gap-y-1 divide-border py-8 sm:grid-cols-3 sm:py-10 lg:grid-cols-5">
           {statTiles.map(({ icon: Icon, label, value }) => (
-            <div key={label} className="flex items-center gap-3 px-2 py-3">
-              <span className="inline-flex size-10 shrink-0 items-center justify-center rounded-2xl bg-accent text-accent-foreground">
-                <Icon className="size-5" />
+            <div key={label} className="flex min-w-0 items-center gap-3 px-1 py-3 sm:px-2">
+              <span className="inline-flex size-9 shrink-0 items-center justify-center rounded-2xl bg-accent text-accent-foreground sm:size-10">
+                <Icon className="size-4 sm:size-5" />
               </span>
               <span className="min-w-0">
-                <span className="block text-2xl font-semibold leading-none">{value}</span>
-                <span className="mt-1 block text-xs uppercase tracking-widest text-muted-foreground">
+                <span className="block text-xl font-semibold leading-none sm:text-2xl">{value}</span>
+                <span className="mt-1 block text-[10px] uppercase tracking-wider text-muted-foreground sm:text-xs sm:tracking-widest">
                   {label}
                 </span>
               </span>
@@ -176,11 +176,11 @@ function Index() {
         </div>
       </section>
 
-      <section className="container-page py-16 md:py-20">
-        <div className="grid items-start gap-10 md:grid-cols-[0.9fr_1.1fr]">
+      <section className="container-page py-14 sm:py-16 md:py-20">
+        <div className="grid items-start gap-8 md:gap-10 lg:grid-cols-[0.9fr_1.1fr]">
           <div>
             <p className="eyebrow text-terracotta">Who we are</p>
-            <h2 className="mt-2 text-3xl md:text-4xl">A family of families</h2>
+            <h2 className="mt-2 text-2xl sm:text-3xl md:text-4xl">A family of families</h2>
             <img
               src={communityTogether}
               alt="CCGMs members of all ages gathered together"
@@ -202,21 +202,24 @@ function Index() {
               We celebrate together, raise funds for causes that matter to our members, promote
               businesses run by our community, and stand beside anyone who needs a hand.
             </p>
-            <div className="grid gap-4 sm:grid-cols-3">
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {[
                 { label: "Members & families", value: "One community" },
                 { label: "Events each year", value: "All year round" },
                 { label: "Causes supported", value: "Together" },
               ].map((item) => (
-                <div key={item.label} className="rounded-2xl border border-border/70 bg-card p-5">
-                  <p className="text-lg font-semibold">{item.value}</p>
-                  <p className="mt-1 text-xs uppercase tracking-widest text-muted-foreground">
+                <div
+                  key={item.label}
+                  className="min-w-0 rounded-2xl border border-border/70 bg-card p-4 sm:p-5"
+                >
+                  <p className="text-base font-semibold sm:text-lg">{item.value}</p>
+                  <p className="mt-1 text-[11px] uppercase tracking-wider text-muted-foreground sm:text-xs">
                     {item.label}
                   </p>
                 </div>
               ))}
             </div>
-            <Button asChild variant="soft">
+            <Button asChild variant="soft" className="w-full sm:w-auto">
               <Link to="/about">
                 More about CCGMs <ArrowRight />
               </Link>
@@ -225,16 +228,16 @@ function Index() {
         </div>
       </section>
 
-      <section className="container-page pb-16 md:pb-20">
-        <div className="grid gap-5 md:grid-cols-3">
+      <section className="container-page pb-14 sm:pb-16 md:pb-20">
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {highlights.map((item) => (
             <Link key={item.to} to={item.to} className="group">
               <Card className="h-full border-border/70 transition-all group-hover:-translate-y-1 group-hover:shadow-[var(--shadow-lift)]">
-                <CardContent className="p-7">
-                  <span className="inline-flex size-11 items-center justify-center rounded-2xl bg-accent text-accent-foreground">
+                <CardContent className="p-6 sm:p-7">
+                  <span className="inline-flex size-11 shrink-0 items-center justify-center rounded-2xl bg-accent text-accent-foreground">
                     <item.icon className="size-5" />
                   </span>
-                  <h2 className="mt-5 text-xl">{item.title}</h2>
+                  <h2 className="mt-5 text-lg sm:text-xl">{item.title}</h2>
                   <p className="mt-2 text-sm text-muted-foreground">{item.body}</p>
                   <span className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-primary">
                     Learn more <ArrowRight className="size-4" />
