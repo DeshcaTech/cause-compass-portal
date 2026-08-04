@@ -1,5 +1,3 @@
-import { Languages } from "lucide-react";
-
 import { useI18n, type Lang } from "@/lib/i18n";
 
 const OPTIONS: { value: Lang; label: string; full: string }[] = [
