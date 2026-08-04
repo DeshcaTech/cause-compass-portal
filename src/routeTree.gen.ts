@@ -30,7 +30,9 @@ import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/
 import { Route as NewsIndexRouteImport } from './routes/news.index'
 import { Route as NewsIdRouteImport } from './routes/news.$id'
 import { Route as NewsUnsubscribeRouteImport } from './routes/news.unsubscribe'
+import { Route as RsvpReportEventIdRouteImport } from './routes/rsvp-report.$eventId'
 import { Route as RsvpTokenRouteImport } from './routes/rsvp.$token'
+import { Route as ApiPublicHooksDailyRsvpDigestRouteImport } from './routes/api/public/hooks/daily-rsvp-digest'
 import { Route as LovableEmailTransactionalPreviewRouteImport } from './routes/lovable/email/transactional/preview'
 
 const IndexRoute = IndexRouteImport.update({
@@ -137,11 +139,22 @@ const NewsUnsubscribeRoute = NewsUnsubscribeRouteImport.update({
   path: '/news/unsubscribe',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RsvpReportEventIdRoute = RsvpReportEventIdRouteImport.update({
+  id: '/rsvp-report/$eventId',
+  path: '/rsvp-report/$eventId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RsvpTokenRoute = RsvpTokenRouteImport.update({
   id: '/rsvp/$token',
   path: '/rsvp/$token',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicHooksDailyRsvpDigestRoute =
+  ApiPublicHooksDailyRsvpDigestRouteImport.update({
+    id: '/api/public/hooks/daily-rsvp-digest',
+    path: '/api/public/hooks/daily-rsvp-digest',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const LovableEmailTransactionalPreviewRoute =
   LovableEmailTransactionalPreviewRouteImport.update({
     id: '/lovable/email/transactional/preview',
@@ -169,8 +182,10 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AuthenticatedAdminRoute
   '/news/$id': typeof NewsIdRoute
   '/news/unsubscribe': typeof NewsUnsubscribeRoute
+  '/rsvp-report/$eventId': typeof RsvpReportEventIdRoute
   '/rsvp/$token': typeof RsvpTokenRoute
   '/news/': typeof NewsIndexRoute
+  '/api/public/hooks/daily-rsvp-digest': typeof ApiPublicHooksDailyRsvpDigestRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
 }
 export interface FileRoutesByTo {
@@ -193,8 +208,10 @@ export interface FileRoutesByTo {
   '/admin': typeof AuthenticatedAdminRoute
   '/news/$id': typeof NewsIdRoute
   '/news/unsubscribe': typeof NewsUnsubscribeRoute
+  '/rsvp-report/$eventId': typeof RsvpReportEventIdRoute
   '/rsvp/$token': typeof RsvpTokenRoute
   '/news': typeof NewsIndexRoute
+  '/api/public/hooks/daily-rsvp-digest': typeof ApiPublicHooksDailyRsvpDigestRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
 }
 export interface FileRoutesById {
@@ -219,8 +236,10 @@ export interface FileRoutesById {
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/news/$id': typeof NewsIdRoute
   '/news/unsubscribe': typeof NewsUnsubscribeRoute
+  '/rsvp-report/$eventId': typeof RsvpReportEventIdRoute
   '/rsvp/$token': typeof RsvpTokenRoute
   '/news/': typeof NewsIndexRoute
+  '/api/public/hooks/daily-rsvp-digest': typeof ApiPublicHooksDailyRsvpDigestRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
 }
 export interface FileRouteTypes {
@@ -245,8 +264,10 @@ export interface FileRouteTypes {
     | '/admin'
     | '/news/$id'
     | '/news/unsubscribe'
+    | '/rsvp-report/$eventId'
     | '/rsvp/$token'
     | '/news/'
+    | '/api/public/hooks/daily-rsvp-digest'
     | '/lovable/email/transactional/preview'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -269,8 +290,10 @@ export interface FileRouteTypes {
     | '/admin'
     | '/news/$id'
     | '/news/unsubscribe'
+    | '/rsvp-report/$eventId'
     | '/rsvp/$token'
     | '/news'
+    | '/api/public/hooks/daily-rsvp-digest'
     | '/lovable/email/transactional/preview'
   id:
     | '__root__'
@@ -294,8 +317,10 @@ export interface FileRouteTypes {
     | '/_authenticated/admin'
     | '/news/$id'
     | '/news/unsubscribe'
+    | '/rsvp-report/$eventId'
     | '/rsvp/$token'
     | '/news/'
+    | '/api/public/hooks/daily-rsvp-digest'
     | '/lovable/email/transactional/preview'
   fileRoutesById: FileRoutesById
 }
@@ -319,8 +344,10 @@ export interface RootRouteChildren {
   VolunteerRoute: typeof VolunteerRoute
   NewsIdRoute: typeof NewsIdRoute
   NewsUnsubscribeRoute: typeof NewsUnsubscribeRoute
+  RsvpReportEventIdRoute: typeof RsvpReportEventIdRoute
   RsvpTokenRoute: typeof RsvpTokenRoute
   NewsIndexRoute: typeof NewsIndexRoute
+  ApiPublicHooksDailyRsvpDigestRoute: typeof ApiPublicHooksDailyRsvpDigestRoute
   LovableEmailTransactionalPreviewRoute: typeof LovableEmailTransactionalPreviewRoute
 }
 
@@ -473,11 +500,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof NewsUnsubscribeRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/rsvp-report/$eventId': {
+      id: '/rsvp-report/$eventId'
+      path: '/rsvp-report/$eventId'
+      fullPath: '/rsvp-report/$eventId'
+      preLoaderRoute: typeof RsvpReportEventIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/rsvp/$token': {
       id: '/rsvp/$token'
       path: '/rsvp/$token'
       fullPath: '/rsvp/$token'
       preLoaderRoute: typeof RsvpTokenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/hooks/daily-rsvp-digest': {
+      id: '/api/public/hooks/daily-rsvp-digest'
+      path: '/api/public/hooks/daily-rsvp-digest'
+      fullPath: '/api/public/hooks/daily-rsvp-digest'
+      preLoaderRoute: typeof ApiPublicHooksDailyRsvpDigestRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/lovable/email/transactional/preview': {
@@ -521,8 +562,10 @@ const rootRouteChildren: RootRouteChildren = {
   VolunteerRoute: VolunteerRoute,
   NewsIdRoute: NewsIdRoute,
   NewsUnsubscribeRoute: NewsUnsubscribeRoute,
+  RsvpReportEventIdRoute: RsvpReportEventIdRoute,
   RsvpTokenRoute: RsvpTokenRoute,
   NewsIndexRoute: NewsIndexRoute,
+  ApiPublicHooksDailyRsvpDigestRoute: ApiPublicHooksDailyRsvpDigestRoute,
   LovableEmailTransactionalPreviewRoute: LovableEmailTransactionalPreviewRoute,
 }
 export const routeTree = rootRouteImport

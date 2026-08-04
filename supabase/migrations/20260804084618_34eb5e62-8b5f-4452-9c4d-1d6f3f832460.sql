@@ -1,0 +1,1 @@
+ALTER TABLE public.events ADD COLUMN IF NOT EXISTS report_token uuid NOT NULL DEFAULT gen_random_uuid();
