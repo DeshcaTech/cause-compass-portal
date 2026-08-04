@@ -100,12 +100,27 @@ function EventCard({ event, onOpen }: { event: EventRow; onOpen: () => void }) {
 
 function EventsPage() {
   const t = useT();
+  const navigate = useNavigate({ from: "/events" });
+  const search = Route.useSearch();
   const { data: events = [] } = useQuery(eventsQuery);
-  const [selected, setSelected] = useState<EventRow | null>(null);
   const [monthOffset, setMonthOffset] = useState(0);
   const [selectedDay, setSelectedDay] = useState<string | null>(null);
+  const [calendarScope, setCalendarScope] = useState<"upcoming" | "past">("upcoming");
 
-  const [typeFilter, setTypeFilter] = useState<"all" | "ccgms" | "other">("all");
+  const typeFilter = search.type ?? "all";
+  const tab = search.tab ?? "coming";
+
+  const setTypeFilter = (value: "all" | "ccgms" | "other") =>
+    navigate({ search: (prev) => ({ ...prev, type: value === "all" ? undefined : value }) });
+  const setTab = (value: string) =>
+    navigate({ search: (prev) => ({ ...prev, tab: value === "coming" ? undefined : (value as never) }) });
+
+  const selected = useMemo(
+    () => events.find((e) => e.id === search.event) ?? null,
+    [events, search.event],
+  );
+  const openEvent = (event: EventRow | null) =>
+    navigate({ search: (prev) => ({ ...prev, event: event?.id }) });
 
   const now = new Date();
   const visible = useMemo(
@@ -130,8 +145,11 @@ function EventsPage() {
   }, [cursor.getFullYear(), cursor.getMonth()]);
 
   function eventsOn(date: Date) {
-    return events.filter((e) => {
+    return visible.filter((e) => {
       const start = new Date(e.start_at);
+      const isPast = start < now;
+      if (calendarScope === "upcoming" && isPast) return false;
+      if (calendarScope === "past" && !isPast) return false;
       return (
         start.getFullYear() === date.getFullYear() &&
         start.getMonth() === date.getMonth() &&
@@ -141,7 +159,11 @@ function EventsPage() {
   }
 
   const dayEvents = selectedDay
-    ? events.filter((e) => new Date(e.start_at).toDateString() === selectedDay)
+    ? visible.filter((e) => {
+        if (new Date(e.start_at).toDateString() !== selectedDay) return false;
+        const isPast = new Date(e.start_at) < now;
+        return calendarScope === "upcoming" ? !isPast : isPast;
+      })
     : [];
 
   return (
