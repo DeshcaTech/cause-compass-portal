@@ -51,6 +51,8 @@ export const Route = createFileRoute("/")({
           "CCGMs is a community association for families: membership, events, fundraising campaigns, member businesses and support when you need it.",
       },
       { property: "og:title", content: "CCGMs — Community Association" },
+      { property: "og:image", content: "https://cause-compass-portal.lovable.app/og-ccgms.jpg" },
+      { name: "twitter:image", content: "https://cause-compass-portal.lovable.app/og-ccgms.jpg" },
       {
         property: "og:description",
         content:

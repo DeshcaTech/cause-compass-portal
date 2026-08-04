@@ -20,6 +20,8 @@ export const Route = createFileRoute("/fundraising")({
           "Active and past CCGMs fundraising campaigns — support education, welfare and cultural projects, or make a one-off donation.",
       },
       { property: "og:title", content: "Fundraising — Support Our Causes" },
+      { property: "og:image", content: "https://cause-compass-portal.lovable.app/og-ccgms.jpg" },
+      { name: "twitter:image", content: "https://cause-compass-portal.lovable.app/og-ccgms.jpg" },
       {
         property: "og:description",
         content: "See active and past campaigns and give to the cause that matters to you.",

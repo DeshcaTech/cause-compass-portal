@@ -23,6 +23,8 @@ export const Route = createFileRoute("/contact")({
           "Get in touch with the CCGMs team about membership, events, asset rental or community support.",
       },
       { property: "og:title", content: "Contact CCGMs" },
+      { property: "og:image", content: "https://cause-compass-portal.lovable.app/og-ccgms.jpg" },
+      { name: "twitter:image", content: "https://cause-compass-portal.lovable.app/og-ccgms.jpg" },
       { property: "og:description", content: "Send a message to the CCGMs community team." },
     ],
   }),

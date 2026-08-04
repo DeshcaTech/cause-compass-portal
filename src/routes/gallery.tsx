@@ -43,6 +43,8 @@ export const Route = createFileRoute("/gallery")({
         content: "Photos from CCGMs gatherings, grouped by event — gala nights, festivals and community days.",
       },
       { property: "og:title", content: "Gallery — CCGMs Photos by Event" },
+      { property: "og:image", content: "https://cause-compass-portal.lovable.app/og-ccgms.jpg" },
+      { name: "twitter:image", content: "https://cause-compass-portal.lovable.app/og-ccgms.jpg" },
       { property: "og:description", content: "Browse community photos grouped by event." },
     ],
   }),

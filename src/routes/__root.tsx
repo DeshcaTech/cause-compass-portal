@@ -15,6 +15,7 @@ import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { Toaster } from "@/components/ui/sonner";
 import { LanguageProvider } from "@/lib/i18n";
+import { BrandStyles } from "@/components/site/BrandStyles";
 
 function NotFoundComponent() {
   return (
@@ -94,8 +95,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "twitter:title", content: "CCGMs — Community Association" },
       { property: "og:description", content: "CCGMs is a community association for families: membership, events, fundraising campaigns, member businesses and support when you need it." },
       { name: "twitter:description", content: "CCGMs is a community association for families: membership, events, fundraising campaigns, member businesses and support when you need it." },
-      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/31390ed9-1a79-4b3d-9e88-5ce311ad8bf0" },
-      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/31390ed9-1a79-4b3d-9e88-5ce311ad8bf0" },
     ],
     links: [
       {
@@ -137,6 +136,7 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <LanguageProvider>
+        <BrandStyles />
         <div className="flex min-h-screen flex-col">
           <Header />
           <main className="flex-1">

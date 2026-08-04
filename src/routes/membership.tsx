@@ -30,6 +30,8 @@ export const Route = createFileRoute("/membership")({
           "Join CCGMs as an individual, student or family member. Family membership covers mum, dad and children up to 21 years old.",
       },
       { property: "og:title", content: "Membership — Join CCGMs Today" },
+      { property: "og:image", content: "https://cause-compass-portal.lovable.app/og-ccgms.jpg" },
+      { name: "twitter:image", content: "https://cause-compass-portal.lovable.app/og-ccgms.jpg" },
       {
         property: "og:description",
         content: "Individual, student and family membership with a unique registration number.",

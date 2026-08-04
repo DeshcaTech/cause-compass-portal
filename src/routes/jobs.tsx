@@ -34,6 +34,8 @@ export const Route = createFileRoute("/jobs")({
           "Browse job openings, apprenticeships and opportunities shared by CCGMs members and partner businesses.",
       },
       { property: "og:title", content: "Jobs — Opportunities Shared by the CCGMs Community" },
+      { property: "og:image", content: "https://cause-compass-portal.lovable.app/og-ccgms.jpg" },
+      { name: "twitter:image", content: "https://cause-compass-portal.lovable.app/og-ccgms.jpg" },
       {
         property: "og:description",
         content: "Job openings and opportunities shared within the CCGMs community.",

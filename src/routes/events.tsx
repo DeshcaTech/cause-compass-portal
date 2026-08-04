@@ -38,6 +38,8 @@ export const Route = createFileRoute("/events")({
           "Coming events, past events and a monthly calendar of CCGMs events and other community events.",
       },
       { property: "og:title", content: "Events — CCGMs Community Calendar" },
+      { property: "og:image", content: "https://cause-compass-portal.lovable.app/og-ccgms.jpg" },
+      { name: "twitter:image", content: "https://cause-compass-portal.lovable.app/og-ccgms.jpg" },
       {
         property: "og:description",
         content: "Browse coming and past events, or explore the monthly community calendar.",

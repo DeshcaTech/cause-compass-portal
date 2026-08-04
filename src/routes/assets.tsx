@@ -28,6 +28,8 @@ export const Route = createFileRoute("/assets")({
           "Members can request community assets such as chairs, tables, marquees and PA systems for their events.",
       },
       { property: "og:title", content: "Assets Rent — CCGMs Community Equipment" },
+      { property: "og:image", content: "https://cause-compass-portal.lovable.app/og-ccgms.jpg" },
+      { name: "twitter:image", content: "https://cause-compass-portal.lovable.app/og-ccgms.jpg" },
       {
         property: "og:description",
         content: "Request chairs, tables, cooking pots, marquees and sound equipment.",

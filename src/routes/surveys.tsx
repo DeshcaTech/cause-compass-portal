@@ -26,6 +26,8 @@ export const Route = createFileRoute("/surveys")({
           "Take part in active CCGMs surveys and help shape events, welfare priorities and community programmes.",
       },
       { property: "og:title", content: "Surveys — Have Your Say at CCGMs" },
+      { property: "og:image", content: "https://cause-compass-portal.lovable.app/og-ccgms.jpg" },
+      { name: "twitter:image", content: "https://cause-compass-portal.lovable.app/og-ccgms.jpg" },
       { property: "og:description", content: "Answer active surveys and shape community decisions." },
     ],
   }),

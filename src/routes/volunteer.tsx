@@ -25,6 +25,8 @@ export const Route = createFileRoute("/volunteer")({
           "Give your time and skills to CCGMs — events, welfare visits, youth mentoring, media, catering and logistics.",
       },
       { property: "og:title", content: "Become a Volunteer — CCGMs" },
+      { property: "og:image", content: "https://cause-compass-portal.lovable.app/og-ccgms.jpg" },
+      { name: "twitter:image", content: "https://cause-compass-portal.lovable.app/og-ccgms.jpg" },
       { property: "og:description", content: "Join the volunteer team supporting our community." },
     ],
   }),

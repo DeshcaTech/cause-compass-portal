@@ -1,4 +1,6 @@
 import { Link } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
+import { brandQuery } from "@/lib/brand";
 import { Mail, MapPin, Phone } from "lucide-react";
 
 import logo from "@/assets/ccgms-logo.png?w=120&format=png";
@@ -40,12 +42,21 @@ const columns = [
 
 export function Footer() {
   const t = useT();
+  const { data: brand } = useQuery(brandQuery);
+  const showLogo = brand?.show_logo_footer ?? true;
+  const customLogo = brand?.logo_url ?? null;
   return (
     <footer className="mt-24 border-t border-border bg-primary text-primary-foreground">
       <div className="container-page grid gap-10 py-14 md:grid-cols-2 lg:grid-cols-5">
         <div className="lg:col-span-2">
           <div className="flex items-center gap-3">
-            <Picture avif={logoAvif} webp={logoWebp} src={logo} alt="" width={44} height={44} className="h-11 w-11" loading="lazy" decoding="async" />
+            {showLogo ? (
+              customLogo ? (
+                <img src={customLogo} alt="" width={44} height={44} className="h-11 w-11 rounded-full object-contain" loading="lazy" decoding="async" />
+              ) : (
+                <Picture avif={logoAvif} webp={logoWebp} src={logo} alt="" width={44} height={44} className="h-11 w-11" loading="lazy" decoding="async" />
+              )
+            ) : null}
             <span className="font-display text-xl font-semibold">CCGMs</span>
           </div>
           <p className="mt-4 max-w-sm text-sm text-primary-foreground/75">
