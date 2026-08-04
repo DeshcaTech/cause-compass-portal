@@ -7,6 +7,7 @@ import { PageHeader } from "@/components/site/PageHeader";
 import { RecordManager } from "@/components/admin/RecordManager";
 import { FundraisingReport } from "@/components/admin/FundraisingReport";
 import { NewsNotifier } from "@/components/admin/NewsNotifier";
+import { SubscriberList } from "@/components/admin/SubscriberList";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -137,6 +138,7 @@ function AdminPage() {
 
           {isAdmin && <TabsContent value="news" className="mt-8">
             <NewsNotifier />
+            <SubscriberList />
             <RecordManager
               table="announcements"
               title="News & announcements"
