@@ -4,12 +4,13 @@ import { useQuery } from "@tanstack/react-query";
 import { Download, FileText } from "lucide-react";
 
 import { PageHeader } from "@/components/site/PageHeader";
+import { SidebarNavItem, SidebarPage } from "@/components/site/SidebarPage";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
 import { documentsQuery } from "@/lib/queries";
 import { useT } from "@/lib/i18n";
+import documentsBanner from "@/assets/community-together.jpg";
 
 export const Route = createFileRoute("/documents")({
   head: () => ({
@@ -48,26 +49,28 @@ function DocumentsPage() {
         title={t("Download centre")}
         description={t("Official documents, forms and reports, free to download for members and the public.")}
       />
-      <section className="container-page py-14">
-        <div className="flex flex-wrap gap-2">
-          {filters.map((category) => (
-            <button
-              key={category}
-              type="button"
-              onClick={() => setActive(category)}
-              className={cn(
-                "rounded-full border px-4 py-2 text-sm transition-colors",
-                active === category
-                  ? "border-transparent bg-primary text-primary-foreground"
-                  : "border-border/70 bg-background text-muted-foreground hover:text-foreground",
-              )}
-            >
-              {category === "All" ? t("All") : category}
-            </button>
-          ))}
-        </div>
-
-        <div className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+      <SidebarPage
+        banner={{
+          image: documentsBanner,
+          title: active === "All" ? t("All documents") : active,
+          description: t("Official documents, forms and reports, free to download."),
+        }}
+        sidebar={filters.map((category) => (
+          <SidebarNavItem
+            key={category}
+            icon={<FileText className="size-5" />}
+            title={category === "All" ? t("All") : category}
+            meta={`${
+              category === "All"
+                ? documents.length
+                : documents.filter((d) => d.category === category).length
+            } ${t("documents")}`}
+            active={active === category}
+            onClick={() => setActive(category)}
+          />
+        ))}
+      >
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-2">
           {visible.map((doc) => (
             <Card key={doc.id} className="flex h-full flex-col border-border/70">
               <CardContent className="flex h-full flex-col gap-4 p-6">
@@ -94,7 +97,7 @@ function DocumentsPage() {
         {visible.length === 0 ? (
           <p className="mt-10 text-sm text-muted-foreground">{t("No documents in this category yet.")}</p>
         ) : null}
-      </section>
+      </SidebarPage>
     </>
   );
 }
