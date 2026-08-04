@@ -7,6 +7,7 @@ export const common: Record<string, string> = {
   "Board Members": "Membres du bureau",
   Board: "Bureau",
   News: "Actualités",
+  Documents: "Documents",
   Downloads: "Téléchargements",
   "Assets rent": "Location de matériel",
   Membership: "Adhésion",
