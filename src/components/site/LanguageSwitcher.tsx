@@ -17,9 +17,8 @@ export function LanguageSwitcher({ className = "" }: { className?: string }) {
       onClick={() => setLang(other.value)}
       title={other.full}
       aria-label={`Switch to ${other.full}`}
-      className={`inline-flex items-center gap-1.5 rounded-full border border-border bg-background/60 px-2.5 py-1 text-xs font-semibold text-muted-foreground transition-colors hover:text-foreground ${className}`}
+      className={`inline-flex items-center rounded-full border border-border bg-background/60 px-2.5 py-1 text-xs font-semibold text-muted-foreground transition-colors hover:text-foreground ${className}`}
     >
-      <Languages className="size-3.5" aria-hidden="true" />
       {other.label}
     </button>
   );
