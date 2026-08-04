@@ -88,6 +88,7 @@ const highlights = [
 function Index() {
   const t = useT();
   const { data: events = [] } = useQuery(eventsQuery);
+  const [selectedEvent, setSelectedEvent] = useState<EventRow | null>(null);
   const { data: campaigns = [] } = useQuery(campaignsQuery);
   const { data: announcements = [] } = useQuery(announcementsQuery);
   const { data: partners = [] } = useQuery(partnersQuery);
