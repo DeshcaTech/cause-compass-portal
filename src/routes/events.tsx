@@ -275,7 +275,40 @@ function EventsPage() {
                   </div>
                 </div>
 
-                <div className="mt-6 grid grid-cols-7 gap-1 text-center text-xs text-muted-foreground">
+                <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
+                  <div className="flex gap-2" role="group" aria-label={t("Show events")}>
+                    {(["upcoming", "past"] as const).map((scope) => (
+                      <button
+                        key={scope}
+                        type="button"
+                        onClick={() => {
+                          setCalendarScope(scope);
+                          setSelectedDay(null);
+                        }}
+                        aria-pressed={calendarScope === scope}
+                        className={`min-h-9 rounded-full border px-4 text-sm transition-colors ${
+                          calendarScope === scope
+                            ? "border-transparent bg-primary text-primary-foreground"
+                            : "border-border hover:bg-secondary"
+                        }`}
+                      >
+                        {scope === "upcoming" ? t("Upcoming") : t("Past")}
+                      </button>
+                    ))}
+                  </div>
+                  <ul className="flex items-center gap-4 text-xs text-muted-foreground">
+                    <li className="flex items-center gap-2">
+                      <span className="size-3 rounded-full bg-primary" aria-hidden="true" />
+                      {t("CCGMs event")}
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="size-3 rounded-full bg-terracotta" aria-hidden="true" />
+                      {t("Other event")}
+                    </li>
+                  </ul>
+                </div>
+
+                <div className="mt-4 grid grid-cols-7 gap-1 text-center text-xs text-muted-foreground">
                   {WEEKDAYS.map((day) => (
                     <div key={day} className="py-2 font-medium">
                       {t(day)}
