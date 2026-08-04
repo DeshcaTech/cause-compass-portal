@@ -135,7 +135,7 @@ function Index() {
               <br />
               <span className="text-gold">{t("generation after generation")}</span>
             </h1>
-            <p className="mt-5 max-w-xl text-[0.78rem] text-primary-foreground/80">
+            <p className="mt-5 max-w-xl text-[16px] text-primary-foreground/80">
               {t("CCGMs is built on family, culture and mutual support. Join us, give to a cause, and be part of everything we build together.")}
             </p>
             <div className="mt-8 flex flex-row gap-3 sm:flex-wrap">
