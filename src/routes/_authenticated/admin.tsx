@@ -141,6 +141,7 @@ function AdminPage() {
             {can("board") && <TabsTrigger value="board">Board</TabsTrigger>}
             {can("president") && <TabsTrigger value="president">President</TabsTrigger>}
             {isAdmin && <TabsTrigger value="assets">Assets</TabsTrigger>}
+            {isAdmin && <TabsTrigger value="village-groups">Village groups</TabsTrigger>}
             {isAdmin && <TabsTrigger value="surveys">Surveys</TabsTrigger>}
             {isAdmin && <TabsTrigger value="roles">Roles</TabsTrigger>}
           </TabsList>
@@ -486,6 +487,35 @@ function AdminPage() {
             />
           </TabsContent>}
 
+          {isAdmin && <TabsContent value="surveys" className="mt-8">
+            {null}
+          </TabsContent>}
+          {isAdmin && <TabsContent value="village-groups" className="mt-8">
+            <RecordManager
+              table="village_groups"
+              title="Village-based groups"
+              description="Village and division groups listed under About CCGMs."
+              orderBy={{ column: "sort_order" }}
+              primaryLabel={(row) => String(row['name'])}
+              secondaryLabel={(row) =>
+                `${row['region']}${row['is_published'] ? "" : " · hidden"}`
+              }
+              defaults={{ is_published: true, region: "General", sort_order: 0 }}
+              fields={[
+                { name: "name", label: "Group name", required: true },
+                { name: "region", label: "Region / division", required: true },
+                { name: "short_description", label: "Short description" },
+                { name: "description", label: "Full description", type: "textarea" },
+                { name: "image_url", label: "Group picture", type: "image", crop: { aspect: 16 / 9, outputWidth: 1400 } },
+                { name: "meeting_info", label: "Meeting details" },
+                { name: "contact_name", label: "Contact name" },
+                { name: "contact_phone", label: "Contact phone" },
+                { name: "contact_email", label: "Contact email" },
+                { name: "sort_order", label: "Sort order", type: "number" },
+                { name: "is_published", label: "Published", type: "switch" },
+              ]}
+            />
+          </TabsContent>}
           {isAdmin && <TabsContent value="surveys" className="mt-8">
             <RecordManager
               table="surveys"
