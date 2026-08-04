@@ -135,6 +135,7 @@ function AdminPage() {
           </TabsList>
 
           {isAdmin && <TabsContent value="events" className="mt-8">
+            {null}
             <RecordManager
               table="events"
               title="Events"
