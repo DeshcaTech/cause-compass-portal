@@ -12,6 +12,8 @@ BASE = (sys.argv[1] if len(sys.argv) > 1 else "http://localhost:8080").rstrip("/
 SCOPES = {"header": "header", "footer": "footer"}
 # Links that intentionally leave the site or require auth are skipped.
 SKIP_HREFS = {"#", ""}
+# Routes behind the auth gate: a redirect to /auth counts as loading successfully.
+PROTECTED_PREFIXES = ("/admin",)
 
 
 async def collect_links(page, scope_selector):
@@ -40,8 +42,12 @@ async def check_route(page, href):
     )
     if not clicked:
         return False, "link element not found"
+    protected = href.startswith(PROTECTED_PREFIXES)
     try:
-        await page.wait_for_url(f"**{href}", timeout=10_000)
+        if protected:
+            await page.wait_for_url(lambda url: href in url or "/auth" in url, timeout=10_000)
+        else:
+            await page.wait_for_url(f"**{href}", timeout=10_000)
     except Exception:
         return False, f"navigation did not reach {href} (at {page.url})"
     await page.wait_for_load_state("networkidle")
@@ -51,6 +57,8 @@ async def check_route(page, href):
     for marker in ("Something went wrong", "404", "Page not found", "Unhandled"):
         if marker.lower() in body[:400].lower():
             return False, f"error marker on page: {marker}"
+    if protected and "/auth" in page.url:
+        return True, "redirected to sign-in (auth gate)"
     if errors:
         return False, f"runtime error: {errors[0][:200]}"
     return True, "ok"
