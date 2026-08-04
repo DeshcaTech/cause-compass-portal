@@ -1,12 +1,13 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
 import { z } from 'zod'
-import { unsubscribeByToken } from '@/lib/news.functions'
+import { resubscribeByToken, unsubscribeByToken } from '@/lib/news.functions'
+import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Link } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/news/unsubscribe')({
-  validateSearch: z.object({ token: z.string().optional() }),
+  validateSearch: z.object({ token: z.string().optional(), action: z.string().optional() }),
   head: () => ({
     meta: [
       { title: 'Unsubscribe from CCGMs news updates' },
@@ -28,9 +29,10 @@ export const Route = createFileRoute('/news/unsubscribe')({
 })
 
 function UnsubscribePage() {
-  const { token } = Route.useSearch()
-  const [state, setState] = useState<'working' | 'done' | 'invalid'>('working')
+  const { token, action } = Route.useSearch()
+  const [state, setState] = useState<'working' | 'done' | 'invalid' | 'resubscribed'>('working')
   const [email, setEmail] = useState<string | null>(null)
+  const [busy, setBusy] = useState(false)
 
   useEffect(() => {
     let cancelled = false
@@ -38,12 +40,16 @@ function UnsubscribePage() {
       setState('invalid')
       return
     }
-    unsubscribeByToken({ data: { token } })
+    const run =
+      action === 'resubscribe'
+        ? resubscribeByToken({ data: { token } })
+        : unsubscribeByToken({ data: { token } })
+    run
       .then((res) => {
         if (cancelled) return
         if (res.ok) {
           setEmail(res.email)
-          setState('done')
+          setState(action === 'resubscribe' ? 'resubscribed' : 'done')
         } else {
           setState('invalid')
         }
@@ -52,7 +58,26 @@ function UnsubscribePage() {
     return () => {
       cancelled = true
     }
-  }, [token])
+  }, [token, action])
+
+  async function onResubscribe() {
+    if (!token) return
+    setBusy(true)
+    try {
+      const res = await resubscribeByToken({ data: { token } })
+      if (res.ok) {
+        setEmail(res.email)
+        setState('resubscribed')
+        toast.success('News notifications re-enabled.')
+      } else {
+        setState('invalid')
+      }
+    } catch {
+      toast.error('Could not re-enable notifications, please try again.')
+    } finally {
+      setBusy(false)
+    }
+  }
 
   return (
     <section className="container-page py-20">
@@ -65,6 +90,20 @@ function UnsubscribePage() {
             <p className="mt-4 text-muted-foreground">
               {email ? `${email} will ` : 'You will '}no longer receive CCGMs news and announcement
               emails. You can re-subscribe any time from the news page.
+            </p>
+            <div className="mt-6">
+              <Button onClick={onResubscribe} disabled={busy}>
+                {busy ? 'Re-enabling…' : 'Changed your mind? Re-enable news emails'}
+              </Button>
+            </div>
+          </>
+        )}
+        {state === 'resubscribed' && (
+          <>
+            <h1 className="mt-3 text-3xl">You&apos;re subscribed again</h1>
+            <p className="mt-4 text-muted-foreground">
+              {email ? `${email} will ` : 'You will '}receive CCGMs news and announcements again. A
+              confirmation email is on its way.
             </p>
           </>
         )}
