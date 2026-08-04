@@ -2,7 +2,10 @@ import { useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { Menu, ChevronDown } from "lucide-react";
 
-import logo from "@/assets/ccgms-logo.png";
+import logo from "@/assets/ccgms-logo.png?w=120&format=png";
+import logoAvif from "@/assets/ccgms-logo.png?w=120&quality=70&format=avif";
+import logoWebp from "@/assets/ccgms-logo.png?w=120&quality=80&format=webp";
+import { Picture } from "@/components/site/Picture";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
@@ -49,7 +52,7 @@ export function Header() {
     <header className="sticky top-0 z-50 border-b border-border/70 bg-background/85 backdrop-blur-md">
       <div className="container-page flex h-18 items-center justify-between gap-4 py-3">
         <Link to="/" className="flex items-center gap-3">
-          <img src={logo} alt="CCGMs logo" width={44} height={44} className="h-11 w-11" />
+          <Picture avif={logoAvif} webp={logoWebp} src={logo} alt="CCGMs logo" width={44} height={44} className="h-11 w-11" fetchPriority="high" decoding="async" />
           <span className="leading-tight">
             <span className="block font-display text-lg font-semibold text-primary">CCGMs</span>
             <span className="block text-[11px] text-muted-foreground">Community Association</span>

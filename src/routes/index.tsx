@@ -13,12 +13,21 @@ import {
   Users,
 } from "lucide-react";
 
-import logo from "@/assets/ccgms-logo.png";
-import hero from "@/assets/hero-community.jpg";
-import communityTogether from "@/assets/community-together.jpg";
-import eventFallback from "@/assets/event-fallback.jpg";
+import logo from "@/assets/ccgms-logo.png?w=200&format=png";
+import logoAvif from "@/assets/ccgms-logo.png?w=200&quality=70&format=avif";
+import logoWebp from "@/assets/ccgms-logo.png?w=200&quality=80&format=webp";
+import hero from "@/assets/hero-community.jpg?w=1200&quality=72&format=jpg";
+import heroAvif from "@/assets/hero-community.jpg?w=1200&quality=55&format=avif";
+import heroWebp from "@/assets/hero-community.jpg?w=1200&quality=70&format=webp";
+import communityTogether from "@/assets/community-together.jpg?w=900&quality=72&format=jpg";
+import communityAvif from "@/assets/community-together.jpg?w=900&quality=55&format=avif";
+import communityWebp from "@/assets/community-together.jpg?w=900&quality=70&format=webp";
+import eventFallback from "@/assets/event-fallback.jpg?w=1000&quality=72&format=jpg";
+import eventFallbackAvif from "@/assets/event-fallback.jpg?w=1000&quality=55&format=avif";
+import eventFallbackWebp from "@/assets/event-fallback.jpg?w=1000&quality=70&format=webp";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Picture } from "@/components/site/Picture";
 import {
   announcementsQuery,
   campaignsQuery,
@@ -106,13 +115,17 @@ function Index() {
         <div className="container-page grid items-center gap-10 py-14 sm:py-16 lg:grid-cols-[1.05fr_0.95fr] lg:py-24">
           <div className="min-w-0">
             <div className="flex min-w-0 items-center gap-3 sm:gap-4">
-              <img
+              <Picture
+                avif={logoAvif}
+                webp={logoWebp}
                 src={logo}
                 alt="CCGMs logo"
                 width={140}
                 height={140}
-              decoding="async"
-                className="h-14 w-14 shrink-0 sm:h-16 sm:w-16 md:h-20 md:w-20"
+                fetchPriority="high"
+                decoding="async"
+                pictureClassName="shrink-0"
+                className="h-14 w-14 sm:h-16 sm:w-16 md:h-20 md:w-20"
               />
               <p className="eyebrow min-w-0 text-gold">Community association</p>
             </div>
@@ -157,7 +170,9 @@ function Index() {
             </div>
           </div>
           <div className="relative">
-            <img
+            <Picture
+              avif={heroAvif}
+              webp={heroWebp}
               src={hero}
               alt="CCGMs members of all generations celebrating together"
               width={1920}
@@ -194,14 +209,17 @@ function Index() {
           <div>
             <p className="eyebrow text-terracotta">Who we are</p>
             <h2 className="mt-2 text-2xl sm:text-3xl md:text-4xl">A family of families</h2>
-            <img
+            <Picture
+              avif={communityAvif}
+              webp={communityWebp}
               src={communityTogether}
               alt="CCGMs members of all ages gathered together"
               loading="lazy"
               width={1280}
               height={960}
               decoding="async"
-              className="mt-6 aspect-[4/3] w-full rounded-3xl object-cover shadow-[var(--shadow-lift)]"
+              pictureClassName="mt-6 block"
+              className="aspect-[4/3] w-full rounded-3xl object-cover shadow-[var(--shadow-lift)]"
             />
           </div>
           <div className="space-y-5">
@@ -313,13 +331,16 @@ function Index() {
             <div className="mt-6 grid gap-5 sm:mt-8 sm:gap-6 lg:grid-cols-[1.4fr_1fr]">
               {/* Lead story */}
               <Card className="overflow-hidden border-border/70 bg-primary text-primary-foreground">
-                <img
-                  src={upcoming[0]!.image_url ?? eventFallback}
+                <Picture
+                  {...(upcoming[0]!.image_url
+                    ? { src: upcoming[0]!.image_url }
+                    : { src: eventFallback, avif: eventFallbackAvif, webp: eventFallbackWebp })}
                   alt={upcoming[0]!.title}
                   loading="lazy"
                   decoding="async"
                   width={1280}
                   height={720}
+                  pictureClassName="block"
                   className="aspect-[16/9] w-full object-cover"
                 />
                 <CardContent className="flex h-full flex-col p-6 sm:p-8 md:p-10">

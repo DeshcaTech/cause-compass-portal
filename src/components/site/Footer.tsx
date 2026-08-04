@@ -1,7 +1,10 @@
 import { Link } from "@tanstack/react-router";
 import { Mail, MapPin, Phone } from "lucide-react";
 
-import logo from "@/assets/ccgms-logo.png";
+import logo from "@/assets/ccgms-logo.png?w=120&format=png";
+import logoAvif from "@/assets/ccgms-logo.png?w=120&quality=70&format=avif";
+import logoWebp from "@/assets/ccgms-logo.png?w=120&quality=80&format=webp";
+import { Picture } from "@/components/site/Picture";
 
 const columns = [
   {
@@ -40,7 +43,7 @@ export function Footer() {
       <div className="container-page grid gap-10 py-14 md:grid-cols-2 lg:grid-cols-5">
         <div className="lg:col-span-2">
           <div className="flex items-center gap-3">
-            <img src={logo} alt="" width={44} height={44} className="h-11 w-11" loading="lazy" />
+            <Picture avif={logoAvif} webp={logoWebp} src={logo} alt="" width={44} height={44} className="h-11 w-11" loading="lazy" decoding="async" />
             <span className="font-display text-xl font-semibold">CCGMs</span>
           </div>
           <p className="mt-4 max-w-sm text-sm text-primary-foreground/75">
