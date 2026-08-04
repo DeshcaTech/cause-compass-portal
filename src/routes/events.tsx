@@ -150,6 +150,16 @@ function EventsPage() {
   const cursor = new Date(now.getFullYear(), now.getMonth() + monthOffset, 1);
   const monthLabel = cursor.toLocaleDateString("en-GB", { month: "long", year: "numeric" });
 
+  const listForTab: EventRow[] = tab === "coming" ? upcoming : tab === "past" ? past : visible;
+  const tabLabel =
+    tab === "coming"
+      ? t("Coming events")
+      : tab === "past"
+        ? t("Past events")
+        : tab === "all"
+          ? t("All events")
+          : t("Calendar");
+
   const grid = useMemo(() => {
     const firstDay = new Date(cursor.getFullYear(), cursor.getMonth(), 1);
     const daysInMonth = new Date(cursor.getFullYear(), cursor.getMonth() + 1, 0).getDate();
