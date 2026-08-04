@@ -34,19 +34,54 @@ const coreValues = [
   },
 ];
 
+const SITE_ORIGIN = "https://cause-compass-portal.lovable.app";
+const ABOUT_URL = `${SITE_ORIGIN}/about`;
+
 export const Route = createFileRoute("/about")({
   head: () => ({
     meta: [
-      { title: "About CCGMs — President's Message" },
+      {
+        title:
+          "About CCGMs — President's Message, Mission & Board | Cause Compass",
+      },
       {
         name: "description",
         content:
-          "Read the president's message and meet the executive board leading the CCGMs community association.",
+          "Discover the CCGMs community: our president's message, mission, vision, core values, and the executive board leading our community association.",
       },
-      { property: "og:title", content: "About CCGMs — President's Message" },
+      { property: "og:title", content: "About CCGMs — President's Message, Mission & Board" },
       {
         property: "og:description",
-        content: "The president's message and the team leading CCGMs.",
+        content:
+          "Read the president's message, explore our mission, vision and core values, and meet the executive board of the CCGMs community association.",
+      },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: ABOUT_URL },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "About CCGMs — President's Message, Mission & Board" },
+      {
+        name: "twitter:description",
+        content:
+          "Read the president's message, explore our mission, vision and core values, and meet the CCGMs board.",
+      },
+    ],
+    links: [{ rel: "canonical", href: ABOUT_URL }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "AboutPage",
+          name: "About CCGMs",
+          url: ABOUT_URL,
+          description:
+            "The president's message, mission, vision, core values, and executive board of the CCGMs community association.",
+          mainEntity: {
+            "@type": "Organization",
+            name: "CCGMs — Cause Compass",
+            url: SITE_ORIGIN,
+          },
+        }),
       },
     ],
   }),
