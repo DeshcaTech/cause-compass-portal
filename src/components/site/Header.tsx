@@ -28,7 +28,13 @@ export const NAV: NavGroup[] = [
   },
   { label: "Membership", to: "/membership" },
   { label: "Events", to: "/events" },
-  { label: "Partners", to: "/partners" },
+  {
+    label: "Partners",
+    items: [
+      { label: "Businesses owned by our members", to: "/partners" },
+      { label: "Jobs", to: "/jobs" },
+    ],
+  },
   { label: "Gallery", to: "/gallery" },
   {
     label: "Get involved",
