@@ -302,6 +302,12 @@ function Index() {
             <div className="mt-8 grid gap-6 lg:grid-cols-[1.4fr_1fr]">
               {/* Lead story */}
               <Card className="overflow-hidden border-border/70 bg-primary text-primary-foreground">
+                <img
+                  src={upcoming[0]!.image_url ?? eventFallback}
+                  alt={upcoming[0]!.title}
+                  loading="lazy"
+                  className="aspect-[16/9] w-full object-cover"
+                />
                 <CardContent className="flex h-full flex-col p-8 md:p-10">
                   <p className="eyebrow text-gold">{formatDate(upcoming[0]!.start_at)}</p>
                   <h3 className="mt-3 text-3xl leading-tight md:text-4xl">{upcoming[0]!.title}</h3>
@@ -348,7 +354,13 @@ function Index() {
               Math.round((campaign.raised_amount / Math.max(campaign.goal_amount, 1)) * 100),
             );
             return (
-              <Card key={campaign.id} className="border-border/70">
+              <Card key={campaign.id} className="overflow-hidden border-border/70">
+                <img
+                  src={campaign.image_url ?? campaignFallback}
+                  alt={campaign.title}
+                  loading="lazy"
+                  className="aspect-[16/9] w-full object-cover"
+                />
                 <CardContent className="p-6">
                   <h3 className="text-lg">{campaign.title}</h3>
                   <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">
