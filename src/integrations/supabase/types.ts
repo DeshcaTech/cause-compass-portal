@@ -564,6 +564,8 @@ export type Database = {
           is_published: boolean
           job_type: string
           location: string | null
+          notify_email: string | null
+          notify_whatsapp: string | null
           reviewed_at: string | null
           salary_range: string | null
           short_description: string | null
@@ -584,6 +586,8 @@ export type Database = {
           is_published?: boolean
           job_type?: string
           location?: string | null
+          notify_email?: string | null
+          notify_whatsapp?: string | null
           reviewed_at?: string | null
           salary_range?: string | null
           short_description?: string | null
@@ -604,6 +608,8 @@ export type Database = {
           is_published?: boolean
           job_type?: string
           location?: string | null
+          notify_email?: string | null
+          notify_whatsapp?: string | null
           reviewed_at?: string | null
           salary_range?: string | null
           short_description?: string | null

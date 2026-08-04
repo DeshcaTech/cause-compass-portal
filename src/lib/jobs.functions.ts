@@ -17,7 +17,9 @@ export const submitJobApplication = createServerFn({ method: 'POST' })
 
     const { data: job, error: jobError } = await supabaseAdmin
       .from('jobs')
-      .select('id, title, company, contact_email, contact_phone, apply_url, is_published, approval_status')
+      .select(
+        'id, title, company, location, job_type, contact_email, contact_phone, notify_email, notify_whatsapp, apply_url, is_published, approval_status',
+      )
       .eq('id', data.job_id)
       .single()
     if (jobError || !job || !job.is_published || job.approval_status !== 'approved') {
@@ -38,10 +40,11 @@ export const submitJobApplication = createServerFn({ method: 'POST' })
       .single()
     if (error || !row) throw new Error(error?.message ?? 'Could not record your interest')
 
-    if (job.contact_email) {
+    const notifyEmail = job.notify_email || job.contact_email
+    if (notifyEmail) {
       try {
         const { sendTemplateEmail } = await import('./email-templates/send-email')
-        await sendTemplateEmail('job-application', job.contact_email, {
+        await sendTemplateEmail('job-application', notifyEmail, {
           templateData: {
             jobTitle: job.title,
             company: job.company,
@@ -52,11 +55,36 @@ export const submitJobApplication = createServerFn({ method: 'POST' })
             message: data.message || '',
           },
           idempotencyKey: `job-application-${row.id}`,
+          replyTo: data.email,
         })
       } catch (err) {
         console.error('Job application notification failed', err)
       }
     }
 
-    return { ok: true, applyUrl: job.apply_url ?? null }
+    const whatsappDigits = (job.notify_whatsapp ?? '').replace(/[^0-9]/g, '')
+    const whatsappUrl = whatsappDigits
+      ? `https://wa.me/${whatsappDigits}?text=${encodeURIComponent(
+          [
+            `New application — ${job.title}${job.company ? ` at ${job.company}` : ''}`,
+            job.location ? `Location: ${job.location}` : '',
+            job.job_type ? `Job type: ${job.job_type}` : '',
+            '',
+            `Name: ${data.full_name}`,
+            `Email: ${data.email}`,
+            data.phone ? `Phone: ${data.phone}` : '',
+            data.membership_number ? `Membership number: ${data.membership_number}` : '',
+            data.message ? `Message: ${data.message}` : '',
+          ]
+            .filter(Boolean)
+            .join('\n'),
+        )}`
+      : null
+
+    return {
+      ok: true,
+      applyUrl: job.apply_url ?? null,
+      whatsappUrl,
+      emailed: Boolean(notifyEmail),
+    }
   })

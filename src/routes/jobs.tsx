@@ -291,6 +291,7 @@ function ApplyDialog({ job, onClose }: { job: Job | null; onClose: () => void })
       toast.success(t("Your details have been sent to the employer."));
       setForm({ full_name: "", email: "", phone: "", membership_number: "", message: "" });
       onClose();
+      if (result.whatsappUrl) window.open(result.whatsappUrl, "_blank", "noopener");
       if (result.applyUrl) window.open(result.applyUrl, "_blank", "noopener");
     } catch (error) {
       toast.error(error instanceof Error ? error.message : t("Something went wrong"));
