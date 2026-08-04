@@ -240,7 +240,7 @@ function Index() {
         <div className="container-page">
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div>
-              <p className="eyebrow text-terracotta">What's on</p>
+              <p className="eyebrow text-terracotta">What&apos;s on</p>
               <h2 className="mt-2 text-3xl md:text-4xl">Coming events</h2>
             </div>
             <Button asChild variant="soft">
