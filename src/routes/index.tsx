@@ -13,9 +13,7 @@ import {
   Users,
 } from "lucide-react";
 
-import logo from "@/assets/ccgms-logo.png?w=200&format=png";
-import logoAvif from "@/assets/ccgms-logo.png?w=200&quality=70&format=avif";
-import logoWebp from "@/assets/ccgms-logo.png?w=200&quality=80&format=webp";
+import { CameroonFlag, UkFlag } from "@/components/site/Flags";
 import hero from "@/assets/hero-community.jpg?w=1200&quality=72&format=jpg";
 import heroAvif from "@/assets/hero-community.jpg?w=1200&quality=55&format=avif";
 import heroWebp from "@/assets/hero-community.jpg?w=1200&quality=70&format=webp";
