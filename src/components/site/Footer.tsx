@@ -39,6 +39,15 @@ const columns = [
       { label: "Refer someone", to: "/refer" },
     ],
   },
+  {
+    title: "Quick links",
+    links: [
+      { label: "Donate", to: "/donate" },
+      { label: "Fundraising", to: "/fundraising" },
+      { label: "Support Our Causes", to: "/fundraising" },
+      { label: "Contact", to: "/contact" },
+    ],
+  },
 ];
 
 export function Footer() {
