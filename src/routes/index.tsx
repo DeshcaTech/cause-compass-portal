@@ -331,7 +331,18 @@ function Index() {
           ) : (
             <div className="mt-6 grid gap-5 sm:mt-8 sm:gap-6 lg:grid-cols-[1.4fr_1fr]">
               {/* Lead story */}
-              <Card className="overflow-hidden border-border/70 bg-primary text-primary-foreground">
+              <Card
+                role="button"
+                tabIndex={0}
+                onClick={() => setSelectedEvent(upcoming[0]!)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    setSelectedEvent(upcoming[0]!);
+                  }
+                }}
+                className="cursor-pointer overflow-hidden border-border/70 bg-primary text-primary-foreground transition-shadow hover:shadow-[var(--shadow-lift)]"
+              >
                 <Picture
                   {...(upcoming[0]!.image_url
                     ? { src: upcoming[0]!.image_url }
@@ -360,20 +371,65 @@ function Index() {
               {/* Supporting column */}
               <div className="divide-y divide-border rounded-xl border border-border/70 bg-card">
                 {upcoming.slice(1).map((event) => (
-                  <div key={event.id} className="p-5 sm:p-6">
+                  <button
+                    key={event.id}
+                    type="button"
+                    onClick={() => setSelectedEvent(event)}
+                    className="block w-full cursor-pointer p-5 text-left transition-colors hover:bg-secondary sm:p-6"
+                  >
                     <p className="eyebrow text-terracotta">{formatDate(event.start_at)}</p>
                     <h3 className="mt-2 text-base leading-snug sm:text-lg">{event.title}</h3>
                     <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">
                       {event.description}
                     </p>
                     <p className="mt-3 text-xs text-muted-foreground">{event.location}</p>
-                  </div>
+                  </button>
                 ))}
               </div>
             </div>
           )}
         </div>
       </section>
+
+      <Dialog open={!!selectedEvent} onOpenChange={(open) => !open && setSelectedEvent(null)}>
+        <DialogContent className="sm:max-w-lg">
+          <DialogHeader>
+            <DialogTitle>{selectedEvent?.title}</DialogTitle>
+          </DialogHeader>
+          {selectedEvent ? (
+            <div className="space-y-4">
+              <Badge
+                className={
+                  selectedEvent.event_type === "ccgms"
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-terracotta text-terracotta-foreground"
+                }
+              >
+                {selectedEvent.event_type === "ccgms" ? t("CCGMs event") : t("Other event")}
+              </Badge>
+              <p className="text-sm text-foreground/85">{selectedEvent.description}</p>
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                <li className="flex items-center gap-2">
+                  <CalendarDays className="size-4" /> {formatDate(selectedEvent.start_at, true)}
+                </li>
+                {selectedEvent.end_at ? (
+                  <li className="flex items-center gap-2">
+                    <Clock className="size-4" /> {t("Ends")} {formatDate(selectedEvent.end_at, true)}
+                  </li>
+                ) : null}
+                <li className="flex items-center gap-2">
+                  <MapPin className="size-4" /> {selectedEvent.location}
+                </li>
+                {selectedEvent.organiser ? (
+                  <li className="flex items-center gap-2">
+                    <UserRound className="size-4" /> {selectedEvent.organiser}
+                  </li>
+                ) : null}
+              </ul>
+            </div>
+          ) : null}
+        </DialogContent>
+      </Dialog>
 
       <section className="container-page py-14 sm:py-16 md:py-20">
         <div className="flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-end sm:justify-between">
