@@ -31,7 +31,6 @@ import { Route as NewsIndexRouteImport } from './routes/news.index'
 import { Route as NewsIdRouteImport } from './routes/news.$id'
 import { Route as NewsUnsubscribeRouteImport } from './routes/news.unsubscribe'
 import { Route as RsvpTokenRouteImport } from './routes/rsvp.$token'
-import { Route as ApiPublicHooksDailyRsvpReportRouteImport } from './routes/api/public/hooks/daily-rsvp-report'
 import { Route as LovableEmailTransactionalPreviewRouteImport } from './routes/lovable/email/transactional/preview'
 
 const IndexRoute = IndexRouteImport.update({
@@ -143,12 +142,6 @@ const RsvpTokenRoute = RsvpTokenRouteImport.update({
   path: '/rsvp/$token',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiPublicHooksDailyRsvpReportRoute =
-  ApiPublicHooksDailyRsvpReportRouteImport.update({
-    id: '/api/public/hooks/daily-rsvp-report',
-    path: '/api/public/hooks/daily-rsvp-report',
-    getParentRoute: () => rootRouteImport,
-  } as any)
 const LovableEmailTransactionalPreviewRoute =
   LovableEmailTransactionalPreviewRouteImport.update({
     id: '/lovable/email/transactional/preview',
@@ -178,7 +171,6 @@ export interface FileRoutesByFullPath {
   '/news/unsubscribe': typeof NewsUnsubscribeRoute
   '/rsvp/$token': typeof RsvpTokenRoute
   '/news/': typeof NewsIndexRoute
-  '/api/public/hooks/daily-rsvp-report': typeof ApiPublicHooksDailyRsvpReportRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
 }
 export interface FileRoutesByTo {
@@ -203,7 +195,6 @@ export interface FileRoutesByTo {
   '/news/unsubscribe': typeof NewsUnsubscribeRoute
   '/rsvp/$token': typeof RsvpTokenRoute
   '/news': typeof NewsIndexRoute
-  '/api/public/hooks/daily-rsvp-report': typeof ApiPublicHooksDailyRsvpReportRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
 }
 export interface FileRoutesById {
@@ -230,7 +221,6 @@ export interface FileRoutesById {
   '/news/unsubscribe': typeof NewsUnsubscribeRoute
   '/rsvp/$token': typeof RsvpTokenRoute
   '/news/': typeof NewsIndexRoute
-  '/api/public/hooks/daily-rsvp-report': typeof ApiPublicHooksDailyRsvpReportRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
 }
 export interface FileRouteTypes {
@@ -257,7 +247,6 @@ export interface FileRouteTypes {
     | '/news/unsubscribe'
     | '/rsvp/$token'
     | '/news/'
-    | '/api/public/hooks/daily-rsvp-report'
     | '/lovable/email/transactional/preview'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -282,7 +271,6 @@ export interface FileRouteTypes {
     | '/news/unsubscribe'
     | '/rsvp/$token'
     | '/news'
-    | '/api/public/hooks/daily-rsvp-report'
     | '/lovable/email/transactional/preview'
   id:
     | '__root__'
@@ -308,7 +296,6 @@ export interface FileRouteTypes {
     | '/news/unsubscribe'
     | '/rsvp/$token'
     | '/news/'
-    | '/api/public/hooks/daily-rsvp-report'
     | '/lovable/email/transactional/preview'
   fileRoutesById: FileRoutesById
 }
@@ -334,7 +321,6 @@ export interface RootRouteChildren {
   NewsUnsubscribeRoute: typeof NewsUnsubscribeRoute
   RsvpTokenRoute: typeof RsvpTokenRoute
   NewsIndexRoute: typeof NewsIndexRoute
-  ApiPublicHooksDailyRsvpReportRoute: typeof ApiPublicHooksDailyRsvpReportRoute
   LovableEmailTransactionalPreviewRoute: typeof LovableEmailTransactionalPreviewRoute
 }
 
@@ -494,13 +480,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RsvpTokenRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/public/hooks/daily-rsvp-report': {
-      id: '/api/public/hooks/daily-rsvp-report'
-      path: '/api/public/hooks/daily-rsvp-report'
-      fullPath: '/api/public/hooks/daily-rsvp-report'
-      preLoaderRoute: typeof ApiPublicHooksDailyRsvpReportRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/lovable/email/transactional/preview': {
       id: '/lovable/email/transactional/preview'
       path: '/lovable/email/transactional/preview'
@@ -544,7 +523,6 @@ const rootRouteChildren: RootRouteChildren = {
   NewsUnsubscribeRoute: NewsUnsubscribeRoute,
   RsvpTokenRoute: RsvpTokenRoute,
   NewsIndexRoute: NewsIndexRoute,
-  ApiPublicHooksDailyRsvpReportRoute: ApiPublicHooksDailyRsvpReportRoute,
   LovableEmailTransactionalPreviewRoute: LovableEmailTransactionalPreviewRoute,
 }
 export const routeTree = rootRouteImport

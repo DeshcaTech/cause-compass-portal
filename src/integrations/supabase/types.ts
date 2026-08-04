@@ -395,8 +395,6 @@ export type Database = {
           id: string
           image_url: string | null
           location: string | null
-          notify_email: string | null
-          notify_whatsapp: string | null
           organiser: string | null
           start_at: string
           ticket_url: string | null
@@ -410,8 +408,6 @@ export type Database = {
           id?: string
           image_url?: string | null
           location?: string | null
-          notify_email?: string | null
-          notify_whatsapp?: string | null
           organiser?: string | null
           start_at: string
           ticket_url?: string | null
@@ -425,8 +421,6 @@ export type Database = {
           id?: string
           image_url?: string | null
           location?: string | null
-          notify_email?: string | null
-          notify_whatsapp?: string | null
           organiser?: string | null
           start_at?: string
           ticket_url?: string | null
