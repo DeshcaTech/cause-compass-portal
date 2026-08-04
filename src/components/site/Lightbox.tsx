@@ -182,7 +182,6 @@ export function Lightbox({
   }
 
   function endPointer(event: React.PointerEvent<HTMLDivElement>) {
-    console.debug("[lightbox] endPointer", event.type, swipeXRef.current);
     pointers.current.delete(event.pointerId);
     if (pointers.current.size < 2) pinchStart.current = null;
     if (pointers.current.size === 0) {
