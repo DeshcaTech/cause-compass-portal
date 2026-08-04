@@ -251,7 +251,8 @@ function Index() {
           ) : (
           <div className="mt-8 grid gap-5 md:grid-cols-3">
             {latestNews.map((item) => (
-              <Card key={item.id} className="overflow-hidden border-border/70">
+              <Link key={item.id} to="/news/$id" params={{ id: item.id }} className="block">
+              <Card className="h-full overflow-hidden border-border/70 transition-shadow hover:shadow-lg">
                 {item.image_url && (
                   <img
                     src={item.image_url}
@@ -268,6 +269,7 @@ function Index() {
                   </p>
                 </CardContent>
               </Card>
+              </Link>
             ))}
           </div>
           )}

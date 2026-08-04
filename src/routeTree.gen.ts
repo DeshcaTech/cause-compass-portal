@@ -22,12 +22,13 @@ import { Route as EventsRouteImport } from './routes/events'
 import { Route as FundraisingRouteImport } from './routes/fundraising'
 import { Route as GalleryRouteImport } from './routes/gallery'
 import { Route as MembershipRouteImport } from './routes/membership'
-import { Route as NewsRouteImport } from './routes/news'
 import { Route as PartnersRouteImport } from './routes/partners'
 import { Route as ReferRouteImport } from './routes/refer'
 import { Route as SurveysRouteImport } from './routes/surveys'
 import { Route as VolunteerRouteImport } from './routes/volunteer'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
+import { Route as NewsIndexRouteImport } from './routes/news.index'
+import { Route as NewsIdRouteImport } from './routes/news.$id'
 import { Route as LovableEmailTransactionalPreviewRouteImport } from './routes/lovable/email/transactional/preview'
 
 const IndexRoute = IndexRouteImport.update({
@@ -94,11 +95,6 @@ const MembershipRoute = MembershipRouteImport.update({
   path: '/membership',
   getParentRoute: () => rootRouteImport,
 } as any)
-const NewsRoute = NewsRouteImport.update({
-  id: '/news',
-  path: '/news',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const PartnersRoute = PartnersRouteImport.update({
   id: '/partners',
   path: '/partners',
@@ -124,6 +120,16 @@ const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const NewsIndexRoute = NewsIndexRouteImport.update({
+  id: '/news/',
+  path: '/news/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NewsIdRoute = NewsIdRouteImport.update({
+  id: '/news/$id',
+  path: '/news/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LovableEmailTransactionalPreviewRoute =
   LovableEmailTransactionalPreviewRouteImport.update({
     id: '/lovable/email/transactional/preview',
@@ -144,12 +150,13 @@ export interface FileRoutesByFullPath {
   '/fundraising': typeof FundraisingRoute
   '/gallery': typeof GalleryRoute
   '/membership': typeof MembershipRoute
-  '/news': typeof NewsRoute
   '/partners': typeof PartnersRoute
   '/refer': typeof ReferRoute
   '/surveys': typeof SurveysRoute
   '/volunteer': typeof VolunteerRoute
   '/admin': typeof AuthenticatedAdminRoute
+  '/news/$id': typeof NewsIdRoute
+  '/news/': typeof NewsIndexRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
 }
 export interface FileRoutesByTo {
@@ -165,12 +172,13 @@ export interface FileRoutesByTo {
   '/fundraising': typeof FundraisingRoute
   '/gallery': typeof GalleryRoute
   '/membership': typeof MembershipRoute
-  '/news': typeof NewsRoute
   '/partners': typeof PartnersRoute
   '/refer': typeof ReferRoute
   '/surveys': typeof SurveysRoute
   '/volunteer': typeof VolunteerRoute
   '/admin': typeof AuthenticatedAdminRoute
+  '/news/$id': typeof NewsIdRoute
+  '/news': typeof NewsIndexRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
 }
 export interface FileRoutesById {
@@ -188,12 +196,13 @@ export interface FileRoutesById {
   '/fundraising': typeof FundraisingRoute
   '/gallery': typeof GalleryRoute
   '/membership': typeof MembershipRoute
-  '/news': typeof NewsRoute
   '/partners': typeof PartnersRoute
   '/refer': typeof ReferRoute
   '/surveys': typeof SurveysRoute
   '/volunteer': typeof VolunteerRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
+  '/news/$id': typeof NewsIdRoute
+  '/news/': typeof NewsIndexRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
 }
 export interface FileRouteTypes {
@@ -211,12 +220,13 @@ export interface FileRouteTypes {
     | '/fundraising'
     | '/gallery'
     | '/membership'
-    | '/news'
     | '/partners'
     | '/refer'
     | '/surveys'
     | '/volunteer'
     | '/admin'
+    | '/news/$id'
+    | '/news/'
     | '/lovable/email/transactional/preview'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -232,12 +242,13 @@ export interface FileRouteTypes {
     | '/fundraising'
     | '/gallery'
     | '/membership'
-    | '/news'
     | '/partners'
     | '/refer'
     | '/surveys'
     | '/volunteer'
     | '/admin'
+    | '/news/$id'
+    | '/news'
     | '/lovable/email/transactional/preview'
   id:
     | '__root__'
@@ -254,12 +265,13 @@ export interface FileRouteTypes {
     | '/fundraising'
     | '/gallery'
     | '/membership'
-    | '/news'
     | '/partners'
     | '/refer'
     | '/surveys'
     | '/volunteer'
     | '/_authenticated/admin'
+    | '/news/$id'
+    | '/news/'
     | '/lovable/email/transactional/preview'
   fileRoutesById: FileRoutesById
 }
@@ -277,11 +289,12 @@ export interface RootRouteChildren {
   FundraisingRoute: typeof FundraisingRoute
   GalleryRoute: typeof GalleryRoute
   MembershipRoute: typeof MembershipRoute
-  NewsRoute: typeof NewsRoute
   PartnersRoute: typeof PartnersRoute
   ReferRoute: typeof ReferRoute
   SurveysRoute: typeof SurveysRoute
   VolunteerRoute: typeof VolunteerRoute
+  NewsIdRoute: typeof NewsIdRoute
+  NewsIndexRoute: typeof NewsIndexRoute
   LovableEmailTransactionalPreviewRoute: typeof LovableEmailTransactionalPreviewRoute
 }
 
@@ -378,13 +391,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MembershipRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/news': {
-      id: '/news'
-      path: '/news'
-      fullPath: '/news'
-      preLoaderRoute: typeof NewsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/partners': {
       id: '/partners'
       path: '/partners'
@@ -419,6 +425,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin'
       preLoaderRoute: typeof AuthenticatedAdminRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/news/': {
+      id: '/news/'
+      path: '/news'
+      fullPath: '/news/'
+      preLoaderRoute: typeof NewsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/news/$id': {
+      id: '/news/$id'
+      path: '/news/$id'
+      fullPath: '/news/$id'
+      preLoaderRoute: typeof NewsIdRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/lovable/email/transactional/preview': {
       id: '/lovable/email/transactional/preview'
@@ -455,11 +475,12 @@ const rootRouteChildren: RootRouteChildren = {
   FundraisingRoute: FundraisingRoute,
   GalleryRoute: GalleryRoute,
   MembershipRoute: MembershipRoute,
-  NewsRoute: NewsRoute,
   PartnersRoute: PartnersRoute,
   ReferRoute: ReferRoute,
   SurveysRoute: SurveysRoute,
   VolunteerRoute: VolunteerRoute,
+  NewsIdRoute: NewsIdRoute,
+  NewsIndexRoute: NewsIndexRoute,
   LovableEmailTransactionalPreviewRoute: LovableEmailTransactionalPreviewRoute,
 }
 export const routeTree = rootRouteImport
