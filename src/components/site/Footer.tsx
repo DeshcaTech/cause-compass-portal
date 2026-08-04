@@ -7,6 +7,7 @@ import logo from "@/assets/ccgms-wordmark.png?w=640&format=png";
 import logoAvif from "@/assets/ccgms-wordmark.png?w=640&quality=70&format=avif";
 import logoWebp from "@/assets/ccgms-wordmark.png?w=640&quality=80&format=webp";
 import { Picture } from "@/components/site/Picture";
+import flagsAsset from "@/assets/cm-uk-flags.jpg.asset.json";
 import { useT } from "@/lib/i18n";
 
 const columns = [
@@ -69,6 +70,13 @@ export function Footer() {
             ) : null}
             <span className={`font-display text-xl font-semibold ${showLogo ? "sr-only" : ""}`}>CCGMs</span>
           </div>
+          <img
+            src={flagsAsset.url}
+            alt="Cameroon and United Kingdom flags"
+            loading="lazy"
+            decoding="async"
+            className="mt-4 h-10 w-auto rounded-md object-cover"
+          />
           <p className="mt-4 max-w-sm text-sm text-primary-foreground/75">
             {t(
               "A community association bringing families together — supporting one another, celebrating our culture and building a stronger future for the next generation.",
