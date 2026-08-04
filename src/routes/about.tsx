@@ -151,21 +151,20 @@ function AboutPage() {
             <p className="eyebrow text-terracotta">Leadership</p>
             <h2 className="mt-2 text-3xl md:text-4xl">The board team</h2>
           </div>
-            <Button asChild variant="hero">
-              <Link to="/board">Meet the full board</Link>
-            </Button>
-          </div>
-          <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {current.map((member) => (
-              <Card key={member.id} className="border-border/70">
-                <CardContent className="p-6">
-                  <p className="font-display text-lg">{member.full_name}</p>
-                  <p className="text-sm text-primary">{member.role_title}</p>
-                  <p className="mt-3 text-sm text-muted-foreground">{member.bio}</p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+          <Button asChild variant="hero">
+            <Link to="/board">Meet the full board</Link>
+          </Button>
+        </div>
+        <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {current.map((member) => (
+            <Card key={member.id} className="border-border/70">
+              <CardContent className="p-6">
+                <p className="font-display text-lg">{member.full_name}</p>
+                <p className="text-sm text-primary">{member.role_title}</p>
+                <p className="mt-3 text-sm text-muted-foreground">{member.bio}</p>
+              </CardContent>
+            </Card>
+          ))}
         </div>
       </section>
     </>
