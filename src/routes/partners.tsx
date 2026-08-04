@@ -22,6 +22,8 @@ export const Route = createFileRoute("/partners")({
           "Discover and support businesses owned by members of the CCGMs community: catering, legal, beauty, building, travel and more.",
       },
       { property: "og:title", content: "Partners — Businesses Owned by CCGMs Members" },
+      { property: "og:image", content: "https://cause-compass-portal.lovable.app/og-ccgms.jpg" },
+      { name: "twitter:image", content: "https://cause-compass-portal.lovable.app/og-ccgms.jpg" },
       {
         property: "og:description",
         content: "A directory of member-owned businesses serving the community.",

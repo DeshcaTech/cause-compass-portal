@@ -22,6 +22,8 @@ export const Route = createFileRoute("/news/")({
           "Latest CCGMs community news, notices and announcements for members, families and partners.",
       },
       { property: "og:title", content: "News & Announcements — CCGMs" },
+      { property: "og:image", content: "https://cause-compass-portal.lovable.app/og-ccgms.jpg" },
+      { name: "twitter:image", content: "https://cause-compass-portal.lovable.app/og-ccgms.jpg" },
       {
         property: "og:description",
         content: "Community news, notices and announcements from CCGMs.",

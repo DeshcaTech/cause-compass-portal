@@ -21,6 +21,8 @@ export const Route = createFileRoute("/documents")({
           "Download the CCGMs constitution, membership forms, annual reports and community policies.",
       },
       { property: "og:title", content: "Downloads — CCGMs Documents" },
+      { property: "og:image", content: "https://cause-compass-portal.lovable.app/og-ccgms.jpg" },
+      { name: "twitter:image", content: "https://cause-compass-portal.lovable.app/og-ccgms.jpg" },
       {
         property: "og:description",
         content: "Constitution, forms, reports and policies available to download.",

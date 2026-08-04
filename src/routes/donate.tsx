@@ -29,6 +29,8 @@ export const Route = createFileRoute("/donate")({
           "Make a one-off donation to CCGMs or give to an active fundraising campaign. Membership number optional but recommended.",
       },
       { property: "og:title", content: "Donate — Give to the CCGMs Community" },
+      { property: "og:image", content: "https://cause-compass-portal.lovable.app/og-ccgms.jpg" },
+      { name: "twitter:image", content: "https://cause-compass-portal.lovable.app/og-ccgms.jpg" },
       { property: "og:description", content: "Give any amount, to any active campaign." },
     ],
   }),

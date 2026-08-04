@@ -20,6 +20,8 @@ export const Route = createFileRoute("/board")({
           "Meet the current CCGMs executive board and browse the teams who served in previous terms.",
       },
       { property: "og:title", content: "CCGMs Board — Current and Past Teams" },
+      { property: "og:image", content: "https://cause-compass-portal.lovable.app/og-ccgms.jpg" },
+      { name: "twitter:image", content: "https://cause-compass-portal.lovable.app/og-ccgms.jpg" },
       {
         property: "og:description",
         content: "The current CCGMs board and the teams who served before them.",

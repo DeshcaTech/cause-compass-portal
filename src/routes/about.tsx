@@ -52,6 +52,8 @@ export const Route = createFileRoute("/about")({
           "Discover the CCGMs community: our president's message, mission, vision, core values, and the executive board leading our community association.",
       },
       { property: "og:title", content: "About CCGMs — President's Message, Mission & Board" },
+      { property: "og:image", content: "https://cause-compass-portal.lovable.app/og-ccgms.jpg" },
+      { name: "twitter:image", content: "https://cause-compass-portal.lovable.app/og-ccgms.jpg" },
       {
         property: "og:description",
         content:

@@ -24,6 +24,8 @@ export const Route = createFileRoute("/refer")({
           "Know someone who needs support? Refer them confidentially to the CCGMs welfare team for bereavement, illness, housing or hardship help.",
       },
       { property: "og:title", content: "Refer Someone — CCGMs Community Support" },
+      { property: "og:image", content: "https://cause-compass-portal.lovable.app/og-ccgms.jpg" },
+      { name: "twitter:image", content: "https://cause-compass-portal.lovable.app/og-ccgms.jpg" },
       { property: "og:description", content: "Confidentially refer someone who needs our support." },
     ],
   }),
