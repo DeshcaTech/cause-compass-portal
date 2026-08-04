@@ -10,6 +10,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { eventsQuery, formatDate, type EventRow } from "@/lib/queries";
 import { EventDialog, eventFallbackImage } from "@/components/site/EventDialog";
+import { SmartImage } from "@/components/site/SmartImage";
 import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/events")({
@@ -59,13 +60,14 @@ function EventCard({ event, onOpen }: { event: EventRow; onOpen: () => void }) {
       }}
     >
       <CardContent className="p-6">
-        <img
+        <SmartImage
           src={event.image_url ?? eventFallbackImage(event.id)}
           alt={event.image_url ? event.title : t("Community members celebrating together")}
           loading="lazy"
           width={1280}
           height={720}
-          className="mb-4 aspect-[16/9] w-full rounded-xl object-cover"
+          wrapperClassName="mb-4 aspect-[16/9] w-full rounded-xl"
+          className="size-full object-cover"
         />
         <div className="flex items-start justify-between gap-3">
           <p className="eyebrow text-primary">{formatDate(event.start_at)}</p>
@@ -88,9 +90,15 @@ function EventsPage() {
   const [monthOffset, setMonthOffset] = useState(0);
   const [selectedDay, setSelectedDay] = useState<string | null>(null);
 
+  const [typeFilter, setTypeFilter] = useState<"all" | "ccgms" | "other">("all");
+
   const now = new Date();
-  const upcoming = events.filter((e) => new Date(e.start_at) >= now);
-  const past = events.filter((e) => new Date(e.start_at) < now).reverse();
+  const visible = useMemo(
+    () => (typeFilter === "all" ? events : events.filter((e) => e.event_type === typeFilter)),
+    [events, typeFilter],
+  );
+  const upcoming = visible.filter((e) => new Date(e.start_at) >= now);
+  const past = visible.filter((e) => new Date(e.start_at) < now).reverse();
 
   const cursor = new Date(now.getFullYear(), now.getMonth() + monthOffset, 1);
   const monthLabel = cursor.toLocaleDateString("en-GB", { month: "long", year: "numeric" });
@@ -130,6 +138,31 @@ function EventsPage() {
       />
 
       <section className="container-page py-14">
+        <div className="mb-6 flex flex-wrap items-center gap-2">
+          <span className="text-xs uppercase tracking-wider text-muted-foreground">
+            {t("Filter by type")}
+          </span>
+          {(["all", "ccgms", "other"] as const).map((value) => (
+            <button
+              key={value}
+              type="button"
+              onClick={() => setTypeFilter(value)}
+              aria-pressed={typeFilter === value}
+              className={`min-h-9 rounded-full border px-4 text-sm transition-colors ${
+                typeFilter === value
+                  ? "border-transparent bg-primary text-primary-foreground"
+                  : "border-border hover:bg-secondary"
+              }`}
+            >
+              {value === "all"
+                ? t("All types")
+                : value === "ccgms"
+                  ? t("CCGMs event")
+                  : t("Other event")}
+            </button>
+          ))}
+        </div>
+
         <Tabs defaultValue="coming">
           <div className="-mx-4 overflow-x-auto px-4 sm:mx-0 sm:px-0">
             <TabsList className="w-max min-w-full justify-start">
@@ -141,17 +174,26 @@ function EventsPage() {
           </div>
 
           <TabsContent value="coming" className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {upcoming.length === 0 ? (
+              <p className="text-sm text-muted-foreground">{t("No events match these filters.")}</p>
+            ) : null}
             {upcoming.map((event) => (
               <EventCard key={event.id} event={event} onOpen={() => setSelected(event)} />
             ))}
           </TabsContent>
           <TabsContent value="past" className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {past.length === 0 ? (
+              <p className="text-sm text-muted-foreground">{t("No events match these filters.")}</p>
+            ) : null}
             {past.map((event) => (
               <EventCard key={event.id} event={event} onOpen={() => setSelected(event)} />
             ))}
           </TabsContent>
           <TabsContent value="all" className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {events.map((event) => (
+            {visible.length === 0 ? (
+              <p className="text-sm text-muted-foreground">{t("No events match these filters.")}</p>
+            ) : null}
+            {visible.map((event) => (
               <EventCard key={event.id} event={event} onOpen={() => setSelected(event)} />
             ))}
           </TabsContent>
