@@ -13,6 +13,7 @@ interface Props {
   attendees?: number
   newToday?: number
   reportDate?: string
+  whatsappUrl?: string
 }
 
 const button = {
@@ -35,6 +36,7 @@ const Email = ({
   attendees = 0,
   newToday = 0,
   reportDate,
+  whatsappUrl,
 }: Props) => (
   <Html lang="en" dir="ltr">
     <Head />
@@ -68,6 +70,13 @@ const Email = ({
               Open RSVP report &amp; PDF
             </Button>
           </>
+        ) : null}
+
+        {whatsappUrl ? (
+          <Text style={paragraph}>
+            <Link href={whatsappUrl}>Send this summary on WhatsApp</Link> to the event contact
+            number.
+          </Text>
         ) : null}
 
         <Text style={mutedText}>You receive this because you are the contact for this event.</Text>
