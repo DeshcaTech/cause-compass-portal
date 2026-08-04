@@ -57,6 +57,7 @@ export function Lightbox({
   const [zoom, setZoom] = useState(1);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [swipeX, setSwipeX] = useState(0);
+  const swipeXRef = useRef(0);
   const [playing, setPlaying] = useState(false);
   const [interval, setIntervalSeconds] = useState(5);
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -175,15 +176,19 @@ export function Lightbox({
     if (zoom > 1) {
       setOffset({ x: dragStart.current.offsetX + dx, y: dragStart.current.offsetY + dy });
     } else {
+      swipeXRef.current = dx;
       setSwipeX(dx);
     }
   }
 
   function endPointer(event: React.PointerEvent<HTMLDivElement>) {
+    console.debug("[lightbox] endPointer", event.type, swipeXRef.current);
     pointers.current.delete(event.pointerId);
     if (pointers.current.size < 2) pinchStart.current = null;
     if (pointers.current.size === 0) {
-      if (zoom === 1 && Math.abs(swipeX) > 50) step(swipeX < 0 ? 1 : -1);
+      const dx = swipeXRef.current;
+      swipeXRef.current = 0;
+      if (zoom === 1 && Math.abs(dx) > 50) step(dx < 0 ? 1 : -1);
       setSwipeX(0);
       dragStart.current = null;
     }
