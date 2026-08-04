@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { boardQuery, type BoardMember } from "@/lib/queries";
+import personFallback from "@/assets/person-fallback.jpg";
 
 export const Route = createFileRoute("/board")({
   head: () => ({
@@ -36,22 +37,12 @@ function MemberGrid({ members }: { members: BoardMember[] }) {
       {members.map((member) => (
         <Card key={member.id} className="border-border/70">
           <CardContent className="p-6">
-            {member.photo_url ? (
-              <img
-                src={member.photo_url}
-                alt={member.full_name}
-                loading="lazy"
-                className="size-16 rounded-full object-cover"
-              />
-            ) : (
-              <div className="flex size-14 items-center justify-center rounded-full bg-[image:var(--gradient-gold)] font-display text-lg text-gold-foreground">
-                {member.full_name
-                  .split(" ")
-                  .map((part) => part[0])
-                  .slice(0, 2)
-                  .join("")}
-              </div>
-            )}
+            <img
+              src={member.photo_url ?? personFallback}
+              alt={member.full_name}
+              loading="lazy"
+              className="size-16 rounded-full object-cover"
+            />
             <p className="mt-4 font-display text-lg">{member.full_name}</p>
             <p className="text-sm text-primary">{member.role_title}</p>
             <Badge variant="secondary" className="mt-3">

@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { Search, Star } from "lucide-react";
 
 import { PageHeader } from "@/components/site/PageHeader";
+import newsFallback from "@/assets/news-fallback.jpg";
 import { NewsSubscribe } from "@/components/site/NewsSubscribe";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -100,14 +101,12 @@ function NewsPage() {
             {filtered.map((item) => (
               <Link key={item.id} to="/news/$id" params={{ id: item.id }} className="block">
                 <Card className="h-full overflow-hidden border-border/70 transition-shadow hover:shadow-lg">
-                  {item.image_url && (
-                    <img
-                      src={item.image_url}
-                      alt={item.title}
-                      loading="lazy"
-                      className="aspect-[16/9] w-full object-cover"
-                    />
-                  )}
+                  <img
+                    src={item.image_url ?? newsFallback}
+                    alt={item.title}
+                    loading="lazy"
+                    className="aspect-[16/9] w-full object-cover"
+                  />
                   <CardContent className="p-6">
                     <div className="flex items-center gap-2">
                       <p className="eyebrow text-terracotta">{formatDate(item.published_at)}</p>

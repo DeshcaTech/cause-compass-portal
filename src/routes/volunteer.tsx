@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { submitVolunteerApplication } from "@/lib/signup.functions";
+import volunteerHero from "@/assets/volunteer-hero.jpg";
 
 export const Route = createFileRoute("/volunteer")({
   head: () => ({
@@ -115,7 +116,13 @@ function VolunteerPage() {
         description="A few hours from many hands is what keeps this community moving."
       />
       <section className="container-page py-14">
-        <Card className="mx-auto max-w-2xl border-border/70">
+        <Card className="mx-auto max-w-2xl overflow-hidden border-border/70">
+          <img
+            src={volunteerHero}
+            alt="CCGMs volunteers helping at a community event"
+            loading="lazy"
+            className="aspect-[16/9] w-full object-cover"
+          />
           <CardContent className="p-6 sm:p-8">
             <form onSubmit={onSubmit} className="space-y-5">
               <div className="space-y-2">

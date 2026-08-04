@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { Globe, Mail, MapPin, Phone, Store } from "lucide-react";
+import { Globe, Mail, MapPin, Phone } from "lucide-react";
 
 import { PageHeader } from "@/components/site/PageHeader";
 import { Badge } from "@/components/ui/badge";
@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { partnersQuery, type Partner } from "@/lib/queries";
+import businessFallback from "@/assets/business-fallback.jpg";
 
 export const Route = createFileRoute("/partners")({
   head: () => ({
@@ -69,18 +70,12 @@ function PartnersPage() {
               className="cursor-pointer border-border/70 transition-all hover:-translate-y-1 hover:shadow-[var(--shadow-lift)]"
             >
               <CardContent className="p-6">
-                {partner.logo_url ? (
-                  <img
-                    src={partner.logo_url}
-                    alt={partner.business_name}
-                    loading="lazy"
-                    className="mb-4 aspect-[16/9] w-full rounded-xl object-cover"
-                  />
-                ) : (
-                  <span className="inline-flex size-11 items-center justify-center rounded-xl bg-[image:var(--gradient-gold)] text-gold-foreground">
-                    <Store className="size-5" />
-                  </span>
-                )}
+                <img
+                  src={partner.logo_url ?? businessFallback}
+                  alt={partner.business_name}
+                  loading="lazy"
+                  className="mb-4 aspect-[16/9] w-full rounded-xl object-cover"
+                />
                 <h2 className="mt-4 text-lg">{partner.business_name}</h2>
                 <Badge variant="secondary" className="mt-2">
                   {partner.category}
@@ -99,13 +94,11 @@ function PartnersPage() {
           </DialogHeader>
           {selected ? (
             <div className="space-y-4">
-              {selected.logo_url ? (
-                <img
-                  src={selected.logo_url}
-                  alt={selected.business_name}
-                  className="aspect-[16/9] w-full rounded-xl object-cover"
-                />
-              ) : null}
+              <img
+                src={selected.logo_url ?? businessFallback}
+                alt={selected.business_name}
+                className="aspect-[16/9] w-full rounded-xl object-cover"
+              />
               <Badge variant="secondary">{selected.category}</Badge>
               <p className="text-sm text-foreground/85">{selected.description}</p>
               <ul className="space-y-2 text-sm text-muted-foreground">

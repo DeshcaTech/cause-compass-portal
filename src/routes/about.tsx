@@ -6,6 +6,7 @@ import { PageHeader } from "@/components/site/PageHeader";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { boardQuery, presidentQuery } from "@/lib/queries";
+import presidentFallback from "@/assets/president-fallback.jpg";
 
 const coreValues = [
   {
@@ -103,7 +104,13 @@ function AboutPage() {
 
       <section className="container-page py-16">
         <div className="grid gap-10 lg:grid-cols-[300px_1fr]">
-          <Card className="h-fit border-border/70 bg-primary text-primary-foreground">
+          <Card className="h-fit overflow-hidden border-border/70 bg-primary text-primary-foreground">
+            <img
+              src={president?.photo_url ?? presidentFallback}
+              alt={president?.president_name ?? "CCGMs President"}
+              loading="lazy"
+              className="aspect-[4/3] w-full object-cover"
+            />
             <CardContent className="p-7">
               <Quote className="size-8 text-gold" />
               <p className="mt-5 font-display text-2xl">{president?.president_name ?? "—"}</p>
