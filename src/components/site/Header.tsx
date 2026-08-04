@@ -24,7 +24,7 @@ export const NAV: NavGroup[] = [
       { label: "Board Members", to: "/board" },
       { label: "Our Groups", to: "/village-groups" },
       { label: "News", to: "/news" },
-      { label: "Downloads", to: "/documents" },
+      { label: "Documents", to: "/documents" },
       { label: "Assets rent", to: "/assets" },
     ],
   },
