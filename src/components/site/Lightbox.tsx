@@ -246,18 +246,12 @@ export function Lightbox({
         case "+":
         case "=":
           event.preventDefault();
-          setZoom((z) => {
-            zoomAtRef.current(z * 1.4);
-            return z;
-          });
+          zoomAtRef.current(zoomRef.current * 1.4);
           break;
         case "-":
         case "_":
           event.preventDefault();
-          setZoom((z) => {
-            zoomAtRef.current(z / 1.4);
-            return z;
-          });
+          zoomAtRef.current(zoomRef.current / 1.4);
           break;
         case "0":
           event.preventDefault();
@@ -291,7 +285,7 @@ export function Lightbox({
       <DialogContent
         ref={shellRef}
         aria-label={`${t("Photo viewer")} — ${caption}, ${position}`}
-        className="max-h-[92dvh] gap-3 overflow-y-auto bg-background sm:max-w-3xl data-[state=open]:fullscreen:max-w-none"
+        className="max-h-[92dvh] gap-3 overflow-y-auto bg-background sm:max-w-3xl"
       >
         <DialogHeader>
           <DialogTitle className="text-left text-base">{caption}</DialogTitle>
