@@ -487,9 +487,6 @@ function AdminPage() {
             />
           </TabsContent>}
 
-          {isAdmin && <TabsContent value="surveys" className="mt-8">
-            {null}
-          </TabsContent>}
           {isAdmin && <TabsContent value="village-groups" className="mt-8">
             <RecordManager
               table="village_groups"
