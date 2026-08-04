@@ -182,28 +182,38 @@ function MembershipPage() {
         description={t("Choose the membership that fits your household. Every member receives a unique registration number by email.")}
       />
 
-      <SidebarPage
-        sidebar={TIERS.map((item) => (
-          <SidebarNavItem
-            key={item.key}
-            icon={<Check className="size-5" />}
-            title={t(item.name)}
-            meta={`${formatMoney(item.price)} ${t("/ year")}`}
-            active={tier === item.key}
-            onClick={() => setTier(item.key)}
-          />
-        ))}
-      >
-        <Card className="border-border/70">
+      <section className="container-page py-14">
+        <div className="grid gap-5 md:grid-cols-3">
+          {TIERS.map((item) => (
+            <button
+              key={item.key}
+              type="button"
+              aria-pressed={tier === item.key}
+              onClick={() => setTier(item.key)}
+              className={`rounded-2xl border bg-card p-6 text-left transition-colors ${
+                tier === item.key
+                  ? "border-primary shadow-[var(--shadow-lift)]"
+                  : "border-border/70 hover:border-primary/50"
+              }`}
+            >
+              <h2 className="text-xl">{t(item.name)}</h2>
+              <p className="mt-3 font-display text-4xl text-primary">{formatMoney(item.price)}</p>
+              <p className="text-sm text-muted-foreground">{t("per year")}</p>
+              <p className="mt-3 text-sm text-muted-foreground">{t(item.blurb)}</p>
+              <ul className="mt-4 grid gap-1.5 text-sm">
+                {item.perks.map((perk) => (
+                  <li key={perk} className="flex items-start gap-2">
+                    <Check className="mt-0.5 size-4 shrink-0 text-primary" />
+                    {t(perk)}
+                  </li>
+                ))}
+              </ul>
+            </button>
+          ))}
+        </div>
+
+        <Card className="mt-8 border-border/70">
           <CardContent className="p-6 sm:p-8">
-            <ul className="mb-6 grid gap-1.5 text-sm sm:grid-cols-3">
-              {selectedTier.perks.map((perk) => (
-                <li key={perk} className="flex items-start gap-2">
-                  <Check className="mt-0.5 size-4 shrink-0 text-primary" />
-                  {t(perk)}
-                </li>
-              ))}
-            </ul>
             <h2 className="text-2xl">{t("Registration details")}</h2>
             <form onSubmit={onSubmit} className="mt-6 space-y-5">
               <div className="grid gap-4 sm:grid-cols-2">
