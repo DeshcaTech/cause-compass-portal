@@ -13,9 +13,7 @@ import {
   Users,
 } from "lucide-react";
 
-import logo from "@/assets/ccgms-logo.png?w=200&format=png";
-import logoAvif from "@/assets/ccgms-logo.png?w=200&quality=70&format=avif";
-import logoWebp from "@/assets/ccgms-logo.png?w=200&quality=80&format=webp";
+import { CameroonFlag, UkFlag } from "@/components/site/Flags";
 import hero from "@/assets/hero-community.jpg?w=1200&quality=72&format=jpg";
 import heroAvif from "@/assets/hero-community.jpg?w=1200&quality=55&format=avif";
 import heroWebp from "@/assets/hero-community.jpg?w=1200&quality=70&format=webp";
@@ -122,19 +120,13 @@ function Index() {
         <div className="container-page grid items-center gap-10 py-14 sm:py-16 lg:grid-cols-[1.05fr_0.95fr] lg:py-24">
           <div className="min-w-0">
             <div className="flex min-w-0 items-center gap-3 sm:gap-4">
-              <Picture
-                avif={logoAvif}
-                webp={logoWebp}
-                src={logo}
-                alt="CCGMs logo"
-                width={140}
-                height={140}
-                fetchPriority="high"
-                decoding="async"
-                pictureClassName="shrink-0"
-                className="h-14 w-14 sm:h-16 sm:w-16 md:h-20 md:w-20"
-              />
-              <p className="eyebrow min-w-0 text-gold">{t("Community association")}</p>
+              <span className="inline-flex shrink-0 items-center gap-1.5">
+                <CameroonFlag className="h-8 w-auto sm:h-10" />
+                <UkFlag className="h-8 w-auto sm:h-10" />
+              </span>
+              <p className="eyebrow min-w-0 text-gold">
+                {t("Cameroonian Community in Greater Manchester and Surrounding area")}
+              </p>
             </div>
             <h1 className="mt-6 text-[2.15rem] leading-[1.02] sm:mt-7 sm:text-[2.6rem] sm:leading-[0.98] lg:text-[4.2rem]">
               {t("Stronger together,")}

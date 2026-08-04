@@ -1,5 +1,7 @@
 export const home: Record<string, string> = {
   "Community association": "Association communautaire",
+  "Cameroonian Community in Greater Manchester and Surrounding area":
+    "Communauté camerounaise du Grand Manchester et ses environs",
   "Stronger together,": "Plus forts ensemble,",
   "generation after generation": "génération après génération",
   "CCGMs is built on family, culture and mutual support. Join us, give to a cause, and be part of everything we build together.":
