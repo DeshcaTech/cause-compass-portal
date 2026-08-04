@@ -10,7 +10,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { documentsQuery } from "@/lib/queries";
 import { useT } from "@/lib/i18n";
-import documentsBanner from "@/assets/community-together.jpg";
 
 export const Route = createFileRoute("/documents")({
   head: () => ({
@@ -50,11 +49,6 @@ function DocumentsPage() {
         description={t("Official documents, forms and reports, free to download for members and the public.")}
       />
       <SidebarPage
-        banner={{
-          image: documentsBanner,
-          title: active === "All" ? t("All documents") : active,
-          description: t("Official documents, forms and reports, free to download."),
-        }}
         sidebar={filters.map((category) => (
           <SidebarNavItem
             key={category}

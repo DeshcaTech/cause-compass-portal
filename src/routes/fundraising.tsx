@@ -103,11 +103,6 @@ function FundraisingPage() {
         description={t("Every campaign is proposed, voted on and reported back to the membership.")}
       />
       <SidebarPage
-        banner={{
-          image: list[0]?.image_url ?? campaignFallback,
-          title: view === "active" ? t("Active campaigns") : t("Past campaigns"),
-          description: t("Every campaign is proposed, voted on and reported back to the membership."),
-        }}
         sidebar={(
           <>
             <SidebarNavItem

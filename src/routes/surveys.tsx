@@ -167,11 +167,6 @@ function SurveysPage() {
         description={t("Your answers shape what we fund, where we meet and how we support each other.")}
       />
       <SidebarPage
-        banner={{
-          image: list[0]?.image_url ?? surveyFallback,
-          title: view === "active" ? t("Active surveys") : t("Closed surveys"),
-          description: t("Your answers shape what we fund, where we meet and how we support each other."),
-        }}
         sidebar={(
           <>
             <SidebarNavItem

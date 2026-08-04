@@ -202,11 +202,6 @@ function EventsPage() {
       />
 
       <SidebarPage
-        banner={{
-          image: listForTab[0]?.image_url ?? eventFallbackImage(tab),
-          title: tabLabel,
-          description: t("CCGMs events and other community events — browse the lists or use the monthly calendar."),
-        }}
         sidebar={(
           <>
             <SidebarSection label={t("Browse")}>

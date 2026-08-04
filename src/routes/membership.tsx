@@ -20,7 +20,6 @@ import {
 import { formatMoney } from "@/lib/queries";
 import { submitMembership } from "@/lib/signup.functions";
 import { useT } from "@/lib/i18n";
-import membershipBanner from "@/assets/community-together.jpg";
 
 export const Route = createFileRoute("/membership")({
   head: () => ({
@@ -185,11 +184,6 @@ function MembershipPage() {
       />
 
       <SidebarPage
-        banner={{
-          image: membershipBanner,
-          title: `${t(selectedTier.name)} — ${formatMoney(selectedTier.price)} ${t("/ year")}`,
-          description: t(selectedTier.blurb),
-        }}
         sidebar={TIERS.map((item) => (
           <SidebarNavItem
             key={item.key}
