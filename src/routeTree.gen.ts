@@ -22,6 +22,7 @@ import { Route as EventsRouteImport } from './routes/events'
 import { Route as FundraisingRouteImport } from './routes/fundraising'
 import { Route as GalleryRouteImport } from './routes/gallery'
 import { Route as MembershipRouteImport } from './routes/membership'
+import { Route as NewsRouteImport } from './routes/news'
 import { Route as PartnersRouteImport } from './routes/partners'
 import { Route as ReferRouteImport } from './routes/refer'
 import { Route as SurveysRouteImport } from './routes/surveys'
@@ -93,6 +94,11 @@ const MembershipRoute = MembershipRouteImport.update({
   path: '/membership',
   getParentRoute: () => rootRouteImport,
 } as any)
+const NewsRoute = NewsRouteImport.update({
+  id: '/news',
+  path: '/news',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PartnersRoute = PartnersRouteImport.update({
   id: '/partners',
   path: '/partners',
@@ -138,6 +144,7 @@ export interface FileRoutesByFullPath {
   '/fundraising': typeof FundraisingRoute
   '/gallery': typeof GalleryRoute
   '/membership': typeof MembershipRoute
+  '/news': typeof NewsRoute
   '/partners': typeof PartnersRoute
   '/refer': typeof ReferRoute
   '/surveys': typeof SurveysRoute
@@ -158,6 +165,7 @@ export interface FileRoutesByTo {
   '/fundraising': typeof FundraisingRoute
   '/gallery': typeof GalleryRoute
   '/membership': typeof MembershipRoute
+  '/news': typeof NewsRoute
   '/partners': typeof PartnersRoute
   '/refer': typeof ReferRoute
   '/surveys': typeof SurveysRoute
@@ -180,6 +188,7 @@ export interface FileRoutesById {
   '/fundraising': typeof FundraisingRoute
   '/gallery': typeof GalleryRoute
   '/membership': typeof MembershipRoute
+  '/news': typeof NewsRoute
   '/partners': typeof PartnersRoute
   '/refer': typeof ReferRoute
   '/surveys': typeof SurveysRoute
@@ -202,6 +211,7 @@ export interface FileRouteTypes {
     | '/fundraising'
     | '/gallery'
     | '/membership'
+    | '/news'
     | '/partners'
     | '/refer'
     | '/surveys'
@@ -222,6 +232,7 @@ export interface FileRouteTypes {
     | '/fundraising'
     | '/gallery'
     | '/membership'
+    | '/news'
     | '/partners'
     | '/refer'
     | '/surveys'
@@ -243,6 +254,7 @@ export interface FileRouteTypes {
     | '/fundraising'
     | '/gallery'
     | '/membership'
+    | '/news'
     | '/partners'
     | '/refer'
     | '/surveys'
@@ -265,6 +277,7 @@ export interface RootRouteChildren {
   FundraisingRoute: typeof FundraisingRoute
   GalleryRoute: typeof GalleryRoute
   MembershipRoute: typeof MembershipRoute
+  NewsRoute: typeof NewsRoute
   PartnersRoute: typeof PartnersRoute
   ReferRoute: typeof ReferRoute
   SurveysRoute: typeof SurveysRoute
@@ -365,6 +378,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MembershipRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/news': {
+      id: '/news'
+      path: '/news'
+      fullPath: '/news'
+      preLoaderRoute: typeof NewsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/partners': {
       id: '/partners'
       path: '/partners'
@@ -435,6 +455,7 @@ const rootRouteChildren: RootRouteChildren = {
   FundraisingRoute: FundraisingRoute,
   GalleryRoute: GalleryRoute,
   MembershipRoute: MembershipRoute,
+  NewsRoute: NewsRoute,
   PartnersRoute: PartnersRoute,
   ReferRoute: ReferRoute,
   SurveysRoute: SurveysRoute,
