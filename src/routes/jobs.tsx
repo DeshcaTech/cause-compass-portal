@@ -94,6 +94,11 @@ function JobsPage() {
 
   const hasFilters = category !== ALL || location !== ALL || jobType !== ALL;
 
+  const allCategories = useMemo(
+    () => Array.from(new Set(jobs.map((job) => job.category).filter(Boolean))).sort(),
+    [jobs],
+  );
+
   return (
     <>
       <PageHeader
