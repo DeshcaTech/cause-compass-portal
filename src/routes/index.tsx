@@ -14,17 +14,17 @@ import {
 } from "lucide-react";
 
 import logo from "@/assets/ccgms-logo.png?w=200&format=png";
-import logoAvif from "@/assets/ccgms-logo.png?w=200&format=avif&quality=70";
-import logoWebp from "@/assets/ccgms-logo.png?w=200&format=webp&quality=80";
-import hero from "@/assets/hero-community.jpg?w=1200&format=jpg&quality=72";
-import heroAvif from "@/assets/hero-community.jpg?w=1200&format=avif&quality=55";
-import heroWebp from "@/assets/hero-community.jpg?w=1200&format=webp&quality=70";
-import communityTogether from "@/assets/community-together.jpg?w=900&format=jpg&quality=72";
-import communityAvif from "@/assets/community-together.jpg?w=900&format=avif&quality=55";
-import communityWebp from "@/assets/community-together.jpg?w=900&format=webp&quality=70";
-import eventFallback from "@/assets/event-fallback.jpg?w=1000&format=jpg&quality=72";
-import eventFallbackAvif from "@/assets/event-fallback.jpg?w=1000&format=avif&quality=55";
-import eventFallbackWebp from "@/assets/event-fallback.jpg?w=1000&format=webp&quality=70";
+import logoAvif from "@/assets/ccgms-logo.png?w=200&quality=70&format=avif";
+import logoWebp from "@/assets/ccgms-logo.png?w=200&quality=80&format=webp";
+import hero from "@/assets/hero-community.jpg?w=1200&quality=72&format=jpg";
+import heroAvif from "@/assets/hero-community.jpg?w=1200&quality=55&format=avif";
+import heroWebp from "@/assets/hero-community.jpg?w=1200&quality=70&format=webp";
+import communityTogether from "@/assets/community-together.jpg?w=900&quality=72&format=jpg";
+import communityAvif from "@/assets/community-together.jpg?w=900&quality=55&format=avif";
+import communityWebp from "@/assets/community-together.jpg?w=900&quality=70&format=webp";
+import eventFallback from "@/assets/event-fallback.jpg?w=1000&quality=72&format=jpg";
+import eventFallbackAvif from "@/assets/event-fallback.jpg?w=1000&quality=55&format=avif";
+import eventFallbackWebp from "@/assets/event-fallback.jpg?w=1000&quality=70&format=webp";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Picture } from "@/components/site/Picture";
