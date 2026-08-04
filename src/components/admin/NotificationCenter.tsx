@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Bell, BellOff, CheckCheck, PartyPopper, TrendingDown, Trash2 } from "lucide-react";
+import { Bell, BellOff, CheckCheck, ExternalLink, PartyPopper, TrendingDown, Trash2 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -24,7 +24,12 @@ function formatWhen(iso: string) {
   });
 }
 
-export function NotificationCenter() {
+export function NotificationCenter({
+  onOpenCampaign,
+}: {
+  /** Called with the campaign id when an alert is opened as a deep link. */
+  onOpenCampaign?: (campaignId: string) => void;
+}) {
   const [items, setItems] = useState<StoredNotification[]>([]);
   const [filter, setFilter] = useState<"all" | "unread">("all");
 
@@ -83,22 +88,37 @@ export function NotificationCenter() {
               {visible.map((n) => (
                 <li
                   key={n.id}
-                  className={`flex items-start gap-3 rounded-lg border p-3 ${
+                  className={`flex items-start gap-2 rounded-lg border p-3 ${
                     n.read ? "border-border/60 bg-muted/30" : "border-primary/40 bg-primary/5"
                   }`}
                 >
-                  <span className="mt-0.5">
-                    {n.kind === "milestone" ? (
-                      <PartyPopper className="h-4 w-4 text-primary" />
-                    ) : (
-                      <TrendingDown className="h-4 w-4 text-destructive" />
-                    )}
-                  </span>
-                  <div className="min-w-0 flex-1">
-                    <p className="text-sm font-medium">{n.title}</p>
-                    <p className="text-sm text-muted-foreground">{n.body}</p>
-                    <p className="mt-1 text-xs text-muted-foreground">{formatWhen(n.firstSeen)}</p>
-                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      markRead(n.id);
+                      onOpenCampaign?.(n.campaignId);
+                    }}
+                    aria-label={`Open ${n.campaignName} drilldown`}
+                    className="flex min-w-0 flex-1 items-start gap-3 rounded-md p-1 text-left transition-colors hover:bg-muted/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  >
+                    <span className="mt-0.5">
+                      {n.kind === "milestone" ? (
+                        <PartyPopper className="h-4 w-4 text-primary" />
+                      ) : (
+                        <TrendingDown className="h-4 w-4 text-destructive" />
+                      )}
+                    </span>
+                    <span className="min-w-0 flex-1">
+                      <span className="flex items-center gap-1 text-sm font-medium">
+                        {n.title}
+                        <ExternalLink className="h-3.5 w-3.5 text-muted-foreground" />
+                      </span>
+                      <span className="block text-sm text-muted-foreground">{n.body}</span>
+                      <span className="mt-1 block text-xs text-muted-foreground">
+                        {formatWhen(n.firstSeen)}
+                      </span>
+                    </span>
+                  </button>
                   <Button
                     variant="ghost"
                     size="sm"
