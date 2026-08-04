@@ -5,7 +5,7 @@ import { PageHeader } from "@/components/site/PageHeader";
 import { Card, CardContent } from "@/components/ui/card";
 import { announcementsQuery } from "@/lib/queries";
 
-export const Route = createFileRoute("/news")({
+export const Route = createFileRoute("/news/")({
   head: () => ({
     meta: [
       { title: "News & Announcements — CCGMs" },
