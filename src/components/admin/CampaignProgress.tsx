@@ -215,7 +215,7 @@ export function CampaignProgress({
         </CardContent>
       </Card>
 
-      <Dialog open={openId !== null} onOpenChange={(open) => !open && setOpenId(null)}>
+      <Dialog open={active !== null} onOpenChange={(open) => !open && setOpenId(null)}>
         <DialogContent className="max-w-3xl">
           <DialogHeader>
             <DialogTitle>{active?.name ?? "Campaign"}</DialogTitle>
