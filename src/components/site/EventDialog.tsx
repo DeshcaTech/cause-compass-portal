@@ -6,7 +6,6 @@ import {
   Check,
   Clock,
   Download,
-  Link2,
   MapPin,
   Share2,
   Tag,
