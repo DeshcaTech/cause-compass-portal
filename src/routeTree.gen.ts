@@ -30,6 +30,7 @@ import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/
 import { Route as NewsIndexRouteImport } from './routes/news.index'
 import { Route as NewsIdRouteImport } from './routes/news.$id'
 import { Route as NewsUnsubscribeRouteImport } from './routes/news.unsubscribe'
+import { Route as RsvpTokenRouteImport } from './routes/rsvp.$token'
 import { Route as LovableEmailTransactionalPreviewRouteImport } from './routes/lovable/email/transactional/preview'
 
 const IndexRoute = IndexRouteImport.update({
@@ -136,6 +137,11 @@ const NewsUnsubscribeRoute = NewsUnsubscribeRouteImport.update({
   path: '/news/unsubscribe',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RsvpTokenRoute = RsvpTokenRouteImport.update({
+  id: '/rsvp/$token',
+  path: '/rsvp/$token',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LovableEmailTransactionalPreviewRoute =
   LovableEmailTransactionalPreviewRouteImport.update({
     id: '/lovable/email/transactional/preview',
@@ -163,6 +169,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AuthenticatedAdminRoute
   '/news/$id': typeof NewsIdRoute
   '/news/unsubscribe': typeof NewsUnsubscribeRoute
+  '/rsvp/$token': typeof RsvpTokenRoute
   '/news/': typeof NewsIndexRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
 }
@@ -186,6 +193,7 @@ export interface FileRoutesByTo {
   '/admin': typeof AuthenticatedAdminRoute
   '/news/$id': typeof NewsIdRoute
   '/news/unsubscribe': typeof NewsUnsubscribeRoute
+  '/rsvp/$token': typeof RsvpTokenRoute
   '/news': typeof NewsIndexRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
 }
@@ -211,6 +219,7 @@ export interface FileRoutesById {
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/news/$id': typeof NewsIdRoute
   '/news/unsubscribe': typeof NewsUnsubscribeRoute
+  '/rsvp/$token': typeof RsvpTokenRoute
   '/news/': typeof NewsIndexRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
 }
@@ -236,6 +245,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/news/$id'
     | '/news/unsubscribe'
+    | '/rsvp/$token'
     | '/news/'
     | '/lovable/email/transactional/preview'
   fileRoutesByTo: FileRoutesByTo
@@ -259,6 +269,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/news/$id'
     | '/news/unsubscribe'
+    | '/rsvp/$token'
     | '/news'
     | '/lovable/email/transactional/preview'
   id:
@@ -283,6 +294,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin'
     | '/news/$id'
     | '/news/unsubscribe'
+    | '/rsvp/$token'
     | '/news/'
     | '/lovable/email/transactional/preview'
   fileRoutesById: FileRoutesById
@@ -307,6 +319,7 @@ export interface RootRouteChildren {
   VolunteerRoute: typeof VolunteerRoute
   NewsIdRoute: typeof NewsIdRoute
   NewsUnsubscribeRoute: typeof NewsUnsubscribeRoute
+  RsvpTokenRoute: typeof RsvpTokenRoute
   NewsIndexRoute: typeof NewsIndexRoute
   LovableEmailTransactionalPreviewRoute: typeof LovableEmailTransactionalPreviewRoute
 }
@@ -460,6 +473,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof NewsUnsubscribeRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/rsvp/$token': {
+      id: '/rsvp/$token'
+      path: '/rsvp/$token'
+      fullPath: '/rsvp/$token'
+      preLoaderRoute: typeof RsvpTokenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/lovable/email/transactional/preview': {
       id: '/lovable/email/transactional/preview'
       path: '/lovable/email/transactional/preview'
@@ -501,6 +521,7 @@ const rootRouteChildren: RootRouteChildren = {
   VolunteerRoute: VolunteerRoute,
   NewsIdRoute: NewsIdRoute,
   NewsUnsubscribeRoute: NewsUnsubscribeRoute,
+  RsvpTokenRoute: RsvpTokenRoute,
   NewsIndexRoute: NewsIndexRoute,
   LovableEmailTransactionalPreviewRoute: LovableEmailTransactionalPreviewRoute,
 }

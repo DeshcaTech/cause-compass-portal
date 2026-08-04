@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { ChevronLeft, ChevronRight, MapPin } from "lucide-react";
@@ -14,6 +14,21 @@ import { SmartImage } from "@/components/site/SmartImage";
 import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/events")({
+  // Filters, the open tab and the open event live in the URL so links can be shared.
+  validateSearch: (search: Record<string, unknown>) => ({
+    event: typeof search['event'] === "string" ? search['event'] : undefined,
+    type:
+      search['type'] === "ccgms" || search['type'] === "other" || search['type'] === "all"
+        ? (search['type'] as "all" | "ccgms" | "other")
+        : undefined,
+    tab:
+      search['tab'] === "coming" ||
+      search['tab'] === "past" ||
+      search['tab'] === "all" ||
+      search['tab'] === "calendar"
+        ? (search['tab'] as "coming" | "past" | "all" | "calendar")
+        : undefined,
+  }),
   head: () => ({
     meta: [
       { title: "Events — CCGMs Community Calendar" },
@@ -83,14 +98,44 @@ function EventCard({ event, onOpen }: { event: EventRow; onOpen: () => void }) {
   );
 }
 
+type EventsSearch = {
+  event?: string;
+  type?: "all" | "ccgms" | "other";
+  tab?: "coming" | "past" | "all" | "calendar";
+};
+
 function EventsPage() {
   const t = useT();
+  const navigate = useNavigate({ from: "/events" });
+  const search = Route.useSearch();
   const { data: events = [] } = useQuery(eventsQuery);
-  const [selected, setSelected] = useState<EventRow | null>(null);
   const [monthOffset, setMonthOffset] = useState(0);
   const [selectedDay, setSelectedDay] = useState<string | null>(null);
+  const [calendarScope, setCalendarScope] = useState<"upcoming" | "past">("upcoming");
 
-  const [typeFilter, setTypeFilter] = useState<"all" | "ccgms" | "other">("all");
+  const typeFilter = search.type ?? "all";
+  const tab = search.tab ?? "coming";
+
+  const setTypeFilter = (value: "all" | "ccgms" | "other") =>
+    navigate({ search: (prev: EventsSearch) => ({ ...prev, type: value === "all" ? undefined : value }) });
+  const setTab = (value: string) =>
+    navigate({ search: (prev: EventsSearch) => ({ ...prev, tab: value === "coming" ? undefined : (value as never) }) });
+
+  const selected = useMemo(
+    () => events.find((e) => e.id === search.event) ?? null,
+    [events, search.event],
+  );
+  const openEvent = (event: EventRow | null) =>
+    navigate({ search: (prev: EventsSearch) => ({ ...prev, event: event?.id }) });
+
+  // Shared link keeps the open event plus the current type filter and tab.
+  const shareUrl = useMemo(() => {
+    if (typeof window === "undefined" || !selected) return undefined;
+    const params = new URLSearchParams({ event: selected.id });
+    if (typeFilter !== "all") params.set("type", typeFilter);
+    if (tab !== "coming") params.set("tab", tab);
+    return `${window.location.origin}/events?${params.toString()}`;
+  }, [selected, typeFilter, tab]);
 
   const now = new Date();
   const visible = useMemo(
@@ -115,8 +160,11 @@ function EventsPage() {
   }, [cursor.getFullYear(), cursor.getMonth()]);
 
   function eventsOn(date: Date) {
-    return events.filter((e) => {
+    return visible.filter((e) => {
       const start = new Date(e.start_at);
+      const isPast = start < now;
+      if (calendarScope === "upcoming" && isPast) return false;
+      if (calendarScope === "past" && !isPast) return false;
       return (
         start.getFullYear() === date.getFullYear() &&
         start.getMonth() === date.getMonth() &&
@@ -126,7 +174,11 @@ function EventsPage() {
   }
 
   const dayEvents = selectedDay
-    ? events.filter((e) => new Date(e.start_at).toDateString() === selectedDay)
+    ? visible.filter((e) => {
+        if (new Date(e.start_at).toDateString() !== selectedDay) return false;
+        const isPast = new Date(e.start_at) < now;
+        return calendarScope === "upcoming" ? !isPast : isPast;
+      })
     : [];
 
   return (
@@ -163,7 +215,7 @@ function EventsPage() {
           ))}
         </div>
 
-        <Tabs defaultValue="coming">
+        <Tabs value={tab} onValueChange={setTab}>
           <div className="-mx-4 overflow-x-auto px-4 sm:mx-0 sm:px-0">
             <TabsList className="w-max min-w-full justify-start">
               <TabsTrigger value="coming">{t("Coming events")}</TabsTrigger>
@@ -178,7 +230,7 @@ function EventsPage() {
               <p className="text-sm text-muted-foreground">{t("No events match these filters.")}</p>
             ) : null}
             {upcoming.map((event) => (
-              <EventCard key={event.id} event={event} onOpen={() => setSelected(event)} />
+              <EventCard key={event.id} event={event} onOpen={() => openEvent(event)} />
             ))}
           </TabsContent>
           <TabsContent value="past" className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -186,7 +238,7 @@ function EventsPage() {
               <p className="text-sm text-muted-foreground">{t("No events match these filters.")}</p>
             ) : null}
             {past.map((event) => (
-              <EventCard key={event.id} event={event} onOpen={() => setSelected(event)} />
+              <EventCard key={event.id} event={event} onOpen={() => openEvent(event)} />
             ))}
           </TabsContent>
           <TabsContent value="all" className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -194,7 +246,7 @@ function EventsPage() {
               <p className="text-sm text-muted-foreground">{t("No events match these filters.")}</p>
             ) : null}
             {visible.map((event) => (
-              <EventCard key={event.id} event={event} onOpen={() => setSelected(event)} />
+              <EventCard key={event.id} event={event} onOpen={() => openEvent(event)} />
             ))}
           </TabsContent>
 
@@ -223,7 +275,40 @@ function EventsPage() {
                   </div>
                 </div>
 
-                <div className="mt-6 grid grid-cols-7 gap-1 text-center text-xs text-muted-foreground">
+                <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
+                  <div className="flex gap-2" role="group" aria-label={t("Show events")}>
+                    {(["upcoming", "past"] as const).map((scope) => (
+                      <button
+                        key={scope}
+                        type="button"
+                        onClick={() => {
+                          setCalendarScope(scope);
+                          setSelectedDay(null);
+                        }}
+                        aria-pressed={calendarScope === scope}
+                        className={`min-h-9 rounded-full border px-4 text-sm transition-colors ${
+                          calendarScope === scope
+                            ? "border-transparent bg-primary text-primary-foreground"
+                            : "border-border hover:bg-secondary"
+                        }`}
+                      >
+                        {scope === "upcoming" ? t("Upcoming") : t("Past")}
+                      </button>
+                    ))}
+                  </div>
+                  <ul className="flex items-center gap-4 text-xs text-muted-foreground">
+                    <li className="flex items-center gap-2">
+                      <span className="size-3 rounded-full bg-primary" aria-hidden="true" />
+                      {t("CCGMs event")}
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="size-3 rounded-full bg-terracotta" aria-hidden="true" />
+                      {t("Other event")}
+                    </li>
+                  </ul>
+                </div>
+
+                <div className="mt-4 grid grid-cols-7 gap-1 text-center text-xs text-muted-foreground">
                   {WEEKDAYS.map((day) => (
                     <div key={day} className="py-2 font-medium">
                       {t(day)}
@@ -280,7 +365,7 @@ function EventsPage() {
                           <li key={event.id}>
                             <button
                               type="button"
-                              onClick={() => setSelected(event)}
+                              onClick={() => openEvent(event)}
                               className="w-full rounded-lg border border-border/70 px-4 py-3 text-left text-sm hover:bg-secondary"
                             >
                               <span className="font-medium">{event.title}</span>
@@ -300,7 +385,11 @@ function EventsPage() {
         </Tabs>
       </section>
 
-      <EventDialog event={selected} onOpenChange={(open) => !open && setSelected(null)} />
+      <EventDialog
+        event={selected}
+        onOpenChange={(open) => !open && openEvent(null)}
+        shareUrl={shareUrl}
+      />
     </>
   );
 }

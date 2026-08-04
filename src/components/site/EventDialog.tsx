@@ -1,7 +1,19 @@
 import { useEffect, useState } from "react";
-import { CalendarDays, CalendarPlus, Check, Clock, MapPin, Tag, UserRound } from "lucide-react";
+import {
+  Apple,
+  CalendarDays,
+  CalendarPlus,
+  Check,
+  Clock,
+  Download,
+  MapPin,
+  Share2,
+  Tag,
+  UserRound,
+} from "lucide-react";
 import { toast } from "sonner";
 import { z } from "zod";
+import { useServerFn } from "@tanstack/react-start";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -15,9 +27,17 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { SmartImage } from "@/components/site/SmartImage";
 import { supabase } from "@/integrations/supabase/client";
 import { downloadEventIcs } from "@/lib/ics";
+import { appleCalendarUrl, googleCalendarUrl, outlookCalendarUrl } from "@/lib/calendar-links";
+import { submitEventRsvp } from "@/lib/rsvp.functions";
 import { formatDate, type EventRow } from "@/lib/queries";
 import { useT } from "@/lib/i18n";
 import eventFallback from "@/assets/event-fallback.jpg";
@@ -67,10 +87,13 @@ function RsvpForm({ event }: { event: EventRow }) {
   const [status, setStatus] = useState<"going" | "interested">("going");
   const [saving, setSaving] = useState(false);
   const [done, setDone] = useState(false);
+  const [editUrl, setEditUrl] = useState<string | null>(null);
+  const sendRsvp = useServerFn(submitEventRsvp);
 
   useEffect(() => {
     setDone(false);
     setStatus("going");
+    setEditUrl(null);
   }, [event.id]);
 
   async function onSubmit(formEvent: React.FormEvent<HTMLFormElement>) {
@@ -84,35 +107,55 @@ function RsvpForm({ event }: { event: EventRow }) {
     }
     setSaving(true);
     const { data: session } = await supabase.auth.getSession();
-    const { error } = await supabase.from("event_rsvps").insert({
-      event_id: event.id,
-      user_id: session.session?.user.id ?? null,
-      full_name: parsed.data.full_name,
-      email: parsed.data.email,
-      phone: parsed.data.phone || null,
-      membership_number: parsed.data.membership_number || null,
-      guests: parsed.data.guests,
-      note: parsed.data.note || null,
-      status,
-    });
-    setSaving(false);
-    if (error) {
+    try {
+      const result = await sendRsvp({
+        data: {
+          event_id: event.id,
+          user_id: session.session?.user.id ?? null,
+          full_name: parsed.data.full_name,
+          email: parsed.data.email,
+          phone: parsed.data.phone ?? "",
+          membership_number: parsed.data.membership_number ?? "",
+          guests: parsed.data.guests,
+          note: parsed.data.note ?? "",
+          status,
+        },
+      });
+      setEditUrl(`${window.location.origin}/rsvp/${result.editToken}`);
+    } catch {
+      setSaving(false);
       toast.error(t("Your RSVP could not be sent. Please try again."));
       return;
     }
+    setSaving(false);
     setDone(true);
-    toast.success(t("Thanks — we've noted your RSVP."));
+    toast.success(t("Thanks — we've emailed you a confirmation."));
   }
 
   if (done) {
     return (
-      <div className="flex items-start gap-3 rounded-xl border border-primary/40 bg-accent px-4 py-3">
-        <Check className="mt-0.5 size-4 shrink-0 text-primary" aria-hidden="true" />
-        <p className="text-sm">
-          {status === "going"
-            ? t("You're on the list. See you there!")
-            : t("Thanks for registering your interest.")}
+      <div className="space-y-3 rounded-xl border border-primary/40 bg-accent px-4 py-3">
+        <div className="flex items-start gap-3">
+          <Check className="mt-0.5 size-4 shrink-0 text-primary" aria-hidden="true" />
+          <p className="text-sm">
+            {status === "going"
+              ? t("You're on the list. See you there!")
+              : t("Thanks for registering your interest.")}
+          </p>
+        </div>
+        <p className="text-xs text-muted-foreground">
+          {t("We've emailed a confirmation with the event details and a link to edit your response.")}
         </p>
+        {editUrl ? (
+          <Button
+            type="button"
+            variant="soft"
+            size="sm"
+            onClick={() => window.open(editUrl, "_self")}
+          >
+            {t("Edit my response")}
+          </Button>
+        ) : null}
       </div>
     );
   }
@@ -201,12 +244,34 @@ function RsvpForm({ event }: { event: EventRow }) {
 export function EventDialog({
   event,
   onOpenChange,
+  shareUrl,
 }: {
   event: EventRow | null;
   onOpenChange: (open: boolean) => void;
+  /** Link copied by the share button — usually the events page with current filters. */
+  shareUrl?: string | undefined;
 }) {
   const t = useT();
   const isCcgms = event?.event_type === "ccgms";
+
+  async function share() {
+    if (!event) return;
+    const url =
+      shareUrl ??
+      (typeof window !== "undefined"
+        ? `${window.location.origin}/events?event=${event.id}`
+        : "");
+    try {
+      if (navigator.share) {
+        await navigator.share({ title: event.title, url });
+        return;
+      }
+      await navigator.clipboard.writeText(url);
+      toast.success(t("Event link copied — paste it to invite others."));
+    } catch {
+      /* user dismissed the share sheet */
+    }
+  }
 
   return (
     <Dialog open={!!event} onOpenChange={onOpenChange}>
@@ -231,14 +296,52 @@ export function EventDialog({
               className="size-full object-cover"
             />
             <p className="text-sm text-foreground/85">{event.description}</p>
-            <Button
-              type="button"
-              variant="soft"
-              className="w-full"
-              onClick={() => downloadEventIcs(event)}
-            >
-              <CalendarPlus aria-hidden="true" /> {t("Add to calendar")}
-            </Button>
+            <div className="flex flex-wrap gap-2">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button type="button" variant="soft" className="flex-1">
+                    <CalendarPlus aria-hidden="true" /> {t("Add to calendar")}
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start" className="w-56">
+                  <DropdownMenuItem asChild>
+                    <a
+                      href={googleCalendarUrl(event)}
+                      target="_blank"
+                      rel="noreferrer noopener"
+                    >
+                      <CalendarDays aria-hidden="true" /> {t("Google Calendar")}
+                    </a>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <a href={appleCalendarUrl(event)} download={`${event.title}.ics`}>
+                      <Apple aria-hidden="true" /> {t("Apple Calendar")}
+                    </a>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <a
+                      href={outlookCalendarUrl(event)}
+                      target="_blank"
+                      rel="noreferrer noopener"
+                    >
+                      <CalendarDays aria-hidden="true" /> {t("Outlook")}
+                    </a>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => downloadEventIcs(event)}>
+                    <Download aria-hidden="true" /> {t("Download .ics file")}
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+              <Button
+                type="button"
+                variant="soft"
+                className="flex-1"
+                onClick={share}
+                aria-label={t("Share this event")}
+              >
+                <Share2 aria-hidden="true" /> {t("Share event")}
+              </Button>
+            </div>
             <ul className="grid gap-2 sm:grid-cols-2">
               <DetailRow
                 icon={CalendarDays}

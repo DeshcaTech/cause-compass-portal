@@ -333,6 +333,7 @@ export type Database = {
       event_rsvps: {
         Row: {
           created_at: string
+          edit_token: string
           email: string
           event_id: string
           full_name: string
@@ -342,10 +343,12 @@ export type Database = {
           note: string | null
           phone: string | null
           status: string
+          updated_at: string
           user_id: string | null
         }
         Insert: {
           created_at?: string
+          edit_token?: string
           email: string
           event_id: string
           full_name: string
@@ -355,10 +358,12 @@ export type Database = {
           note?: string | null
           phone?: string | null
           status?: string
+          updated_at?: string
           user_id?: string | null
         }
         Update: {
           created_at?: string
+          edit_token?: string
           email?: string
           event_id?: string
           full_name?: string
@@ -368,6 +373,7 @@ export type Database = {
           note?: string | null
           phone?: string | null
           status?: string
+          updated_at?: string
           user_id?: string | null
         }
         Relationships: [
@@ -940,6 +946,7 @@ export type Database = {
         | "board_manager"
         | "president_manager"
         | "fundraising_manager"
+        | "event_manager"
       campaign_status: "active" | "past"
       event_type: "ccgms" | "other"
       family_relation: "partner" | "dependent"
@@ -1077,6 +1084,7 @@ export const Constants = {
         "board_manager",
         "president_manager",
         "fundraising_manager",
+        "event_manager",
       ],
       campaign_status: ["active", "past"],
       event_type: ["ccgms", "other"],
