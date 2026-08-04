@@ -5,21 +5,18 @@ import logo from "@/assets/ccgms-logo.png";
 
 const columns = [
   {
-    title: "About CCGMs",
+    title: "Explore",
     links: [
+      { label: "Home", to: "/" },
       { label: "President's message", to: "/about" },
-      { label: "Board", to: "/board" },
-      { label: "Downloads", to: "/documents" },
-      { label: "Assets rent", to: "/assets" },
-    ],
-  },
-  {
-    title: "Community",
-    links: [
+      { label: "Board members", to: "/board" },
+      { label: "News", to: "/news" },
       { label: "Membership", to: "/membership" },
       { label: "Events", to: "/events" },
       { label: "Partners", to: "/partners" },
       { label: "Gallery", to: "/gallery" },
+      { label: "Downloads", to: "/documents" },
+      { label: "Assets rent", to: "/assets" },
     ],
   },
   {
@@ -30,6 +27,7 @@ const columns = [
       { label: "Surveys", to: "/surveys" },
       { label: "Volunteer", to: "/volunteer" },
       { label: "Refer someone", to: "/refer" },
+      { label: "Contact us", to: "/contact" },
     ],
   },
 ];
@@ -37,7 +35,7 @@ const columns = [
 export function Footer() {
   return (
     <footer className="mt-24 border-t border-border bg-primary text-primary-foreground">
-      <div className="container-page grid gap-10 py-14 md:grid-cols-2 lg:grid-cols-5">
+      <div className="container-page grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-4">
         <div className="lg:col-span-2">
           <div className="flex items-center gap-3">
             <img src={logo} alt="" width={44} height={44} className="h-11 w-11" loading="lazy" />
