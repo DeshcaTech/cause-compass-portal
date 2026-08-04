@@ -398,7 +398,6 @@ export type Database = {
           notify_email: string | null
           notify_whatsapp: string | null
           organiser: string | null
-          report_token: string
           start_at: string
           ticket_url: string | null
           title: string
@@ -414,7 +413,6 @@ export type Database = {
           notify_email?: string | null
           notify_whatsapp?: string | null
           organiser?: string | null
-          report_token?: string
           start_at: string
           ticket_url?: string | null
           title: string
@@ -430,7 +428,6 @@ export type Database = {
           notify_email?: string | null
           notify_whatsapp?: string | null
           organiser?: string | null
-          report_token?: string
           start_at?: string
           ticket_url?: string | null
           title?: string
