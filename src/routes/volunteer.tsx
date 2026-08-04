@@ -13,6 +13,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { submitVolunteerApplication } from "@/lib/signup.functions";
 import volunteerHero from "@/assets/volunteer-hero.jpg";
+import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/volunteer")({
   head: () => ({
@@ -51,6 +52,7 @@ const schema = z.object({
 });
 
 function VolunteerPage() {
+  const t = useT();
   const [areas, setAreas] = useState<string[]>([]);
   const [saving, setSaving] = useState(false);
   const [done, setDone] = useState(false);
@@ -59,11 +61,11 @@ function VolunteerPage() {
     event.preventDefault();
     const parsed = schema.safeParse(Object.fromEntries(new FormData(event.currentTarget)));
     if (!parsed.success) {
-      toast.error(parsed.error.issues[0]?.message ?? "Please check the form");
+      toast.error(t(parsed.error.issues[0]?.message ?? "Please check the form"));
       return;
     }
     if (areas.length === 0) {
-      toast.error("Choose at least one area you'd like to help with");
+      toast.error(t("Choose at least one area you'd like to help with"));
       return;
     }
     setSaving(true);
@@ -81,7 +83,7 @@ function VolunteerPage() {
       });
       setDone(true);
     } catch {
-      toast.error("Your application could not be sent. Please try again.");
+      toast.error(t("Your application could not be sent. Please try again."));
     } finally {
       setSaving(false);
     }
@@ -90,16 +92,16 @@ function VolunteerPage() {
   if (done) {
     return (
       <>
-        <PageHeader eyebrow="Get involved" title="Application received" />
+        <PageHeader eyebrow={t("Get involved")} title={t("Application received")} />
         <section className="container-page py-16">
           <Card className="mx-auto max-w-xl border-border/70 text-center">
             <CardContent className="p-10">
               <span className="mx-auto flex size-14 items-center justify-center rounded-full bg-[image:var(--gradient-gold)] text-gold-foreground">
                 <HandHeart className="size-7" />
               </span>
-              <h2 className="mt-6 text-2xl">Thank you for stepping forward</h2>
+              <h2 className="mt-6 text-2xl">{t("Thank you for stepping forward")}</h2>
               <p className="mt-3 text-sm text-muted-foreground">
-                The volunteer coordinator will be in touch to match you with a team.
+                {t("The volunteer coordinator will be in touch to match you with a team.")}
               </p>
             </CardContent>
           </Card>
@@ -111,9 +113,9 @@ function VolunteerPage() {
   return (
     <>
       <PageHeader
-        eyebrow="Get involved"
-        title="Become a volunteer"
-        description="A few hours from many hands is what keeps this community moving."
+        eyebrow={t("Get involved")}
+        title={t("Become a volunteer")}
+        description={t("A few hours from many hands is what keeps this community moving.")}
       />
       <section className="container-page py-14">
         <Card className="mx-auto max-w-2xl overflow-hidden border-border/70">
@@ -127,25 +129,25 @@ function VolunteerPage() {
             <form onSubmit={onSubmit} className="space-y-5">
               <div className="space-y-2">
                 <Label htmlFor="membership_number">
-                  Membership number (optional, but recommended)
+                  {t("Membership number (optional, but recommended)")}
                 </Label>
                 <Input id="membership_number" name="membership_number" placeholder="CCGM-1000" />
               </div>
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="space-y-2">
-                  <Label htmlFor="full_name">Full name</Label>
+                  <Label htmlFor="full_name">{t("Full name")}</Label>
                   <Input id="full_name" name="full_name" required maxLength={120} />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
+                  <Label htmlFor="email">{t("Email")}</Label>
                   <Input id="email" name="email" type="email" required maxLength={255} />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="phone">Phone</Label>
+                  <Label htmlFor="phone">{t("Phone")}</Label>
                   <Input id="phone" name="phone" maxLength={30} />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="availability">Availability</Label>
+                  <Label htmlFor="availability">{t("Availability")}</Label>
                   <Input
                     id="availability"
                     name="availability"
@@ -156,7 +158,7 @@ function VolunteerPage() {
               </div>
 
               <div className="space-y-3">
-                <Label>Where would you like to help?</Label>
+                <Label>{t("Where would you like to help?")}</Label>
                 <div className="grid gap-2 sm:grid-cols-2">
                   {AREAS.map((area) => (
                     <label
@@ -171,19 +173,19 @@ function VolunteerPage() {
                           )
                         }
                       />
-                      {area}
+                      {t(area)}
                     </label>
                   ))}
                 </div>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="message">Anything else we should know?</Label>
+                <Label htmlFor="message">{t("Anything else we should know?")}</Label>
                 <Textarea id="message" name="message" rows={4} maxLength={1000} />
               </div>
 
               <Button type="submit" variant="hero" size="lg" className="w-full" disabled={saving}>
-                {saving ? "Sending…" : "Submit application"}
+                {saving ? t("Sending…") : t("Submit application")}
               </Button>
             </form>
           </CardContent>
