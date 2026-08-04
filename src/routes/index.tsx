@@ -14,6 +14,10 @@ import {
 
 import logo from "@/assets/ccgms-logo.png";
 import hero from "@/assets/hero-community.jpg";
+import communityTogether from "@/assets/community-together.jpg";
+import newsFallback from "@/assets/news-fallback.jpg";
+import campaignFallback from "@/assets/campaign-fallback.jpg";
+import eventFallback from "@/assets/event-fallback.jpg";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -114,8 +118,8 @@ function Index() {
             </p>
             <div className="mt-9 flex flex-col gap-3 sm:flex-row">
               <Button asChild variant="gold" size="xl">
-                <Link to="/donate">
-                  Donate <ArrowRight />
+                <Link to="/membership">
+                  Join the Community <ArrowRight />
                 </Link>
               </Button>
               <Button asChild variant="onHero" size="xl">
@@ -179,6 +183,14 @@ function Index() {
           <div>
             <p className="eyebrow text-terracotta">Who we are</p>
             <h2 className="mt-2 text-3xl md:text-4xl">A family of families</h2>
+            <img
+              src={communityTogether}
+              alt="CCGMs members of all ages gathered together"
+              loading="lazy"
+              width={1280}
+              height={960}
+              className="mt-6 aspect-[4/3] w-full rounded-3xl object-cover shadow-[var(--shadow-lift)]"
+            />
           </div>
           <div className="space-y-5">
             <p className="text-base text-muted-foreground md:text-lg">
@@ -253,14 +265,12 @@ function Index() {
             {latestNews.map((item) => (
               <Link key={item.id} to="/news/$id" params={{ id: item.id }} className="block">
               <Card className="h-full overflow-hidden border-border/70 transition-shadow hover:shadow-lg">
-                {item.image_url && (
-                  <img
-                    src={item.image_url}
-                    alt={item.title}
-                    loading="lazy"
-                    className="aspect-[16/9] w-full object-cover"
-                  />
-                )}
+                <img
+                  src={item.image_url ?? newsFallback}
+                  alt={item.title}
+                  loading="lazy"
+                  className="aspect-[16/9] w-full object-cover"
+                />
                 <CardContent className="p-6">
                   <p className="eyebrow text-terracotta">{formatDate(item.published_at)}</p>
                   <h3 className="mt-2 text-lg">{item.title}</h3>
