@@ -131,6 +131,7 @@ function AdminPage() {
             {can("event") && <TabsTrigger value="rsvps">RSVPs</TabsTrigger>}
             {isAdmin && <TabsTrigger value="gallery">Gallery</TabsTrigger>}
             {isAdmin && <TabsTrigger value="partners">Partners</TabsTrigger>}
+            {isAdmin && <TabsTrigger value="jobs">Jobs</TabsTrigger>}
             {can("fundraising") && <TabsTrigger value="campaigns">Campaigns</TabsTrigger>}
             {can("fundraising") && <TabsTrigger value="reports">Reports</TabsTrigger>}
             {can("board") && <TabsTrigger value="board">Board</TabsTrigger>}
