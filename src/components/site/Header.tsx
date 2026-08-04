@@ -161,7 +161,7 @@ export function Header() {
                     onClick={() =>
                       setOpenGroup((g) => (g === group.label ? null : group.label))
                     }
-                    className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm font-medium"
+                    className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm font-bold"
                     aria-expanded={openGroup === group.label}
                   >
                     {t(group.label)}
