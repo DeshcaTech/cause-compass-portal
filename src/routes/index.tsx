@@ -15,8 +15,6 @@ import {
 import logo from "@/assets/ccgms-logo.png";
 import hero from "@/assets/hero-community.jpg";
 import communityTogether from "@/assets/community-together.jpg";
-import newsFallback from "@/assets/news-fallback.jpg";
-import campaignFallback from "@/assets/campaign-fallback.jpg";
 import eventFallback from "@/assets/event-fallback.jpg";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -264,13 +262,7 @@ function Index() {
           <div className="mt-8 grid gap-5 md:grid-cols-3">
             {latestNews.map((item) => (
               <Link key={item.id} to="/news/$id" params={{ id: item.id }} className="block">
-              <Card className="h-full overflow-hidden border-border/70 transition-shadow hover:shadow-lg">
-                <img
-                  src={item.image_url ?? newsFallback}
-                  alt={item.title}
-                  loading="lazy"
-                  className="aspect-[16/9] w-full object-cover"
-                />
+              <Card className="h-full border-border/70 transition-shadow hover:shadow-lg">
                 <CardContent className="p-6">
                   <p className="eyebrow text-terracotta">{formatDate(item.published_at)}</p>
                   <h3 className="mt-2 text-lg">{item.title}</h3>
@@ -354,13 +346,7 @@ function Index() {
               Math.round((campaign.raised_amount / Math.max(campaign.goal_amount, 1)) * 100),
             );
             return (
-              <Card key={campaign.id} className="overflow-hidden border-border/70">
-                <img
-                  src={campaign.image_url ?? campaignFallback}
-                  alt={campaign.title}
-                  loading="lazy"
-                  className="aspect-[16/9] w-full object-cover"
-                />
+              <Card key={campaign.id} className="border-border/70">
                 <CardContent className="p-6">
                   <h3 className="text-lg">{campaign.title}</h3>
                   <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">
