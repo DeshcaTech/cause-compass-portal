@@ -7,6 +7,7 @@ import { PageHeader } from "@/components/site/PageHeader";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { galleriesQuery, galleryPhotosQuery } from "@/lib/queries";
+import galleryFallback from "@/assets/gallery-fallback.jpg";
 
 export const Route = createFileRoute("/gallery")({
   head: () => ({
@@ -81,8 +82,14 @@ function GalleryPage() {
           <p className="mt-2 text-sm text-muted-foreground">{active?.description}</p>
 
           {activePhotos.length === 0 ? (
-            <Card className="mt-6 border-dashed border-border">
-              <CardContent className="flex flex-col items-center gap-3 py-16 text-center">
+            <Card className="mt-6 overflow-hidden border-dashed border-border">
+              <img
+                src={galleryFallback}
+                alt="Community members celebrating together"
+                loading="lazy"
+                className="aspect-[16/9] w-full object-cover"
+              />
+              <CardContent className="flex flex-col items-center gap-3 py-10 text-center">
                 <ImageIcon className="size-8 text-muted-foreground" />
                 <p className="text-sm text-muted-foreground">
                   No photos uploaded to this gallery yet. Photos added by the admin appear here.
