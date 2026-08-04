@@ -76,7 +76,7 @@ export const Route = createFileRoute('/api/public/hooks/daily-rsvp-digest')({
   server: {
     handlers: {
       POST: async ({ request }) => {
-        const secret = process.env['RSVP_DIGEST_SECRET']
+        const secret = process.env['RSVP_DIGEST_CRON_KEY'] || process.env['RSVP_DIGEST_SECRET']
         const token = request.headers.get('authorization')?.replace('Bearer ', '') ?? ''
         if (!secret || token !== secret) {
           return new Response(JSON.stringify({ error: 'Unauthorized' }), {
