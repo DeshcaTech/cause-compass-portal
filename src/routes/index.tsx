@@ -250,11 +250,13 @@ function Index() {
       </section>
 
       {/* Latest news & announcements */}
-      <section className="container-page pb-16 md:pb-20">
-          <div className="flex flex-wrap items-end justify-between gap-4">
+      <section className="container-page pb-14 sm:pb-16 md:pb-20">
+          <div className="flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-end sm:justify-between">
             <div>
               <p className="eyebrow text-terracotta">Noticeboard</p>
-              <h2 className="mt-2 text-3xl md:text-4xl">Latest news &amp; announcements</h2>
+              <h2 className="mt-2 text-2xl sm:text-3xl md:text-4xl">
+                Latest news &amp; announcements
+              </h2>
             </div>
           </div>
           {latestNews.length === 0 ? (
@@ -262,13 +264,13 @@ function Index() {
               No announcements yet — check back soon for community news and updates.
             </p>
           ) : (
-          <div className="mt-8 grid gap-5 md:grid-cols-3">
+          <div className="mt-6 grid gap-4 sm:mt-8 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3">
             {latestNews.map((item) => (
               <Link key={item.id} to="/news/$id" params={{ id: item.id }} className="block">
               <Card className="h-full border-border/70 transition-shadow hover:shadow-lg">
-                <CardContent className="p-6">
+                <CardContent className="p-5 sm:p-6">
                   <p className="eyebrow text-terracotta">{formatDate(item.published_at)}</p>
-                  <h3 className="mt-2 text-lg">{item.title}</h3>
+                  <h3 className="mt-2 text-base leading-snug sm:text-lg">{item.title}</h3>
                   <p className="mt-2 line-clamp-3 text-sm text-muted-foreground">
                     {item.summary ?? item.body}
                   </p>
@@ -280,21 +282,21 @@ function Index() {
           )}
       </section>
 
-      <section className="surface-panel border-y border-border py-16 md:py-20">
+      <section className="surface-panel border-y border-border py-14 sm:py-16 md:py-20">
         <div className="container-page">
-          <div className="flex flex-wrap items-end justify-between gap-4">
+          <div className="flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-end sm:justify-between">
             <div>
               <p className="eyebrow text-terracotta">What&apos;s on</p>
-              <h2 className="mt-2 text-3xl md:text-4xl">Coming events</h2>
+              <h2 className="mt-2 text-2xl sm:text-3xl md:text-4xl">Coming events</h2>
             </div>
-            <Button asChild variant="soft">
+            <Button asChild variant="soft" className="w-full sm:w-auto">
               <Link to="/events">All events</Link>
             </Button>
           </div>
           {upcoming.length === 0 ? (
             <p className="mt-8 text-sm text-muted-foreground">New events are being planned.</p>
           ) : (
-            <div className="mt-8 grid gap-6 lg:grid-cols-[1.4fr_1fr]">
+            <div className="mt-6 grid gap-5 sm:mt-8 sm:gap-6 lg:grid-cols-[1.4fr_1fr]">
               {/* Lead story */}
               <Card className="overflow-hidden border-border/70 bg-primary text-primary-foreground">
                 <img
@@ -303,13 +305,15 @@ function Index() {
                   loading="lazy"
                   className="aspect-[16/9] w-full object-cover"
                 />
-                <CardContent className="flex h-full flex-col p-8 md:p-10">
+                <CardContent className="flex h-full flex-col p-6 sm:p-8 md:p-10">
                   <p className="eyebrow text-gold">{formatDate(upcoming[0]!.start_at)}</p>
-                  <h3 className="mt-3 text-3xl leading-tight md:text-4xl">{upcoming[0]!.title}</h3>
+                  <h3 className="mt-3 text-2xl leading-tight sm:text-3xl md:text-4xl">
+                    {upcoming[0]!.title}
+                  </h3>
                   <p className="mt-4 line-clamp-4 text-sm text-primary-foreground/80 md:text-base">
                     {upcoming[0]!.description}
                   </p>
-                  <p className="mt-auto pt-6 text-xs uppercase tracking-widest text-primary-foreground/60">
+                  <p className="mt-auto break-words pt-6 text-[11px] uppercase tracking-wider text-primary-foreground/60 sm:text-xs sm:tracking-widest">
                     {upcoming[0]!.location}
                   </p>
                 </CardContent>
@@ -317,9 +321,9 @@ function Index() {
               {/* Supporting column */}
               <div className="divide-y divide-border rounded-xl border border-border/70 bg-card">
                 {upcoming.slice(1).map((event) => (
-                  <div key={event.id} className="p-6">
+                  <div key={event.id} className="p-5 sm:p-6">
                     <p className="eyebrow text-terracotta">{formatDate(event.start_at)}</p>
-                    <h3 className="mt-2 text-lg">{event.title}</h3>
+                    <h3 className="mt-2 text-base leading-snug sm:text-lg">{event.title}</h3>
                     <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">
                       {event.description}
                     </p>
