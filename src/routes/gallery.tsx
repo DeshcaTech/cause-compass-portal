@@ -80,11 +80,16 @@ function GalleryPage() {
       src: photo.photo_url,
       caption: photo.caption ?? null,
     }));
+    // The album's main photo leads the viewer when it isn't already a photo.
+    const cover = active?.cover_url;
+    if (cover && !real.some((tile) => tile.src === cover)) {
+      real.unshift({ key: `cover-${active!.id}`, src: cover, caption: active!.title });
+    }
     const fillers = placeholdersFor(activeId ?? "gallery")
       .slice(0, Math.max(0, 6 - real.length))
       .map((src, index) => ({ key: `placeholder-${index}`, src, caption: null }));
     return [...real, ...fillers];
-  }, [activePhotos, activeId]);
+  }, [activePhotos, activeId, active?.cover_url, active?.id, active?.title]);
 
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const triggerRef = useRef<HTMLButtonElement | null>(null);

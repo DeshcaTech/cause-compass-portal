@@ -25,4 +25,11 @@ export const gallery: Record<string, string> = {
   "Play slideshow": "Lancer le diaporama",
   "Pause slideshow": "Mettre le diaporama en pause",
   "Slideshow interval": "Intervalle du diaporama",
+  "Download image": "Télécharger l'image",
+  "Copy link": "Copier le lien",
+  "Preparing…": "Préparation…",
+  "Photo downloaded.": "Photo téléchargée.",
+  "Photo link copied to your clipboard.": "Lien de la photo copié dans le presse-papiers.",
+  "Copy this photo link": "Copiez ce lien de photo",
+  "main photo": "photo principale",
 };
