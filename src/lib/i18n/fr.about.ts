@@ -42,6 +42,9 @@ export const about: Record<string, string> = {
   "Community groups within CCGMs.":
     "Groupes communautaires au sein des CCGMs.",
   "All groups": "Tous les groupes",
+  "Village-based Groups": "Groupes de village",
+  "Other Groups": "Autres groupes",
+  "Categories": "Catégories",
   "groups": "groupes",
   "No groups listed yet.": "Aucun groupe listé pour le moment.",
 };

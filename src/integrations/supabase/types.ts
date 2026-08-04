@@ -1036,6 +1036,7 @@ export type Database = {
           contact_phone: string | null
           created_at: string
           description: string | null
+          group_category: string
           id: string
           image_url: string | null
           is_published: boolean
@@ -1051,6 +1052,7 @@ export type Database = {
           contact_phone?: string | null
           created_at?: string
           description?: string | null
+          group_category?: string
           id?: string
           image_url?: string | null
           is_published?: boolean
@@ -1066,6 +1068,7 @@ export type Database = {
           contact_phone?: string | null
           created_at?: string
           description?: string | null
+          group_category?: string
           id?: string
           image_url?: string | null
           is_published?: boolean

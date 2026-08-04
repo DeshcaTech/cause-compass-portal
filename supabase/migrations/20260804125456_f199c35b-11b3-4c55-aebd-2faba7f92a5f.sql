@@ -1,0 +1,1 @@
+ALTER TABLE public.village_groups ADD COLUMN IF NOT EXISTS group_category text NOT NULL DEFAULT 'village';

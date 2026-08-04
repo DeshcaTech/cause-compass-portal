@@ -497,10 +497,19 @@ function AdminPage() {
               secondaryLabel={(row) =>
                 `${row['region']}${row['is_published'] ? "" : " · hidden"}`
               }
-              defaults={{ is_published: true, region: "General", sort_order: 0 }}
+              defaults={{ is_published: true, region: "General", sort_order: 0, group_category: "village" }}
               fields={[
                 { name: "name", label: "Group name", required: true },
                 { name: "region", label: "Region / division", required: true },
+                {
+                  name: "group_category",
+                  label: "Group category",
+                  type: "select",
+                  options: [
+                    { value: "village", label: "Village-based Group" },
+                    { value: "other", label: "Other Group" },
+                  ],
+                },
                 { name: "short_description", label: "Short description" },
                 { name: "description", label: "Full description", type: "textarea" },
                 { name: "image_url", label: "Group picture", type: "image", crop: { aspect: 16 / 9, outputWidth: 1400 } },

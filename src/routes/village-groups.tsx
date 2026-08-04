@@ -4,7 +4,7 @@ import { useState } from "react";
 import { CalendarDays, Mail, Phone, Users } from "lucide-react";
 
 import { PageHeader } from "@/components/site/PageHeader";
-import { SidebarNavItem, SidebarPage } from "@/components/site/SidebarPage";
+import { SidebarNavItem, SidebarPage, SidebarSection } from "@/components/site/SidebarPage";
 import { SmartImage } from "@/components/site/SmartImage";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
@@ -50,12 +50,21 @@ function VillageGroupsPage() {
   const t = useT();
   const { data: groups = [] } = useQuery(villageGroupsQuery);
   const [selected, setSelected] = useState<VillageGroup | null>(null);
-  const [region, setRegion] = useState("All");
+  const [category, setCategory] = useState<"all" | "village" | "other">("all");
 
-  const regions = ["All", ...Array.from(new Set(groups.map((g) => g.region)))];
-  const visible = region === "All" ? groups : groups.filter((g) => g.region === region);
-  const thumbFor = (item: string) =>
-    (item === "All" ? groups[0] : groups.find((g) => g.region === item))?.image_url ?? groupsBanner;
+  const categories = [
+    { key: "all" as const, label: t("All groups") },
+    { key: "village" as const, label: t("Village-based Groups") },
+    { key: "other" as const, label: t("Other Groups") },
+  ];
+  const inCategory = (key: "all" | "village" | "other") =>
+    key === "all"
+      ? groups
+      : groups.filter((g) => (g.group_category === "other" ? "other" : "village") === key);
+  const visible = inCategory(category);
+  const activeLabel = categories.find((c) => c.key === category)?.label ?? t("All groups");
+  const thumbFor = (key: "all" | "village" | "other") =>
+    inCategory(key).find((g) => g.image_url)?.image_url ?? groupsBanner;
 
   return (
     <>
@@ -66,48 +75,62 @@ function VillageGroupsPage() {
       />
       <SidebarPage
         banner={{
-          image: thumbFor(region),
-          title: region === "All" ? t("All groups") : region,
+          image: thumbFor(category),
+          title: activeLabel,
           description: t("Community groups within CCGMs."),
         }}
-        sidebar={regions.map((item) => (
-          <SidebarNavItem
-            key={item}
-            image={item === "All" ? null : thumbFor(item)}
-            icon={<Users className="size-5" />}
-            title={item === "All" ? t("All") : item}
-            meta={`${
-              item === "All" ? groups.length : groups.filter((g) => g.region === item).length
-            } ${t("groups")}`}
-            active={region === item}
-            onClick={() => setRegion(item)}
-          />
-        ))}
+        sidebar={
+          <SidebarSection label={t("Categories")}>
+            {categories.map((item) => (
+              <SidebarNavItem
+                key={item.key}
+                icon={<Users className="size-5" />}
+                title={item.label}
+                meta={`${inCategory(item.key).length} ${t("groups")}`}
+                active={category === item.key}
+                onClick={() => setCategory(item.key)}
+              />
+            ))}
+          </SidebarSection>
+        }
       >
-        <div className="grid gap-5 sm:grid-cols-2">
-          {visible.map((group) => (
-            <Card
-              key={group.id}
-              onClick={() => setSelected(group)}
-              className="cursor-pointer border-border/70 transition-shadow hover:shadow-[var(--shadow-lift)]"
-            >
-              <CardContent className="p-6">
-                <div className="flex items-start justify-between gap-3">
-                  <h2 className="text-lg font-medium leading-snug">{group.name}</h2>
-                  <Badge variant="secondary">{group.region}</Badge>
-                </div>
-                {group.short_description ? (
-                  <p className="mt-2 text-sm text-muted-foreground">{group.short_description}</p>
-                ) : null}
-                {group.meeting_info ? (
-                  <p className="mt-4 flex items-center gap-2 border-t border-border/60 pt-4 text-xs text-muted-foreground">
-                    <CalendarDays className="size-4 shrink-0" /> {group.meeting_info}
-                  </p>
-                ) : null}
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+        {(category === "all" ? (["village", "other"] as const) : [category]).map((key) => {
+          const rows = inCategory(key);
+          if (rows.length === 0) return null;
+          return (
+            <div key={key} className="mb-10 last:mb-0">
+              {category === "all" ? (
+                <h2 className="mb-4 text-xl font-medium">
+                  {key === "village" ? t("Village-based Groups") : t("Other Groups")}
+                </h2>
+              ) : null}
+              <div className="grid gap-5 sm:grid-cols-2">
+                {rows.map((group) => (
+                  <Card
+                    key={group.id}
+                    onClick={() => setSelected(group)}
+                    className="cursor-pointer border-border/70 transition-shadow hover:shadow-[var(--shadow-lift)]"
+                  >
+                    <CardContent className="p-6">
+                      <div className="flex items-start justify-between gap-3">
+                        <h3 className="text-lg font-medium leading-snug">{group.name}</h3>
+                        <Badge variant="secondary">{group.region}</Badge>
+                      </div>
+                      {group.short_description ? (
+                        <p className="mt-2 text-sm text-muted-foreground">{group.short_description}</p>
+                      ) : null}
+                      {group.meeting_info ? (
+                        <p className="mt-4 flex items-center gap-2 border-t border-border/60 pt-4 text-xs text-muted-foreground">
+                          <CalendarDays className="size-4 shrink-0" /> {group.meeting_info}
+                        </p>
+                      ) : null}
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </div>
+          );
+        })}
 
         {visible.length === 0 ? (
           <p className="mt-10 text-sm text-muted-foreground">{t("No groups listed yet.")}</p>
