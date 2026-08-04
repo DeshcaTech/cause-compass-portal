@@ -21,7 +21,6 @@ import {
 } from "@/components/ui/select";
 import { jobsQuery, type Job } from "@/lib/queries";
 import { submitJobApplication } from "@/lib/jobs.functions";
-import businessFallback from "@/assets/business-fallback.jpg";
 import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/jobs")({
@@ -47,9 +46,17 @@ export const Route = createFileRoute("/jobs")({
 
 const ALL = "all";
 
+const isExpired = (job: Job) => {
+  if (!job.closes_at) return false;
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  return new Date(`${job.closes_at}T00:00:00`) < today;
+};
+
 function JobsPage() {
   const t = useT();
-  const { data: jobs = [] } = useQuery(jobsQuery);
+  const { data: allJobs = [] } = useQuery(jobsQuery);
+  const jobs = useMemo(() => allJobs.filter((job) => !isExpired(job)), [allJobs]);
   const [selected, setSelected] = useState<Job | null>(null);
   const [applyFor, setApplyFor] = useState<Job | null>(null);
   const [category, setCategory] = useState(ALL);
@@ -160,19 +167,19 @@ function JobsPage() {
                       className="cursor-pointer border-border/70 transition-all hover:-translate-y-1 hover:shadow-[var(--shadow-lift)]"
                     >
                       <CardContent className="p-6">
-                        <img
-                          src={job.image_url ?? businessFallback}
-                          alt={job.title}
-                          loading="lazy"
-                          className="mb-4 aspect-[16/9] w-full rounded-xl object-cover"
-                        />
-                        <h3 className="mt-4 text-lg">{job.title}</h3>
+                        <h3 className="text-lg">{job.title}</h3>
                         <p className="text-sm text-muted-foreground">{job.company}</p>
                         <div className="mt-2 flex flex-wrap gap-2">
                           <Badge variant="outline">{job.job_type}</Badge>
                           {job.location ? <Badge variant="secondary">{job.location}</Badge> : null}
                         </div>
                         <p className="mt-3 text-sm text-muted-foreground">{job.short_description}</p>
+                        {job.closes_at ? (
+                          <p className="mt-3 flex items-center gap-2 text-xs text-muted-foreground">
+                            <CalendarClock className="size-3.5" /> {t("Closing date")}:{" "}
+                            {new Date(job.closes_at).toLocaleDateString()}
+                          </p>
+                        ) : null}
                       </CardContent>
                     </Card>
                   ))}
@@ -190,11 +197,6 @@ function JobsPage() {
           </DialogHeader>
           {selected ? (
             <div className="space-y-4">
-              <img
-                src={selected.image_url ?? businessFallback}
-                alt={selected.title}
-                className="aspect-[16/9] w-full rounded-xl object-cover"
-              />
               <div className="flex flex-wrap gap-2">
                 <Badge variant="secondary">{selected.category}</Badge>
                 <Badge variant="outline">{selected.job_type}</Badge>
