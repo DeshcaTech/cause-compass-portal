@@ -11,9 +11,8 @@ async function runDigest() {
 
   const { data: events, error } = await supabaseAdmin
     .from('events')
-    .select('id, title, start_at, location, notify_email')
+    .select('id, title, start_at, location, notify_email, notify_whatsapp')
     .gte('start_at', new Date().toISOString())
-    .not('notify_email', 'is', null)
     .order('start_at')
   if (error) throw new Error(error.message)
 
@@ -23,6 +22,7 @@ async function runDigest() {
 
   for (const event of events ?? []) {
     const recipient = (event.notify_email ?? '').trim()
+    const whatsapp = (event.notify_whatsapp ?? '').replace(/[^0-9]/g, '')
     if (!recipient) continue
 
     const { data: rsvps } = await supabaseAdmin
@@ -37,6 +37,7 @@ async function runDigest() {
     const newToday = rows.filter((r) => r.created_at >= since).length
 
     const signature = await signEventReport(event.id)
+    const reportUrl = `${siteUrl()}/rsvp-report/${event.id}?k=${signature}`
     try {
       await sendTemplateEmail('rsvp-digest', recipient, {
         templateData: {
@@ -50,11 +51,16 @@ async function runDigest() {
             minute: '2-digit',
           }),
           eventLocation: event.location ?? '',
-          reportUrl: `${siteUrl()}/rsvp-report/${event.id}?k=${signature}`,
+          reportUrl,
           going,
           interested,
           attendees,
           newToday,
+          whatsappUrl: whatsapp
+            ? `https://wa.me/${whatsapp}?text=${encodeURIComponent(
+                `RSVP status for ${event.title}: ${going} going, ${interested} interested, ${attendees} expected attendees. Full report: ${reportUrl}`,
+              )}`
+            : '',
           reportDate: today.toLocaleDateString('en-GB', {
             day: 'numeric',
             month: 'long',
