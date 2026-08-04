@@ -74,7 +74,7 @@ export function Footer() {
               alt="Cameroon and United Kingdom flags"
               loading="lazy"
               decoding="async"
-              className="h-10 w-auto rounded-md object-cover"
+              className="ml-auto h-10 w-auto rounded-md object-cover"
             />
           </div>
           <p className="mt-4 max-w-sm text-sm text-primary-foreground/75">
