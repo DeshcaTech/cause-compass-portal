@@ -6,6 +6,7 @@ import { LogOut } from "lucide-react";
 import { PageHeader } from "@/components/site/PageHeader";
 import { RecordManager } from "@/components/admin/RecordManager";
 import { FundraisingReport } from "@/components/admin/FundraisingReport";
+import { NewsNotifier } from "@/components/admin/NewsNotifier";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -135,6 +136,7 @@ function AdminPage() {
           </TabsList>
 
           {isAdmin && <TabsContent value="news" className="mt-8">
+            <NewsNotifier />
             <RecordManager
               table="announcements"
               title="News & announcements"
@@ -152,6 +154,7 @@ function AdminPage() {
                 { name: "published_at", label: "Published", type: "datetime" },
                 { name: "image_url", label: "Picture", type: "image", crop: { aspect: 16 / 9, outputWidth: 1600 } },
                 { name: "is_published", label: "Published", type: "switch" },
+                { name: "is_featured", label: "Featured", type: "switch" },
               ]}
             />
           </TabsContent>}
@@ -279,6 +282,7 @@ function AdminPage() {
                 { name: "website", label: "Website" },
                 { name: "address", label: "Address" },
                 { name: "is_published", label: "Published", type: "switch" },
+                { name: "is_featured", label: "Featured", type: "switch" },
               ]}
             />
           </TabsContent>}
@@ -364,6 +368,7 @@ function AdminPage() {
                 { name: "message", label: "Message", type: "textarea", required: true },
                 { name: "photo_url", label: "Photo", type: "image", crop: { aspect: 4 / 3, outputWidth: 1200 } },
                 { name: "is_published", label: "Published", type: "switch" },
+                { name: "is_featured", label: "Featured", type: "switch" },
               ]}
             />
           </TabsContent>}
