@@ -507,6 +507,63 @@ export type Database = {
           },
         ]
       }
+      jobs: {
+        Row: {
+          apply_url: string | null
+          category: string
+          closes_at: string | null
+          company: string
+          contact_email: string | null
+          contact_phone: string | null
+          created_at: string
+          description: string | null
+          id: string
+          image_url: string | null
+          is_published: boolean
+          job_type: string
+          location: string | null
+          salary_range: string | null
+          short_description: string | null
+          title: string
+        }
+        Insert: {
+          apply_url?: string | null
+          category?: string
+          closes_at?: string | null
+          company: string
+          contact_email?: string | null
+          contact_phone?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          is_published?: boolean
+          job_type?: string
+          location?: string | null
+          salary_range?: string | null
+          short_description?: string | null
+          title: string
+        }
+        Update: {
+          apply_url?: string | null
+          category?: string
+          closes_at?: string | null
+          company?: string
+          contact_email?: string | null
+          contact_phone?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          is_published?: boolean
+          job_type?: string
+          location?: string | null
+          salary_range?: string | null
+          short_description?: string | null
+          title?: string
+        }
+        Relationships: []
+      }
       membership_family_members: {
         Row: {
           birth_month: number

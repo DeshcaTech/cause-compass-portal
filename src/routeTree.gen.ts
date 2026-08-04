@@ -21,6 +21,7 @@ import { Route as DonateRouteImport } from './routes/donate'
 import { Route as EventsRouteImport } from './routes/events'
 import { Route as FundraisingRouteImport } from './routes/fundraising'
 import { Route as GalleryRouteImport } from './routes/gallery'
+import { Route as JobsRouteImport } from './routes/jobs'
 import { Route as MembershipRouteImport } from './routes/membership'
 import { Route as PartnersRouteImport } from './routes/partners'
 import { Route as ReferRouteImport } from './routes/refer'
@@ -92,6 +93,11 @@ const FundraisingRoute = FundraisingRouteImport.update({
 const GalleryRoute = GalleryRouteImport.update({
   id: '/gallery',
   path: '/gallery',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const JobsRoute = JobsRouteImport.update({
+  id: '/jobs',
+  path: '/jobs',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MembershipRoute = MembershipRouteImport.update({
@@ -174,6 +180,7 @@ export interface FileRoutesByFullPath {
   '/events': typeof EventsRoute
   '/fundraising': typeof FundraisingRoute
   '/gallery': typeof GalleryRoute
+  '/jobs': typeof JobsRoute
   '/membership': typeof MembershipRoute
   '/partners': typeof PartnersRoute
   '/refer': typeof ReferRoute
@@ -200,6 +207,7 @@ export interface FileRoutesByTo {
   '/events': typeof EventsRoute
   '/fundraising': typeof FundraisingRoute
   '/gallery': typeof GalleryRoute
+  '/jobs': typeof JobsRoute
   '/membership': typeof MembershipRoute
   '/partners': typeof PartnersRoute
   '/refer': typeof ReferRoute
@@ -228,6 +236,7 @@ export interface FileRoutesById {
   '/events': typeof EventsRoute
   '/fundraising': typeof FundraisingRoute
   '/gallery': typeof GalleryRoute
+  '/jobs': typeof JobsRoute
   '/membership': typeof MembershipRoute
   '/partners': typeof PartnersRoute
   '/refer': typeof ReferRoute
@@ -256,6 +265,7 @@ export interface FileRouteTypes {
     | '/events'
     | '/fundraising'
     | '/gallery'
+    | '/jobs'
     | '/membership'
     | '/partners'
     | '/refer'
@@ -282,6 +292,7 @@ export interface FileRouteTypes {
     | '/events'
     | '/fundraising'
     | '/gallery'
+    | '/jobs'
     | '/membership'
     | '/partners'
     | '/refer'
@@ -309,6 +320,7 @@ export interface FileRouteTypes {
     | '/events'
     | '/fundraising'
     | '/gallery'
+    | '/jobs'
     | '/membership'
     | '/partners'
     | '/refer'
@@ -337,6 +349,7 @@ export interface RootRouteChildren {
   EventsRoute: typeof EventsRoute
   FundraisingRoute: typeof FundraisingRoute
   GalleryRoute: typeof GalleryRoute
+  JobsRoute: typeof JobsRoute
   MembershipRoute: typeof MembershipRoute
   PartnersRoute: typeof PartnersRoute
   ReferRoute: typeof ReferRoute
@@ -435,6 +448,13 @@ declare module '@tanstack/react-router' {
       path: '/gallery'
       fullPath: '/gallery'
       preLoaderRoute: typeof GalleryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/jobs': {
+      id: '/jobs'
+      path: '/jobs'
+      fullPath: '/jobs'
+      preLoaderRoute: typeof JobsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/membership': {
@@ -555,6 +575,7 @@ const rootRouteChildren: RootRouteChildren = {
   EventsRoute: EventsRoute,
   FundraisingRoute: FundraisingRoute,
   GalleryRoute: GalleryRoute,
+  JobsRoute: JobsRoute,
   MembershipRoute: MembershipRoute,
   PartnersRoute: PartnersRoute,
   ReferRoute: ReferRoute,
