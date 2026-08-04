@@ -1,11 +1,38 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { Quote } from "lucide-react";
+import { Eye, Quote, Sparkles, Target } from "lucide-react";
 
 import { PageHeader } from "@/components/site/PageHeader";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { boardQuery, presidentQuery } from "@/lib/queries";
+
+const coreValues = [
+  {
+    title: "Family",
+    body: "We are a family of families — nurturing bonds across parents, children, students and elders.",
+  },
+  {
+    title: "Community",
+    body: "We show up for one another, celebrating together and standing beside anyone who needs a hand.",
+  },
+  {
+    title: "Culture",
+    body: "We honour and share our heritage, keeping traditions alive for the generations to come.",
+  },
+  {
+    title: "Generosity",
+    body: "We give our time, skills and resources so that no one in our community faces hardship alone.",
+  },
+  {
+    title: "Integrity",
+    body: "We lead with honesty and transparency, earning the trust of every member we serve.",
+  },
+  {
+    title: "Faith",
+    body: "We are guided by shared faith and values that anchor our actions and unite our purpose.",
+  },
+];
 
 export const Route = createFileRoute("/about")({
   head: () => ({
