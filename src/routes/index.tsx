@@ -336,17 +336,17 @@ function Index() {
         </div>
       </section>
 
-      <section className="container-page py-16 md:py-20">
-        <div className="flex flex-wrap items-end justify-between gap-4">
+      <section className="container-page py-14 sm:py-16 md:py-20">
+        <div className="flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-end sm:justify-between">
           <div>
             <p className="eyebrow text-terracotta">Fundraising</p>
-            <h2 className="mt-2 text-3xl md:text-4xl">Active campaigns</h2>
+            <h2 className="mt-2 text-2xl sm:text-3xl md:text-4xl">Active campaigns</h2>
           </div>
-          <Button asChild variant="soft">
+          <Button asChild variant="soft" className="w-full sm:w-auto">
             <Link to="/fundraising">See all campaigns</Link>
           </Button>
         </div>
-        <div className="mt-8 grid gap-5 md:grid-cols-3">
+        <div className="mt-6 grid gap-4 sm:mt-8 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3">
           {activeCampaigns.map((campaign) => {
             const pct = Math.min(
               100,
@@ -354,8 +354,8 @@ function Index() {
             );
             return (
               <Card key={campaign.id} className="border-border/70">
-                <CardContent className="p-6">
-                  <h3 className="text-lg">{campaign.title}</h3>
+                <CardContent className="p-5 sm:p-6">
+                  <h3 className="text-base leading-snug sm:text-lg">{campaign.title}</h3>
                   <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">
                     {campaign.summary}
                   </p>
@@ -372,7 +372,7 @@ function Index() {
                       raised of {formatMoney(campaign.goal_amount)}
                     </span>
                   </p>
-                  <Button asChild variant="hero" size="sm" className="mt-5">
+                  <Button asChild variant="hero" size="sm" className="mt-5 w-full sm:w-auto">
                     <Link to="/donate" search={{ campaign: campaign.id }}>
                       Donate
                     </Link>
@@ -386,22 +386,24 @@ function Index() {
 
       {/* Selected community businesses */}
       {featuredPartners.length > 0 && (
-        <section className="surface-panel border-t border-border py-16 md:py-20">
+        <section className="surface-panel border-t border-border py-14 sm:py-16 md:py-20">
           <div className="container-page">
-            <div className="flex flex-wrap items-end justify-between gap-4">
+            <div className="flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-end sm:justify-between">
               <div>
                 <p className="eyebrow text-terracotta">Our members at work</p>
-                <h2 className="mt-2 text-3xl md:text-4xl">Selected community businesses</h2>
+                <h2 className="mt-2 text-2xl sm:text-3xl md:text-4xl">
+                  Selected community businesses
+                </h2>
               </div>
-              <Button asChild variant="soft">
+              <Button asChild variant="soft" className="w-full sm:w-auto">
                 <Link to="/partners">All businesses</Link>
               </Button>
             </div>
-            <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="mt-6 grid gap-4 sm:mt-8 sm:grid-cols-2 sm:gap-5 lg:grid-cols-4">
               {featuredPartners.map((partner) => (
                 <Link key={partner.id} to="/partners" className="group">
                   <Card className="h-full border-border/70 transition-all group-hover:-translate-y-1 group-hover:shadow-[var(--shadow-lift)]">
-                    <CardContent className="p-6">
+                    <CardContent className="p-5 sm:p-6">
                       {partner.logo_url ? (
                         <img
                           src={partner.logo_url}
@@ -414,10 +416,12 @@ function Index() {
                           <Building2 className="size-6" />
                         </span>
                       )}
-                      <p className="mt-4 text-xs uppercase tracking-widest text-muted-foreground">
+                      <p className="mt-4 text-[11px] uppercase tracking-wider text-muted-foreground sm:text-xs">
                         {partner.category}
                       </p>
-                      <h3 className="mt-1 text-lg">{partner.business_name}</h3>
+                      <h3 className="mt-1 text-base leading-snug sm:text-lg">
+                        {partner.business_name}
+                      </h3>
                       <p className="mt-2 line-clamp-3 text-sm text-muted-foreground">
                         {partner.short_description ?? partner.description}
                       </p>
