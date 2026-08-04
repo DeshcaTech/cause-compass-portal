@@ -237,14 +237,18 @@ function Index() {
       </section>
 
       {/* Latest news & announcements */}
-      {latestNews.length > 0 && (
-        <section className="container-page pb-16 md:pb-20">
+      <section className="container-page pb-16 md:pb-20">
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div>
               <p className="eyebrow text-terracotta">Noticeboard</p>
               <h2 className="mt-2 text-3xl md:text-4xl">Latest news &amp; announcements</h2>
             </div>
           </div>
+          {latestNews.length === 0 ? (
+            <p className="mt-8 text-sm text-muted-foreground">
+              No announcements yet — check back soon for community news and updates.
+            </p>
+          ) : (
           <div className="mt-8 grid gap-5 md:grid-cols-3">
             {latestNews.map((item) => (
               <Card key={item.id} className="overflow-hidden border-border/70">
@@ -266,8 +270,8 @@ function Index() {
               </Card>
             ))}
           </div>
-        </section>
-      )}
+          )}
+      </section>
 
       <section className="surface-panel border-y border-border py-16 md:py-20">
         <div className="container-page">
