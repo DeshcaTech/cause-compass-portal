@@ -9,4 +9,8 @@ export const gallery: Record<string, string> = {
   "No photos uploaded to this gallery yet. Photos added by the admin appear here.":
     "Aucune photo n'a encore été ajoutée à cette galerie. Les photos ajoutées par l'administrateur apparaîtront ici.",
   "Community photo": "Photo communautaire",
+  "View photo": "Voir la photo",
+  "of": "sur",
+  "Previous photo": "Photo précédente",
+  "Next photo": "Photo suivante",
 };
