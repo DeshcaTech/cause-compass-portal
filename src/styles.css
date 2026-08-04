@@ -106,6 +106,12 @@
   --text-nav--line-height: 20px;
   --text-label: 14px;
   --text-label--line-height: 18px;
+
+  /* Control heights + horizontal padding for button sizes */
+  --spacing-btn-sm: 32px;
+  --spacing-btn-md: 40px;
+  --spacing-btn-lg: 46px;
+  --spacing-btn-xl: 54px;
 }
 
 :root {
