@@ -8,7 +8,29 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { galleriesQuery, galleryPhotosQuery } from "@/lib/queries";
 import galleryFallback from "@/assets/gallery-fallback.jpg";
+import communityTogether from "@/assets/community-together.jpg";
+import eventFallback from "@/assets/event-fallback.jpg";
+import heroCommunity from "@/assets/hero-community.jpg";
+import surveyFallback from "@/assets/survey-fallback.jpg";
+import volunteerHero from "@/assets/volunteer-hero.jpg";
 import { useT } from "@/lib/i18n";
+
+const PLACEHOLDER_PHOTOS = [
+  galleryFallback,
+  communityTogether,
+  eventFallback,
+  heroCommunity,
+  volunteerHero,
+  surveyFallback,
+];
+
+function placeholdersFor(seed: string) {
+  let hash = 0;
+  for (let i = 0; i < seed.length; i += 1) hash = (hash * 31 + seed.charCodeAt(i)) % 997;
+  return PLACEHOLDER_PHOTOS.map(
+    (_, i) => PLACEHOLDER_PHOTOS[(hash + i) % PLACEHOLDER_PHOTOS.length]!,
+  );
+}
 
 export const Route = createFileRoute("/gallery")({
   head: () => ({
@@ -84,20 +106,31 @@ function GalleryPage() {
           <p className="mt-2 text-sm text-muted-foreground">{active?.description}</p>
 
           {activePhotos.length === 0 ? (
-            <Card className="mt-6 overflow-hidden border-dashed border-border">
-              <img
-                src={galleryFallback}
-                alt={t("Community members celebrating together")}
-                loading="lazy"
-                className="aspect-[16/9] w-full object-cover"
-              />
-              <CardContent className="flex flex-col items-center gap-3 py-10 text-center">
-                <ImageIcon className="size-8 text-muted-foreground" />
-                <p className="text-sm text-muted-foreground">
-                  {t("No photos uploaded to this gallery yet. Photos added by the admin appear here.")}
-                </p>
-              </CardContent>
-            </Card>
+            <>
+              <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                {placeholdersFor(activeId ?? "gallery").map((src, index) => (
+                  <figure
+                    key={`${src}-${index}`}
+                    className="overflow-hidden rounded-xl border border-border"
+                  >
+                    <img
+                      src={src}
+                      alt={t("Community members celebrating together")}
+                      loading="lazy"
+                      className="h-56 w-full object-cover transition-transform hover:scale-105"
+                    />
+                  </figure>
+                ))}
+              </div>
+              <Card className="mt-4 border-dashed border-border">
+                <CardContent className="flex flex-col items-center gap-3 py-8 text-center">
+                  <ImageIcon className="size-8 text-muted-foreground" />
+                  <p className="text-sm text-muted-foreground">
+                    {t("No photos uploaded to this gallery yet. Photos added by the admin appear here.")}
+                  </p>
+                </CardContent>
+              </Card>
+            </>
           ) : (
             <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {activePhotos.map((photo) => (
