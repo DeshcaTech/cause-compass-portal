@@ -113,6 +113,8 @@ export function Lightbox({
 
   const zoomAtRef = useRef(zoomAt);
   zoomAtRef.current = zoomAt;
+  const zoomRef = useRef(zoom);
+  zoomRef.current = zoom;
 
   // Native, non-passive wheel listener (React's onWheel is passive, so
   // preventDefault there is ignored and the page would scroll / page-zoom).
@@ -126,19 +128,10 @@ export function Lightbox({
       const dy = event.deltaY * (event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? 100 : 1);
       const factor = Math.exp(-dy * 0.0015);
       zoomAtRef.current(
-        clampFactor(factor),
+        zoomRef.current * factor,
         event.clientX - rect.left,
         event.clientY - rect.top,
       );
-    }
-    function clampFactor(factor: number) {
-      // resolve against the live zoom through the functional updater
-      let next = 1;
-      setZoom((z) => {
-        next = z * factor;
-        return z;
-      });
-      return next;
     }
     el.addEventListener("wheel", onWheel, { passive: false });
     return () => el.removeEventListener("wheel", onWheel);
