@@ -68,7 +68,7 @@ function VillageGroupsPage() {
         banner={{
           image: thumbFor(region),
           title: region === "All" ? t("All groups") : region,
-          description: t("Village and division groups within CCGMs."),
+          description: t("Community groups within CCGMs."),
         }}
         sidebar={regions.map((item) => (
           <SidebarNavItem

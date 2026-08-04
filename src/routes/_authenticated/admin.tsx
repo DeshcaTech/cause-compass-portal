@@ -141,7 +141,7 @@ function AdminPage() {
             {can("board") && <TabsTrigger value="board">Board</TabsTrigger>}
             {can("president") && <TabsTrigger value="president">President</TabsTrigger>}
             {isAdmin && <TabsTrigger value="assets">Assets</TabsTrigger>}
-            {isAdmin && <TabsTrigger value="village-groups">Village groups</TabsTrigger>}
+            {isAdmin && <TabsTrigger value="village-groups">Groups</TabsTrigger>}
             {isAdmin && <TabsTrigger value="surveys">Surveys</TabsTrigger>}
             {isAdmin && <TabsTrigger value="roles">Roles</TabsTrigger>}
           </TabsList>
@@ -490,8 +490,8 @@ function AdminPage() {
           {isAdmin && <TabsContent value="village-groups" className="mt-8">
             <RecordManager
               table="village_groups"
-              title="Village-based groups"
-              description="Village and division groups listed under About CCGMs."
+              title="Our groups"
+              description="Community groups listed under About CCGMs."
               orderBy={{ column: "sort_order" }}
               primaryLabel={(row) => String(row['name'])}
               secondaryLabel={(row) =>
