@@ -206,7 +206,7 @@ function EventsPage() {
           ))}
         </div>
 
-        <Tabs defaultValue="coming">
+        <Tabs value={tab} onValueChange={setTab}>
           <div className="-mx-4 overflow-x-auto px-4 sm:mx-0 sm:px-0">
             <TabsList className="w-max min-w-full justify-start">
               <TabsTrigger value="coming">{t("Coming events")}</TabsTrigger>
@@ -343,7 +343,11 @@ function EventsPage() {
         </Tabs>
       </section>
 
-      <EventDialog event={selected} onOpenChange={(open) => !open && setSelected(null)} />
+      <EventDialog
+        event={selected}
+        onOpenChange={(open) => !open && openEvent(null)}
+        shareUrl={shareUrl}
+      />
     </>
   );
 }
