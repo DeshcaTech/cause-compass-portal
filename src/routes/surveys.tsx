@@ -20,7 +20,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { supabase } from "@/integrations/supabase/client";
-import { formatDate, surveysQuery, surveyStatus, type Survey } from "@/lib/queries";
+import { formatDateShort, surveysQuery, surveyStatus, type Survey } from "@/lib/queries";
 import surveyFallback from "@/assets/survey-fallback.jpg";
 import { useT } from "@/lib/i18n";
 import { searchString, useSearchFilter } from "@/lib/use-search-filter";
@@ -173,7 +173,7 @@ function SurveyDialog({
           <DialogDescription className="text-left">
             {survey
               ? survey.closes_at
-                ? `${t("Closes")} ${formatDate(survey.closes_at)}`
+                ? `${t("Closes")} ${formatDateShort(survey.closes_at)}`
                 : t("Active survey")
               : null}
           </DialogDescription>
@@ -231,7 +231,7 @@ function SurveyCard({
           <h3 className="text-lg">{survey.title}</h3>
           {status === "active" ? (
             survey.closes_at ? (
-              <Badge variant="secondary">{t("Closes")} {formatDate(survey.closes_at)}</Badge>
+              <Badge variant="secondary">{t("Closes")} {formatDateShort(survey.closes_at)}</Badge>
             ) : (
               <Badge className="bg-primary text-primary-foreground">{t("Active")}</Badge>
             )
