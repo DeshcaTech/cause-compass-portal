@@ -12,6 +12,7 @@ import { JobApplicationsManager } from "@/components/admin/JobApplicationsManage
 import { ReferralsManager } from "@/components/admin/ReferralsManager";
 import { SubscriberList } from "@/components/admin/SubscriberList";
 import { BrandSettings } from "@/components/admin/BrandSettings";
+import { SiteContentSettings } from "@/components/admin/SiteContentSettings";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -189,6 +190,29 @@ function AdminPage() {
 
           {isAdmin && <TabsContent value="brand" className="mt-8">
             <BrandSettings />
+          </TabsContent>}
+
+          {isAdmin && <TabsContent value="site-content" className="mt-8">
+            <SiteContentSettings />
+          </TabsContent>}
+
+          {isAdmin && <TabsContent value="documents" className="mt-8">
+            <RecordManager
+              table="documents"
+              title="Documents"
+              description="Files listed on the documents page."
+              orderBy={{ column: "category" }}
+              primaryLabel={(row) => String(row['title'])}
+              secondaryLabel={(row) => String(row['category'])}
+              defaults={{ category: "General" }}
+              fields={[
+                { name: "title", label: "Title", required: true },
+                { name: "description", label: "Description", type: "textarea" },
+                { name: "category", label: "Category", required: true },
+                { name: "file_url", label: "File link (URL)", required: true },
+                { name: "file_type", label: "File type", placeholder: "PDF, DOCX…" },
+              ]}
+            />
           </TabsContent>}
 
           {isAdmin && <TabsContent value="events" className="mt-8">
