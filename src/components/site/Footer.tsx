@@ -38,22 +38,22 @@ const columns = [
     title: "Explore",
     links: [
       { label: "President's message", to: "/about" },
-      { label: "Membership", to: "/membership" },
       { label: "Events", to: "/events" },
       { label: "Partners", to: "/partners" },
       { label: "Gallery", to: "/gallery" },
       { label: "Documents", to: "/documents" },
+      { label: "Contact Us", to: "/contact" },
     ],
   },
   {
     title: "Get Involved",
     links: [
+      { label: "Membership", to: "/membership" },
       { label: "Get Support", to: "/refer" },
       { label: "Surveys", to: "/surveys" },
       { label: "Become a Volunteer", to: "/volunteer" },
       { label: "Donate", to: "/donate" },
       { label: "Asset Rental", to: "/assets" },
-      { label: "Contact Us", to: "/contact" },
     ],
   },
 ];
