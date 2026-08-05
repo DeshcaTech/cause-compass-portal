@@ -27,7 +27,7 @@ const columns = [
     ],
   },
   {
-    title: "Quick links",
+    title: "Get Involved",
     links: [
       { label: "Get Support", to: "/refer" },
       { label: "Surveys", to: "/surveys" },
