@@ -14,6 +14,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { supabase } from "@/integrations/supabase/client";
 import { useT } from "@/lib/i18n";
 import { siteSettingsQuery } from "@/lib/site-settings";
+import { trackEvent } from "@/lib/analytics";
 import whatsappUs from "@/assets/whatsapp-us.png";
 
 export const Route = createFileRoute("/contact")({
@@ -135,6 +136,7 @@ function ContactPage() {
                 target="_blank"
                 rel="noreferrer"
                 aria-label={t("Chat with CCGMs on WhatsApp")}
+                onClick={() => void trackEvent("whatsapp_us_click", { source: "contact_page" })}
                 className="block transition-transform hover:scale-[1.02]"
               >
                 <img
