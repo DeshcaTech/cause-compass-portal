@@ -152,6 +152,72 @@ function ContactPage() {
                 />
               </a>
             ) : null}
+            <div className="flex flex-wrap items-center gap-2.5">
+              <a
+                href={`tel:${(site?.contact_phone ?? "07700900000").replace(/[^\d]/g, "")}`}
+                aria-label={t("Call us")}
+                onClick={() => void trackEvent("contact_page_click", { channel: "phone" })}
+                className="grid size-9 place-items-center rounded-full bg-primary-foreground/10 text-primary-foreground transition-colors hover:bg-primary-foreground/20"
+              >
+                <Phone className="size-4" />
+              </a>
+              <a
+                href={`mailto:${site?.contact_email ?? "hello@ccgms.org"}`}
+                aria-label={t("Email us")}
+                onClick={() => void trackEvent("contact_page_click", { channel: "email" })}
+                className="grid size-9 place-items-center rounded-full bg-primary-foreground/10 text-primary-foreground transition-colors hover:bg-primary-foreground/20"
+              >
+                <Mail className="size-4" />
+              </a>
+              {site?.facebook_url ? (
+                <a
+                  href={site.facebook_url}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label="Facebook"
+                  onClick={() => void trackEvent("contact_page_social_click", { channel: "facebook" })}
+                  className="grid size-9 place-items-center rounded-full bg-primary-foreground/10 text-primary-foreground transition-colors hover:bg-primary-foreground/20"
+                >
+                  <Facebook className="size-4" />
+                </a>
+              ) : null}
+              {site?.instagram_url ? (
+                <a
+                  href={site.instagram_url}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label="Instagram"
+                  onClick={() => void trackEvent("contact_page_social_click", { channel: "instagram" })}
+                  className="grid size-9 place-items-center rounded-full bg-primary-foreground/10 text-primary-foreground transition-colors hover:bg-primary-foreground/20"
+                >
+                  <Instagram className="size-4" />
+                </a>
+              ) : null}
+              {site?.x_url ? (
+                <a
+                  href={site.x_url}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label="X (Twitter)"
+                  onClick={() => void trackEvent("contact_page_social_click", { channel: "x" })}
+                  className="grid size-9 place-items-center rounded-full bg-primary-foreground/10 text-primary-foreground transition-colors hover:bg-primary-foreground/20"
+                >
+                  <Twitter className="size-4" />
+                </a>
+              ) : null}
+              {site?.youtube_url ? (
+                <a
+                  href={site.youtube_url}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label="YouTube"
+                  onClick={() => void trackEvent("contact_page_social_click", { channel: "youtube" })}
+                  className="grid size-9 place-items-center rounded-full bg-primary-foreground/10 text-primary-foreground transition-colors hover:bg-primary-foreground/20"
+                >
+                  <Youtube className="size-4" />
+                </a>
+              ) : null}
+            </div>
             <div className="rounded-xl bg-primary-foreground/10 p-4 text-sm text-primary-foreground/80">
               {t("Office hours: Tuesday to Saturday, 10:00 – 17:00. Urgent welfare requests are reviewed within 72 hours.")}
             </div>
