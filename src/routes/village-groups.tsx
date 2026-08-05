@@ -90,7 +90,10 @@ function VillageGroupsPage() {
             label={t("Category")}
             value={category}
             onChange={(value) =>
-              navigate({ search: { category: value === "all" ? undefined : value } })
+              navigate({
+                search: (prev) => ({ ...prev, category: value === "all" ? undefined : value }),
+                replace: true,
+              })
             }
             options={categories.map((item) => ({
               value: item.key,
