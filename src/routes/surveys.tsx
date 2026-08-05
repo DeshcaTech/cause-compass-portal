@@ -2,6 +2,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "sonner";
+import { CheckCircle2 } from "lucide-react";
 
 import { PageHeader } from "@/components/site/PageHeader";
 import { FilterPage, FilterSelect } from "@/components/site/FilterPage";
@@ -19,7 +20,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { supabase } from "@/integrations/supabase/client";
-import { formatDate, surveysQuery, type Survey } from "@/lib/queries";
+import { formatDate, surveysQuery, surveyStatus, type Survey } from "@/lib/queries";
 import surveyFallback from "@/assets/survey-fallback.jpg";
 import { useT } from "@/lib/i18n";
 import { searchString, useSearchFilter } from "@/lib/use-search-filter";
@@ -51,7 +52,7 @@ type SurveysSearch = {
   survey?: string | undefined;
 };
 
-function SurveyForm({ survey }: { survey: Survey }) {
+function SurveyForm({ survey, onClose }: { survey: Survey; onClose: () => void }) {
   const t = useT();
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [membership, setMembership] = useState("");
@@ -82,11 +83,18 @@ function SurveyForm({ survey }: { survey: Survey }) {
 
   if (done) {
     return (
-      <div className="space-y-3 rounded-xl border border-primary/40 bg-accent px-4 py-4 text-center">
+      <div className="space-y-4 rounded-xl border border-primary/40 bg-accent px-4 py-6 text-center">
+        <CheckCircle2 className="mx-auto size-10 text-primary" aria-hidden />
         <h3 className="text-lg">{t("Response recorded")}</h3>
         <p className="text-sm text-muted-foreground">
           {t('Thank you for helping shape "{title}".').replace("{title}", survey.title)}
         </p>
+        <p className="text-sm text-muted-foreground">
+          {t("Your answers have been saved. You can close this window and browse the other surveys.")}
+        </p>
+        <Button type="button" variant="hero" className="w-full" onClick={onClose}>
+          {t("Close and back to surveys")}
+        </Button>
       </div>
     );
   }
@@ -179,7 +187,7 @@ function SurveyDialog({
               className="aspect-[16/6] w-full rounded-xl object-cover"
             />
             <p className="text-sm text-foreground/85">{survey.description}</p>
-            <SurveyForm key={survey.id} survey={survey} />
+            <SurveyForm key={survey.id} survey={survey} onClose={() => onOpenChange(false)} />
           </div>
         ) : null}
       </DialogContent>
@@ -250,8 +258,8 @@ function SurveysPage() {
   const navigate = useNavigate({ from: "/surveys" });
   const search = Route.useSearch();
   const { data: surveys = [] } = useQuery(surveysQuery);
-  const active = surveys.filter((s) => s.is_active);
-  const closed = surveys.filter((s) => !s.is_active);
+  const active = surveys.filter((s) => surveyStatus(s) === "active");
+  const closed = surveys.filter((s) => surveyStatus(s) !== "active");
   const [view, setView] = useSearchFilter("view", "active");
   const list = view === "active" ? active : closed;
 
