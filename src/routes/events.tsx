@@ -101,9 +101,9 @@ function EventCard({ event, onOpen }: { event: EventRow; onOpen: () => void }) {
 }
 
 type EventsSearch = {
-  event?: string;
-  type?: "all" | "ccgms" | "other";
-  tab?: "coming" | "past" | "all" | "calendar";
+  event?: string | undefined;
+  type?: "all" | "ccgms" | "other" | undefined;
+  tab?: "coming" | "past" | "all" | "calendar" | undefined;
 };
 
 function EventsPage() {
