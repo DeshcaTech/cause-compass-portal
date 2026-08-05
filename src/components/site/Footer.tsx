@@ -145,30 +145,32 @@ export function Footer() {
             © {new Date().getFullYear()} CCGMs Community Association.{" "}
             {t("All rights reserved.")}
           </p>
-          <p className="text-primary-foreground/70">
-            {t("Powered by")}{" "}
-            {waHref ? (
-              <a
-                href={waHref}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => void trackEvent("deshcatech_whatsapp_click", { source: "footer" })}
-                className="font-semibold text-gold underline-offset-4 hover:underline"
-              >
-                DeshcaTech
-              </a>
-            ) : (
-              <span className="font-semibold text-gold">DeshcaTech</span>
-            )}
-          </p>
-          <span className="flex gap-4">
-            <Link to="/contact" className="hover:text-gold">
-              {t("Contact us")}
-            </Link>
-            <Link to="/admin" className="hover:text-gold">
-              {t("Admin")}
-            </Link>
-          </span>
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-6">
+            <p className="text-primary-foreground/70">
+              {t("Powered by")}{" "}
+              {waHref ? (
+                <a
+                  href={waHref}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => void trackEvent("deshcatech_whatsapp_click", { source: "footer" })}
+                  className="font-semibold text-gold underline-offset-4 hover:underline"
+                >
+                  DeshcaTech
+                </a>
+              ) : (
+                <span className="font-semibold text-gold">DeshcaTech</span>
+              )}
+            </p>
+            <span className="flex gap-4">
+              <Link to="/contact" className="hover:text-gold">
+                {t("Contact us")}
+              </Link>
+              <Link to="/admin" className="hover:text-gold">
+                {t("Admin")}
+              </Link>
+            </span>
+          </div>
         </div>
       </div>
     </footer>
