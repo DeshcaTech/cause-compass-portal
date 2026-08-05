@@ -260,6 +260,11 @@ export type RecordManagerProps = {
   secondaryLabel?: (row: Record<string, any>) => string;
   /** When provided, returns a short label shown as a highlighted badge next to the title (return null/empty to hide). */
   badge?: (row: Record<string, any>) => string | null;
+  /** Optional extra per-row action buttons, with a helper to patch the row in place. */
+  rowActions?: (
+    row: Record<string, any>,
+    helpers: { update: (patch: Record<string, any>) => Promise<void>; isSaving: boolean },
+  ) => ReactNode;
   defaults?: Record<string, any>;
   filter?: { column: string; value: string } | null;
 };
