@@ -15,6 +15,7 @@ import { BrandSettings } from "@/components/admin/BrandSettings";
 import { SiteContentSettings } from "@/components/admin/SiteContentSettings";
 import { AdminAccounts } from "@/components/admin/AdminAccounts";
 import { AuditLog } from "@/components/admin/AuditLog";
+import { AccessDenied } from "@/components/admin/AccessDenied";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -23,8 +24,10 @@ import { galleriesQuery } from "@/lib/queries";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   // Drilldown dialog state lives in the URL so back/forward reopen it.
-  validateSearch: (search: Record<string, unknown>): { campaign?: string } =>
-    typeof search['campaign'] === "string" ? { campaign: search['campaign'] } : {},
+  validateSearch: (search: Record<string, unknown>): { campaign?: string; tab?: string } => ({
+    ...(typeof search['campaign'] === "string" ? { campaign: search['campaign'] } : {}),
+    ...(typeof search['tab'] === "string" ? { tab: search['tab'] } : {}),
+  }),
   head: () => ({
     meta: [
       { title: "Admin panel — Manage CCGMs Content" },
@@ -45,6 +48,7 @@ export const Route = createFileRoute("/_authenticated/admin")({
 
 function AdminPage() {
   const navigate = useNavigate();
+  const { tab: requestedTab } = Route.useSearch();
   const queryClient = useQueryClient();
   const { data: galleries = [] } = useQuery(galleriesQuery);
   const [albumId, setAlbumId] = useState<string>("");
