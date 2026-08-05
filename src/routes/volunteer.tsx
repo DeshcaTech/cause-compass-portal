@@ -44,20 +44,57 @@ const AREAS = [
   "Transport",
 ];
 
+const DAYS = [
+  { key: "Mon", label: "Monday" },
+  { key: "Tue", label: "Tuesday" },
+  { key: "Wed", label: "Wednesday" },
+  { key: "Thu", label: "Thursday" },
+  { key: "Fri", label: "Friday" },
+  { key: "Sat", label: "Saturday" },
+  { key: "Sun", label: "Sunday" },
+];
+
+const TIME_SLOTS = [
+  { key: "morning", label: "Morning", short: "Morning" },
+  { key: "afternoon", label: "Afternoon", short: "Afternoon" },
+  { key: "evening", label: "Evening", short: "Evening" },
+];
+
 const schema = z.object({
   full_name: z.string().trim().min(2, "Enter your full name").max(120),
   email: z.string().trim().email("Enter a valid email").max(255),
   phone: z.string().trim().max(30).optional(),
   membership_number: z.string().trim().max(30).optional(),
-  availability: z.string().trim().max(200).optional(),
+  availability: z.string().trim().max(500).optional(),
   message: z.string().trim().max(1000).optional(),
 });
 
 function VolunteerPage() {
   const t = useT();
   const [areas, setAreas] = useState<string[]>([]);
+  const [slots, setSlots] = useState<Set<string>>(new Set());
   const [saving, setSaving] = useState(false);
   const [done, setDone] = useState(false);
+
+  function toggleSlot(key: string) {
+    setSlots((prev) => {
+      const next = new Set(prev);
+      if (next.has(key)) next.delete(key);
+      else next.add(key);
+      return next;
+    });
+  }
+
+  function buildAvailability() {
+    return DAYS.map((day) => {
+      const selected = TIME_SLOTS.filter((s) =>
+        slots.has(`${day.key}|${s.key}`),
+      ).map((s) => s.short);
+      return selected.length ? `${day.key}: ${selected.join(", ")}` : null;
+    })
+      .filter(Boolean)
+      .join("; ");
+  }
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -70,6 +107,7 @@ function VolunteerPage() {
       toast.error(t("Choose at least one area you'd like to help with"));
       return;
     }
+    const availability = buildAvailability();
     setSaving(true);
     try {
       await submitVolunteerApplication({
@@ -78,7 +116,7 @@ function VolunteerPage() {
           email: parsed.data.email,
           phone: parsed.data.phone,
           membership_number: parsed.data.membership_number,
-          availability: parsed.data.availability,
+          availability: availability || undefined,
           message: parsed.data.message,
           areas,
         },
@@ -148,14 +186,49 @@ function VolunteerPage() {
                   <Label htmlFor="phone">{t("Phone")}</Label>
                   <Input id="phone" name="phone" maxLength={30} />
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="availability">{t("Availability")}</Label>
-                  <Input
-                    id="availability"
-                    name="availability"
-                    placeholder="Weekends, evenings…"
-                    maxLength={200}
-                  />
+              </div>
+
+              <div className="space-y-3">
+                <Label>{t("Availability — pick the days and times you can help")}</Label>
+                <div className="overflow-x-auto rounded-lg border border-border">
+                  <table className="w-full border-collapse text-sm">
+                    <thead>
+                      <tr className="bg-muted/40">
+                        <th className="px-3 py-2 text-left font-medium text-muted-foreground">
+                          {t("Day")}
+                        </th>
+                        {TIME_SLOTS.map((s) => (
+                          <th
+                            key={s.key}
+                            className="px-3 py-2 text-center font-medium text-muted-foreground"
+                          >
+                            {t(s.label)}
+                          </th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {DAYS.map((day, idx) => (
+                        <tr key={day.key} className={idx % 2 ? "bg-muted/20" : ""}>
+                          <td className="whitespace-nowrap px-3 py-2 font-medium">
+                            {t(day.label)}
+                          </td>
+                          {TIME_SLOTS.map((s) => {
+                            const slotKey = `${day.key}|${s.key}`;
+                            return (
+                              <td key={s.key} className="px-3 py-2 text-center">
+                                <Checkbox
+                                  checked={slots.has(slotKey)}
+                                  onCheckedChange={() => toggleSlot(slotKey)}
+                                  aria-label={`${day.label} ${s.label}`}
+                                />
+                              </td>
+                            );
+                          })}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
               </div>
 
