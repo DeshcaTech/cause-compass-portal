@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 
 import { PageHeader } from "@/components/site/PageHeader";
-import { SidebarNavItem, SidebarPage } from "@/components/site/SidebarPage";
+import { FilterPage, FilterSelect } from "@/components/site/FilterPage";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { boardQuery, type BoardMember } from "@/lib/queries";
@@ -81,34 +81,29 @@ function BoardPage() {
         title={t("Our board")}
         description={t("The current executive team is shown by default. Switch to past teams to see who served before.")}
       />
-      <SidebarPage
-        sidebar={(
-          <>
-            <SidebarNavItem
-              image={current.find((m) => m.photo_url)?.photo_url ?? personFallback}
-              title={t("Current team")}
-              meta={`${current.length} ${t("members")}`}
-              active={term === "current"}
-              onClick={() => setTerm("current")}
-            />
-            {pastTerms.map((label) => (
-              <SidebarNavItem
-                key={label}
-                image={
-                  past.find((m) => m.term_label === label && m.photo_url)?.photo_url ??
-                  personFallback
-                }
-                title={label}
-                meta={`${past.filter((m) => m.term_label === label).length} ${t("members")}`}
-                active={term === label}
-                onClick={() => setTerm(label)}
-              />
-            ))}
-          </>
+      <FilterPage
+        filters={(
+          <FilterSelect
+            label={t("Team")}
+            value={term}
+            onChange={setTerm}
+            options={[
+              {
+                value: "current",
+                label: t("Current team"),
+                meta: `${current.length} ${t("members")}`,
+              },
+              ...pastTerms.map((label) => ({
+                value: label,
+                label,
+                meta: `${past.filter((m) => m.term_label === label).length} ${t("members")}`,
+              })),
+            ]}
+          />
         )}
       >
         <MemberGrid members={showing} />
-      </SidebarPage>
+      </FilterPage>
     </>
   );
 }
