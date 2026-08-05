@@ -62,12 +62,35 @@ export function Footer() {
   const t = useT();
   const { data: brand } = useQuery(brandQuery);
   const { data: site } = useQuery(siteSettingsQuery);
+  const { data: galleries = [] } = useQuery(galleriesQuery);
+  const { data: photos = [] } = useQuery(galleryPhotosQuery);
   const waHref = whatsappHref(
     site?.developer_whatsapp || site?.contact_whatsapp || site?.contact_phone,
     site?.whatsapp_message,
   );
   const showLogo = brand?.show_logo_footer ?? true;
   const customLogo = brand?.logo_url ?? null;
+
+  // Six showcase photos for the desktop footer strip: prefer the
+  // admin-chosen default gallery's photos, then any gallery photos, then
+  // placeholders so the strip always looks complete.
+  const galleryTiles = useMemo(() => {
+    const defaultGallery = galleries.find((g) => g.is_default) ?? galleries[0];
+    let real = photos
+      .filter((p) => (defaultGallery ? p.gallery_id === defaultGallery.id : true))
+      .map((p) => ({ key: p.id, src: p.photo_url, alt: p.caption ?? defaultGallery?.title ?? "Community photo" }));
+    if (real.length === 0) {
+      real = photos
+        .slice(0, 6)
+        .map((p) => ({ key: p.id, src: p.photo_url, alt: p.caption ?? "Community photo" }));
+    }
+    const fillers = FOOTER_PLACEHOLDERS.slice(0, Math.max(0, 6 - real.length)).map((src, i) => ({
+      key: `placeholder-${i}`,
+      src,
+      alt: "Community photo",
+    }));
+    return [...real, ...fillers].slice(0, 6);
+  }, [galleries, photos]);
   return (
     <footer className="mt-24 border-t border-border bg-primary text-primary-foreground">
       <div className="container-page grid grid-cols-2 gap-8 py-12 sm:gap-10 lg:grid-cols-6">
