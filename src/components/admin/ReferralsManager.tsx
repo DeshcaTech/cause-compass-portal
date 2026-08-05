@@ -283,7 +283,7 @@ function Detail({ term, value }: { term: string; value: string | null }) {
   return (
     <div>
       <dt className="text-xs uppercase tracking-wide text-muted-foreground">{term}</dt>
-      <dd className="mt-0.5 whitespace-pre-wrap text-foreground/90 capitalize-none">
+      <dd className="mt-0.5 whitespace-pre-wrap text-foreground/90">
         {value && value.trim() ? value : "—"}
       </dd>
     </div>
