@@ -130,9 +130,9 @@ function ContactPage() {
             <div className="rounded-xl bg-primary-foreground/10 p-4 text-sm text-primary-foreground/80">
               {t("Office hours: Tuesday to Saturday, 10:00 – 17:00. Urgent welfare requests are reviewed within 72 hours.")}
             </div>
-            {site?.contact_whatsapp ? (
+            {(site?.contact_whatsapp || site?.contact_phone) ? (
               <a
-                href={`https://wa.me/${site.contact_whatsapp.replace(/[^0-9]/g, "")}`}
+                href={`https://wa.me/${(site.contact_whatsapp || site.contact_phone || "").replace(/[^0-9]/g, "")}`}
                 target="_blank"
                 rel="noreferrer"
                 aria-label={t("Chat with CCGMs on WhatsApp")}
