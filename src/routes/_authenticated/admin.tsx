@@ -320,9 +320,8 @@ function AdminPage() {
               description="One album per event. Set a main photo for each album — it leads the gallery page. The default album opens first."
               orderBy={{ column: "event_date", ascending: false }}
               primaryLabel={(row) => String(row['title'])}
-              secondaryLabel={(row) =>
-                `${row['event_date'] ?? "Undated"}${row['is_default'] ? " · default album" : ""}`
-              }
+              secondaryLabel={(row) => `${row['event_date'] ?? "Undated"}`}
+              badge={(row) => (row['is_default'] ? "Open by default" : null)}
               defaults={{ is_default: false }}
               fields={[
                 { name: "title", label: "Album title", required: true },

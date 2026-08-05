@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Pencil, Plus, Trash2 } from "lucide-react";
+import { CheckCircle2, Pencil, Plus, Trash2 } from "lucide-react";
 import { toast } from "sonner";
+import { Badge } from "@/components/ui/badge";
 
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -257,6 +258,8 @@ export type RecordManagerProps = {
   orderBy?: { column: string; ascending?: boolean };
   primaryLabel: (row: Record<string, any>) => string;
   secondaryLabel?: (row: Record<string, any>) => string;
+  /** When provided, returns a short label shown as a highlighted badge next to the title (return null/empty to hide). */
+  badge?: (row: Record<string, any>) => string | null;
   defaults?: Record<string, any>;
   filter?: { column: string; value: string } | null;
 };
@@ -292,6 +295,7 @@ export function RecordManager({
   orderBy,
   primaryLabel,
   secondaryLabel,
+  badge,
   defaults,
   filter = null,
 }: RecordManagerProps) {
@@ -393,11 +397,21 @@ export function RecordManager({
             </CardContent>
           </Card>
         ) : null}
-        {rows.map((row) => (
+        {rows.map((row) => {
+          const badgeText = badge ? badge(row) : null;
+          return (
           <Card key={row['id']} className="border-border/70">
             <CardContent className="flex flex-wrap items-center justify-between gap-3 p-4">
               <div className="min-w-0">
-                <p className="truncate font-medium">{primaryLabel(row)}</p>
+                <div className="flex flex-wrap items-center gap-2">
+                  <p className="truncate font-medium">{primaryLabel(row)}</p>
+                  {badgeText ? (
+                    <Badge className="gap-1 border-transparent bg-emerald-500/15 text-emerald-700 dark:text-emerald-300">
+                      <CheckCircle2 className="size-3.5" />
+                      {badgeText}
+                    </Badge>
+                  ) : null}
+                </div>
                 {secondaryLabel ? (
                   <p className="truncate text-xs text-muted-foreground">{secondaryLabel(row)}</p>
                 ) : null}
@@ -412,7 +426,8 @@ export function RecordManager({
               </div>
             </CardContent>
           </Card>
-        ))}
+          );
+        })}
       </div>
 
       <Dialog open={open} onOpenChange={setOpen}>
