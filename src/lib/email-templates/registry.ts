@@ -25,6 +25,7 @@ import { template as newsUnsubscribed } from './news-unsubscribed'
 import { template as rsvpConfirmation } from './rsvp-confirmation'
 import { template as rsvpDigest } from './rsvp-digest'
 import { template as jobApplication } from './job-application'
+import { template as adminInvite } from './admin-invite'
 
 export const TEMPLATES: Record<string, TemplateEntry> = {
   'membership-confirmation': membershipConfirmation,
@@ -35,4 +36,5 @@ export const TEMPLATES: Record<string, TemplateEntry> = {
   'rsvp-confirmation': rsvpConfirmation,
   'rsvp-digest': rsvpDigest,
   'job-application': jobApplication,
+  'admin-invite': adminInvite,
 }

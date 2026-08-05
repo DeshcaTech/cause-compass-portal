@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AboutRouteImport } from './routes/about'
+import { Route as AdminInviteRouteImport } from './routes/admin-invite'
 import { Route as AssetsRouteImport } from './routes/assets'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as BoardRouteImport } from './routes/board'
@@ -50,6 +51,11 @@ const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
   path: '/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminInviteRoute = AdminInviteRouteImport.update({
+  id: '/admin-invite',
+  path: '/admin-invite',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AssetsRoute = AssetsRouteImport.update({
@@ -183,6 +189,7 @@ const LovableEmailTransactionalPreviewRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/admin-invite': typeof AdminInviteRoute
   '/assets': typeof AssetsRoute
   '/auth': typeof AuthRoute
   '/board': typeof BoardRoute
@@ -212,6 +219,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/admin-invite': typeof AdminInviteRoute
   '/assets': typeof AssetsRoute
   '/auth': typeof AuthRoute
   '/board': typeof BoardRoute
@@ -243,6 +251,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/about': typeof AboutRoute
+  '/admin-invite': typeof AdminInviteRoute
   '/assets': typeof AssetsRoute
   '/auth': typeof AuthRoute
   '/board': typeof BoardRoute
@@ -274,6 +283,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/about'
+    | '/admin-invite'
     | '/assets'
     | '/auth'
     | '/board'
@@ -303,6 +313,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/about'
+    | '/admin-invite'
     | '/assets'
     | '/auth'
     | '/board'
@@ -333,6 +344,7 @@ export interface FileRouteTypes {
     | '/'
     | '/_authenticated'
     | '/about'
+    | '/admin-invite'
     | '/assets'
     | '/auth'
     | '/board'
@@ -364,6 +376,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AboutRoute: typeof AboutRoute
+  AdminInviteRoute: typeof AdminInviteRoute
   AssetsRoute: typeof AssetsRoute
   AuthRoute: typeof AuthRoute
   BoardRoute: typeof BoardRoute
@@ -411,6 +424,13 @@ declare module '@tanstack/react-router' {
       path: '/about'
       fullPath: '/about'
       preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin-invite': {
+      id: '/admin-invite'
+      path: '/admin-invite'
+      fullPath: '/admin-invite'
+      preLoaderRoute: typeof AdminInviteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/assets': {
@@ -606,6 +626,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AboutRoute: AboutRoute,
+  AdminInviteRoute: AdminInviteRoute,
   AssetsRoute: AssetsRoute,
   AuthRoute: AuthRoute,
   BoardRoute: BoardRoute,

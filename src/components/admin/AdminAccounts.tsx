@@ -21,6 +21,7 @@ import {
   revokeAdminAccess,
   setAdminLevel,
 } from "@/lib/admins.functions";
+import { AdminInvites } from "@/components/admin/AdminInvites";
 
 const LEVELS = [
   { value: "admin", label: "Level 1 — full admin + account management" },
@@ -88,9 +89,14 @@ export function AdminAccounts() {
         </p>
       </div>
 
+      <AdminInvites />
+
       <Card className="border-border/70">
         <CardContent className="space-y-4 p-6">
-          <h3 className="text-lg">Create an admin account</h3>
+          <h3 className="text-lg">Create an account directly</h3>
+          <p className="text-sm text-muted-foreground">
+            Sets a temporary password yourself instead of sending an invitation.
+          </p>
           <div className="grid gap-4 md:grid-cols-2">
             <div className="space-y-1.5">
               <Label htmlFor="admin-name">Full name</Label>
