@@ -6,6 +6,7 @@ import { toast } from "sonner";
 
 import { PageHeader } from "@/components/site/PageHeader";
 import { RecordManager } from "@/components/admin/RecordManager";
+import { SurveysManager } from "@/components/admin/SurveysManager";
 import { FundraisingReport } from "@/components/admin/FundraisingReport";
 import { NewsNotifier } from "@/components/admin/NewsNotifier";
 import { RsvpManager } from "@/components/admin/RsvpManager";
