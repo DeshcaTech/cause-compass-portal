@@ -115,9 +115,22 @@ function AboutPage() {
               loading="lazy"
               className="aspect-[3/4] w-full object-cover object-top"
             />
-            <CardContent className="p-7">
-              <Quote className="size-8 text-gold" />
-              <p className="mt-5 font-display text-2xl">{president?.president_name ?? "—"}</p>
+            <CardContent className="p-7 text-center">
+              <Quote className="mx-auto size-8 text-gold" />
+              {(() => {
+                const raw = president?.president_name ?? "—";
+                const match = raw.match(/^(.*?)\s*(\(.*\))\s*$/);
+                const first = match ? match[1] : raw;
+                const second = match ? match[2] : null;
+                return (
+                  <>
+                    <p className="mt-5 font-display text-2xl leading-tight">{first}</p>
+                    {second && (
+                      <p className="font-display text-2xl leading-tight text-primary-foreground/90">{second}</p>
+                    )}
+                  </>
+                );
+              })()}
               <p className="text-sm text-primary-foreground/70">{president?.title}</p>
             </CardContent>
           </Card>
