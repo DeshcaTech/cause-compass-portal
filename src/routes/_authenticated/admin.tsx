@@ -15,6 +15,7 @@ import { BrandSettings } from "@/components/admin/BrandSettings";
 import { SiteContentSettings } from "@/components/admin/SiteContentSettings";
 import { AdminAccounts } from "@/components/admin/AdminAccounts";
 import { AuditLog } from "@/components/admin/AuditLog";
+import { AccessDenied } from "@/components/admin/AccessDenied";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -23,8 +24,10 @@ import { galleriesQuery } from "@/lib/queries";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   // Drilldown dialog state lives in the URL so back/forward reopen it.
-  validateSearch: (search: Record<string, unknown>): { campaign?: string } =>
-    typeof search['campaign'] === "string" ? { campaign: search['campaign'] } : {},
+  validateSearch: (search: Record<string, unknown>): { campaign?: string; tab?: string } => ({
+    ...(typeof search['campaign'] === "string" ? { campaign: search['campaign'] } : {}),
+    ...(typeof search['tab'] === "string" ? { tab: search['tab'] } : {}),
+  }),
   head: () => ({
     meta: [
       { title: "Admin panel — Manage CCGMs Content" },
@@ -45,6 +48,7 @@ export const Route = createFileRoute("/_authenticated/admin")({
 
 function AdminPage() {
   const navigate = useNavigate();
+  const { tab: requestedTab } = Route.useSearch();
   const queryClient = useQueryClient();
   const { data: galleries = [] } = useQuery(galleriesQuery);
   const [albumId, setAlbumId] = useState<string>("");
@@ -101,24 +105,50 @@ function AdminPage() {
 
   if (!hasAnyAccess) {
     return (
-      <section className="container-page py-20">
-        <Card className="mx-auto max-w-md border-border/70">
-          <CardContent className="space-y-4 p-8 text-center">
-            <h1 className="text-xl">Admin access required</h1>
-            <p className="text-sm text-muted-foreground">
-              Your account doesn't have an admin or manager role. Ask an existing administrator to
-              grant you access to the board, president's message or fundraising area.
-            </p>
-            <Button variant="soft" onClick={signOut}>
-              <LogOut /> Sign out
-            </Button>
-          </CardContent>
-        </Card>
-      </section>
+      <AccessDenied
+        requirement="Any admin level (1–3) or an area manager role"
+        currentLevel="No admin role"
+        onSignOut={signOut}
+      />
     );
   }
 
   const activeAlbum = albumId || galleries[0]?.id || "";
+  const access: Record<string, { label: string; allowed: boolean; requirement: string }> = {
+    events: { label: "Events", allowed: isContentAdmin, requirement: "Admin level 1, 2 or 3" },
+    news: { label: "News", allowed: isContentAdmin, requirement: "Admin level 1, 2 or 3" },
+    rsvps: { label: "RSVPs", allowed: can("event"), requirement: "Admin level 1–3 or event manager" },
+    gallery: { label: "Gallery", allowed: isContentAdmin, requirement: "Admin level 1, 2 or 3" },
+    partners: { label: "Partners", allowed: isContentAdmin, requirement: "Admin level 1, 2 or 3" },
+    jobs: { label: "Jobs", allowed: isContentAdmin, requirement: "Admin level 1, 2 or 3" },
+    "job-applications": { label: "Applications", allowed: isContentAdmin, requirement: "Admin level 1, 2 or 3" },
+    referrals: { label: "Get Support", allowed: isAdmin, requirement: "Admin level 1 or 2" },
+    brand: { label: "Brand", allowed: isContentAdmin, requirement: "Admin level 1, 2 or 3" },
+    "site-content": { label: "Site content", allowed: isContentAdmin, requirement: "Admin level 1, 2 or 3" },
+    documents: { label: "Documents", allowed: isContentAdmin, requirement: "Admin level 1, 2 or 3" },
+    campaigns: { label: "Campaigns", allowed: can("fundraising"), requirement: "Admin level 1–2 or fundraising manager" },
+    reports: { label: "Reports", allowed: can("fundraising"), requirement: "Admin level 1–2 or fundraising manager" },
+    board: { label: "Board", allowed: can("board"), requirement: "Admin level 1–3 or board manager" },
+    president: { label: "President's message", allowed: can("president"), requirement: "Admin level 1–2 or president manager" },
+    assets: { label: "Assets", allowed: isAdmin, requirement: "Admin level 1 or 2" },
+    "village-groups": { label: "Groups", allowed: isContentAdmin, requirement: "Admin level 1, 2 or 3" },
+    surveys: { label: "Surveys", allowed: isAdmin, requirement: "Admin level 1 or 2" },
+    roles: { label: "Roles", allowed: isContentAdmin, requirement: "Admin level 1, 2 or 3" },
+    admins: { label: "Admin accounts", allowed: isSuperAdmin, requirement: "Admin level 1 (super admin)" },
+    activity: { label: "Activity log", allowed: isContentAdmin, requirement: "Admin level 1, 2 or 3" },
+  };
+  const blocked = requestedTab ? access[requestedTab] : undefined;
+  if (requestedTab && (!blocked || !blocked.allowed)) {
+    return (
+      <AccessDenied
+        section={blocked?.label ?? requestedTab}
+        requirement={blocked?.requirement ?? "A higher admin level"}
+        currentLevel={levelLabel}
+        onBack={() => navigate({ to: "/admin", search: {}, replace: true })}
+        onSignOut={signOut}
+      />
+    );
+  }
   const defaultTab = isContentAdmin
     ? "events"
     : can("board")
@@ -149,7 +179,7 @@ function AdminPage() {
           </Button>
         </div>
 
-        <Tabs defaultValue={defaultTab}>
+        <Tabs defaultValue={requestedTab ?? defaultTab} onValueChange={(value) => navigate({ to: "/admin", search: (prev: Record<string, unknown>) => ({ ...prev, tab: value }), replace: true })}>
           <TabsList>
             {isContentAdmin && <TabsTrigger value="events">Events</TabsTrigger>}
             {isContentAdmin && <TabsTrigger value="news">News</TabsTrigger>}
