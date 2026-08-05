@@ -107,7 +107,7 @@ function GalleryPage() {
       <PageHeader
         eyebrow={t("Gallery")}
         title={t("Moments from our community")}
-        description={t("Photos are grouped per event. The gallery marked as default opens first.")}
+        description={t("Photos are grouped per event — pick an album to browse its moments.")}
       />
       <FilterPage
         filters={(
@@ -117,7 +117,7 @@ function GalleryPage() {
             onChange={setActiveId}
             options={galleries.map((gallery) => ({
               value: gallery.id,
-              label: `${gallery.title}${gallery.is_default ? ` — ${t("Default")}` : ""}`,
+              label: gallery.title,
               meta: gallery.event_date
                 ? new Date(gallery.event_date).toLocaleDateString("en-GB", {
                     month: "long",
