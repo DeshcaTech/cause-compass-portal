@@ -1,7 +1,10 @@
 import { createServerFn } from '@tanstack/react-start'
 import { z } from 'zod'
 
+import type { SupabaseClient } from '@supabase/supabase-js'
+
 import { requireSupabaseAuth } from '@/integrations/supabase/auth-middleware'
+import type { Database } from '@/integrations/supabase/types'
 
 const ADMIN_ROLES = ['admin', 'admin_l2', 'admin_l3'] as const
 type AdminRole = (typeof ADMIN_ROLES)[number]
@@ -13,10 +16,7 @@ export type AdminAccount = {
   role: AdminRole
 }
 
-async function assertSuperAdmin(
-  supabase: { rpc: (fn: 'is_super_admin', args: { _user_id: string }) => Promise<{ data: boolean | null; error: { message: string } | null }> },
-  userId: string,
-) {
+async function assertSuperAdmin(supabase: SupabaseClient<Database>, userId: string) {
   const { data, error } = await supabase.rpc('is_super_admin', { _user_id: userId })
   if (error) throw new Error(error.message)
   if (!data) throw new Error('Only a level 1 administrator can manage admin accounts')
