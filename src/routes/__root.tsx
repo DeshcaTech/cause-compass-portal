@@ -16,6 +16,7 @@ import { Footer } from "@/components/site/Footer";
 import { Toaster } from "@/components/ui/sonner";
 import { LanguageProvider } from "@/lib/i18n";
 import { BrandStyles } from "@/components/site/BrandStyles";
+import { BuildTogetherCTA } from "@/components/site/BuildTogetherCTA";
 
 function NotFoundComponent() {
   return (
@@ -142,6 +143,7 @@ function RootComponent() {
           <main className="flex-1">
             {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
             <Outlet />
+            <BuildTogetherCTA />
           </main>
           <Footer />
         </div>
