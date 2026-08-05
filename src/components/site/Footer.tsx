@@ -1,9 +1,19 @@
 import { Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
+import { useMemo } from "react";
 import { brandQuery } from "@/lib/brand";
+import { galleriesQuery, galleryPhotosQuery } from "@/lib/queries";
 import { Facebook, Instagram, Mail, MapPin, Phone, Twitter, Youtube } from "lucide-react";
 import whatsappUs from "@/assets/whatsapp-us.png";
 import { TikTok } from "@/components/site/icons/TikTok";
+import { SmartImage } from "@/components/site/SmartImage";
+
+import galleryFallback from "@/assets/gallery-fallback.jpg";
+import communityTogether from "@/assets/community-together.jpg";
+import eventFallback from "@/assets/event-fallback.jpg";
+import heroCommunity from "@/assets/hero-community.jpg";
+import volunteerHero from "@/assets/volunteer-hero.jpg";
+import surveyFallback from "@/assets/survey-fallback.jpg";
 
 import logo from "@/assets/ccgms-wordmark.png?w=640&format=png";
 import logoAvif from "@/assets/ccgms-wordmark.png?w=640&quality=70&format=avif";
@@ -13,6 +23,15 @@ import flagsAsset from "@/assets/cm-uk-flags.jpg.asset.json";
 import { useT } from "@/lib/i18n";
 import { siteSettingsQuery, whatsappHref } from "@/lib/site-settings";
 import { trackEvent } from "@/lib/analytics";
+
+const FOOTER_PLACEHOLDERS = [
+  galleryFallback,
+  communityTogether,
+  eventFallback,
+  heroCommunity,
+  volunteerHero,
+  surveyFallback,
+];
 
 const columns = [
   {
