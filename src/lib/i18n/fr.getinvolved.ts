@@ -49,6 +49,10 @@ export const getinvolved: Record<string, string> = {
   "Closed surveys": "Enquêtes terminées",
   "No active surveys right now.": "Aucune enquête en cours pour le moment.",
   "No closed surveys yet.": "Aucune enquête terminée pour le moment.",
+  "Complete survey": "Répondre à l'enquête",
+  "Complete this survey": "Répondre à cette enquête",
+  "question": "question",
+  "questions": "questions",
 
   // Volunteer
   "Enter your full name": "Saisissez votre nom complet",
