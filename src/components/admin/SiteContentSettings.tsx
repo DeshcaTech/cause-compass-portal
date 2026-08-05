@@ -24,7 +24,13 @@ type Field = {
   toggle?: boolean;
 };
 
-type Group = { title: string; description: string; fields: Field[]; superAdminOnly?: boolean };
+type Group = {
+  title: string;
+  description: string;
+  fields: Field[];
+  superAdminOnly?: boolean;
+  whatsappAdminOnly?: boolean;
+};
 
 const GROUPS: Group[] = [
   {
@@ -76,10 +82,10 @@ const GROUPS: Group[] = [
     ],
   },
   {
-    title: "Contact WhatsApp (level 1 only)",
+    title: "Contact WhatsApp (level 1 & 2)",
     description:
       "Number behind the 'WhatsApp Us' button on the contact page. Use the international format, e.g. 447700900000. Leave empty to hide the button.",
-    superAdminOnly: true,
+    whatsappAdminOnly: true,
     fields: [
       { key: "contact_whatsapp", label: "Community WhatsApp number", hint: "447700900000" },
       {
