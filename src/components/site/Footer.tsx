@@ -307,6 +307,9 @@ export function Footer() {
             {t("All rights reserved.")}
           </p>
           <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-6">
+            <Link to="/admin" className="hover:text-gold">
+              {t("Admin")}
+            </Link>
             <p className="text-primary-foreground/70">
               {t("Powered by")}{" "}
               {waHref ? (
@@ -323,14 +326,6 @@ export function Footer() {
                 <span className="font-semibold text-gold">DeshcaTech</span>
               )}
             </p>
-            <span className="flex gap-4">
-              <Link to="/contact" className="hover:text-gold">
-                {t("Contact us")}
-              </Link>
-              <Link to="/admin" className="hover:text-gold">
-                {t("Admin")}
-              </Link>
-            </span>
           </div>
         </div>
       </div>
