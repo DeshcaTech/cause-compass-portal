@@ -1,4 +1,6 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { zodValidator, fallback } from "@tanstack/zod-adapter";
+import { z } from "zod";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { CalendarDays, Mail, Phone, Users } from "lucide-react";
@@ -16,7 +18,15 @@ import groupsBanner from "@/assets/community-together.jpg";
 const SITE_ORIGIN = "https://cause-compass-portal.lovable.app";
 const PAGE_URL = `${SITE_ORIGIN}/village-groups`;
 
+const CATEGORIES = ["all", "village", "other"] as const;
+type CategoryKey = (typeof CATEGORIES)[number];
+
+const searchSchema = z.object({
+  category: fallback(z.string(), "all").default("all"),
+});
+
 export const Route = createFileRoute("/village-groups")({
+  validateSearch: zodValidator(searchSchema),
   head: () => ({
     meta: [
       { title: "Our Groups — CCGMs Community" },
@@ -48,16 +58,20 @@ export const Route = createFileRoute("/village-groups")({
 
 function VillageGroupsPage() {
   const t = useT();
+  const navigate = useNavigate({ from: "/village-groups" });
+  const search = Route.useSearch();
+  const category: CategoryKey = CATEGORIES.includes(search.category as CategoryKey)
+    ? (search.category as CategoryKey)
+    : "all";
   const { data: groups = [] } = useQuery(villageGroupsQuery);
   const [selected, setSelected] = useState<VillageGroup | null>(null);
-  const [category, setCategory] = useState<"all" | "village" | "other">("all");
 
   const categories = [
     { key: "all" as const, label: t("All groups") },
     { key: "village" as const, label: t("Village-based Groups") },
     { key: "other" as const, label: t("Other Groups") },
   ];
-  const inCategory = (key: "all" | "village" | "other") =>
+  const inCategory = (key: CategoryKey) =>
     key === "all"
       ? groups
       : groups.filter((g) => (g.group_category === "other" ? "other" : "village") === key);
@@ -75,7 +89,7 @@ function VillageGroupsPage() {
           <FilterSelect
             label={t("Category")}
             value={category}
-            onChange={(value) => setCategory(value as "all" | "village" | "other")}
+            onChange={(value) => navigate({ search: { category: value } })}
             options={categories.map((item) => ({
               value: item.key,
               label: item.label,
