@@ -110,7 +110,7 @@ export function Footer() {
                     loading="lazy"
                     width={1536}
                     height={512}
-                    className="h-7 w-auto"
+                    className="h-10 w-auto"
                   />
                 </a>
               ) : null}
