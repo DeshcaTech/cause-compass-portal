@@ -295,6 +295,7 @@ export function RecordManager({
   orderBy,
   primaryLabel,
   secondaryLabel,
+  badge,
   defaults,
   filter = null,
 }: RecordManagerProps) {
