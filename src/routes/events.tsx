@@ -371,7 +371,7 @@ function EventsPage() {
             </div>
           </>
         )}
-      </SidebarPage>
+      </FilterPage>
 
       <EventDialog
         event={selected}
