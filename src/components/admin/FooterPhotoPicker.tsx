@@ -7,7 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { footerPhotosQuery, galleriesQuery, galleryPhotosQuery } from "@/lib/queries";
 import { Button } from "@/components/ui/button";
 
-const MAX_FOOTER_PHOTOS = 100;
+const MAX_FOOTER_PHOTOS = 10;
 
 /**
  * Lets an admin tick photos straight from the gallery albums into the footer

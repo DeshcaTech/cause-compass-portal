@@ -414,7 +414,7 @@ function AdminPage() {
             <RecordManager
               table="footer_photos"
               title="Footer photos"
-              description="The footer pool (max 100). Photos picked above appear here — you can also upload extra ones, edit captions or reorder."
+              description="The footer pool (max 10). Photos picked above appear here — you can also upload extra ones, edit captions or reorder."
               orderBy={{ column: "sort_order" }}
               primaryLabel={(row) => String(row['caption'] ?? "Footer photo")}
               secondaryLabel={(row) => String(row['photo_url'])}
