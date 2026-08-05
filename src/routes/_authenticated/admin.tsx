@@ -12,6 +12,7 @@ import { NewsNotifier } from "@/components/admin/NewsNotifier";
 import { RsvpManager } from "@/components/admin/RsvpManager";
 import { JobApplicationsManager } from "@/components/admin/JobApplicationsManager";
 import { ReferralsManager } from "@/components/admin/ReferralsManager";
+import { VolunteersManager } from "@/components/admin/VolunteersManager";
 import { SubscriberList } from "@/components/admin/SubscriberList";
 import { BrandSettings } from "@/components/admin/BrandSettings";
 import { SiteContentSettings } from "@/components/admin/SiteContentSettings";
@@ -125,6 +126,7 @@ function AdminPage() {
     jobs: { label: "Jobs", allowed: isContentAdmin, requirement: "Admin level 1, 2 or 3" },
     "job-applications": { label: "Applications", allowed: isContentAdmin, requirement: "Admin level 1, 2 or 3" },
     referrals: { label: "Get Support", allowed: isAdmin, requirement: "Admin level 1 or 2" },
+    volunteers: { label: "Volunteers", allowed: isAdmin, requirement: "Admin level 1 or 2" },
     brand: { label: "Brand", allowed: isContentAdmin, requirement: "Admin level 1, 2 or 3" },
     "site-content": { label: "Site content", allowed: isContentAdmin, requirement: "Admin level 1, 2 or 3" },
     documents: { label: "Documents", allowed: isContentAdmin, requirement: "Admin level 1, 2 or 3" },
@@ -191,6 +193,7 @@ function AdminPage() {
             {isContentAdmin && <TabsTrigger value="jobs">Jobs</TabsTrigger>}
             {isContentAdmin && <TabsTrigger value="job-applications">Applications</TabsTrigger>}
             {isAdmin && <TabsTrigger value="referrals">Get Support</TabsTrigger>}
+            {isAdmin && <TabsTrigger value="volunteers">Volunteers</TabsTrigger>}
             {isContentAdmin && <TabsTrigger value="brand">Brand</TabsTrigger>}
             {isContentAdmin && <TabsTrigger value="site-content">Site content</TabsTrigger>}
             {isContentAdmin && <TabsTrigger value="documents">Documents</TabsTrigger>}
@@ -242,6 +245,10 @@ function AdminPage() {
 
           {isAdmin && <TabsContent value="referrals" className="mt-8">
             <ReferralsManager />
+          </TabsContent>}
+
+          {isAdmin && <TabsContent value="volunteers" className="mt-8">
+            <VolunteersManager />
           </TabsContent>}
 
           {isContentAdmin && <TabsContent value="brand" className="mt-8">
