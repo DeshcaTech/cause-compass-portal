@@ -13,6 +13,7 @@ import { ReferralsManager } from "@/components/admin/ReferralsManager";
 import { SubscriberList } from "@/components/admin/SubscriberList";
 import { BrandSettings } from "@/components/admin/BrandSettings";
 import { SiteContentSettings } from "@/components/admin/SiteContentSettings";
+import { AdminAccounts } from "@/components/admin/AdminAccounts";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -62,10 +63,30 @@ function AdminPage() {
     },
   });
 
-  const isAdmin = roles.includes("admin");
+  const level = roles.includes("admin")
+    ? 1
+    : roles.includes("admin_l2")
+      ? 2
+      : roles.includes("admin_l3")
+        ? 3
+        : 99;
+  const isSuperAdmin = level === 1;
+  const isAdmin = level <= 2; // full admin (levels 1 and 2)
+  const isContentAdmin = level <= 3; // content admin (levels 1, 2 and 3)
   const can = (area: "board" | "president" | "fundraising" | "event") =>
-    isAdmin || roles.includes(`${area}_manager`);
-  const hasAnyAccess = isAdmin || can("board") || can("president") || can("fundraising") || can("event");
+    isAdmin ||
+    (isContentAdmin && (area === "board" || area === "event")) ||
+    roles.includes(`${area}_manager`);
+  const hasAnyAccess =
+    isContentAdmin || can("board") || can("president") || can("fundraising") || can("event");
+  const levelLabel =
+    level === 1
+      ? "administrator (level 1)"
+      : level === 2
+        ? "administrator (level 2)"
+        : level === 3
+          ? "content administrator (level 3)"
+          : roles.map((role) => role.replace(/_/g, " ")).join(", ");
 
   async function signOut() {
     await queryClient.cancelQueries();
@@ -98,7 +119,7 @@ function AdminPage() {
   }
 
   const activeAlbum = albumId || galleries[0]?.id || "";
-  const defaultTab = isAdmin
+  const defaultTab = isContentAdmin
     ? "events"
     : can("board")
       ? "board"
@@ -120,7 +141,7 @@ function AdminPage() {
           <p className="text-sm text-muted-foreground">
             Signed in as{" "}
             <span className="font-medium text-foreground">
-              {isAdmin ? "administrator" : roles.map((role) => role.replace(/_/g, " ")).join(", ")}
+            {levelLabel}
             </span>
           </p>
           <Button variant="soft" size="sm" onClick={signOut}>
