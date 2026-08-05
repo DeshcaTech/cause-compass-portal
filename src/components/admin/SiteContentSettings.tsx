@@ -81,6 +81,7 @@ const GROUPS: Group[] = [
       { key: "instagram_url", label: "Instagram", hint: "https://instagram.com/…" },
       { key: "x_url", label: "X (Twitter)", hint: "https://x.com/…" },
       { key: "youtube_url", label: "YouTube", hint: "https://youtube.com/…" },
+      { key: "tiktok_url", label: "TikTok", hint: "https://tiktok.com/@…" },
     ],
   },
   {
