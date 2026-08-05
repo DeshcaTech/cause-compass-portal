@@ -14,6 +14,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { supabase } from "@/integrations/supabase/client";
 import { useT } from "@/lib/i18n";
 import { siteSettingsQuery } from "@/lib/site-settings";
+import whatsappUs from "@/assets/whatsapp-us.png";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
@@ -128,6 +129,24 @@ function ContactPage() {
             <div className="rounded-xl bg-primary-foreground/10 p-4 text-sm text-primary-foreground/80">
               {t("Office hours: Tuesday to Saturday, 10:00 – 17:00. Urgent welfare requests are reviewed within 72 hours.")}
             </div>
+            {site?.contact_whatsapp ? (
+              <a
+                href={`https://wa.me/${site.contact_whatsapp.replace(/[^0-9]/g, "")}`}
+                target="_blank"
+                rel="noreferrer"
+                aria-label={t("Chat with CCGMs on WhatsApp")}
+                className="block transition-transform hover:scale-[1.02]"
+              >
+                <img
+                  src={whatsappUs}
+                  alt={t("Chat with CCGMs on WhatsApp")}
+                  loading="lazy"
+                  width={1536}
+                  height={512}
+                  className="h-14 w-auto"
+                />
+              </a>
+            ) : null}
           </CardContent>
         </Card>
       </section>
