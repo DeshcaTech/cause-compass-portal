@@ -22,8 +22,8 @@ export const NAV: NavGroup[] = [
     items: [
       { label: "President's message", to: "/about" },
       { label: "Board Members", to: "/board" },
-      { label: "Our Groups", to: "/village-groups" },
       { label: "News", to: "/news" },
+      { label: "Our Groups", to: "/village-groups" },
       { label: "Documents", to: "/documents" },
       { label: "Assets rent", to: "/assets" },
     ],
