@@ -363,6 +363,17 @@ export function RecordManager({
     onError: (error: Error) => toast.error(error.message),
   });
 
+  const quickUpdate = useMutation({
+    mutationFn: async ({ row, patch }: { row: Record<string, any>; patch: Record<string, any> }) => {
+      const { error } = await db.from(table).update(patch).eq("id", row['id']);
+      if (error) throw new Error(error.message);
+    },
+    onSuccess: () => {
+      invalidate();
+    },
+    onError: (error: Error) => toast.error(error.message),
+  });
+
   function openCreate() {
     const initial: Record<string, any> = {};
     for (const field of fields) initial[field.name] = toFormValue(field, defaults?.[field.name] ?? null);
