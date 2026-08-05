@@ -12,8 +12,12 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { partnersQuery, type Partner } from "@/lib/queries";
 import businessFallback from "@/assets/business-fallback.jpg";
 import { useT } from "@/lib/i18n";
+import { searchString, useSearchFilter } from "@/lib/use-search-filter";
 
 export const Route = createFileRoute("/partners")({
+  validateSearch: (search: Record<string, unknown>) => ({
+    category: searchString(search, "category"),
+  }),
   head: () => ({
     meta: [
       { title: "Partners — Businesses Owned by CCGMs Members" },
@@ -38,7 +42,7 @@ function PartnersPage() {
   const t = useT();
   const { data: partners = [] } = useQuery(partnersQuery);
   const [selected, setSelected] = useState<Partner | null>(null);
-  const [category, setCategory] = useState("All");
+  const [category, setCategory] = useSearchFilter("category", "All");
   const categories = ["All", ...Array.from(new Set(partners.map((p) => p.category)))];
   const filtered = category === "All" ? partners : partners.filter((p) => p.category === category);
   return (
