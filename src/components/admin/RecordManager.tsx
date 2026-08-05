@@ -432,7 +432,13 @@ export function RecordManager({
                   <p className="truncate text-xs text-muted-foreground">{secondaryLabel(row)}</p>
                 ) : null}
               </div>
-              <div className="flex gap-2">
+              <div className="flex flex-wrap gap-2">
+                {rowActions
+                  ? rowActions(row, {
+                      update: (patch) => quickUpdate.mutate({ row, patch }),
+                      isSaving: quickUpdate.isPending,
+                    })
+                  : null}
                 <Button variant="soft" size="sm" onClick={() => openEdit(row)}>
                   <Pencil /> Edit
                 </Button>
