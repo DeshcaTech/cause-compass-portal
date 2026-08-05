@@ -17,12 +17,12 @@ const columns = [
   {
     title: "Explore",
     links: [
+      { label: "President's message", to: "/about" },
       { label: "Membership", to: "/membership" },
       { label: "Events", to: "/events" },
       { label: "Partners", to: "/partners" },
       { label: "Gallery", to: "/gallery" },
       { label: "Documents", to: "/documents" },
-      { label: "Assets rent", to: "/assets" },
     ],
   },
   {
