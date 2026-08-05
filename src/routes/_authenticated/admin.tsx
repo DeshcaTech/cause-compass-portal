@@ -9,6 +9,7 @@ import { FundraisingReport } from "@/components/admin/FundraisingReport";
 import { NewsNotifier } from "@/components/admin/NewsNotifier";
 import { RsvpManager } from "@/components/admin/RsvpManager";
 import { JobApplicationsManager } from "@/components/admin/JobApplicationsManager";
+import { ReferralsManager } from "@/components/admin/ReferralsManager";
 import { SubscriberList } from "@/components/admin/SubscriberList";
 import { BrandSettings } from "@/components/admin/BrandSettings";
 import { Button } from "@/components/ui/button";
@@ -135,6 +136,7 @@ function AdminPage() {
             {isAdmin && <TabsTrigger value="partners">Partners</TabsTrigger>}
             {isAdmin && <TabsTrigger value="jobs">Jobs</TabsTrigger>}
             {isAdmin && <TabsTrigger value="job-applications">Applications</TabsTrigger>}
+            {isAdmin && <TabsTrigger value="referrals">Get Support</TabsTrigger>}
             {isAdmin && <TabsTrigger value="brand">Brand</TabsTrigger>}
             {can("fundraising") && <TabsTrigger value="campaigns">Campaigns</TabsTrigger>}
             {can("fundraising") && <TabsTrigger value="reports">Reports</TabsTrigger>}
@@ -177,6 +179,10 @@ function AdminPage() {
 
           {isAdmin && <TabsContent value="job-applications" className="mt-8">
             <JobApplicationsManager />
+          </TabsContent>}
+
+          {isAdmin && <TabsContent value="referrals" className="mt-8">
+            <ReferralsManager />
           </TabsContent>}
 
           {isAdmin && <TabsContent value="brand" className="mt-8">
