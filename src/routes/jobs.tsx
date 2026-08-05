@@ -5,7 +5,7 @@ import { Banknote, Briefcase, CalendarClock, ExternalLink, Mail, MapPin, Phone }
 import { toast } from "sonner";
 
 import { PageHeader } from "@/components/site/PageHeader";
-import { SidebarNavItem, SidebarPage, SidebarSection } from "@/components/site/SidebarPage";
+import { FilterPage, FilterSelect } from "@/components/site/FilterPage";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -106,45 +106,43 @@ function JobsPage() {
         title={t("Jobs")}
         description={t("Opportunities shared by our members and partner businesses. Click a role to see full details.")}
       />
-      <SidebarPage
-        sidebar={(
-          <SidebarSection label={t("Category")}>
-            <SidebarNavItem
-              icon={<Briefcase className="size-5" />}
-              title={t("All categories")}
-              meta={`${jobs.length} ${t("roles")}`}
-              active={category === ALL}
-              onClick={() => setCategory(ALL)}
+      <FilterPage
+        filters={(
+          <>
+            <FilterSelect
+              label={t("Category")}
+              value={category}
+              onChange={setCategory}
+              options={[
+                { value: ALL, label: t("All categories"), meta: `${jobs.length} ${t("roles")}` },
+                ...allCategories.map((item) => ({
+                  value: item,
+                  label: item,
+                  meta: `${jobs.filter((job) => job.category === item).length} ${t("roles")}`,
+                })),
+              ]}
             />
-            {allCategories.map((item) => (
-              <SidebarNavItem
-                key={item}
-                icon={<Briefcase className="size-5" />}
-                title={item}
-                meta={`${jobs.filter((job) => job.category === item).length} ${t("roles")}`}
-                active={category === item}
-                onClick={() => setCategory(item)}
-              />
-            ))}
-          </SidebarSection>
+            <FilterSelect
+              label={t("Location")}
+              value={location}
+              onChange={setLocation}
+              options={[
+                { value: ALL, label: t("All locations") },
+                ...options.locations.map((item) => ({ value: item, label: item })),
+              ]}
+            />
+            <FilterSelect
+              label={t("Job type")}
+              value={jobType}
+              onChange={setJobType}
+              options={[
+                { value: ALL, label: t("All job types") },
+                ...options.jobTypes.map((item) => ({ value: item, label: item })),
+              ]}
+            />
+          </>
         )}
       >
-        <div className="grid gap-3 sm:grid-cols-2">
-          <FilterSelect
-            label={t("Location")}
-            value={location}
-            onChange={setLocation}
-            allLabel={t("All locations")}
-            options={options.locations}
-          />
-          <FilterSelect
-            label={t("Job type")}
-            value={jobType}
-            onChange={setJobType}
-            allLabel={t("All job types")}
-            options={options.jobTypes}
-          />
-        </div>
         {hasFilters ? (
           <button
             type="button"
@@ -191,7 +189,7 @@ function JobsPage() {
             ))}
           </div>
         )}
-      </SidebarPage>
+      </FilterPage>
 
       <Dialog open={!!selected} onOpenChange={(open) => !open && setSelected(null)}>
         <DialogContent className="sm:max-w-lg">
@@ -259,39 +257,6 @@ function JobsPage() {
 
       <ApplyDialog job={applyFor} onClose={() => setApplyFor(null)} />
     </>
-  );
-}
-
-function FilterSelect({
-  label,
-  value,
-  onChange,
-  allLabel,
-  options,
-}: {
-  label: string;
-  value: string;
-  onChange: (value: string) => void;
-  allLabel: string;
-  options: string[];
-}) {
-  return (
-    <div className="space-y-1.5">
-      <Label>{label}</Label>
-      <Select value={value} onValueChange={onChange}>
-        <SelectTrigger>
-          <SelectValue placeholder={allLabel} />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value={ALL}>{allLabel}</SelectItem>
-          {options.map((item) => (
-            <SelectItem key={item} value={item}>
-              {item}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-    </div>
   );
 }
 

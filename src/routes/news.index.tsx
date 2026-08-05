@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import { Search, Star } from "lucide-react";
 
 import { PageHeader } from "@/components/site/PageHeader";
-import { SidebarNavItem, SidebarPage } from "@/components/site/SidebarPage";
+import { FilterPage, FilterSelect } from "@/components/site/FilterPage";
 import newsFallback from "@/assets/news-fallback.jpg";
 import { NewsSubscribe } from "@/components/site/NewsSubscribe";
 import { Card, CardContent } from "@/components/ui/card";
@@ -72,24 +72,17 @@ function NewsPage() {
         title={t("News & announcements")}
         description={t("Updates, notices and community news from the CCGMs board.")}
       />
-      <SidebarPage
-        sidebar={(
-          <>
-            <SidebarNavItem
-              image={news[0]?.image_url ?? newsFallback}
-              title={t("All news")}
-              meta={`${news.length}`}
-              active={!featuredOnly}
-              onClick={() => setFeaturedOnly(false)}
-            />
-            <SidebarNavItem
-              image={news.find((n) => n.is_featured)?.image_url ?? newsFallback}
-              title={t("Featured")}
-              meta={`${featuredCount}`}
-              active={featuredOnly}
-              onClick={() => setFeaturedOnly(true)}
-            />
-          </>
+      <FilterPage
+        filters={(
+          <FilterSelect
+            label={t("Category")}
+            value={featuredOnly ? "featured" : "all"}
+            onChange={(value) => setFeaturedOnly(value === "featured")}
+            options={[
+              { value: "all", label: t("All news"), meta: `${news.length}` },
+              { value: "featured", label: t("Featured"), meta: `${featuredCount}` },
+            ]}
+          />
         )}
       >
         <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -150,7 +143,7 @@ function NewsPage() {
         <div className="mt-12">
           <NewsSubscribe />
         </div>
-      </SidebarPage>
+      </FilterPage>
     </div>
   );
 }

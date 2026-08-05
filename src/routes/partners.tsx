@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Globe, Mail, MapPin, Phone } from "lucide-react";
 
 import { PageHeader } from "@/components/site/PageHeader";
-import { SidebarNavItem, SidebarPage } from "@/components/site/SidebarPage";
+import { FilterPage, FilterSelect } from "@/components/site/FilterPage";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -41,10 +41,6 @@ function PartnersPage() {
   const [category, setCategory] = useState("All");
   const categories = ["All", ...Array.from(new Set(partners.map((p) => p.category)))];
   const filtered = category === "All" ? partners : partners.filter((p) => p.category === category);
-  const thumbFor = (item: string) =>
-    (item === "All" ? partners[0] : partners.find((p) => p.category === item))?.logo_url ??
-    businessFallback;
-
   return (
     <>
       <PageHeader
@@ -52,19 +48,23 @@ function PartnersPage() {
         title={t("Businesses owned by our members")}
         description={t("Shop, hire and refer within the community. Click a business to see full details.")}
       />
-      <SidebarPage
-        sidebar={categories.map((item) => (
-          <SidebarNavItem
-            key={item}
-            image={thumbFor(item)}
-            title={item === "All" ? t("All") : item}
-            meta={`${
-              item === "All" ? partners.length : partners.filter((p) => p.category === item).length
-            } ${t("businesses")}`}
-            active={category === item}
-            onClick={() => setCategory(item)}
+      <FilterPage
+        filters={(
+          <FilterSelect
+            label={t("Category")}
+            value={category}
+            onChange={setCategory}
+            options={categories.map((item) => ({
+              value: item,
+              label: item === "All" ? t("All") : item,
+              meta: `${
+                item === "All"
+                  ? partners.length
+                  : partners.filter((p) => p.category === item).length
+              } ${t("businesses")}`,
+            }))}
           />
-        ))}
+        )}
       >
         <div className="grid gap-5 sm:grid-cols-2">
           {filtered.map((partner) => (
@@ -94,7 +94,7 @@ function PartnersPage() {
             {t("No businesses in this category yet.")}
           </p>
         ) : null}
-      </SidebarPage>
+      </FilterPage>
 
       <Dialog open={!!selected} onOpenChange={(open) => !open && setSelected(null)}>
         <DialogContent className="sm:max-w-lg">

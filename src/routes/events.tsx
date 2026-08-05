@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import { ChevronLeft, ChevronRight, MapPin } from "lucide-react";
 
 import { PageHeader } from "@/components/site/PageHeader";
-import { SidebarNavItem, SidebarPage, SidebarSection } from "@/components/site/SidebarPage";
+import { FilterPage, FilterSelect } from "@/components/site/FilterPage";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -201,56 +201,30 @@ function EventsPage() {
         description={t("CCGMs events and other community events — browse the lists or use the monthly calendar.")}
       />
 
-      <SidebarPage
-        sidebar={(
+      <FilterPage
+        filters={(
           <>
-            <SidebarSection label={t("Browse")}>
-              {(["coming", "past", "all", "calendar"] as const).map((value) => (
-                <SidebarNavItem
-                  key={value}
-                  image={
-                    (value === "coming" ? upcoming : value === "past" ? past : visible)[0]
-                      ?.image_url ?? eventFallbackImage(value)
-                  }
-                  title={
-                    value === "coming"
-                      ? t("Coming events")
-                      : value === "past"
-                        ? t("Past events")
-                        : value === "all"
-                          ? t("All events")
-                          : t("Calendar")
-                  }
-                  meta={
-                    value === "coming"
-                      ? `${upcoming.length}`
-                      : value === "past"
-                        ? `${past.length}`
-                        : value === "all"
-                          ? `${visible.length}`
-                          : monthLabel
-                  }
-                  active={tab === value}
-                  onClick={() => setTab(value)}
-                />
-              ))}
-            </SidebarSection>
-            <SidebarSection label={t("Filter by type")}>
-              {(["all", "ccgms", "other"] as const).map((value) => (
-                <SidebarNavItem
-                  key={value}
-                  title={
-                    value === "all"
-                      ? t("All types")
-                      : value === "ccgms"
-                        ? t("CCGMs event")
-                        : t("Other event")
-                  }
-                  active={typeFilter === value}
-                  onClick={() => setTypeFilter(value)}
-                />
-              ))}
-            </SidebarSection>
+            <FilterSelect
+              label={t("Browse")}
+              value={tab}
+              onChange={setTab}
+              options={[
+                { value: "coming", label: t("Coming events"), meta: `${upcoming.length}` },
+                { value: "past", label: t("Past events"), meta: `${past.length}` },
+                { value: "all", label: t("All events"), meta: `${visible.length}` },
+                { value: "calendar", label: t("Calendar"), meta: monthLabel },
+              ]}
+            />
+            <FilterSelect
+              label={t("Filter by type")}
+              value={typeFilter}
+              onChange={(value) => setTypeFilter(value as "all" | "ccgms" | "other")}
+              options={[
+                { value: "all", label: t("All types") },
+                { value: "ccgms", label: t("CCGMs event") },
+                { value: "other", label: t("Other event") },
+              ]}
+            />
           </>
         )}
       >
@@ -397,7 +371,7 @@ function EventsPage() {
             </div>
           </>
         )}
-      </SidebarPage>
+      </FilterPage>
 
       <EventDialog
         event={selected}

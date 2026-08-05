@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { ImageIcon } from "lucide-react";
 
 import { PageHeader } from "@/components/site/PageHeader";
+import { FilterPage, FilterSelect } from "@/components/site/FilterPage";
 import { Lightbox } from "@/components/site/Lightbox";
 import { SmartImage } from "@/components/site/SmartImage";
 import { Badge } from "@/components/ui/badge";
@@ -107,44 +108,25 @@ function GalleryPage() {
         title={t("Moments from our community")}
         description={t("Photos are grouped per event. The gallery marked as default opens first.")}
       />
-      <section className="container-page grid gap-8 py-14 lg:grid-cols-[280px_1fr]">
-        <aside className="space-y-2">
-          {galleries.map((gallery) => (
-            <button
-              key={gallery.id}
-              type="button"
-              onClick={() => setActiveId(gallery.id)}
-              className={`flex w-full items-center gap-3 rounded-xl border p-2 text-left transition-colors ${
-                activeId === gallery.id
-                  ? "border-primary bg-accent"
-                  : "border-border bg-card hover:bg-secondary"
-              }`}
-            >
-              <SmartImage
-                src={mainPhoto(gallery.id, gallery.cover_url)}
-                alt=""
-                loading="lazy"
-                wrapperClassName="size-14 shrink-0 rounded-lg"
-                className="size-full object-cover"
-              />
-              <span className="min-w-0 flex-1">
-              <span className="flex items-center justify-between gap-2">
-                <span className="font-medium">{gallery.title}</span>
-                {gallery.is_default ? <Badge variant="secondary">{t("Default")}</Badge> : null}
-              </span>
-              <span className="mt-1 block text-xs text-muted-foreground">
-                {gallery.event_date
-                  ? new Date(gallery.event_date).toLocaleDateString("en-GB", {
-                      month: "long",
-                      year: "numeric",
-                    })
-                  : t("Undated")}
-              </span>
-              </span>
-            </button>
-          ))}
-        </aside>
-
+      <FilterPage
+        filters={(
+          <FilterSelect
+            label={t("Gallery")}
+            value={activeId ?? ""}
+            onChange={setActiveId}
+            options={galleries.map((gallery) => ({
+              value: gallery.id,
+              label: `${gallery.title}${gallery.is_default ? ` — ${t("Default")}` : ""}`,
+              meta: gallery.event_date
+                ? new Date(gallery.event_date).toLocaleDateString("en-GB", {
+                    month: "long",
+                    year: "numeric",
+                  })
+                : t("Undated"),
+            }))}
+          />
+        )}
+      >
         <div>
           {active ? (
             <div className="relative overflow-hidden rounded-2xl border border-border">
@@ -200,7 +182,7 @@ function GalleryPage() {
             </Card>
           ) : null}
         </div>
-      </section>
+      </FilterPage>
 
       <Lightbox
         tiles={tiles}
