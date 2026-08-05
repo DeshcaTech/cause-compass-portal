@@ -24,7 +24,7 @@ export function SidebarPage({
   children: ReactNode;
 }) {
   return (
-    <section className="container-page grid gap-8 py-14 lg:grid-cols-[280px_1fr]">
+    <section className="container-page grid gap-8 py-10 lg:grid-cols-[280px_1fr]">
       <aside className="space-y-2">{sidebar}</aside>
       <div>
         {banner ? (
@@ -44,7 +44,7 @@ export function SidebarPage({
             </div>
           </div>
         ) : null}
-        <div className={banner ? "mt-6" : undefined}>{children}</div>
+        <div className={banner ? "mt-4" : undefined}>{children}</div>
       </div>
     </section>
   );
