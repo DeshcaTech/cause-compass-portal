@@ -121,7 +121,7 @@ function Index() {
       <section className="relative isolate overflow-hidden bg-primary text-primary-foreground">
         <div className="container-page grid items-center gap-10 py-14 sm:py-16 lg:grid-cols-[1.05fr_0.95fr] lg:py-24">
           <div className="min-w-0">
-            <div className="flex items-center justify-between gap-3 sm:gap-4">
+            <div className="flex items-center justify-end gap-3 sm:gap-4">
               <p className="eyebrow min-w-0 text-right text-gold leading-relaxed">
                 {(site ? site.hero_eyebrow : t("Cameroonian Community in Greater Manchester and Surrounding area"))
                   .split("\n")
