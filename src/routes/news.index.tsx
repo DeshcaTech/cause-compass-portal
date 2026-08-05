@@ -86,7 +86,7 @@ function NewsPage() {
               <FilterSelect
                 label={t("Category")}
                 value={featuredOnly ? "featured" : "all"}
-                onChange={(value) => setFeaturedOnly(value === "featured")}
+                onChange={(value) => setView(value)}
                 options={[
                   { value: "all", label: t("All news"), meta: `${news.length}` },
                   { value: "featured", label: t("Featured"), meta: `${featuredCount}` },
