@@ -258,6 +258,8 @@ export type RecordManagerProps = {
   orderBy?: { column: string; ascending?: boolean };
   primaryLabel: (row: Record<string, any>) => string;
   secondaryLabel?: (row: Record<string, any>) => string;
+  /** When provided, returns a short label shown as a highlighted badge next to the title (return null/empty to hide). */
+  badge?: (row: Record<string, any>) => string | null;
   defaults?: Record<string, any>;
   filter?: { column: string; value: string } | null;
 };
