@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { Mail, MapPin, Phone } from "lucide-react";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -12,6 +13,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { supabase } from "@/integrations/supabase/client";
 import { useT } from "@/lib/i18n";
+import { siteSettingsQuery } from "@/lib/site-settings";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
@@ -42,6 +44,7 @@ const schema = z.object({
 function ContactPage() {
   const t = useT();
   const [saving, setSaving] = useState(false);
+  const { data: site } = useQuery(siteSettingsQuery);
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -113,13 +116,14 @@ function ContactPage() {
           <CardContent className="space-y-5 p-7">
             <h2 className="text-xl text-primary-foreground">{t("Community office")}</h2>
             <p className="flex items-start gap-3 text-sm text-primary-foreground/80">
-              <MapPin className="mt-0.5 size-4 shrink-0" /> {t("CCGMs Centre, 24 Unity Road")}
+              <MapPin className="mt-0.5 size-4 shrink-0" />{" "}
+              {site?.contact_address ?? t("CCGMs Centre, 24 Unity Road")}
             </p>
             <p className="flex items-start gap-3 text-sm text-primary-foreground/80">
-              <Phone className="mt-0.5 size-4 shrink-0" /> 07700 900000
+              <Phone className="mt-0.5 size-4 shrink-0" /> {site?.contact_phone ?? "07700 900000"}
             </p>
             <p className="flex items-start gap-3 text-sm text-primary-foreground/80">
-              <Mail className="mt-0.5 size-4 shrink-0" /> hello@ccgms.org
+              <Mail className="mt-0.5 size-4 shrink-0" /> {site?.contact_email ?? "hello@ccgms.org"}
             </p>
             <div className="rounded-xl bg-primary-foreground/10 p-4 text-sm text-primary-foreground/80">
               {t("Office hours: Tuesday to Saturday, 10:00 – 17:00. Urgent welfare requests are reviewed within 72 hours.")}
