@@ -89,7 +89,9 @@ function VillageGroupsPage() {
           <FilterSelect
             label={t("Category")}
             value={category}
-            onChange={(value) => navigate({ search: { category: value } })}
+            onChange={(value) =>
+              navigate({ search: { category: value === "all" ? undefined : value } })
+            }
             options={categories.map((item) => ({
               value: item.key,
               label: item.label,

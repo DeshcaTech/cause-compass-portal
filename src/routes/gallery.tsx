@@ -17,6 +17,7 @@ import heroCommunity from "@/assets/hero-community.jpg";
 import surveyFallback from "@/assets/survey-fallback.jpg";
 import volunteerHero from "@/assets/volunteer-hero.jpg";
 import { useT } from "@/lib/i18n";
+import { searchString, useSearchFilter } from "@/lib/use-search-filter";
 
 const PLACEHOLDER_PHOTOS = [
   galleryFallback,
