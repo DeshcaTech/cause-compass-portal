@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useRouter } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useMemo, useState } from "react";
 import { brandQuery } from "@/lib/brand";
@@ -300,6 +300,23 @@ export function Footer() {
           </div>
         </div>
       </div>
+      {(() => {
+        const pathname = useRouter().state.location.pathname.replace(/\/$/, "") || "/";
+        const showCta = pathname !== "/" && pathname !== "/membership";
+        if (!showCta) return null;
+        return (
+          <div className="border-t border-primary-foreground/15">
+            <div className="container-page flex justify-center py-5">
+              <Link
+                to="/membership"
+                className="inline-flex items-center justify-center rounded-full bg-terracotta px-6 py-2.5 text-sm font-semibold text-terracotta-foreground shadow-sm transition-transform hover:scale-[1.03]"
+              >
+                {t("Let's Build It Together")}
+              </Link>
+            </div>
+          </div>
+        );
+      })()}
       <div className="border-t border-primary-foreground/15">
         <div className="container-page flex flex-col gap-2 py-5 text-xs text-primary-foreground/60 sm:flex-row sm:items-center sm:justify-between">
           <p>
