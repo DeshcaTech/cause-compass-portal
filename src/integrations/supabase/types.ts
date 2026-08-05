@@ -63,6 +63,7 @@ export type Database = {
           id: string
           image_url: string | null
           is_featured: boolean
+          is_pinned: boolean
           is_published: boolean
           notified_at: string | null
           published_at: string
@@ -75,6 +76,7 @@ export type Database = {
           id?: string
           image_url?: string | null
           is_featured?: boolean
+          is_pinned?: boolean
           is_published?: boolean
           notified_at?: string | null
           published_at?: string
@@ -87,6 +89,7 @@ export type Database = {
           id?: string
           image_url?: string | null
           is_featured?: boolean
+          is_pinned?: boolean
           is_published?: boolean
           notified_at?: string | null
           published_at?: string
