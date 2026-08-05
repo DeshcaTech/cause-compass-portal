@@ -138,6 +138,8 @@ function AdminPage() {
             {isAdmin && <TabsTrigger value="job-applications">Applications</TabsTrigger>}
             {isAdmin && <TabsTrigger value="referrals">Get Support</TabsTrigger>}
             {isAdmin && <TabsTrigger value="brand">Brand</TabsTrigger>}
+            {isAdmin && <TabsTrigger value="site-content">Site content</TabsTrigger>}
+            {isAdmin && <TabsTrigger value="documents">Documents</TabsTrigger>}
             {can("fundraising") && <TabsTrigger value="campaigns">Campaigns</TabsTrigger>}
             {can("fundraising") && <TabsTrigger value="reports">Reports</TabsTrigger>}
             {can("board") && <TabsTrigger value="board">Board</TabsTrigger>}
