@@ -2,7 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 import { brandQuery } from "@/lib/brand";
-import { galleriesQuery, galleryPhotosQuery } from "@/lib/queries";
+import { footerPhotosQuery, galleriesQuery, galleryPhotosQuery } from "@/lib/queries";
 import { Facebook, Instagram, Mail, MapPin, Phone, Twitter, Youtube } from "lucide-react";
 import whatsappUs from "@/assets/whatsapp-us.png";
 import { TikTok } from "@/components/site/icons/TikTok";
@@ -64,6 +64,10 @@ export function Footer() {
   const { data: site } = useQuery(siteSettingsQuery);
   const { data: galleries = [] } = useQuery(galleriesQuery);
   const { data: photos = [] } = useQuery(galleryPhotosQuery);
+  const { data: curated = [] } = useQuery(footerPhotosQuery);
+  // Reshuffle only after hydration so server and client markup match.
+  const [shuffleSeed, setShuffleSeed] = useState(0);
+  useEffect(() => setShuffleSeed(Math.random()), []);
   const waHref = whatsappHref(
     site?.developer_whatsapp || site?.contact_whatsapp || site?.contact_phone,
     site?.whatsapp_message,
@@ -75,6 +79,20 @@ export function Footer() {
   // admin-chosen default gallery's photos, then any gallery photos, then
   // placeholders so the strip always looks complete.
   const galleryTiles = useMemo(() => {
+    if (curated.length > 0) {
+      const pool = [...curated];
+      if (shuffleSeed) {
+        for (let i = pool.length - 1; i > 0; i -= 1) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [pool[i], pool[j]] = [pool[j]!, pool[i]!];
+        }
+      }
+      return pool.slice(0, 6).map((p) => ({
+        key: p.id,
+        src: p.photo_url,
+        alt: p.caption ?? "Community photo",
+      }));
+    }
     const defaultGallery = galleries.find((g) => g.is_default) ?? galleries[0];
     let real = photos
       .filter((p) => (defaultGallery ? p.gallery_id === defaultGallery.id : true))
@@ -90,7 +108,7 @@ export function Footer() {
       alt: "Community photo",
     }));
     return [...real, ...fillers].slice(0, 6);
-  }, [galleries, photos]);
+  }, [galleries, photos, curated, shuffleSeed]);
   return (
     <footer className="mt-24 border-t border-border bg-primary text-primary-foreground">
       <div className="container-page grid grid-cols-2 gap-8 py-12 sm:gap-10 lg:grid-cols-6">
