@@ -11,7 +11,7 @@ const MAX_FOOTER_PHOTOS = 10;
 
 /**
  * Lets an admin tick photos straight from the gallery albums into the footer
- * pool (max 100). Ticking a selected photo removes it from the footer again.
+ * pool (max 10). Ticking a selected photo removes it from the footer again.
  */
 export function FooterPhotoPicker() {
   const queryClient = useQueryClient();
