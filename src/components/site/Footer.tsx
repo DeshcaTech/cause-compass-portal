@@ -133,7 +133,19 @@ export function Footer() {
             {t("All rights reserved.")}
           </p>
           <p className="text-primary-foreground/70">
-            {t("Powered by")} <span className="font-semibold text-gold">DeshcaTech</span>
+            {t("Powered by")}{" "}
+            {waHref ? (
+              <a
+                href={waHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-semibold text-gold underline-offset-4 hover:underline"
+              >
+                DeshcaTech
+              </a>
+            ) : (
+              <span className="font-semibold text-gold">DeshcaTech</span>
+            )}
           </p>
           <span className="flex gap-4">
             <Link to="/contact" className="hover:text-gold">
