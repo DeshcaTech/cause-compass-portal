@@ -9,6 +9,7 @@ import newsFallback from "@/assets/news-fallback.jpg";
 import { NewsSubscribe } from "@/components/site/NewsSubscribe";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { announcementsQuery } from "@/lib/queries";
 import { useT } from "@/lib/i18n";
