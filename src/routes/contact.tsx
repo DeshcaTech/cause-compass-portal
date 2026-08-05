@@ -13,7 +13,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { supabase } from "@/integrations/supabase/client";
 import { useT } from "@/lib/i18n";
-import { siteSettingsQuery } from "@/lib/site-settings";
+import { siteSettingsQuery, whatsappHref } from "@/lib/site-settings";
 import { trackEvent } from "@/lib/analytics";
 import whatsappUs from "@/assets/whatsapp-us.png";
 
@@ -126,9 +126,14 @@ function ContactPage() {
                 <Phone className="mt-0.5 size-4 shrink-0" /> {site?.contact_phone ?? "07700 900000"}
               </p>
               {site?.show_contact_whatsapp !== false &&
-              (site?.contact_whatsapp || site?.contact_phone) ? (
+              whatsappHref(site?.contact_whatsapp || site?.contact_phone, site?.whatsapp_message) ? (
                 <a
-                  href={`https://wa.me/${(site.contact_whatsapp || site.contact_phone || "").replace(/[^0-9]/g, "")}`}
+                  href={
+                    whatsappHref(
+                      site?.contact_whatsapp || site?.contact_phone,
+                      site?.whatsapp_message,
+                    )!
+                  }
                   target="_blank"
                   rel="noreferrer"
                   aria-label={t("Chat with CCGMs on WhatsApp")}

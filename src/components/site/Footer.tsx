@@ -9,7 +9,8 @@ import logoWebp from "@/assets/ccgms-wordmark.png?w=640&quality=80&format=webp";
 import { Picture } from "@/components/site/Picture";
 import flagsAsset from "@/assets/cm-uk-flags.jpg.asset.json";
 import { useT } from "@/lib/i18n";
-import { siteSettingsQuery } from "@/lib/site-settings";
+import { siteSettingsQuery, whatsappHref } from "@/lib/site-settings";
+import { trackEvent } from "@/lib/analytics";
 
 const columns = [
   {
@@ -55,11 +56,10 @@ export function Footer() {
   const t = useT();
   const { data: brand } = useQuery(brandQuery);
   const { data: site } = useQuery(siteSettingsQuery);
-  const rawWa =
-    site?.developer_whatsapp || site?.contact_whatsapp || site?.contact_phone || "";
-  let waDigits = rawWa.replace(/[^\d]/g, "");
-  if (waDigits.startsWith("0")) waDigits = `44${waDigits.slice(1)}`;
-  const waHref = waDigits.length >= 9 ? `https://wa.me/${waDigits}` : null;
+  const waHref = whatsappHref(
+    site?.developer_whatsapp || site?.contact_whatsapp || site?.contact_phone,
+    site?.whatsapp_message,
+  );
   const showLogo = brand?.show_logo_footer ?? true;
   const customLogo = brand?.logo_url ?? null;
   return (
@@ -144,6 +144,7 @@ export function Footer() {
                 href={waHref}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() => void trackEvent("deshcatech_whatsapp_click", { source: "footer" })}
                 className="font-semibold text-gold underline-offset-4 hover:underline"
               >
                 DeshcaTech

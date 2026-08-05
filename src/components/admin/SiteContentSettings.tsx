@@ -93,6 +93,12 @@ const GROUPS: Group[] = [
         label: "Show the WhatsApp button on the contact page",
         toggle: true,
       },
+      {
+        key: "whatsapp_message",
+        label: "Default WhatsApp message (optional)",
+        hint: "Hello CCGMs, I'd like to ask about…",
+        multiline: true,
+      },
     ],
   },
 ];
@@ -134,6 +140,7 @@ export function SiteContentSettings({
           ? draft.developer_whatsapp.trim()
           : null,
         contact_whatsapp: draft.contact_whatsapp?.trim() ? draft.contact_whatsapp.trim() : null,
+        whatsapp_message: draft.whatsapp_message?.trim() ? draft.whatsapp_message.trim() : null,
       };
       if (!isSuperAdmin) {
         delete (payload as Partial<SiteSettings>).developer_whatsapp;
@@ -141,6 +148,7 @@ export function SiteContentSettings({
       if (!whatsappAllowed) {
         delete (payload as Partial<SiteSettings>).contact_whatsapp;
         delete (payload as Partial<SiteSettings>).show_contact_whatsapp;
+        delete (payload as Partial<SiteSettings>).whatsapp_message;
       }
       const { error } = await supabase.from("site_settings").update(payload).eq("id", 1);
       if (error) throw new Error(error.message);

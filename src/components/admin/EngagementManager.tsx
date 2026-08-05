@@ -29,7 +29,7 @@ export function EngagementManager() {
       const { data, error } = await supabase
         .from("analytics_events")
         .select("id, event_name, page_path, created_at")
-        .eq("event_name", "whatsapp_us_click")
+        .in("event_name", ["whatsapp_us_click", "deshcatech_whatsapp_click"])
         .order("created_at", { ascending: false })
         .limit(500);
       if (error) throw new Error(error.message);
@@ -43,6 +43,8 @@ export function EngagementManager() {
       total: events.length,
       last7: ts.filter((t) => t >= since(7)).length,
       last30: ts.filter((t) => t >= since(30)).length,
+      whatsappUs: events.filter((e) => e.event_name === "whatsapp_us_click").length,
+      deshcatech: events.filter((e) => e.event_name === "deshcatech_whatsapp_click").length,
     };
   }, [events]);
 
@@ -50,9 +52,9 @@ export function EngagementManager() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h2 className="text-xl font-semibold">WhatsApp Us engagement</h2>
+          <h2 className="text-xl font-semibold">WhatsApp engagement</h2>
           <p className="text-sm text-muted-foreground">
-            Every click on the “WhatsApp Us” button on the contact page.
+            Clicks on the “WhatsApp Us” button and the footer DeshcaTech link.
           </p>
         </div>
         <Button variant="outline" onClick={() => void refetch()} disabled={isFetching}>
@@ -60,11 +62,13 @@ export function EngagementManager() {
         </Button>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-3">
+      <div className="grid gap-4 sm:grid-cols-3 lg:grid-cols-5">
         {[
           { label: "Total clicks", value: stats.total },
           { label: "Last 7 days", value: stats.last7 },
           { label: "Last 30 days", value: stats.last30 },
+          { label: "WhatsApp Us", value: stats.whatsappUs },
+          { label: "DeshcaTech link", value: stats.deshcatech },
         ].map((card) => (
           <Card key={card.label} className="border-border/70">
             <CardContent className="flex items-center gap-4 p-6">
@@ -89,6 +93,9 @@ export function EngagementManager() {
               {events.map((event) => (
                 <div key={event.id} className="flex items-center justify-between gap-4 px-6 py-3 text-sm">
                   <span>{formatStamp(event.created_at)}</span>
+                  <span className="font-medium">
+                    {event.event_name === "deshcatech_whatsapp_click" ? "DeshcaTech" : "WhatsApp Us"}
+                  </span>
                   <span className="text-muted-foreground">{event.page_path ?? "—"}</span>
                 </div>
               ))}
