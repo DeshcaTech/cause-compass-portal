@@ -55,6 +55,8 @@ export function Footer() {
   const t = useT();
   const { data: brand } = useQuery(brandQuery);
   const { data: site } = useQuery(siteSettingsQuery);
+  const waDigits = (site?.developer_whatsapp ?? "").replace(/[^\d]/g, "");
+  const waHref = waDigits ? `https://wa.me/${waDigits}` : null;
   const showLogo = brand?.show_logo_footer ?? true;
   const customLogo = brand?.logo_url ?? null;
   return (
