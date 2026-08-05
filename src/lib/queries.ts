@@ -356,3 +356,13 @@ export function formatDate(value: string, withTime = false) {
     ...(withTime ? { hour: "2-digit", minute: "2-digit" } : {}),
   });
 }
+
+/** 8-digit numeric date, e.g. 08/08/2026 */
+export function formatDateShort(value: string) {
+  const date = new Date(value);
+  return date.toLocaleDateString("en-GB", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  });
+}
