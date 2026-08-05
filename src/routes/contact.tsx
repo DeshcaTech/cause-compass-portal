@@ -130,8 +130,8 @@ function ContactPage() {
                 <a
                   href={
                     whatsappHref(
-                      site.contact_whatsapp || site.contact_phone,
-                      site.whatsapp_message,
+                      site?.contact_whatsapp || site?.contact_phone,
+                      site?.whatsapp_message,
                     )!
                   }
                   target="_blank"
