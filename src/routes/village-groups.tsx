@@ -7,13 +7,11 @@ import { CalendarDays, Mail, Phone, Users } from "lucide-react";
 
 import { PageHeader } from "@/components/site/PageHeader";
 import { FilterPage, FilterSelect } from "@/components/site/FilterPage";
-import { SmartImage } from "@/components/site/SmartImage";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { villageGroupsQuery, type VillageGroup } from "@/lib/queries";
 import { useT } from "@/lib/i18n";
-import groupsBanner from "@/assets/community-together.jpg";
 
 const SITE_ORIGIN = "https://cause-compass-portal.lovable.app";
 const PAGE_URL = `${SITE_ORIGIN}/village-groups`;
