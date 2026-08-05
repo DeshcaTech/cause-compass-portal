@@ -179,7 +179,7 @@ function AdminPage() {
           </Button>
         </div>
 
-        <Tabs defaultValue={defaultTab}>
+        <Tabs defaultValue={requestedTab ?? defaultTab} onValueChange={(value) => navigate({ to: "/admin", search: (prev) => ({ ...prev, tab: value }), replace: true })}>
           <TabsList>
             {isContentAdmin && <TabsTrigger value="events">Events</TabsTrigger>}
             {isContentAdmin && <TabsTrigger value="news">News</TabsTrigger>}
