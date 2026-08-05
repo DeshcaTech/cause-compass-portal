@@ -10,6 +10,46 @@ import { boardQuery, type BoardMember } from "@/lib/queries";
 import { useT } from "@/lib/i18n";
 import { searchString, useSearchFilter } from "@/lib/use-search-filter";
 import personFallback from "@/assets/person-fallback.jpg";
+import boardM1 from "@/assets/board/m1.jpg";
+import boardM2 from "@/assets/board/m2.jpg";
+import boardM3 from "@/assets/board/m3.jpg";
+import boardM4 from "@/assets/board/m4.jpg";
+import boardM5 from "@/assets/board/m5.jpg";
+import boardF1 from "@/assets/board/f1.jpg";
+import boardF2 from "@/assets/board/f2.jpg";
+import boardF3 from "@/assets/board/f3.jpg";
+import boardF4 from "@/assets/board/f4.jpg";
+import boardF5 from "@/assets/board/f5.jpg";
+
+const MALE_PORTRAITS = [boardM1, boardM2, boardM3, boardM4, boardM5];
+const FEMALE_PORTRAITS = [boardF1, boardF2, boardF3, boardF4, boardF5];
+const FEMALE_HINTS = [
+  "rose",
+  "alice",
+  "marie",
+  "claire",
+  "grace",
+  "linda",
+  "mary",
+  "anne",
+  "sarah",
+  "esther",
+  "julie",
+  "brenda",
+];
+
+function hash(value: string) {
+  let total = 0;
+  for (let i = 0; i < value.length; i += 1) total = (total * 31 + value.charCodeAt(i)) >>> 0;
+  return total;
+}
+
+function portraitFor(member: BoardMember) {
+  if (member.photo_url) return member.photo_url;
+  const name = member.full_name.toLowerCase();
+  const pool = FEMALE_HINTS.some((hint) => name.includes(hint)) ? FEMALE_PORTRAITS : MALE_PORTRAITS;
+  return pool[hash(member.id) % pool.length] ?? personFallback;
+}
 
 export const Route = createFileRoute("/board")({
   validateSearch: (search: Record<string, unknown>): { team?: string | undefined} => ({
@@ -46,10 +86,10 @@ function MemberGrid({ members }: { members: BoardMember[] }) {
         <Card key={member.id} className="border-border/70">
           <CardContent className="p-6">
             <img
-              src={member.photo_url ?? personFallback}
+              src={portraitFor(member)}
               alt={member.full_name}
               loading="lazy"
-              className="size-16 rounded-full object-cover"
+              className="size-16 rounded-full object-cover object-top"
             />
             <p className="mt-4 font-display text-lg">{member.full_name}</p>
             <p className="text-sm text-primary">{member.role_title}</p>
