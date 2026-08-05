@@ -73,6 +73,15 @@ const GROUPS: Group[] = [
       { key: "developer_whatsapp", label: "DeshcaTech WhatsApp number", hint: "447700900000" },
     ],
   },
+  {
+    title: "Contact WhatsApp (level 1 only)",
+    description:
+      "Number behind the 'WhatsApp Us' button on the contact page. Use the international format, e.g. 447700900000. Leave empty to hide the button.",
+    superAdminOnly: true,
+    fields: [
+      { key: "contact_whatsapp", label: "Community WhatsApp number", hint: "447700900000" },
+    ],
+  },
 ];
 
 export function SiteContentSettings({ isSuperAdmin = false }: { isSuperAdmin?: boolean }) {
@@ -104,8 +113,12 @@ export function SiteContentSettings({ isSuperAdmin = false }: { isSuperAdmin?: b
         developer_whatsapp: draft.developer_whatsapp?.trim()
           ? draft.developer_whatsapp.trim()
           : null,
+        contact_whatsapp: draft.contact_whatsapp?.trim() ? draft.contact_whatsapp.trim() : null,
       };
-      if (!isSuperAdmin) delete (payload as Partial<SiteSettings>).developer_whatsapp;
+      if (!isSuperAdmin) {
+        delete (payload as Partial<SiteSettings>).developer_whatsapp;
+        delete (payload as Partial<SiteSettings>).contact_whatsapp;
+      }
       const { error } = await supabase.from("site_settings").update(payload).eq("id", 1);
       if (error) throw new Error(error.message);
       await queryClient.invalidateQueries({ queryKey: SITE_SETTINGS_KEY });
