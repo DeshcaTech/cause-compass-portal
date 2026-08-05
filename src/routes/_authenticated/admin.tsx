@@ -225,6 +225,7 @@ function AdminPage() {
                 { name: "image_url", label: "Picture", type: "image", crop: { aspect: 16 / 9, outputWidth: 1600 } },
                 { name: "is_published", label: "Published", type: "switch" },
                 { name: "is_featured", label: "Featured", type: "switch" },
+                { name: "is_pinned", label: "Pinned to top (max 3)", type: "switch" },
               ]}
             />
           </TabsContent>}
