@@ -1075,6 +1075,7 @@ export type Database = {
           id: number
           ios_app_url: string | null
           org_name: string
+          show_contact_whatsapp: boolean
           updated_at: string
         }
         Insert: {
@@ -1097,6 +1098,7 @@ export type Database = {
           id?: number
           ios_app_url?: string | null
           org_name?: string
+          show_contact_whatsapp?: boolean
           updated_at?: string
         }
         Update: {
@@ -1119,6 +1121,7 @@ export type Database = {
           id?: number
           ios_app_url?: string | null
           org_name?: string
+          show_contact_whatsapp?: boolean
           updated_at?: string
         }
         Relationships: []

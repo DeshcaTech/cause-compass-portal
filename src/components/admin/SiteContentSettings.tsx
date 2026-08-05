@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { supabase } from "@/integrations/supabase/client";
 import {
@@ -20,6 +21,7 @@ type Field = {
   label: string;
   hint?: string;
   multiline?: boolean;
+  toggle?: boolean;
 };
 
 type Group = { title: string; description: string; fields: Field[]; superAdminOnly?: boolean };
@@ -80,6 +82,11 @@ const GROUPS: Group[] = [
     superAdminOnly: true,
     fields: [
       { key: "contact_whatsapp", label: "Community WhatsApp number", hint: "447700900000" },
+      {
+        key: "show_contact_whatsapp",
+        label: "Show the WhatsApp button on the contact page",
+        toggle: true,
+      },
     ],
   },
 ];
@@ -99,7 +106,7 @@ export function SiteContentSettings({ isSuperAdmin = false }: { isSuperAdmin?: b
     [draft, data],
   );
 
-  function set(key: keyof SiteSettings, value: string) {
+  function set(key: keyof SiteSettings, value: string | boolean) {
     setDraft((prev) => ({ ...prev, [key]: value }));
   }
 
@@ -118,6 +125,7 @@ export function SiteContentSettings({ isSuperAdmin = false }: { isSuperAdmin?: b
       if (!isSuperAdmin) {
         delete (payload as Partial<SiteSettings>).developer_whatsapp;
         delete (payload as Partial<SiteSettings>).contact_whatsapp;
+        delete (payload as Partial<SiteSettings>).show_contact_whatsapp;
       }
       const { error } = await supabase.from("site_settings").update(payload).eq("id", 1);
       if (error) throw new Error(error.message);
@@ -149,26 +157,40 @@ export function SiteContentSettings({ isSuperAdmin = false }: { isSuperAdmin?: b
                 <h3 className="text-lg">{group.title}</h3>
                 <p className="text-sm text-muted-foreground">{group.description}</p>
               </div>
-              {group.fields.map((field) => (
+              {group.fields.map((field) =>
+                field.toggle ? (
+                  <div
+                    key={String(field.key)}
+                    className="flex items-center justify-between gap-4 rounded-lg border border-border/70 p-3"
+                  >
+                    <Label htmlFor={String(field.key)}>{field.label}</Label>
+                    <Switch
+                      id={String(field.key)}
+                      checked={Boolean(draft[field.key])}
+                      onCheckedChange={(checked) => set(field.key, checked)}
+                    />
+                  </div>
+                ) : (
                 <div key={String(field.key)} className="space-y-2">
                   <Label htmlFor={String(field.key)}>{field.label}</Label>
                   {field.multiline ? (
                     <Textarea
                       id={String(field.key)}
                       rows={4}
-                      value={draft[field.key] ?? ""}
+                      value={String(draft[field.key] ?? "")}
                       onChange={(e) => set(field.key, e.target.value)}
                     />
                   ) : (
                     <Input
                       id={String(field.key)}
-                      value={draft[field.key] ?? ""}
+                      value={String(draft[field.key] ?? "")}
                       placeholder={field.hint ?? ""}
                       onChange={(e) => set(field.key, e.target.value)}
                     />
                   )}
                 </div>
-              ))}
+                ),
+              )}
             </CardContent>
           </Card>
         ))}

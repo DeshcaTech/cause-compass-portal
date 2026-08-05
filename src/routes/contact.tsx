@@ -125,7 +125,8 @@ function ContactPage() {
               <p className="flex items-start gap-3 text-sm text-primary-foreground/80">
                 <Phone className="mt-0.5 size-4 shrink-0" /> {site?.contact_phone ?? "07700 900000"}
               </p>
-              {(site?.contact_whatsapp || site?.contact_phone) ? (
+              {site?.show_contact_whatsapp !== false &&
+              (site?.contact_whatsapp || site?.contact_phone) ? (
                 <a
                   href={`https://wa.me/${(site.contact_whatsapp || site.contact_phone || "").replace(/[^0-9]/g, "")}`}
                   target="_blank"
