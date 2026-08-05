@@ -283,29 +283,6 @@ export function Footer() {
         </div>
       </div>
       <div className="border-t border-primary-foreground/15">
-        <div className="container-page py-6">
-          <p className="eyebrow text-gold">{t("From the gallery")}</p>
-          <div className="mt-4 grid grid-cols-3 gap-3 sm:grid-cols-6">
-            {galleryTiles.map((tile) => (
-              <Link
-                key={tile.key}
-                to="/gallery"
-                className="group overflow-hidden rounded-lg border border-primary-foreground/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
-                aria-label={t("View gallery")}
-              >
-                <SmartImage
-                  src={tile.src}
-                  alt={tile.alt}
-                  loading="lazy"
-                  wrapperClassName="aspect-square w-full"
-                  className="size-full object-cover transition-transform duration-300 group-hover:scale-105"
-                />
-              </Link>
-            ))}
-          </div>
-        </div>
-      </div>
-      <div className="border-t border-primary-foreground/15">
         <div className="container-page flex flex-col gap-2 py-5 text-xs text-primary-foreground/60 sm:flex-row sm:items-center sm:justify-between">
           <p>
             © {new Date().getFullYear()} CCGMs Community Association.{" "}
