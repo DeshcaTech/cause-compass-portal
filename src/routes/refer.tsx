@@ -17,13 +17,13 @@ import { useT } from "@/lib/i18n";
 export const Route = createFileRoute("/refer")({
   head: () => ({
     meta: [
-      { title: "Refer Someone — CCGMs Community Support" },
+      { title: "Get Support — CCGMs Community Support" },
       {
         name: "description",
         content:
           "Know someone who needs support? Refer them confidentially to the CCGMs welfare team for bereavement, illness, housing or hardship help.",
       },
-      { property: "og:title", content: "Refer Someone — CCGMs Community Support" },
+      { property: "og:title", content: "Get Support — CCGMs Community Support" },
       { property: "og:image", content: "https://cause-compass-portal.lovable.app/og-ccgms.jpg" },
       { name: "twitter:image", content: "https://cause-compass-portal.lovable.app/og-ccgms.jpg" },
       { property: "og:description", content: "Confidentially refer someone who needs our support." },
@@ -110,7 +110,7 @@ function ReferPage() {
     <>
       <PageHeader
         eyebrow={t("Get involved")}
-        title={t("Refer someone for support")}
+        title={t("Get support")}
         description={t("If you know a member of our community going through a difficult time, tell us confidentially.")}
       />
       <section className="container-page py-14">
