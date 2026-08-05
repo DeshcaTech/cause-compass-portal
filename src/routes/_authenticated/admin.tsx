@@ -322,6 +322,21 @@ function AdminPage() {
               primaryLabel={(row) => String(row['title'])}
               secondaryLabel={(row) => `${row['event_date'] ?? "Undated"}`}
               badge={(row) => (row['is_default'] ? "Open by default" : null)}
+              rowActions={(row, { update, isSaving }) =>
+                row['is_default'] ? null : (
+                  <Button
+                    variant="soft"
+                    size="sm"
+                    disabled={isSaving}
+                    onClick={async () => {
+                      await update({ is_default: true });
+                      toast.success(`“${row['title']}” will now open by default.`);
+                    }}
+                  >
+                    {isSaving ? "Setting…" : "Set as default"}
+                  </Button>
+                )
+              }
               defaults={{ is_default: false }}
               fields={[
                 { name: "title", label: "Album title", required: true },
