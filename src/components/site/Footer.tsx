@@ -15,7 +15,7 @@ import { trackEvent } from "@/lib/analytics";
 
 const columns = [
   {
-    title: "About CCGMs",
+    title: "Explore",
     links: [
       { label: "President's message", to: "/about" },
       { label: "Board", to: "/board" },
