@@ -17,9 +17,11 @@ const columns = [
   {
     title: "Explore",
     links: [
-      { label: "President's message", to: "/about" },
-      { label: "Board", to: "/board" },
-      { label: "Downloads", to: "/documents" },
+      { label: "Membership", to: "/membership" },
+      { label: "Events", to: "/events" },
+      { label: "Partners", to: "/partners" },
+      { label: "Gallery", to: "/gallery" },
+      { label: "Documents", to: "/documents" },
       { label: "Assets rent", to: "/assets" },
     ],
   },
