@@ -24,7 +24,13 @@ type Field = {
   toggle?: boolean;
 };
 
-type Group = { title: string; description: string; fields: Field[]; superAdminOnly?: boolean };
+type Group = {
+  title: string;
+  description: string;
+  fields: Field[];
+  superAdminOnly?: boolean;
+  whatsappAdminOnly?: boolean;
+};
 
 const GROUPS: Group[] = [
   {
@@ -76,10 +82,10 @@ const GROUPS: Group[] = [
     ],
   },
   {
-    title: "Contact WhatsApp (level 1 only)",
+    title: "Contact WhatsApp (level 1 & 2)",
     description:
       "Number behind the 'WhatsApp Us' button on the contact page. Use the international format, e.g. 447700900000. Leave empty to hide the button.",
-    superAdminOnly: true,
+    whatsappAdminOnly: true,
     fields: [
       { key: "contact_whatsapp", label: "Community WhatsApp number", hint: "447700900000" },
       {
@@ -91,7 +97,14 @@ const GROUPS: Group[] = [
   },
 ];
 
-export function SiteContentSettings({ isSuperAdmin = false }: { isSuperAdmin?: boolean }) {
+export function SiteContentSettings({
+  isSuperAdmin = false,
+  canManageWhatsapp = false,
+}: {
+  isSuperAdmin?: boolean;
+  canManageWhatsapp?: boolean;
+}) {
+  const whatsappAllowed = isSuperAdmin || canManageWhatsapp;
   const queryClient = useQueryClient();
   const { data, isLoading } = useQuery(siteSettingsQuery);
   const [draft, setDraft] = useState<SiteSettings>(DEFAULT_SITE_SETTINGS);
@@ -124,6 +137,8 @@ export function SiteContentSettings({ isSuperAdmin = false }: { isSuperAdmin?: b
       };
       if (!isSuperAdmin) {
         delete (payload as Partial<SiteSettings>).developer_whatsapp;
+      }
+      if (!whatsappAllowed) {
         delete (payload as Partial<SiteSettings>).contact_whatsapp;
         delete (payload as Partial<SiteSettings>).show_contact_whatsapp;
       }
@@ -150,7 +165,11 @@ export function SiteContentSettings({ isSuperAdmin = false }: { isSuperAdmin?: b
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
-        {GROUPS.filter((group) => !group.superAdminOnly || isSuperAdmin).map((group) => (
+        {GROUPS.filter(
+          (group) =>
+            (!group.superAdminOnly || isSuperAdmin) &&
+            (!group.whatsappAdminOnly || whatsappAllowed),
+        ).map((group) => (
           <Card key={group.title} className="border-border/70">
             <CardContent className="space-y-5 p-6">
               <div>

@@ -263,7 +263,7 @@ function AdminPage() {
           </TabsContent>}
 
           {isContentAdmin && <TabsContent value="site-content" className="mt-8">
-            <SiteContentSettings isSuperAdmin={isSuperAdmin} />
+            <SiteContentSettings isSuperAdmin={isSuperAdmin} canManageWhatsapp={isAdmin} />
           </TabsContent>}
 
           {isContentAdmin && <TabsContent value="documents" className="mt-8">
