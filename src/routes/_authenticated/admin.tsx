@@ -14,6 +14,7 @@ import { SubscriberList } from "@/components/admin/SubscriberList";
 import { BrandSettings } from "@/components/admin/BrandSettings";
 import { SiteContentSettings } from "@/components/admin/SiteContentSettings";
 import { AdminAccounts } from "@/components/admin/AdminAccounts";
+import { AuditLog } from "@/components/admin/AuditLog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -22,9 +23,8 @@ import { galleriesQuery } from "@/lib/queries";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   // Drilldown dialog state lives in the URL so back/forward reopen it.
-  validateSearch: (search: Record<string, unknown>) => ({
-    campaign: typeof search['campaign'] === "string" ? search['campaign'] : undefined,
-  }),
+  validateSearch: (search: Record<string, unknown>): { campaign?: string } =>
+    typeof search['campaign'] === "string" ? { campaign: search['campaign'] } : {},
   head: () => ({
     meta: [
       { title: "Admin panel — Manage CCGMs Content" },
@@ -171,6 +171,7 @@ function AdminPage() {
             {isAdmin && <TabsTrigger value="surveys">Surveys</TabsTrigger>}
             {isContentAdmin && <TabsTrigger value="roles">Roles</TabsTrigger>}
             {isSuperAdmin && <TabsTrigger value="admins">Admin accounts</TabsTrigger>}
+            {isContentAdmin && <TabsTrigger value="activity">Activity log</TabsTrigger>}
           </TabsList>
 
           {isContentAdmin && <TabsContent value="news" className="mt-8">
@@ -604,6 +605,10 @@ function AdminPage() {
 
           {isSuperAdmin && <TabsContent value="admins" className="mt-8">
             <AdminAccounts />
+          </TabsContent>}
+
+          {isContentAdmin && <TabsContent value="activity" className="mt-8">
+            <AuditLog />
           </TabsContent>}
 
           {isContentAdmin && <TabsContent value="roles" className="mt-8">
