@@ -1193,6 +1193,8 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      admin_level: { Args: { _user_id: string }; Returns: number }
+      can_edit_content: { Args: { _user_id: string }; Returns: boolean }
       can_manage: {
         Args: { _area: string; _user_id: string }
         Returns: boolean
@@ -1205,6 +1207,8 @@ export type Database = {
         }
         Returns: boolean
       }
+      is_admin: { Args: { _user_id: string }; Returns: boolean }
+      is_super_admin: { Args: { _user_id: string }; Returns: boolean }
       submit_membership: {
         Args: {
           _address: string
@@ -1228,6 +1232,8 @@ export type Database = {
         | "president_manager"
         | "fundraising_manager"
         | "event_manager"
+        | "admin_l2"
+        | "admin_l3"
       campaign_status: "active" | "past"
       event_type: "ccgms" | "other"
       family_relation: "partner" | "dependent"
@@ -1366,6 +1372,8 @@ export const Constants = {
         "president_manager",
         "fundraising_manager",
         "event_manager",
+        "admin_l2",
+        "admin_l3",
       ],
       campaign_status: ["active", "past"],
       event_type: ["ccgms", "other"],
