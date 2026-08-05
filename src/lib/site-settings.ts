@@ -20,6 +20,7 @@ export type SiteSettings = {
   contact_whatsapp: string | null;
   show_contact_whatsapp: boolean;
   developer_whatsapp: string | null;
+  whatsapp_message: string | null;
 };
 
 export const DEFAULT_SITE_SETTINGS: SiteSettings = {
@@ -45,6 +46,7 @@ export const DEFAULT_SITE_SETTINGS: SiteSettings = {
   contact_whatsapp: null,
   show_contact_whatsapp: true,
   developer_whatsapp: null,
+  whatsapp_message: null,
 };
 
 export const SITE_SETTINGS_KEY = ["site-settings"] as const;
@@ -56,7 +58,7 @@ export const siteSettingsQuery = queryOptions({
     const { data, error } = await supabase
       .from("site_settings")
       .select(
-        "org_name, hero_eyebrow, hero_title_line1, hero_title_line2, hero_intro, about_eyebrow, about_title, about_body_1, about_body_2, android_app_url, ios_app_url, contact_address, contact_phone, contact_email, footer_blurb, contact_whatsapp, show_contact_whatsapp, developer_whatsapp",
+        "org_name, hero_eyebrow, hero_title_line1, hero_title_line2, hero_intro, about_eyebrow, about_title, about_body_1, about_body_2, android_app_url, ios_app_url, contact_address, contact_phone, contact_email, footer_blurb, contact_whatsapp, show_contact_whatsapp, developer_whatsapp, whatsapp_message",
       )
       .eq("id", 1)
       .maybeSingle();
@@ -64,3 +66,14 @@ export const siteSettingsQuery = queryOptions({
     return { ...DEFAULT_SITE_SETTINGS, ...(data ?? {}) } as SiteSettings;
   },
 });
+
+/** Build a wa.me link from a raw number, optionally prefilling a message. */
+export function whatsappHref(raw: string | null | undefined, message?: string | null) {
+  let digits = (raw ?? "").replace(/[^\d]/g, "");
+  if (digits.startsWith("0")) digits = `44${digits.slice(1)}`;
+  if (digits.length < 9) return null;
+  const text = message?.trim();
+  return text
+    ? `https://wa.me/${digits}?text=${encodeURIComponent(text)}`
+    : `https://wa.me/${digits}`;
+}
