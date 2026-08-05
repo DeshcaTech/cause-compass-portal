@@ -10,6 +10,7 @@ import { boardQuery, type BoardMember } from "@/lib/queries";
 import { useT } from "@/lib/i18n";
 import { searchString, useSearchFilter } from "@/lib/use-search-filter";
 import personFallback from "@/assets/person-fallback.jpg";
+import presidentPhoto from "@/assets/president-fallback.jpg";
 import boardM1 from "@/assets/board/m1.jpg";
 import boardM2 from "@/assets/board/m2.jpg";
 import boardM3 from "@/assets/board/m3.jpg";
@@ -46,6 +47,7 @@ function hash(value: string) {
 
 function portraitFor(member: BoardMember) {
   if (member.photo_url) return member.photo_url;
+  if (member.role_title === "President" && member.is_current) return presidentPhoto;
   const name = member.full_name.toLowerCase();
   const pool = FEMALE_HINTS.some((hint) => name.includes(hint)) ? FEMALE_PORTRAITS : MALE_PORTRAITS;
   return pool[hash(member.id) % pool.length] ?? personFallback;
