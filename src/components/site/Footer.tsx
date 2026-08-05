@@ -9,6 +9,7 @@ import logoWebp from "@/assets/ccgms-wordmark.png?w=640&quality=80&format=webp";
 import { Picture } from "@/components/site/Picture";
 import flagsAsset from "@/assets/cm-uk-flags.jpg.asset.json";
 import { useT } from "@/lib/i18n";
+import { siteSettingsQuery } from "@/lib/site-settings";
 
 const columns = [
   {
@@ -53,6 +54,7 @@ const columns = [
 export function Footer() {
   const t = useT();
   const { data: brand } = useQuery(brandQuery);
+  const { data: site } = useQuery(siteSettingsQuery);
   const showLogo = brand?.show_logo_footer ?? true;
   const customLogo = brand?.logo_url ?? null;
   return (
@@ -87,19 +89,21 @@ export function Footer() {
             />
           </div>
           <p className="mt-4 max-w-sm text-sm text-primary-foreground/75">
-            {t(
-              "A community association bringing families together — supporting one another, celebrating our culture and building a stronger future for the next generation.",
-            )}
+            {site
+              ? site.footer_blurb
+              : t(
+                  "A community association bringing families together — supporting one another, celebrating our culture and building a stronger future for the next generation.",
+                )}
           </p>
           <ul className="mt-6 space-y-2 text-sm text-primary-foreground/75">
             <li className="flex items-center gap-2">
-              <MapPin className="size-4" /> CCGMs Centre, 24 Unity Road
+              <MapPin className="size-4" /> {site?.contact_address ?? "CCGMs Centre, 24 Unity Road"}
             </li>
             <li className="flex items-center gap-2">
-              <Phone className="size-4" /> 07700 900000
+              <Phone className="size-4" /> {site?.contact_phone ?? "07700 900000"}
             </li>
             <li className="flex items-center gap-2">
-              <Mail className="size-4" /> hello@ccgms.org
+              <Mail className="size-4" /> {site?.contact_email ?? "hello@ccgms.org"}
             </li>
           </ul>
         </div>
