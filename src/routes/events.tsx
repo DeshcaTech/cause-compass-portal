@@ -119,9 +119,15 @@ function EventsPage() {
   const tab = search.tab ?? "coming";
 
   const setTypeFilter = (value: "all" | "ccgms" | "other") =>
-    navigate({ search: (prev: EventsSearch) => ({ ...prev, type: value === "all" ? undefined : value }) });
+    navigate({
+      search: (prev: EventsSearch) => ({ ...prev, type: value === "all" ? undefined : value }),
+      replace: true,
+    });
   const setTab = (value: string) =>
-    navigate({ search: (prev: EventsSearch) => ({ ...prev, tab: value === "coming" ? undefined : (value as never) }) });
+    navigate({
+      search: (prev: EventsSearch) => ({ ...prev, tab: value === "coming" ? undefined : (value as never) }),
+      replace: true,
+    });
 
   const selected = useMemo(
     () => events.find((e) => e.id === search.event) ?? null,
