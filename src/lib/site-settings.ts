@@ -51,6 +51,10 @@ export const DEFAULT_SITE_SETTINGS: SiteSettings = {
   show_contact_whatsapp: true,
   developer_whatsapp: null,
   whatsapp_message: null,
+  facebook_url: null,
+  instagram_url: null,
+  x_url: null,
+  youtube_url: null,
 };
 
 export const SITE_SETTINGS_KEY = ["site-settings"] as const;
