@@ -946,6 +946,69 @@ export type Database = {
         }
         Relationships: []
       }
+      site_settings: {
+        Row: {
+          about_body_1: string
+          about_body_2: string
+          about_eyebrow: string
+          about_title: string
+          android_app_url: string | null
+          contact_address: string
+          contact_email: string
+          contact_phone: string
+          created_at: string
+          footer_blurb: string
+          hero_eyebrow: string
+          hero_intro: string
+          hero_title_line1: string
+          hero_title_line2: string
+          id: number
+          ios_app_url: string | null
+          org_name: string
+          updated_at: string
+        }
+        Insert: {
+          about_body_1?: string
+          about_body_2?: string
+          about_eyebrow?: string
+          about_title?: string
+          android_app_url?: string | null
+          contact_address?: string
+          contact_email?: string
+          contact_phone?: string
+          created_at?: string
+          footer_blurb?: string
+          hero_eyebrow?: string
+          hero_intro?: string
+          hero_title_line1?: string
+          hero_title_line2?: string
+          id?: number
+          ios_app_url?: string | null
+          org_name?: string
+          updated_at?: string
+        }
+        Update: {
+          about_body_1?: string
+          about_body_2?: string
+          about_eyebrow?: string
+          about_title?: string
+          android_app_url?: string | null
+          contact_address?: string
+          contact_email?: string
+          contact_phone?: string
+          created_at?: string
+          footer_blurb?: string
+          hero_eyebrow?: string
+          hero_intro?: string
+          hero_title_line1?: string
+          hero_title_line2?: string
+          id?: number
+          ios_app_url?: string | null
+          org_name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       survey_responses: {
         Row: {
           answers: Json
