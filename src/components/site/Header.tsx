@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "@tanstack/react-router";
+import { Link, useRouterState } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { Menu, ChevronDown } from "lucide-react";
 
@@ -58,6 +58,9 @@ export function Header() {
   const [open, setOpen] = useState(false);
   const [openGroup, setOpenGroup] = useState<string | null>(null);
   const t = useT();
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const isPathActive = (to: string) =>
+    pathname === to || pathname.startsWith(to + "/");
   const { data: brand } = useQuery(brandQuery);
   const showLogo = brand?.show_logo_header ?? true;
   const customLogo = brand?.logo_url ?? null;
@@ -95,7 +98,14 @@ export function Header() {
           {NAV.map((group) =>
             group.items ? (
               <div key={group.label} className="group relative">
-                <button className={`${linkClass} inline-flex items-center gap-1 font-bold`} type="button">
+                <button
+                  className={`${linkClass} inline-flex items-center gap-1 font-bold ${
+                    group.items!.some((it) => isPathActive(it.to))
+                      ? "text-primary"
+                      : ""
+                  }`}
+                  type="button"
+                >
                   {t(group.label)}
                   <ChevronDown className="size-3.5" />
                 </button>
@@ -105,9 +115,18 @@ export function Header() {
                       key={item.to}
                       to={item.to}
                       className="block rounded-lg px-3 py-2 text-nav text-foreground/85 hover:bg-accent hover:text-accent-foreground"
-                      activeProps={{ className: "bg-accent text-accent-foreground" }}
+                      activeOptions={{ exact: false }}
+                      activeProps={{
+                        className:
+                          "bg-accent/80 font-semibold text-accent-foreground ring-1 ring-primary/40",
+                      }}
                     >
-                      {t(item.label)}
+                      <span className="flex items-center gap-2">
+                        {isPathActive(item.to) && (
+                          <span className="size-1.5 rounded-full bg-primary" />
+                        )}
+                        {t(item.label)}
+                      </span>
                     </Link>
                   ))}
                 </div>
@@ -161,7 +180,11 @@ export function Header() {
                     onClick={() =>
                       setOpenGroup((g) => (g === group.label ? null : group.label))
                     }
-                    className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-nav font-bold"
+                    className={`flex w-full items-center justify-between rounded-lg px-3 py-2 text-nav font-bold ${
+                      group.items!.some((it) => isPathActive(it.to))
+                        ? "text-primary"
+                        : ""
+                    }`}
                     aria-expanded={openGroup === group.label}
                   >
                     {t(group.label)}
@@ -179,6 +202,10 @@ export function Header() {
                           to={item.to}
                           onClick={() => setOpen(false)}
                           className="block rounded-lg px-3 py-2 text-nav text-foreground/80 hover:bg-accent hover:text-accent-foreground"
+                          activeOptions={{ exact: false }}
+                          activeProps={{
+                            className: "bg-accent font-semibold text-accent-foreground",
+                          }}
                         >
                           {t(item.label)}
                         </Link>
