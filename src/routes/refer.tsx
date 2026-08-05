@@ -110,7 +110,7 @@ function ReferPage() {
     <>
       <PageHeader
         eyebrow={t("Get involved")}
-        title={t("Refer someone for support")}
+        title={t("Get support")}
         description={t("If you know a member of our community going through a difficult time, tell us confidentially.")}
       />
       <section className="container-page py-14">
