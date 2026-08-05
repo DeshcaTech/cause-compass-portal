@@ -1,9 +1,19 @@
 import { Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
+import { useMemo } from "react";
 import { brandQuery } from "@/lib/brand";
+import { galleriesQuery, galleryPhotosQuery } from "@/lib/queries";
 import { Facebook, Instagram, Mail, MapPin, Phone, Twitter, Youtube } from "lucide-react";
 import whatsappUs from "@/assets/whatsapp-us.png";
 import { TikTok } from "@/components/site/icons/TikTok";
+import { SmartImage } from "@/components/site/SmartImage";
+
+import galleryFallback from "@/assets/gallery-fallback.jpg";
+import communityTogether from "@/assets/community-together.jpg";
+import eventFallback from "@/assets/event-fallback.jpg";
+import heroCommunity from "@/assets/hero-community.jpg";
+import volunteerHero from "@/assets/volunteer-hero.jpg";
+import surveyFallback from "@/assets/survey-fallback.jpg";
 
 import logo from "@/assets/ccgms-wordmark.png?w=640&format=png";
 import logoAvif from "@/assets/ccgms-wordmark.png?w=640&quality=70&format=avif";
@@ -13,6 +23,15 @@ import flagsAsset from "@/assets/cm-uk-flags.jpg.asset.json";
 import { useT } from "@/lib/i18n";
 import { siteSettingsQuery, whatsappHref } from "@/lib/site-settings";
 import { trackEvent } from "@/lib/analytics";
+
+const FOOTER_PLACEHOLDERS = [
+  galleryFallback,
+  communityTogether,
+  eventFallback,
+  heroCommunity,
+  volunteerHero,
+  surveyFallback,
+];
 
 const columns = [
   {
@@ -43,12 +62,35 @@ export function Footer() {
   const t = useT();
   const { data: brand } = useQuery(brandQuery);
   const { data: site } = useQuery(siteSettingsQuery);
+  const { data: galleries = [] } = useQuery(galleriesQuery);
+  const { data: photos = [] } = useQuery(galleryPhotosQuery);
   const waHref = whatsappHref(
     site?.developer_whatsapp || site?.contact_whatsapp || site?.contact_phone,
     site?.whatsapp_message,
   );
   const showLogo = brand?.show_logo_footer ?? true;
   const customLogo = brand?.logo_url ?? null;
+
+  // Six showcase photos for the desktop footer strip: prefer the
+  // admin-chosen default gallery's photos, then any gallery photos, then
+  // placeholders so the strip always looks complete.
+  const galleryTiles = useMemo(() => {
+    const defaultGallery = galleries.find((g) => g.is_default) ?? galleries[0];
+    let real = photos
+      .filter((p) => (defaultGallery ? p.gallery_id === defaultGallery.id : true))
+      .map((p) => ({ key: p.id, src: p.photo_url, alt: p.caption ?? defaultGallery?.title ?? "Community photo" }));
+    if (real.length === 0) {
+      real = photos
+        .slice(0, 6)
+        .map((p) => ({ key: p.id, src: p.photo_url, alt: p.caption ?? "Community photo" }));
+    }
+    const fillers = FOOTER_PLACEHOLDERS.slice(0, Math.max(0, 6 - real.length)).map((src, i) => ({
+      key: `placeholder-${i}`,
+      src,
+      alt: "Community photo",
+    }));
+    return [...real, ...fillers].slice(0, 6);
+  }, [galleries, photos]);
   return (
     <footer className="mt-24 border-t border-border bg-primary text-primary-foreground">
       <div className="container-page grid grid-cols-2 gap-8 py-12 sm:gap-10 lg:grid-cols-6">
@@ -217,6 +259,29 @@ export function Footer() {
             </ul>
           </div>
         ))}
+      </div>
+      <div className="hidden border-t border-primary-foreground/15 lg:block">
+        <div className="container-page py-6">
+          <p className="eyebrow text-gold">{t("From the gallery")}</p>
+          <div className="mt-4 grid grid-cols-6 gap-3">
+            {galleryTiles.map((tile) => (
+              <Link
+                key={tile.key}
+                to="/gallery"
+                className="group overflow-hidden rounded-lg border border-primary-foreground/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
+                aria-label={t("View gallery")}
+              >
+                <SmartImage
+                  src={tile.src}
+                  alt={tile.alt}
+                  loading="lazy"
+                  wrapperClassName="aspect-square w-full"
+                  className="size-full object-cover transition-transform duration-300 group-hover:scale-105"
+                />
+              </Link>
+            ))}
+          </div>
+        </div>
       </div>
       <div className="border-t border-primary-foreground/15">
         <div className="container-page flex flex-col gap-2 py-5 text-xs text-primary-foreground/60 sm:flex-row sm:items-center sm:justify-between">
