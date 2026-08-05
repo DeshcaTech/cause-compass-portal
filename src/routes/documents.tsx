@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { Download, FileText } from "lucide-react";
@@ -10,8 +9,12 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { documentsQuery } from "@/lib/queries";
 import { useT } from "@/lib/i18n";
+import { searchString, useSearchFilter } from "@/lib/use-search-filter";
 
 export const Route = createFileRoute("/documents")({
+  validateSearch: (search: Record<string, unknown>) => ({
+    category: searchString(search, "category"),
+  }),
   head: () => ({
     meta: [
       { title: "Downloads — CCGMs Documents" },
@@ -36,7 +39,7 @@ function DocumentsPage() {
   const t = useT();
   const { data: documents = [] } = useQuery(documentsQuery);
   const categories = Array.from(new Set(documents.map((d) => d.category)));
-  const [active, setActive] = useState<string>("All");
+  const [active, setActive] = useSearchFilter("category", "All");
   const filters = ["All", ...categories];
   const visible =
     active === "All" ? documents : documents.filter((d) => d.category === active);

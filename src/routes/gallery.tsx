@@ -17,6 +17,7 @@ import heroCommunity from "@/assets/hero-community.jpg";
 import surveyFallback from "@/assets/survey-fallback.jpg";
 import volunteerHero from "@/assets/volunteer-hero.jpg";
 import { useT } from "@/lib/i18n";
+import { searchString, useSearchFilter } from "@/lib/use-search-filter";
 
 const PLACEHOLDER_PHOTOS = [
   galleryFallback,
@@ -36,6 +37,9 @@ function placeholdersFor(seed: string) {
 }
 
 export const Route = createFileRoute("/gallery")({
+  validateSearch: (search: Record<string, unknown>) => ({
+    gallery: searchString(search, "gallery"),
+  }),
   head: () => ({
     meta: [
       { title: "Gallery — CCGMs Photos by Event" },
@@ -59,13 +63,10 @@ function GalleryPage() {
     (a, b) => Number(b.is_default) - Number(a.is_default),
   );
   const { data: photos = [] } = useQuery(galleryPhotosQuery);
-  const [activeId, setActiveId] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (!activeId && galleries.length > 0) {
-      setActiveId((galleries.find((g) => g.is_default) ?? galleries[0])!.id);
-    }
-  }, [galleries, activeId]);
+  const [galleryParam, setActiveId] = useSearchFilter("gallery", "");
+  // No URL selection yet: open the admin-chosen default album.
+  const defaultId = (galleries.find((g) => g.is_default) ?? galleries[0])?.id ?? null;
+  const activeId = galleryParam || defaultId;
 
   const active = galleries.find((g) => g.id === activeId) ?? null;
   const activePhotos = photos.filter((p) => p.gallery_id === activeId);

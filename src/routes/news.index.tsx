@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { Search, Star } from "lucide-react";
 
 import { PageHeader } from "@/components/site/PageHeader";
@@ -13,8 +13,13 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { announcementsQuery } from "@/lib/queries";
 import { useT } from "@/lib/i18n";
+import { searchString, useSearchFilter } from "@/lib/use-search-filter";
 
 export const Route = createFileRoute("/news/")({
+  validateSearch: (search: Record<string, unknown>) => ({
+    view: searchString(search, "view"),
+    q: searchString(search, "q"),
+  }),
   head: () => ({
     meta: [
       { title: "News & Announcements — CCGMs" },
@@ -48,8 +53,9 @@ function formatDate(value: string) {
 function NewsPage() {
   const t = useT();
   const { data: news = [] } = useQuery(announcementsQuery);
-  const [search, setSearch] = useState("");
-  const [featuredOnly, setFeaturedOnly] = useState(false);
+  const [search, setSearch] = useSearchFilter("q", "");
+  const [view, setView] = useSearchFilter("view", "all");
+  const featuredOnly = view === "featured";
 
   const filtered = useMemo(() => {
     const term = search.trim().toLowerCase();
@@ -80,7 +86,7 @@ function NewsPage() {
               <FilterSelect
                 label={t("Category")}
                 value={featuredOnly ? "featured" : "all"}
-                onChange={(value) => setFeaturedOnly(value === "featured")}
+                onChange={(value) => setView(value)}
                 options={[
                   { value: "all", label: t("All news"), meta: `${news.length}` },
                   { value: "featured", label: t("Featured"), meta: `${featuredCount}` },

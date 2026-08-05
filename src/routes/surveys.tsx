@@ -15,8 +15,12 @@ import { supabase } from "@/integrations/supabase/client";
 import { formatDate, surveysQuery, type Survey } from "@/lib/queries";
 import surveyFallback from "@/assets/survey-fallback.jpg";
 import { useT } from "@/lib/i18n";
+import { searchString, useSearchFilter } from "@/lib/use-search-filter";
 
 export const Route = createFileRoute("/surveys")({
+  validateSearch: (search: Record<string, unknown>) => ({
+    view: searchString(search, "view"),
+  }),
   head: () => ({
     meta: [
       { title: "Surveys — Have Your Say at CCGMs" },
@@ -156,7 +160,7 @@ function SurveysPage() {
   const { data: surveys = [] } = useQuery(surveysQuery);
   const active = surveys.filter((s) => s.is_active);
   const closed = surveys.filter((s) => !s.is_active);
-  const [view, setView] = useState<"active" | "closed">("active");
+  const [view, setView] = useSearchFilter("view", "active");
   const list = view === "active" ? active : closed;
 
   return (
