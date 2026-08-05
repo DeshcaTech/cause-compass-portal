@@ -122,8 +122,15 @@ function VillageGroupsPage() {
                   <Card
                     key={group.id}
                     onClick={() => setSelected(group)}
-                    className="cursor-pointer border-border/70 transition-shadow hover:shadow-[var(--shadow-lift)]"
+                    className="cursor-pointer overflow-hidden py-0 border-border/70 transition-shadow hover:shadow-[var(--shadow-lift)]"
                   >
+                    <SmartImage
+                      src={group.image_url ?? groupsBanner}
+                      alt={group.name}
+                      loading="lazy"
+                      wrapperClassName="aspect-[16/9] w-full overflow-hidden rounded-t-xl border-b border-border/60"
+                      className="size-full object-cover"
+                    />
                     <CardContent className="p-6">
                       <div className="flex items-start justify-between gap-3">
                         <h3 className="text-lg font-medium leading-snug">{group.name}</h3>
