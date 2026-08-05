@@ -260,10 +260,10 @@ export function Footer() {
           </div>
         ))}
       </div>
-      <div className="hidden border-t border-primary-foreground/15 lg:block">
+      <div className="border-t border-primary-foreground/15">
         <div className="container-page py-6">
           <p className="eyebrow text-gold">{t("From the gallery")}</p>
-          <div className="mt-4 grid grid-cols-6 gap-3">
+          <div className="mt-4 grid grid-cols-3 gap-3 sm:grid-cols-6">
             {galleryTiles.map((tile) => (
               <Link
                 key={tile.key}
