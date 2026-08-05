@@ -22,7 +22,9 @@ type Field = {
   multiline?: boolean;
 };
 
-const GROUPS: { title: string; description: string; fields: Field[] }[] = [
+type Group = { title: string; description: string; fields: Field[]; superAdminOnly?: boolean };
+
+const GROUPS: Group[] = [
   {
     title: "Home page hero",
     description: "The headline block at the top of the home page.",
@@ -62,9 +64,18 @@ const GROUPS: { title: string; description: string; fields: Field[] }[] = [
       { key: "footer_blurb", label: "Footer description", multiline: true },
     ],
   },
+  {
+    title: "Developer credit (level 1 only)",
+    description:
+      "WhatsApp number behind the 'Powered by DeshcaTech' link in the footer. Use the international format, e.g. 447700900000.",
+    superAdminOnly: true,
+    fields: [
+      { key: "developer_whatsapp", label: "DeshcaTech WhatsApp number", hint: "447700900000" },
+    ],
+  },
 ];
 
-export function SiteContentSettings() {
+export function SiteContentSettings({ isSuperAdmin = false }: { isSuperAdmin?: boolean }) {
   const queryClient = useQueryClient();
   const { data, isLoading } = useQuery(siteSettingsQuery);
   const [draft, setDraft] = useState<SiteSettings>(DEFAULT_SITE_SETTINGS);
@@ -90,7 +101,11 @@ export function SiteContentSettings() {
         ...draft,
         android_app_url: draft.android_app_url?.trim() ? draft.android_app_url.trim() : null,
         ios_app_url: draft.ios_app_url?.trim() ? draft.ios_app_url.trim() : null,
+        developer_whatsapp: draft.developer_whatsapp?.trim()
+          ? draft.developer_whatsapp.trim()
+          : null,
       };
+      if (!isSuperAdmin) delete (payload as Partial<SiteSettings>).developer_whatsapp;
       const { error } = await supabase.from("site_settings").update(payload).eq("id", 1);
       if (error) throw new Error(error.message);
       await queryClient.invalidateQueries({ queryKey: SITE_SETTINGS_KEY });
@@ -114,7 +129,7 @@ export function SiteContentSettings() {
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
-        {GROUPS.map((group) => (
+        {GROUPS.filter((group) => !group.superAdminOnly || isSuperAdmin).map((group) => (
           <Card key={group.title} className="border-border/70">
             <CardContent className="space-y-5 p-6">
               <div>

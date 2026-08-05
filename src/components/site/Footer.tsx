@@ -55,6 +55,8 @@ export function Footer() {
   const t = useT();
   const { data: brand } = useQuery(brandQuery);
   const { data: site } = useQuery(siteSettingsQuery);
+  const waDigits = (site?.developer_whatsapp ?? "").replace(/[^\d]/g, "");
+  const waHref = waDigits ? `https://wa.me/${waDigits}` : null;
   const showLogo = brand?.show_logo_footer ?? true;
   const customLogo = brand?.logo_url ?? null;
   return (
@@ -133,7 +135,19 @@ export function Footer() {
             {t("All rights reserved.")}
           </p>
           <p className="text-primary-foreground/70">
-            {t("Powered by")} <span className="font-semibold text-gold">DeshcaTech</span>
+            {t("Powered by")}{" "}
+            {waHref ? (
+              <a
+                href={waHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-semibold text-gold underline-offset-4 hover:underline"
+              >
+                DeshcaTech
+              </a>
+            ) : (
+              <span className="font-semibold text-gold">DeshcaTech</span>
+            )}
           </p>
           <span className="flex gap-4">
             <Link to="/contact" className="hover:text-gold">
