@@ -62,6 +62,7 @@ function DonatePage() {
 
   const [campaignId, setCampaignId] = useState<string>(campaignParam ?? "general");
   const [amount, setAmount] = useState("25");
+  const [customAmount, setCustomAmount] = useState(false);
   const [anonymous, setAnonymous] = useState(false);
   const [saving, setSaving] = useState(false);
   const [done, setDone] = useState(false);
@@ -150,9 +151,12 @@ function DonatePage() {
                     <button
                       key={preset}
                       type="button"
-                      onClick={() => setAmount(String(preset))}
+                      onClick={() => {
+                        setCustomAmount(false);
+                        setAmount(String(preset));
+                      }}
                       className={`rounded-full border px-4 py-1.5 text-sm transition-colors ${
-                        amount === String(preset)
+                        !customAmount && amount === String(preset)
                           ? "border-transparent bg-primary text-primary-foreground"
                           : "border-border hover:bg-secondary"
                       }`}
@@ -160,16 +164,34 @@ function DonatePage() {
                       {formatMoney(preset)}
                     </button>
                   ))}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setCustomAmount(true);
+                      setAmount("");
+                    }}
+                    className={`rounded-full border px-4 py-1.5 text-sm transition-colors ${
+                      customAmount
+                        ? "border-transparent bg-primary text-primary-foreground"
+                        : "border-border hover:bg-secondary"
+                    }`}
+                  >
+                    {t("Other")}
+                  </button>
                 </div>
-                <Input
-                  id="amount"
-                  type="number"
-                  min={1}
-                  step="1"
-                  value={amount}
-                  onChange={(e) => setAmount(e.target.value)}
-                  required
-                />
+                {customAmount ? (
+                  <Input
+                    id="amount"
+                    type="number"
+                    min={1}
+                    step="1"
+                    autoFocus
+                    placeholder={t("Enter your amount")}
+                    value={amount}
+                    onChange={(e) => setAmount(e.target.value)}
+                    required
+                  />
+                ) : null}
               </div>
 
               <div className="space-y-2">
