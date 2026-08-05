@@ -91,7 +91,10 @@ function VillageGroupsPage() {
             value={category}
             onChange={(value) =>
               navigate({
-                search: (prev) => ({ ...prev, category: value === "all" ? undefined : value }),
+                search: (prev: { category?: string }) => ({
+                  ...prev,
+                  category: value === "all" ? undefined : value,
+                }),
                 replace: true,
               })
             }
