@@ -4,7 +4,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 
 import { PageHeader } from "@/components/site/PageHeader";
-import { SidebarNavItem, SidebarPage } from "@/components/site/SidebarPage";
+import { FilterPage, FilterSelect } from "@/components/site/FilterPage";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -166,24 +166,25 @@ function SurveysPage() {
         title={t("Surveys")}
         description={t("Your answers shape what we fund, where we meet and how we support each other.")}
       />
-      <SidebarPage
-        sidebar={(
-          <>
-            <SidebarNavItem
-              image={active[0]?.image_url ?? surveyFallback}
-              title={t("Active surveys")}
-              meta={`${active.length} ${t("surveys")}`}
-              active={view === "active"}
-              onClick={() => setView("active")}
-            />
-            <SidebarNavItem
-              image={closed[0]?.image_url ?? surveyFallback}
-              title={t("Closed surveys")}
-              meta={`${closed.length} ${t("surveys")}`}
-              active={view === "closed"}
-              onClick={() => setView("closed")}
-            />
-          </>
+      <FilterPage
+        filters={(
+          <FilterSelect
+            label={t("Surveys")}
+            value={view}
+            onChange={(value) => setView(value as "active" | "closed")}
+            options={[
+              {
+                value: "active",
+                label: t("Active surveys"),
+                meta: `${active.length} ${t("surveys")}`,
+              },
+              {
+                value: "closed",
+                label: t("Closed surveys"),
+                meta: `${closed.length} ${t("surveys")}`,
+              },
+            ]}
+          />
         )}
       >
         {view === "active" ? (
@@ -219,7 +220,7 @@ function SurveysPage() {
             )}
           </div>
         )}
-      </SidebarPage>
+      </FilterPage>
     </>
   );
 }
