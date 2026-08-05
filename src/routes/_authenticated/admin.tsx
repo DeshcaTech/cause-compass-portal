@@ -407,6 +407,21 @@ function AdminPage() {
                 <p className="mt-4 text-sm text-muted-foreground">Create an album first.</p>
               )}
             </div>
+
+            <RecordManager
+              table="footer_photos"
+              title="Footer photos"
+              description="Load up to 10 pictures here — six of them appear at random in the website footer on every visit."
+              orderBy={{ column: "sort_order" }}
+              primaryLabel={(row) => String(row['caption'] ?? "Footer photo")}
+              secondaryLabel={(row) => String(row['photo_url'])}
+              defaults={{ sort_order: 0 }}
+              fields={[
+                { name: "photo_url", label: "Photo", type: "image", required: true, crop: { aspect: 1, outputWidth: 800 } },
+                { name: "caption", label: "Caption (used as image description)" },
+                { name: "sort_order", label: "Sort order", type: "number" },
+              ]}
+            />
           </TabsContent>}
 
           {isContentAdmin && <TabsContent value="partners" className="mt-8">
