@@ -1,0 +1,1 @@
+UPDATE public.board_members SET full_name = 'Virgile Chegoua (Tchatcho)' WHERE role_title = 'President' AND is_current = true;
