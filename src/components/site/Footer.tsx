@@ -24,25 +24,6 @@ const columns = [
     ],
   },
   {
-    title: "Community",
-    links: [
-      { label: "Membership", to: "/membership" },
-      { label: "Events", to: "/events" },
-      { label: "Partners", to: "/partners" },
-      { label: "Gallery", to: "/gallery" },
-    ],
-  },
-  {
-    title: "Get involved",
-    links: [
-      { label: "Fundraising", to: "/fundraising" },
-      { label: "Donate", to: "/donate" },
-      { label: "Surveys", to: "/surveys" },
-      { label: "Volunteer", to: "/volunteer" },
-      { label: "Refer someone", to: "/refer" },
-    ],
-  },
-  {
     title: "Quick links",
     links: [
       { label: "Donate", to: "/donate" },
