@@ -121,39 +121,37 @@ function ContactPage() {
               <MapPin className="mt-0.5 size-4 shrink-0" />{" "}
               {site?.contact_address ?? t("CCGMs Centre, 24 Unity Road")}
             </p>
-            <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-              <p className="flex items-start gap-3 text-sm text-primary-foreground/80">
-                <Phone className="mt-0.5 size-4 shrink-0" /> {site?.contact_phone ?? "07700 900000"}
-              </p>
-              {site?.show_contact_whatsapp !== false &&
-              whatsappHref(site?.contact_whatsapp || site?.contact_phone, site?.whatsapp_message) ? (
-                <a
-                  href={
-                    whatsappHref(
-                      site?.contact_whatsapp || site?.contact_phone,
-                      site?.whatsapp_message,
-                    )!
-                  }
-                  target="_blank"
-                  rel="noreferrer"
-                  aria-label={t("Chat with CCGMs on WhatsApp")}
-                  onClick={() => void trackEvent("whatsapp_us_click", { source: "contact_page" })}
-                  className="block transition-transform hover:scale-[1.02]"
-                >
-                  <img
-                    src={whatsappUs}
-                    alt={t("Chat with CCGMs on WhatsApp")}
-                    loading="lazy"
-                    width={1536}
-                    height={512}
-                    className="h-14 w-auto"
-                  />
-                </a>
-              ) : null}
-            </div>
+            <p className="flex items-start gap-3 text-sm text-primary-foreground/80">
+              <Phone className="mt-0.5 size-4 shrink-0" /> {site?.contact_phone ?? "07700 900000"}
+            </p>
             <p className="flex items-start gap-3 text-sm text-primary-foreground/80">
               <Mail className="mt-0.5 size-4 shrink-0" /> {site?.contact_email ?? "hello@ccgms.org"}
             </p>
+            {site?.show_contact_whatsapp !== false &&
+            whatsappHref(site?.contact_whatsapp || site?.contact_phone, site?.whatsapp_message) ? (
+              <a
+                href={
+                  whatsappHref(
+                    site?.contact_whatsapp || site?.contact_phone,
+                    site?.whatsapp_message,
+                  )!
+                }
+                target="_blank"
+                rel="noreferrer"
+                aria-label={t("Chat with CCGMs on WhatsApp")}
+                onClick={() => void trackEvent("whatsapp_us_click", { source: "contact_page" })}
+                className="block transition-transform hover:scale-[1.02]"
+              >
+                <img
+                  src={whatsappUs}
+                  alt={t("Chat with CCGMs on WhatsApp")}
+                  loading="lazy"
+                  width={1536}
+                  height={512}
+                  className="h-14 w-auto"
+                />
+              </a>
+            ) : null}
             <div className="rounded-xl bg-primary-foreground/10 p-4 text-sm text-primary-foreground/80">
               {t("Office hours: Tuesday to Saturday, 10:00 – 17:00. Urgent welfare requests are reviewed within 72 hours.")}
             </div>
