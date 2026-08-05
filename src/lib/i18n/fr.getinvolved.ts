@@ -99,4 +99,9 @@ export const getinvolved: Record<string, string> = {
   "How can we help?": "Comment pouvons-nous aider ?",
   "They know about this referral and are happy to be contacted.": "Cette personne est au courant de ce signalement et accepte d'être contactée.",
   "Send referral": "Envoyer le signalement",
+  "Refer myself": "Demander de l'aide pour moi",
+  "Refer someone else": "Signaler quelqu'un d'autre",
+  "I am happy to be contacted by the welfare team.": "J'accepte d'être contacté(e) par l'équipe d'aide sociale.",
+  "Thank you for reaching out": "Merci d'avoir fait appel à nous",
+  "Phone (optional)": "Téléphone (facultatif)",
 };
