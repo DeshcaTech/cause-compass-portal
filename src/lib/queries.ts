@@ -272,6 +272,25 @@ export const galleryPhotosQuery = queryOptions({
     unwrap<GalleryPhoto[]>(await supabase.from("gallery_photos").select("*").order("sort_order")),
 });
 
+export type FooterPhoto = {
+  id: string;
+  photo_url: string;
+  caption: string | null;
+  sort_order: number;
+};
+
+/** Up to 10 admin-curated pictures; the footer shows 6 of them at random. */
+export const footerPhotosQuery = queryOptions({
+  queryKey: ["footer_photos"],
+  queryFn: async () =>
+    unwrap<FooterPhoto[]>(
+      await supabase
+        .from("footer_photos")
+        .select("id, photo_url, caption, sort_order")
+        .order("sort_order"),
+    ),
+});
+
 export const assetsQuery = queryOptions({
   queryKey: ["community_assets"],
   queryFn: async () =>
