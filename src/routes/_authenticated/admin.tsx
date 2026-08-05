@@ -151,28 +151,29 @@ function AdminPage() {
 
         <Tabs defaultValue={defaultTab}>
           <TabsList>
-            {isAdmin && <TabsTrigger value="events">Events</TabsTrigger>}
-            {isAdmin && <TabsTrigger value="news">News</TabsTrigger>}
+            {isContentAdmin && <TabsTrigger value="events">Events</TabsTrigger>}
+            {isContentAdmin && <TabsTrigger value="news">News</TabsTrigger>}
             {can("event") && <TabsTrigger value="rsvps">RSVPs</TabsTrigger>}
-            {isAdmin && <TabsTrigger value="gallery">Gallery</TabsTrigger>}
-            {isAdmin && <TabsTrigger value="partners">Partners</TabsTrigger>}
-            {isAdmin && <TabsTrigger value="jobs">Jobs</TabsTrigger>}
-            {isAdmin && <TabsTrigger value="job-applications">Applications</TabsTrigger>}
+            {isContentAdmin && <TabsTrigger value="gallery">Gallery</TabsTrigger>}
+            {isContentAdmin && <TabsTrigger value="partners">Partners</TabsTrigger>}
+            {isContentAdmin && <TabsTrigger value="jobs">Jobs</TabsTrigger>}
+            {isContentAdmin && <TabsTrigger value="job-applications">Applications</TabsTrigger>}
             {isAdmin && <TabsTrigger value="referrals">Get Support</TabsTrigger>}
-            {isAdmin && <TabsTrigger value="brand">Brand</TabsTrigger>}
-            {isAdmin && <TabsTrigger value="site-content">Site content</TabsTrigger>}
-            {isAdmin && <TabsTrigger value="documents">Documents</TabsTrigger>}
+            {isContentAdmin && <TabsTrigger value="brand">Brand</TabsTrigger>}
+            {isContentAdmin && <TabsTrigger value="site-content">Site content</TabsTrigger>}
+            {isContentAdmin && <TabsTrigger value="documents">Documents</TabsTrigger>}
             {can("fundraising") && <TabsTrigger value="campaigns">Campaigns</TabsTrigger>}
             {can("fundraising") && <TabsTrigger value="reports">Reports</TabsTrigger>}
             {can("board") && <TabsTrigger value="board">Board</TabsTrigger>}
             {can("president") && <TabsTrigger value="president">President</TabsTrigger>}
             {isAdmin && <TabsTrigger value="assets">Assets</TabsTrigger>}
-            {isAdmin && <TabsTrigger value="village-groups">Groups</TabsTrigger>}
+            {isContentAdmin && <TabsTrigger value="village-groups">Groups</TabsTrigger>}
             {isAdmin && <TabsTrigger value="surveys">Surveys</TabsTrigger>}
-            {isAdmin && <TabsTrigger value="roles">Roles</TabsTrigger>}
+            {isContentAdmin && <TabsTrigger value="roles">Roles</TabsTrigger>}
+            {isSuperAdmin && <TabsTrigger value="admins">Admin accounts</TabsTrigger>}
           </TabsList>
 
-          {isAdmin && <TabsContent value="news" className="mt-8">
+          {isContentAdmin && <TabsContent value="news" className="mt-8">
             <NewsNotifier />
             <SubscriberList />
             <RecordManager
@@ -201,7 +202,7 @@ function AdminPage() {
             <RsvpManager />
           </TabsContent>}
 
-          {isAdmin && <TabsContent value="job-applications" className="mt-8">
+          {isContentAdmin && <TabsContent value="job-applications" className="mt-8">
             <JobApplicationsManager />
           </TabsContent>}
 
@@ -209,15 +210,15 @@ function AdminPage() {
             <ReferralsManager />
           </TabsContent>}
 
-          {isAdmin && <TabsContent value="brand" className="mt-8">
+          {isContentAdmin && <TabsContent value="brand" className="mt-8">
             <BrandSettings />
           </TabsContent>}
 
-          {isAdmin && <TabsContent value="site-content" className="mt-8">
+          {isContentAdmin && <TabsContent value="site-content" className="mt-8">
             <SiteContentSettings />
           </TabsContent>}
 
-          {isAdmin && <TabsContent value="documents" className="mt-8">
+          {isContentAdmin && <TabsContent value="documents" className="mt-8">
             <RecordManager
               table="documents"
               title="Documents"
@@ -236,7 +237,7 @@ function AdminPage() {
             />
           </TabsContent>}
 
-          {isAdmin && <TabsContent value="events" className="mt-8">
+          {isContentAdmin && <TabsContent value="events" className="mt-8">
             <RecordManager
               table="events"
               title="Events"
@@ -280,7 +281,7 @@ function AdminPage() {
             />
           </TabsContent>}
 
-          {isAdmin && <TabsContent value="gallery" className="mt-8 space-y-12">
+          {isContentAdmin && <TabsContent value="gallery" className="mt-8 space-y-12">
             <RecordManager
               table="galleries"
               title="Gallery albums"
@@ -346,7 +347,7 @@ function AdminPage() {
             </div>
           </TabsContent>}
 
-          {isAdmin && <TabsContent value="partners" className="mt-8">
+          {isContentAdmin && <TabsContent value="partners" className="mt-8">
             <RecordManager
               table="partners"
               title="Partners"
@@ -373,7 +374,7 @@ function AdminPage() {
             />
           </TabsContent>}
 
-          {isAdmin && <TabsContent value="jobs" className="mt-8">
+          {isContentAdmin && <TabsContent value="jobs" className="mt-8">
             <RecordManager
               table="jobs"
               title="Jobs"
@@ -540,7 +541,7 @@ function AdminPage() {
             />
           </TabsContent>}
 
-          {isAdmin && <TabsContent value="village-groups" className="mt-8">
+          {isContentAdmin && <TabsContent value="village-groups" className="mt-8">
             <RecordManager
               table="village_groups"
               title="Our groups"
@@ -601,12 +602,18 @@ function AdminPage() {
             />
           </TabsContent>}
 
-          {isAdmin && <TabsContent value="roles" className="mt-8">
+          {isSuperAdmin && <TabsContent value="admins" className="mt-8">
+            <AdminAccounts />
+          </TabsContent>}
+
+          {isContentAdmin && <TabsContent value="roles" className="mt-8">
             <Card className="border-border/70">
               <CardContent className="space-y-3 p-6 text-sm text-muted-foreground">
                 <h2 className="text-lg text-foreground">Who can manage what</h2>
                 <ul className="list-disc space-y-1 pl-5">
-                  <li><span className="text-foreground">Administrator</span> — every area of the site.</li>
+                  <li><span className="text-foreground">Level 1 administrator</span> — every area of the site, plus creating and managing other admin accounts.</li>
+                  <li><span className="text-foreground">Level 2 administrator</span> — every area of the site except admin account management.</li>
+                  <li><span className="text-foreground">Level 3 content administrator</span> — site content only (news, events, RSVPs, gallery, partners, jobs, documents, groups, board, brand and site wording). No access to asset rentals, membership, the president's message or the Get Involved areas.</li>
                   <li><span className="text-foreground">Board manager</span> — board & team members only.</li>
                   <li><span className="text-foreground">President manager</span> — the president's message only.</li>
                   <li><span className="text-foreground">Event manager</span> — event RSVP and interest lists only.</li>
