@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { ImageIcon } from "lucide-react";
 
 import { PageHeader } from "@/components/site/PageHeader";
+import { FilterPage, FilterSelect } from "@/components/site/FilterPage";
 import { Lightbox } from "@/components/site/Lightbox";
 import { SmartImage } from "@/components/site/SmartImage";
 import { Badge } from "@/components/ui/badge";
