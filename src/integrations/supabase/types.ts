@@ -1078,6 +1078,7 @@ export type Database = {
           ios_app_url: string | null
           org_name: string
           show_contact_whatsapp: boolean
+          tiktok_url: string | null
           updated_at: string
           whatsapp_message: string | null
           x_url: string | null
@@ -1106,6 +1107,7 @@ export type Database = {
           ios_app_url?: string | null
           org_name?: string
           show_contact_whatsapp?: boolean
+          tiktok_url?: string | null
           updated_at?: string
           whatsapp_message?: string | null
           x_url?: string | null
@@ -1134,6 +1136,7 @@ export type Database = {
           ios_app_url?: string | null
           org_name?: string
           show_contact_whatsapp?: boolean
+          tiktok_url?: string | null
           updated_at?: string
           whatsapp_message?: string | null
           x_url?: string | null
