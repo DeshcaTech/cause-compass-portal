@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 
 import { PageHeader } from "@/components/site/PageHeader";
-import { SidebarNavItem, SidebarPage } from "@/components/site/SidebarPage";
+import { FilterPage, FilterSelect } from "@/components/site/FilterPage";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -102,24 +102,25 @@ function FundraisingPage() {
         title={t("Support our causes")}
         description={t("Every campaign is proposed, voted on and reported back to the membership.")}
       />
-      <SidebarPage
-        sidebar={(
-          <>
-            <SidebarNavItem
-              image={active[0]?.image_url ?? campaignFallback}
-              title={t("Active campaigns")}
-              meta={`${active.length} ${t("campaigns")}`}
-              active={view === "active"}
-              onClick={() => setView("active")}
-            />
-            <SidebarNavItem
-              image={past[0]?.image_url ?? campaignFallback}
-              title={t("Past campaigns")}
-              meta={`${past.length} ${t("campaigns")}`}
-              active={view === "past"}
-              onClick={() => setView("past")}
-            />
-          </>
+      <FilterPage
+        filters={(
+          <FilterSelect
+            label={t("Campaigns")}
+            value={view}
+            onChange={(value) => setView(value as "active" | "past")}
+            options={[
+              {
+                value: "active",
+                label: t("Active campaigns"),
+                meta: `${active.length} ${t("campaigns")}`,
+              },
+              {
+                value: "past",
+                label: t("Past campaigns"),
+                meta: `${past.length} ${t("campaigns")}`,
+              },
+            ]}
+          />
         )}
       >
         <div className="grid gap-5 md:grid-cols-2">
@@ -143,7 +144,7 @@ function FundraisingPage() {
             </Button>
           </CardContent>
         </Card>
-      </SidebarPage>
+      </FilterPage>
     </>
   );
 }
