@@ -33,6 +33,7 @@ const columns = [
       { label: "Become a Volunteer", to: "/volunteer" },
       { label: "Donate", to: "/donate" },
       { label: "Asset Rental", to: "/assets" },
+      { label: "Contact Us", to: "/contact" },
     ],
   },
 ];
