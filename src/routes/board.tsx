@@ -12,7 +12,7 @@ import { searchString, useSearchFilter } from "@/lib/use-search-filter";
 import personFallback from "@/assets/person-fallback.jpg";
 
 export const Route = createFileRoute("/board")({
-  validateSearch: (search: Record<string, unknown>): { team?: string } => ({
+  validateSearch: (search: Record<string, unknown>): { team?: string | undefined} => ({
     team: searchString(search, "team"),
   }),
   head: () => ({
