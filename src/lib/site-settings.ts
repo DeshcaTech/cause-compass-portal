@@ -18,6 +18,7 @@ export type SiteSettings = {
   contact_email: string;
   footer_blurb: string;
   contact_whatsapp: string | null;
+  show_contact_whatsapp: boolean;
   developer_whatsapp: string | null;
 };
 
@@ -42,6 +43,7 @@ export const DEFAULT_SITE_SETTINGS: SiteSettings = {
   footer_blurb:
     "A community association bringing families together — supporting one another, celebrating our culture and building a stronger future for the next generation.",
   contact_whatsapp: null,
+  show_contact_whatsapp: true,
   developer_whatsapp: null,
 };
 
@@ -54,7 +56,7 @@ export const siteSettingsQuery = queryOptions({
     const { data, error } = await supabase
       .from("site_settings")
       .select(
-        "org_name, hero_eyebrow, hero_title_line1, hero_title_line2, hero_intro, about_eyebrow, about_title, about_body_1, about_body_2, android_app_url, ios_app_url, contact_address, contact_phone, contact_email, footer_blurb, contact_whatsapp, developer_whatsapp",
+        "org_name, hero_eyebrow, hero_title_line1, hero_title_line2, hero_intro, about_eyebrow, about_title, about_body_1, about_body_2, android_app_url, ios_app_url, contact_address, contact_phone, contact_email, footer_blurb, contact_whatsapp, show_contact_whatsapp, developer_whatsapp",
       )
       .eq("id", 1)
       .maybeSingle();
