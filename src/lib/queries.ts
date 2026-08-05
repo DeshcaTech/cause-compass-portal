@@ -279,7 +279,7 @@ export type FooterPhoto = {
   sort_order: number;
 };
 
-/** Up to 10 admin-curated pictures; the footer shows 6 of them at random. */
+/** Up to 100 admin-curated pictures; the footer shows 6 of them at random. */
 export const footerPhotosQuery = queryOptions({
   queryKey: ["footer_photos"],
   queryFn: async () =>

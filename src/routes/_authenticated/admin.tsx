@@ -411,7 +411,7 @@ function AdminPage() {
             <RecordManager
               table="footer_photos"
               title="Footer photos"
-              description="Load up to 10 pictures here — six of them appear at random in the website footer on every visit."
+              description="Load up to 100 pictures here — six of them appear at random in the website footer on every visit."
               orderBy={{ column: "sort_order" }}
               primaryLabel={(row) => String(row['caption'] ?? "Footer photo")}
               secondaryLabel={(row) => String(row['photo_url'])}
