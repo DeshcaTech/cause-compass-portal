@@ -56,6 +56,7 @@ export const DEFAULT_SITE_SETTINGS: SiteSettings = {
   instagram_url: null,
   x_url: null,
   youtube_url: null,
+  tiktok_url: null,
 };
 
 export const SITE_SETTINGS_KEY = ["site-settings"] as const;
