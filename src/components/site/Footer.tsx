@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { brandQuery } from "@/lib/brand";
 import { Mail, MapPin, Phone } from "lucide-react";
+import whatsappUs from "@/assets/whatsapp-us.png";
 
 import logo from "@/assets/ccgms-wordmark.png?w=640&format=png";
 import logoAvif from "@/assets/ccgms-wordmark.png?w=640&quality=70&format=avif";
@@ -104,8 +105,30 @@ export function Footer() {
             <li className="flex items-center gap-2">
               <MapPin className="size-4" /> {site?.contact_address ?? "CCGMs Centre, 24 Unity Road"}
             </li>
-            <li className="flex items-center gap-2">
-              <Phone className="size-4" /> {site?.contact_phone ?? "07700 900000"}
+            <li className="flex flex-wrap items-center gap-2">
+              <span className="flex items-center gap-2">
+                <Phone className="size-4" /> {site?.contact_phone ?? "07700 900000"}
+              </span>
+              {site?.show_contact_whatsapp !== false &&
+              whatsappHref(site?.contact_whatsapp || site?.contact_phone, site?.whatsapp_message) ? (
+                <a
+                  href={whatsappHref(site?.contact_whatsapp || site?.contact_phone, site?.whatsapp_message)!}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label="Chat with CCGMs on WhatsApp"
+                  onClick={() => void trackEvent("whatsapp_us_click", { source: "footer" })}
+                  className="block transition-transform hover:scale-[1.02]"
+                >
+                  <img
+                    src={whatsappUs}
+                    alt="Chat with CCGMs on WhatsApp"
+                    loading="lazy"
+                    width={1536}
+                    height={512}
+                    className="h-7 w-auto"
+                  />
+                </a>
+              ) : null}
             </li>
             <li className="flex items-center gap-2">
               <Mail className="size-4" /> {site?.contact_email ?? "hello@ccgms.org"}
