@@ -97,7 +97,14 @@ const GROUPS: Group[] = [
   },
 ];
 
-export function SiteContentSettings({ isSuperAdmin = false }: { isSuperAdmin?: boolean }) {
+export function SiteContentSettings({
+  isSuperAdmin = false,
+  canManageWhatsapp = false,
+}: {
+  isSuperAdmin?: boolean;
+  canManageWhatsapp?: boolean;
+}) {
+  const whatsappAllowed = isSuperAdmin || canManageWhatsapp;
   const queryClient = useQueryClient();
   const { data, isLoading } = useQuery(siteSettingsQuery);
   const [draft, setDraft] = useState<SiteSettings>(DEFAULT_SITE_SETTINGS);
@@ -130,6 +137,8 @@ export function SiteContentSettings({ isSuperAdmin = false }: { isSuperAdmin?: b
       };
       if (!isSuperAdmin) {
         delete (payload as Partial<SiteSettings>).developer_whatsapp;
+      }
+      if (!whatsappAllowed) {
         delete (payload as Partial<SiteSettings>).contact_whatsapp;
         delete (payload as Partial<SiteSettings>).show_contact_whatsapp;
       }
@@ -156,7 +165,11 @@ export function SiteContentSettings({ isSuperAdmin = false }: { isSuperAdmin?: b
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
-        {GROUPS.filter((group) => !group.superAdminOnly || isSuperAdmin).map((group) => (
+        {GROUPS.filter(
+          (group) =>
+            (!group.superAdminOnly || isSuperAdmin) &&
+            (!group.whatsappAdminOnly || whatsappAllowed),
+        ).map((group) => (
           <Card key={group.title} className="border-border/70">
             <CardContent className="space-y-5 p-6">
               <div>
