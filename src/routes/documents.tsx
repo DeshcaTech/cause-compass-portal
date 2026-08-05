@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Download, FileText } from "lucide-react";
 
 import { PageHeader } from "@/components/site/PageHeader";
-import { SidebarNavItem, SidebarPage } from "@/components/site/SidebarPage";
+import { FilterPage, FilterSelect } from "@/components/site/FilterPage";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -48,21 +48,23 @@ function DocumentsPage() {
         title={t("Download centre")}
         description={t("Official documents, forms and reports, free to download for members and the public.")}
       />
-      <SidebarPage
-        sidebar={filters.map((category) => (
-          <SidebarNavItem
-            key={category}
-            icon={<FileText className="size-5" />}
-            title={category === "All" ? t("All") : category}
-            meta={`${
-              category === "All"
-                ? documents.length
-                : documents.filter((d) => d.category === category).length
-            } ${t("documents")}`}
-            active={active === category}
-            onClick={() => setActive(category)}
+      <FilterPage
+        filters={(
+          <FilterSelect
+            label={t("Category")}
+            value={active}
+            onChange={setActive}
+            options={filters.map((category) => ({
+              value: category,
+              label: category === "All" ? t("All") : category,
+              meta: `${
+                category === "All"
+                  ? documents.length
+                  : documents.filter((d) => d.category === category).length
+              } ${t("documents")}`,
+            }))}
           />
-        ))}
+        )}
       >
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-2">
           {visible.map((doc) => (
@@ -91,7 +93,7 @@ function DocumentsPage() {
         {visible.length === 0 ? (
           <p className="mt-10 text-sm text-muted-foreground">{t("No documents in this category yet.")}</p>
         ) : null}
-      </SidebarPage>
+      </FilterPage>
     </>
   );
 }
