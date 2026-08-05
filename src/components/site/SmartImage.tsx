@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ImageOff, RotateCw } from "lucide-react";
 
 import { Skeleton } from "@/components/ui/skeleton";
@@ -27,6 +27,7 @@ export function SmartImage({
   height?: number;
 }) {
   const t = useT();
+  const imageRef = useRef<HTMLImageElement>(null);
   const [attempt, setAttempt] = useState(0);
   const [status, setStatus] = useState<"loading" | "loaded" | "error">("loading");
 
@@ -34,6 +35,12 @@ export function SmartImage({
     setAttempt(0);
     setStatus("loading");
   }, [src]);
+
+  useEffect(() => {
+    const image = imageRef.current;
+    if (!image?.complete) return;
+    setStatus(image.naturalWidth > 0 ? "loaded" : "error");
+  }, [src, attempt]);
 
   function onError() {
     if (attempt < 1) {
@@ -48,6 +55,7 @@ export function SmartImage({
     <div className={cn("relative overflow-hidden bg-secondary", wrapperClassName)}>
       {status !== "error" ? (
         <img
+          ref={imageRef}
           key={attempt}
           src={attempt === 0 ? src : `${src}${src.includes("?") ? "&" : "?"}retry=${attempt}`}
           alt={alt}
