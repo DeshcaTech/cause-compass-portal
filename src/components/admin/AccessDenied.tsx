@@ -1,7 +1,14 @@
-import { ShieldAlert, LogOut, Mail } from "lucide-react";
+import { useState } from "react";
+import { useMutation } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
+import { ShieldAlert, LogOut, Mail, Send, CheckCircle2 } from "lucide-react";
+import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { requestAdminAccess } from "@/lib/access-requests.functions";
 
 type AccessDeniedProps = {
   /** Human name of the blocked area, e.g. "Membership". */
@@ -21,6 +28,27 @@ export function AccessDenied({
   onSignOut,
   onBack,
 }: AccessDeniedProps) {
+  const submitRequest = useServerFn(requestAdminAccess);
+  const [reason, setReason] = useState("");
+  const [sent, setSent] = useState(false);
+
+  const requestMutation = useMutation({
+    mutationFn: () =>
+      submitRequest({
+        data: {
+          section: section || "Admin dashboard",
+          requirement,
+          currentLevel: currentLevel || "No admin role",
+          reason: reason.trim() || undefined,
+        },
+      }),
+    onSuccess: () => {
+      setSent(true);
+      toast.success("Your request has been sent to the administrators");
+    },
+    onError: (error: Error) => toast.error(error.message),
+  });
+
   return (
     <section className="container-page py-16">
       <Card className="mx-auto max-w-xl border-border/70">
@@ -64,6 +92,43 @@ export function AccessDenied({
               </li>
               <li>Sign out and back in once the new level is granted.</li>
             </ol>
+          </div>
+
+          <div className="space-y-3 rounded-lg border border-border/70 p-4">
+            <div className="space-y-1">
+              <p className="text-sm font-medium">Request this access</p>
+              <p className="text-sm text-muted-foreground">
+                We email the level 1 administrators with your account details and the section you
+                need.
+              </p>
+            </div>
+            {sent ? (
+              <p className="flex items-center gap-2 text-sm text-foreground">
+                <CheckCircle2 className="size-4" aria-hidden /> Request sent. An administrator will
+                be in touch.
+              </p>
+            ) : (
+              <>
+                <div className="space-y-1.5">
+                  <Label htmlFor="access-reason">Why do you need it? (optional)</Label>
+                  <Textarea
+                    id="access-reason"
+                    rows={3}
+                    maxLength={1000}
+                    value={reason}
+                    onChange={(event) => setReason(event.target.value)}
+                    placeholder="e.g. I manage membership payments and need to confirm a family registration."
+                  />
+                </div>
+                <Button
+                  variant="hero"
+                  disabled={requestMutation.isPending}
+                  onClick={() => requestMutation.mutate()}
+                >
+                  <Send /> {requestMutation.isPending ? "Sending…" : "Send access request"}
+                </Button>
+              </>
+            )}
           </div>
 
           <div className="flex flex-wrap gap-3">
