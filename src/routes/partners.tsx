@@ -41,10 +41,6 @@ function PartnersPage() {
   const [category, setCategory] = useState("All");
   const categories = ["All", ...Array.from(new Set(partners.map((p) => p.category)))];
   const filtered = category === "All" ? partners : partners.filter((p) => p.category === category);
-  const thumbFor = (item: string) =>
-    (item === "All" ? partners[0] : partners.find((p) => p.category === item))?.logo_url ??
-    businessFallback;
-
   return (
     <>
       <PageHeader
