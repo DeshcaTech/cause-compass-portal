@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { brandQuery } from "@/lib/brand";
 import { Facebook, Instagram, Mail, MapPin, Phone, Twitter, Youtube } from "lucide-react";
 import whatsappUs from "@/assets/whatsapp-us.png";
+import { TikTok } from "@/components/site/icons/TikTok";
 
 import logo from "@/assets/ccgms-wordmark.png?w=640&format=png";
 import logoAvif from "@/assets/ccgms-wordmark.png?w=640&quality=70&format=avif";
@@ -182,6 +183,18 @@ export function Footer() {
                 className="grid size-9 place-items-center rounded-full bg-primary-foreground/10 text-primary-foreground transition-colors hover:bg-primary-foreground/20"
               >
                 <Youtube className="size-4" />
+              </a>
+            ) : null}
+            {site?.tiktok_url ? (
+              <a
+                href={site.tiktok_url}
+                target="_blank"
+                rel="noreferrer"
+                aria-label="TikTok"
+                onClick={() => void trackEvent("footer_social_click", { channel: "tiktok" })}
+                className="grid size-9 place-items-center rounded-full bg-primary-foreground/10 text-primary-foreground transition-colors hover:bg-primary-foreground/20"
+              >
+                <TikTok className="size-4" />
               </a>
             ) : null}
           </div>
