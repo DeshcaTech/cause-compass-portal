@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
-import { Search, Star } from "lucide-react";
+import { Pin, Search, Star } from "lucide-react";
 
 import { PageHeader } from "@/components/site/PageHeader";
 import { FilterPage, FilterSelect } from "@/components/site/FilterPage";
@@ -56,11 +56,13 @@ function NewsPage() {
   const [search, setSearch] = useSearchFilter("q", "");
   const [view, setView] = useSearchFilter("view", "all");
   const featuredOnly = view === "featured";
+  const pinnedOnly = view === "pinned";
 
   const filtered = useMemo(() => {
     const term = search.trim().toLowerCase();
     return news
       .filter((item) => (featuredOnly ? item.is_featured : true))
+      .filter((item) => (pinnedOnly ? item.is_pinned : true))
       .filter((item) =>
         term
           ? [item.title, item.summary, item.body]
@@ -68,9 +70,10 @@ function NewsPage() {
               .some((value) => String(value).toLowerCase().includes(term))
           : true,
       );
-  }, [news, search, featuredOnly]);
+  }, [news, search, featuredOnly, pinnedOnly]);
 
   const featuredCount = news.filter((item) => item.is_featured).length;
+  const pinnedCount = news.filter((item) => item.is_pinned).length;
 
   return (
     <div>
@@ -85,10 +88,11 @@ function NewsPage() {
             <div className="sm:min-w-[200px]">
               <FilterSelect
                 label={t("Category")}
-                value={featuredOnly ? "featured" : "all"}
+                value={pinnedOnly ? "pinned" : featuredOnly ? "featured" : "all"}
                 onChange={(value) => setView(value)}
                 options={[
                   { value: "all", label: t("All news"), meta: `${news.length}` },
+                  { value: "pinned", label: t("Pinned"), meta: `${pinnedCount}` },
                   { value: "featured", label: t("Featured"), meta: `${featuredCount}` },
                 ]}
               />
@@ -120,7 +124,11 @@ function NewsPage() {
           <div className="grid gap-6 md:grid-cols-2">
             {filtered.map((item) => (
               <Link key={item.id} to="/news/$id" params={{ id: item.id }} className="block">
-                <Card className="h-full overflow-hidden border-border/70 transition-shadow hover:shadow-lg">
+                <Card
+                  className={`h-full overflow-hidden border-border/70 transition-shadow hover:shadow-lg ${
+                    item.is_pinned ? "ring-2 ring-primary/30" : ""
+                  }`}
+                >
                   <img
                     src={item.image_url ?? newsFallback}
                     alt={item.title}
@@ -130,6 +138,11 @@ function NewsPage() {
                   <CardContent className="p-6">
                     <div className="flex items-center gap-2">
                       <p className="eyebrow text-terracotta">{formatDate(item.published_at)}</p>
+                      {item.is_pinned && (
+                        <span className="inline-flex items-center gap-1 rounded-full bg-terracotta/10 px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-terracotta">
+                          <Pin className="size-3 fill-current" /> {t("Pinned")}
+                        </span>
+                      )}
                       {item.is_featured && (
                         <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-primary">
                           <Star className="size-3 fill-current" /> {t("Featured")}
