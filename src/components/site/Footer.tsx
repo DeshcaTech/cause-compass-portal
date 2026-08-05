@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { brandQuery } from "@/lib/brand";
-import { Mail, MapPin, Phone } from "lucide-react";
+import { Facebook, Instagram, Mail, MapPin, Phone, Twitter, Youtube } from "lucide-react";
 import whatsappUs from "@/assets/whatsapp-us.png";
 
 import logo from "@/assets/ccgms-wordmark.png?w=640&format=png";
@@ -119,6 +119,72 @@ export function Footer() {
               <Mail className="size-4" /> {site?.contact_email ?? "hello@ccgms.org"}
             </li>
           </ul>
+          <div className="mt-6 flex flex-wrap items-center gap-2.5">
+            <a
+              href={`tel:${(site?.contact_phone ?? "07700900000").replace(/[^\d]/g, "")}`}
+              aria-label="Call us"
+              onClick={() => void trackEvent("footer_contact_click", { channel: "phone" })}
+              className="grid size-9 place-items-center rounded-full bg-primary-foreground/10 text-primary-foreground transition-colors hover:bg-primary-foreground/20"
+            >
+              <Phone className="size-4" />
+            </a>
+            <a
+              href={`mailto:${site?.contact_email ?? "hello@ccgms.org"}`}
+              aria-label="Email us"
+              onClick={() => void trackEvent("footer_contact_click", { channel: "email" })}
+              className="grid size-9 place-items-center rounded-full bg-primary-foreground/10 text-primary-foreground transition-colors hover:bg-primary-foreground/20"
+            >
+              <Mail className="size-4" />
+            </a>
+            {site?.facebook_url ? (
+              <a
+                href={site.facebook_url}
+                target="_blank"
+                rel="noreferrer"
+                aria-label="Facebook"
+                onClick={() => void trackEvent("footer_social_click", { channel: "facebook" })}
+                className="grid size-9 place-items-center rounded-full bg-primary-foreground/10 text-primary-foreground transition-colors hover:bg-primary-foreground/20"
+              >
+                <Facebook className="size-4" />
+              </a>
+            ) : null}
+            {site?.instagram_url ? (
+              <a
+                href={site.instagram_url}
+                target="_blank"
+                rel="noreferrer"
+                aria-label="Instagram"
+                onClick={() => void trackEvent("footer_social_click", { channel: "instagram" })}
+                className="grid size-9 place-items-center rounded-full bg-primary-foreground/10 text-primary-foreground transition-colors hover:bg-primary-foreground/20"
+              >
+                <Instagram className="size-4" />
+              </a>
+            ) : null}
+            {site?.x_url ? (
+              <a
+                href={site.x_url}
+                target="_blank"
+                rel="noreferrer"
+                aria-label="X (Twitter)"
+                onClick={() => void trackEvent("footer_social_click", { channel: "x" })}
+                className="grid size-9 place-items-center rounded-full bg-primary-foreground/10 text-primary-foreground transition-colors hover:bg-primary-foreground/20"
+              >
+                <Twitter className="size-4" />
+              </a>
+            ) : null}
+            {site?.youtube_url ? (
+              <a
+                href={site.youtube_url}
+                target="_blank"
+                rel="noreferrer"
+                aria-label="YouTube"
+                onClick={() => void trackEvent("footer_social_click", { channel: "youtube" })}
+                className="grid size-9 place-items-center rounded-full bg-primary-foreground/10 text-primary-foreground transition-colors hover:bg-primary-foreground/20"
+              >
+                <Youtube className="size-4" />
+              </a>
+            ) : null}
+          </div>
         </div>
 
         {columns.map((column) => (

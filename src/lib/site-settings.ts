@@ -21,6 +21,10 @@ export type SiteSettings = {
   show_contact_whatsapp: boolean;
   developer_whatsapp: string | null;
   whatsapp_message: string | null;
+  facebook_url: string | null;
+  instagram_url: string | null;
+  x_url: string | null;
+  youtube_url: string | null;
 };
 
 export const DEFAULT_SITE_SETTINGS: SiteSettings = {
@@ -47,6 +51,10 @@ export const DEFAULT_SITE_SETTINGS: SiteSettings = {
   show_contact_whatsapp: true,
   developer_whatsapp: null,
   whatsapp_message: null,
+  facebook_url: null,
+  instagram_url: null,
+  x_url: null,
+  youtube_url: null,
 };
 
 export const SITE_SETTINGS_KEY = ["site-settings"] as const;
@@ -58,7 +66,7 @@ export const siteSettingsQuery = queryOptions({
     const { data, error } = await supabase
       .from("site_settings")
       .select(
-        "org_name, hero_eyebrow, hero_title_line1, hero_title_line2, hero_intro, about_eyebrow, about_title, about_body_1, about_body_2, android_app_url, ios_app_url, contact_address, contact_phone, contact_email, footer_blurb, contact_whatsapp, show_contact_whatsapp, developer_whatsapp, whatsapp_message",
+        "org_name, hero_eyebrow, hero_title_line1, hero_title_line2, hero_intro, about_eyebrow, about_title, about_body_1, about_body_2, android_app_url, ios_app_url, contact_address, contact_phone, contact_email, footer_blurb, contact_whatsapp, show_contact_whatsapp, developer_whatsapp, whatsapp_message, facebook_url, instagram_url, x_url, youtube_url",
       )
       .eq("id", 1)
       .maybeSingle();

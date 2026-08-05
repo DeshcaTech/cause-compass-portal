@@ -73,6 +73,17 @@ const GROUPS: Group[] = [
     ],
   },
   {
+    title: "Social media",
+    description:
+      "Links to your community profiles. Shown as quick-contact icons in the footer. Leave empty to hide an icon.",
+    fields: [
+      { key: "facebook_url", label: "Facebook", hint: "https://facebook.com/…" },
+      { key: "instagram_url", label: "Instagram", hint: "https://instagram.com/…" },
+      { key: "x_url", label: "X (Twitter)", hint: "https://x.com/…" },
+      { key: "youtube_url", label: "YouTube", hint: "https://youtube.com/…" },
+    ],
+  },
+  {
     title: "Developer credit (level 1 only)",
     description:
       "WhatsApp number behind the 'Powered by DeshcaTech' link in the footer. Use the international format, e.g. 447700900000.",
@@ -141,6 +152,10 @@ export function SiteContentSettings({
           : null,
         contact_whatsapp: draft.contact_whatsapp?.trim() ? draft.contact_whatsapp.trim() : null,
         whatsapp_message: draft.whatsapp_message?.trim() ? draft.whatsapp_message.trim() : null,
+        facebook_url: draft.facebook_url?.trim() ? draft.facebook_url.trim() : null,
+        instagram_url: draft.instagram_url?.trim() ? draft.instagram_url.trim() : null,
+        x_url: draft.x_url?.trim() ? draft.x_url.trim() : null,
+        youtube_url: draft.youtube_url?.trim() ? draft.youtube_url.trim() : null,
       };
       if (!isSuperAdmin) {
         delete (payload as Partial<SiteSettings>).developer_whatsapp;
