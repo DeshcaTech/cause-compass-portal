@@ -55,8 +55,11 @@ export function Footer() {
   const t = useT();
   const { data: brand } = useQuery(brandQuery);
   const { data: site } = useQuery(siteSettingsQuery);
-  const waDigits = (site?.developer_whatsapp ?? "").replace(/[^\d]/g, "");
-  const waHref = waDigits ? `https://wa.me/${waDigits}` : null;
+  const rawWa =
+    site?.developer_whatsapp || site?.contact_whatsapp || site?.contact_phone || "";
+  let waDigits = rawWa.replace(/[^\d]/g, "");
+  if (waDigits.startsWith("0")) waDigits = `44${waDigits.slice(1)}`;
+  const waHref = waDigits.length >= 9 ? `https://wa.me/${waDigits}` : null;
   const showLogo = brand?.show_logo_footer ?? true;
   const customLogo = brand?.logo_url ?? null;
   return (
