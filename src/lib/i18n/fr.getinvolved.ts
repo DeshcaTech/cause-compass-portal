@@ -82,7 +82,7 @@ export const getinvolved: Record<string, string> = {
   "Referral received": "Signalement reçu",
   "Thank you for looking out for them": "Merci de veiller sur cette personne",
   "The welfare team handles every referral confidentially and will follow up sensitively.": "L'équipe d'aide sociale traite chaque signalement en toute confidentialité et assurera un suivi avec délicatesse.",
-  "Refer someone for support": "Signaler une personne à soutenir",
+  "Get support": "Obtenir de l'aide",
   "If you know a member of our community going through a difficult time, tell us confidentially.": "Si vous connaissez un membre de notre communauté qui traverse une période difficile, faites-le-nous savoir en toute confidentialité.",
   "Your membership number (optional, but recommended)": "Votre numéro d'adhérent (facultatif, mais recommandé)",
   "Your email": "Votre e-mail",
