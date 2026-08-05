@@ -9,7 +9,8 @@ import logoWebp from "@/assets/ccgms-wordmark.png?w=640&quality=80&format=webp";
 import { Picture } from "@/components/site/Picture";
 import flagsAsset from "@/assets/cm-uk-flags.jpg.asset.json";
 import { useT } from "@/lib/i18n";
-import { siteSettingsQuery } from "@/lib/site-settings";
+import { siteSettingsQuery, whatsappHref } from "@/lib/site-settings";
+import { trackEvent } from "@/lib/analytics";
 
 const columns = [
   {
