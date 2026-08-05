@@ -129,6 +129,14 @@ function NewsPage() {
                     item.is_pinned ? "ring-2 ring-primary/30" : ""
                   }`}
                 >
+                  {item.is_pinned && (
+                    <img
+                      src={item.image_url || newsFallback}
+                      alt={item.title}
+                      loading="lazy"
+                      className="aspect-[16/9] w-full object-cover"
+                    />
+                  )}
                   <CardContent className="p-6">
                     <div className="flex items-center gap-2">
                       <p className="eyebrow text-terracotta">{formatDate(item.published_at)}</p>
