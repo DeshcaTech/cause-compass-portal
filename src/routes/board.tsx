@@ -94,10 +94,10 @@ function MemberGrid({ members }: { members: BoardMember[] }) {
               className="size-16 rounded-full object-cover object-top"
             />
             <p className="mt-4 font-display text-lg">{member.full_name}</p>
-            <p className="text-sm text-primary">{member.role_title}</p>
-            <Badge variant="secondary" className="mt-3">
-              {member.term_label}
-            </Badge>
+            <div className="mt-1 flex items-center gap-2">
+              <p className="text-sm text-primary">{member.role_title}</p>
+              <Badge variant="secondary">{member.term_label}</Badge>
+            </div>
             {member.bio ? (
               <p className="mt-3 text-sm text-muted-foreground">{member.bio}</p>
             ) : null}
