@@ -73,6 +73,17 @@ const GROUPS: Group[] = [
     ],
   },
   {
+    title: "Social media",
+    description:
+      "Links to your community profiles. Shown as quick-contact icons in the footer. Leave empty to hide an icon.",
+    fields: [
+      { key: "facebook_url", label: "Facebook", hint: "https://facebook.com/…" },
+      { key: "instagram_url", label: "Instagram", hint: "https://instagram.com/…" },
+      { key: "x_url", label: "X (Twitter)", hint: "https://x.com/…" },
+      { key: "youtube_url", label: "YouTube", hint: "https://youtube.com/…" },
+    ],
+  },
+  {
     title: "Developer credit (level 1 only)",
     description:
       "WhatsApp number behind the 'Powered by DeshcaTech' link in the footer. Use the international format, e.g. 447700900000.",
