@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { brandQuery } from "@/lib/brand";
 import { Facebook, Instagram, Mail, MapPin, Phone, Twitter, Youtube } from "lucide-react";
 import whatsappUs from "@/assets/whatsapp-us.png";
+import { TikTok } from "@/components/site/icons/TikTok";
 
 import logo from "@/assets/ccgms-wordmark.png?w=640&format=png";
 import logoAvif from "@/assets/ccgms-wordmark.png?w=640&quality=70&format=avif";
