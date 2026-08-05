@@ -24,8 +24,14 @@ import { jobsQuery, type Job } from "@/lib/queries";
 import { submitJobApplication } from "@/lib/jobs.functions";
 import { supabase } from "@/integrations/supabase/client";
 import { useT } from "@/lib/i18n";
+import { searchString, useSearchFilter } from "@/lib/use-search-filter";
 
 export const Route = createFileRoute("/jobs")({
+  validateSearch: (search: Record<string, unknown>) => ({
+    category: searchString(search, "category"),
+    location: searchString(search, "location"),
+    type: searchString(search, "type"),
+  }),
   head: () => ({
     meta: [
       { title: "Jobs — Opportunities Shared by the CCGMs Community" },
@@ -63,9 +69,9 @@ function JobsPage() {
   const jobs = useMemo(() => allJobs.filter((job) => !isExpired(job)), [allJobs]);
   const [selected, setSelected] = useState<Job | null>(null);
   const [applyFor, setApplyFor] = useState<Job | null>(null);
-  const [category, setCategory] = useState(ALL);
-  const [location, setLocation] = useState(ALL);
-  const [jobType, setJobType] = useState(ALL);
+  const [category, setCategory] = useSearchFilter("category", ALL);
+  const [location, setLocation] = useSearchFilter("location", ALL);
+  const [jobType, setJobType] = useSearchFilter("type", ALL);
 
   const filtered = useMemo(
     () =>
