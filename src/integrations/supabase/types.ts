@@ -904,6 +904,7 @@ export type Database = {
           created_at: string
           details: string | null
           id: string
+          is_self: boolean
           membership_number: string | null
           person_contact: string | null
           person_name: string
@@ -918,6 +919,7 @@ export type Database = {
           created_at?: string
           details?: string | null
           id?: string
+          is_self?: boolean
           membership_number?: string | null
           person_contact?: string | null
           person_name: string
@@ -932,6 +934,7 @@ export type Database = {
           created_at?: string
           details?: string | null
           id?: string
+          is_self?: boolean
           membership_number?: string | null
           person_contact?: string | null
           person_name?: string
