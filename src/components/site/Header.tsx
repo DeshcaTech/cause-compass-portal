@@ -48,7 +48,7 @@ export const NAV: NavGroup[] = [
       { label: "Get Support", to: "/refer" },
     ],
   },
-  { label: "Contact", to: "/contact" },
+  { label: "Contact Us", to: "/contact" },
 ];
 
 const linkClass =
