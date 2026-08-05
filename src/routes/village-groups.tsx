@@ -122,7 +122,7 @@ function VillageGroupsPage() {
                   <Card
                     key={group.id}
                     onClick={() => setSelected(group)}
-                    className="cursor-pointer border-border/70 transition-shadow hover:shadow-[var(--shadow-lift)]"
+                    className="cursor-pointer overflow-hidden py-0 border-border/70 transition-shadow hover:shadow-[var(--shadow-lift)]"
                   >
                     <SmartImage
                       src={group.image_url ?? groupsBanner}
