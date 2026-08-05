@@ -436,7 +436,7 @@ export function RecordManager({
               <div className="flex flex-wrap gap-2">
                 {rowActions
                   ? rowActions(row, {
-                      update: (patch) => quickUpdate.mutate({ row, patch }),
+                      update: (patch) => quickUpdate.mutateAsync({ row, patch }),
                       isSaving: quickUpdate.isPending,
                     })
                   : null}
