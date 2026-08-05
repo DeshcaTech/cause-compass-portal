@@ -4,6 +4,7 @@ import { useState } from "react";
 import { CalendarDays, Mail, Phone, Users } from "lucide-react";
 
 import { PageHeader } from "@/components/site/PageHeader";
+import { FilterPage, FilterSelect } from "@/components/site/FilterPage";
 import { SmartImage } from "@/components/site/SmartImage";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
@@ -69,32 +70,21 @@ function VillageGroupsPage() {
         title={t("Our Groups")}
         description={t("Community groups within CCGMs. Click a group to see meeting details and contacts.")}
       />
-      <section className="container-page py-14">
-        <div className="grid gap-5 md:grid-cols-3">
-          {categories.map((item) => (
-            <button
-              key={item.key}
-              type="button"
-              aria-pressed={category === item.key}
-              onClick={() => setCategory(item.key)}
-              className={`rounded-2xl border bg-card p-6 text-left transition-colors ${
-                category === item.key
-                  ? "border-primary shadow-[var(--shadow-lift)]"
-                  : "border-border/70 hover:border-primary/50"
-              }`}
-            >
-              <span className="flex size-10 items-center justify-center rounded-full bg-secondary text-primary">
-                <Users className="size-5" />
-              </span>
-              <h2 className="mt-4 text-xl">{item.label}</h2>
-              <p className="mt-1 text-sm text-muted-foreground">
-                {inCategory(item.key).length} {t("groups")}
-              </p>
-            </button>
-          ))}
-        </div>
-
-        <div className="mt-10">
+      <FilterPage
+        filters={(
+          <FilterSelect
+            label={t("Category")}
+            value={category}
+            onChange={(value) => setCategory(value as "all" | "village" | "other")}
+            options={categories.map((item) => ({
+              value: item.key,
+              label: item.label,
+              meta: `${inCategory(item.key).length} ${t("groups")}`,
+            }))}
+          />
+        )}
+      >
+        <div>
         {(category === "all" ? (["village", "other"] as const) : [category]).map((key) => {
           const rows = inCategory(key);
           if (rows.length === 0) return null;
@@ -137,7 +127,7 @@ function VillageGroupsPage() {
           <p className="mt-10 text-sm text-muted-foreground">{t("No groups listed yet.")}</p>
         ) : null}
         </div>
-      </section>
+      </FilterPage>
 
       <Dialog open={!!selected} onOpenChange={(open) => !open && setSelected(null)}>
         <DialogContent className="max-w-lg">
