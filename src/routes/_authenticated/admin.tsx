@@ -14,6 +14,7 @@ import { JobApplicationsManager } from "@/components/admin/JobApplicationsManage
 import { ReferralsManager } from "@/components/admin/ReferralsManager";
 import { VolunteersManager } from "@/components/admin/VolunteersManager";
 import { EngagementManager } from "@/components/admin/EngagementManager";
+import { FooterPhotoPicker } from "@/components/admin/FooterPhotoPicker";
 import { SubscriberList } from "@/components/admin/SubscriberList";
 import { BrandSettings } from "@/components/admin/BrandSettings";
 import { SiteContentSettings } from "@/components/admin/SiteContentSettings";
@@ -408,10 +409,12 @@ function AdminPage() {
               )}
             </div>
 
+            <FooterPhotoPicker />
+
             <RecordManager
               table="footer_photos"
               title="Footer photos"
-              description="Load up to 100 pictures here — six of them appear at random in the website footer on every visit."
+              description="The footer pool (max 100). Photos picked above appear here — you can also upload extra ones, edit captions or reorder."
               orderBy={{ column: "sort_order" }}
               primaryLabel={(row) => String(row['caption'] ?? "Footer photo")}
               secondaryLabel={(row) => String(row['photo_url'])}
