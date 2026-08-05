@@ -28,6 +28,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Picture } from "@/components/site/Picture";
 import { EventDialog } from "@/components/site/EventDialog";
 import { useT } from "@/lib/i18n";
+import { siteSettingsQuery } from "@/lib/site-settings";
 import {
   announcementsQuery,
   campaignsQuery,
@@ -90,6 +91,7 @@ function Index() {
   const { data: announcements = [] } = useQuery(announcementsQuery);
   const { data: partners = [] } = useQuery(partnersQuery);
   const { data: stats } = useQuery(homeStatsQuery);
+  const { data: site } = useQuery(siteSettingsQuery);
 
   const upcoming = useMemo(() => {
     const now = Date.now();
@@ -121,7 +123,7 @@ function Index() {
           <div className="min-w-0">
             <div className="flex items-center justify-between gap-3 sm:gap-4">
               <p className="eyebrow min-w-0 text-right text-gold">
-                {t("Cameroonian Community in Greater Manchester and Surrounding area")}
+                {site ? site.hero_eyebrow : t("Cameroonian Community in Greater Manchester and Surrounding area")}
               </p>
               <img
                 src={flagsAsset.url}
@@ -131,12 +133,16 @@ function Index() {
               />
             </div>
             <h1 className="mt-6 text-[1.91rem] leading-[1.02] sm:mt-7 sm:text-[2.31rem] sm:leading-[0.98] lg:text-[3.73rem]">
-              {t("Stronger together,")}
+              {site ? site.hero_title_line1 : t("Stronger together,")}
               <br />
-              <span className="text-gold">{t("generation after generation")}</span>
+              <span className="text-gold">
+                {site ? site.hero_title_line2 : t("generation after generation")}
+              </span>
             </h1>
             <p className="mt-5 max-w-xl text-[16px] text-primary-foreground/80">
-              {t("CCGMs is built on family, culture and mutual support. Join us, give to a cause, and be part of everything we build together.")}
+              {site
+                ? site.hero_intro
+                : t("CCGMs is built on family, culture and mutual support. Join us, give to a cause, and be part of everything we build together.")}
             </p>
             <div className="mt-8 flex flex-row gap-3 sm:flex-wrap">
               <Button asChild variant="gold" size="xl">
@@ -163,7 +169,8 @@ function Index() {
             />
             <div className="mt-6 flex flex-wrap items-center justify-center gap-4 sm:justify-start">
               <a
-                href="#"
+                href={site?.android_app_url || "#"}
+                {...(site?.android_app_url ? { target: "_blank", rel: "noreferrer" } : {})}
                 className="inline-flex min-w-0 shrink-0 transition-transform hover:scale-[1.03]"
                 aria-label={t("Download for Android")}
               >
@@ -178,7 +185,8 @@ function Index() {
                 />
               </a>
               <a
-                href="#"
+                href={site?.ios_app_url || "#"}
+                {...(site?.ios_app_url ? { target: "_blank", rel: "noreferrer" } : {})}
                 className="inline-flex min-w-0 shrink-0 transition-transform hover:scale-[1.03]"
                 aria-label={t("Download for iPhone")}
               >
@@ -219,8 +227,10 @@ function Index() {
       <section className="container-page py-14 sm:py-16 md:py-20">
         <div className="grid items-start gap-8 md:gap-10 lg:grid-cols-[0.9fr_1.1fr]">
           <div>
-            <p className="eyebrow text-terracotta">{t("Who we are")}</p>
-            <h2 className="mt-2 text-2xl sm:text-3xl md:text-[2rem]">{t("A family of families")}</h2>
+            <p className="eyebrow text-terracotta">{site ? site.about_eyebrow : t("Who we are")}</p>
+            <h2 className="mt-2 text-2xl sm:text-3xl md:text-[2rem]">
+              {site ? site.about_title : t("A family of families")}
+            </h2>
             <Picture
               avif={communityAvif}
               webp={communityWebp}
@@ -236,10 +246,14 @@ function Index() {
           </div>
           <div className="space-y-5">
             <p className="text-base text-muted-foreground md:text-lg">
-              {t("CCGMs brings together members of our community across generations — parents, students, elders and children — around culture, faith, friendship and mutual support. What began as a handful of families sharing meals and traditions is now an association with a board, an events calendar and campaigns that back people when life gets hard.")}
+              {site
+                ? site.about_body_1
+                : t("CCGMs brings together members of our community across generations — parents, students, elders and children — around culture, faith, friendship and mutual support. What began as a handful of families sharing meals and traditions is now an association with a board, an events calendar and campaigns that back people when life gets hard.")}
             </p>
             <p className="text-sm text-muted-foreground md:text-base">
-              {t("We celebrate together, raise funds for causes that matter to our members, promote businesses run by our community, and stand beside anyone who needs a hand.")}
+              {site
+                ? site.about_body_2
+                : t("We celebrate together, raise funds for causes that matter to our members, promote businesses run by our community, and stand beside anyone who needs a hand.")}
             </p>
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {[
