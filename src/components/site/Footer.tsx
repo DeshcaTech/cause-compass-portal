@@ -185,6 +185,18 @@ export function Footer() {
                 <Youtube className="size-4" />
               </a>
             ) : null}
+            {site?.tiktok_url ? (
+              <a
+                href={site.tiktok_url}
+                target="_blank"
+                rel="noreferrer"
+                aria-label="TikTok"
+                onClick={() => void trackEvent("footer_social_click", { channel: "tiktok" })}
+                className="grid size-9 place-items-center rounded-full bg-primary-foreground/10 text-primary-foreground transition-colors hover:bg-primary-foreground/20"
+              >
+                <TikTok className="size-4" />
+              </a>
+            ) : null}
           </div>
         </div>
 
