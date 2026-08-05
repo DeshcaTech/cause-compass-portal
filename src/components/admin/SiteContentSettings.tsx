@@ -157,6 +157,7 @@ export function SiteContentSettings({
         instagram_url: draft.instagram_url?.trim() ? draft.instagram_url.trim() : null,
         x_url: draft.x_url?.trim() ? draft.x_url.trim() : null,
         youtube_url: draft.youtube_url?.trim() ? draft.youtube_url.trim() : null,
+        tiktok_url: draft.tiktok_url?.trim() ? draft.tiktok_url.trim() : null,
       };
       if (!isSuperAdmin) {
         delete (payload as Partial<SiteSettings>).developer_whatsapp;
