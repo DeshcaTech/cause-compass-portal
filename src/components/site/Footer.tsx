@@ -51,7 +51,7 @@ export function Footer() {
   return (
     <footer className="mt-24 border-t border-border bg-primary text-primary-foreground">
       <div className="container-page grid grid-cols-2 gap-8 py-12 sm:gap-10 lg:grid-cols-6">
-        <div className="lg:col-span-2">
+        <div className="col-span-2 lg:col-span-2">
           <div className="flex flex-wrap items-center justify-between gap-4">
             {showLogo ? (
               customLogo ? (
