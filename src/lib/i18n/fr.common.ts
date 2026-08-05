@@ -20,7 +20,7 @@ export const common: Record<string, string> = {
   Surveys: "Sondages",
   "Become a volunteer": "Devenir bénévole",
   Volunteer: "Bénévolat",
-  "Refer someone": "Orienter quelqu'un",
+  "Get Support": "Obtenir de l'aide",
   Contact: "Contact",
   Join: "Adhérer",
   Community: "Communauté",
