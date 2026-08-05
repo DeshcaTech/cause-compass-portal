@@ -301,6 +301,7 @@ export function RecordManager({
   primaryLabel,
   secondaryLabel,
   badge,
+  rowActions,
   defaults,
   filter = null,
 }: RecordManagerProps) {
