@@ -397,11 +397,21 @@ export function RecordManager({
             </CardContent>
           </Card>
         ) : null}
-        {rows.map((row) => (
+        {rows.map((row) => {
+          const badgeText = badge ? badge(row) : null;
+          return (
           <Card key={row['id']} className="border-border/70">
             <CardContent className="flex flex-wrap items-center justify-between gap-3 p-4">
               <div className="min-w-0">
-                <p className="truncate font-medium">{primaryLabel(row)}</p>
+                <div className="flex flex-wrap items-center gap-2">
+                  <p className="truncate font-medium">{primaryLabel(row)}</p>
+                  {badgeText ? (
+                    <Badge className="gap-1 border-transparent bg-emerald-500/15 text-emerald-700 dark:text-emerald-300">
+                      <CheckCircle2 className="size-3.5" />
+                      {badgeText}
+                    </Badge>
+                  ) : null}
+                </div>
                 {secondaryLabel ? (
                   <p className="truncate text-xs text-muted-foreground">{secondaryLabel(row)}</p>
                 ) : null}
@@ -416,7 +426,8 @@ export function RecordManager({
               </div>
             </CardContent>
           </Card>
-        ))}
+          );
+        })}
       </div>
 
       <Dialog open={open} onOpenChange={setOpen}>
