@@ -21,6 +21,10 @@ export type SiteSettings = {
   show_contact_whatsapp: boolean;
   developer_whatsapp: string | null;
   whatsapp_message: string | null;
+  facebook_url: string | null;
+  instagram_url: string | null;
+  x_url: string | null;
+  youtube_url: string | null;
 };
 
 export const DEFAULT_SITE_SETTINGS: SiteSettings = {
