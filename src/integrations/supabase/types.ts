@@ -1133,6 +1133,7 @@ export type Database = {
           id: string
           image_url: string | null
           is_active: boolean
+          opens_at: string | null
           questions: Json
           title: string
         }
@@ -1143,6 +1144,7 @@ export type Database = {
           id?: string
           image_url?: string | null
           is_active?: boolean
+          opens_at?: string | null
           questions?: Json
           title: string
         }
@@ -1153,6 +1155,7 @@ export type Database = {
           id?: string
           image_url?: string | null
           is_active?: boolean
+          opens_at?: string | null
           questions?: Json
           title?: string
         }

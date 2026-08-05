@@ -85,7 +85,17 @@ export type Survey = {
   questions: SurveyQuestion[];
   is_active: boolean;
   closes_at: string | null;
+  opens_at?: string | null;
 };
+
+/** A survey is live only when it is switched on and today falls inside its date window. */
+export function surveyStatus(survey: Survey): "active" | "closed" {
+  if (!survey.is_active) return "closed";
+  const today = new Date().toISOString().slice(0, 10);
+  if (survey.opens_at && survey.opens_at > today) return "closed";
+  if (survey.closes_at && survey.closes_at < today) return "closed";
+  return "active";
+}
 
 export type Gallery = {
   id: string;

@@ -6,6 +6,7 @@ import { toast } from "sonner";
 
 import { PageHeader } from "@/components/site/PageHeader";
 import { RecordManager } from "@/components/admin/RecordManager";
+import { SurveysManager } from "@/components/admin/SurveysManager";
 import { FundraisingReport } from "@/components/admin/FundraisingReport";
 import { NewsNotifier } from "@/components/admin/NewsNotifier";
 import { RsvpManager } from "@/components/admin/RsvpManager";
@@ -624,29 +625,7 @@ function AdminPage() {
             />
           </TabsContent>}
           {isAdmin && <TabsContent value="surveys" className="mt-8">
-            <RecordManager
-              table="surveys"
-              title="Surveys"
-              description="Surveys shown on the surveys page."
-              orderBy={{ column: "created_at", ascending: false }}
-              primaryLabel={(row) => String(row['title'])}
-              secondaryLabel={(row) => (row['is_active'] ? "Active" : "Closed")}
-              defaults={{ is_active: true, questions: [] }}
-              fields={[
-                { name: "title", label: "Title", required: true },
-                { name: "description", label: "Description", type: "textarea" },
-                { name: "image_url", label: "Survey picture", type: "image", crop: { aspect: 16 / 6, outputWidth: 1600 } },
-                {
-                  name: "questions",
-                  label: "Questions (JSON)",
-                  type: "json",
-                  required: true,
-                  help: 'e.g. [{"id":"q1","type":"choice","label":"Your view?","options":["Yes","No"]}]',
-                },
-                { name: "is_active", label: "Active", type: "switch" },
-                { name: "closes_at", label: "Closing date", type: "date" },
-              ]}
-            />
+            <SurveysManager />
           </TabsContent>}
 
           {isSuperAdmin && <TabsContent value="admins" className="mt-8">
