@@ -152,6 +152,10 @@ export function SiteContentSettings({
           : null,
         contact_whatsapp: draft.contact_whatsapp?.trim() ? draft.contact_whatsapp.trim() : null,
         whatsapp_message: draft.whatsapp_message?.trim() ? draft.whatsapp_message.trim() : null,
+        facebook_url: draft.facebook_url?.trim() ? draft.facebook_url.trim() : null,
+        instagram_url: draft.instagram_url?.trim() ? draft.instagram_url.trim() : null,
+        x_url: draft.x_url?.trim() ? draft.x_url.trim() : null,
+        youtube_url: draft.youtube_url?.trim() ? draft.youtube_url.trim() : null,
       };
       if (!isSuperAdmin) {
         delete (payload as Partial<SiteSettings>).developer_whatsapp;
