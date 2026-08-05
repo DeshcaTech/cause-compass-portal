@@ -122,8 +122,19 @@ function Index() {
         <div className="container-page grid items-center gap-10 py-14 sm:py-16 lg:grid-cols-[1.05fr_0.95fr] lg:py-24">
           <div className="min-w-0">
             <div className="flex items-center justify-between gap-3 sm:gap-4">
-              <p className="eyebrow min-w-0 text-right text-gold">
-                {site ? site.hero_eyebrow : t("Cameroonian Community in Greater Manchester and Surrounding area")}
+              <p className="eyebrow min-w-0 text-right text-gold leading-relaxed">
+                {(site ? site.hero_eyebrow : t("Cameroonian Community in Greater Manchester and Surrounding area"))
+                  .split("\n")
+                  .flatMap((line) => line.split(/\s+/).filter(Boolean))
+                  .reduce<string[][]>((acc, word, i, arr) => {
+                    const perLine = Math.ceil(arr.length / 3);
+                    const idx = Math.min(Math.floor(i / perLine), 2);
+                    (acc[idx] ??= []).push(word);
+                    return acc;
+                  }, [[], [], []])
+                  .map((line, i) => (
+                    <span key={i} className="block">{line.join(" ")}</span>
+                  ))}
               </p>
               <img
                 src={flagsAsset.url}
