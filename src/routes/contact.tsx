@@ -146,7 +146,7 @@ function ContactPage() {
                     loading="lazy"
                     width={1536}
                     height={512}
-                    className="h-10 w-auto"
+                    className="h-14 w-auto"
                   />
                 </a>
               ) : null}
