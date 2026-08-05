@@ -37,7 +37,7 @@ function placeholdersFor(seed: string) {
 }
 
 export const Route = createFileRoute("/gallery")({
-  validateSearch: (search: Record<string, unknown>) => ({
+  validateSearch: (search: Record<string, unknown>): { gallery?: string | undefined} => ({
     gallery: searchString(search, "gallery"),
   }),
   head: () => ({

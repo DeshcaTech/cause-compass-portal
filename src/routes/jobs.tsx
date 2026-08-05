@@ -27,7 +27,7 @@ import { useT } from "@/lib/i18n";
 import { searchString, useSearchFilter } from "@/lib/use-search-filter";
 
 export const Route = createFileRoute("/jobs")({
-  validateSearch: (search: Record<string, unknown>) => ({
+  validateSearch: (search: Record<string, unknown>): { category?: string | undefined; location?: string | undefined; type?: string | undefined} => ({
     category: searchString(search, "category"),
     location: searchString(search, "location"),
     type: searchString(search, "type"),

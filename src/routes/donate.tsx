@@ -11,6 +11,13 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { supabase } from "@/integrations/supabase/client";
 import { campaignsQuery, formatMoney } from "@/lib/queries";
@@ -118,34 +125,22 @@ function DonatePage() {
           <CardContent className="p-6 sm:p-8">
             <form onSubmit={onSubmit} className="space-y-6">
               <div className="space-y-2">
-                <Label>{t("Where should your gift go?")}</Label>
-                <div className="grid gap-2">
-                  <button
-                    type="button"
-                    onClick={() => setCampaignId("general")}
-                    className={`rounded-lg border px-4 py-3 text-left text-sm transition-colors ${
-                      campaignId === "general"
-                        ? "border-primary bg-accent"
-                        : "border-border hover:bg-secondary"
-                    }`}
-                  >
-                    {t("General community fund (random donation)")}
-                  </button>
-                  {active.map((campaign) => (
-                    <button
-                      key={campaign.id}
-                      type="button"
-                      onClick={() => setCampaignId(campaign.id)}
-                      className={`rounded-lg border px-4 py-3 text-left text-sm transition-colors ${
-                        campaignId === campaign.id
-                          ? "border-primary bg-accent"
-                          : "border-border hover:bg-secondary"
-                      }`}
-                    >
-                      {campaign.title}
-                    </button>
-                  ))}
-                </div>
+                <Label htmlFor="gift-destination">{t("Where should your gift go?")}</Label>
+                <Select value={campaignId} onValueChange={setCampaignId}>
+                  <SelectTrigger id="gift-destination" className="w-full">
+                    <SelectValue placeholder={t("Choose a destination")} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="general">
+                      {t("General community fund (random donation)")}
+                    </SelectItem>
+                    {active.map((campaign) => (
+                      <SelectItem key={campaign.id} value={campaign.id}>
+                        {campaign.title}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
 
               <div className="space-y-2">

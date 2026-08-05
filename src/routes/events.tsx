@@ -15,7 +15,7 @@ import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/events")({
   // Filters, the open tab and the open event live in the URL so links can be shared.
-  validateSearch: (search: Record<string, unknown>) => ({
+  validateSearch: (search: Record<string, unknown>): { event?: string | undefined; type?: "all" | "ccgms" | "other" | undefined; tab?: "all" | "calendar" | "coming" | "past" | undefined} => ({
     event: typeof search['event'] === "string" ? search['event'] : undefined,
     type:
       search['type'] === "ccgms" || search['type'] === "other" || search['type'] === "all"

@@ -18,7 +18,7 @@ import { useT } from "@/lib/i18n";
 import { searchString, useSearchFilter } from "@/lib/use-search-filter";
 
 export const Route = createFileRoute("/surveys")({
-  validateSearch: (search: Record<string, unknown>) => ({
+  validateSearch: (search: Record<string, unknown>): { view?: string | undefined} => ({
     view: searchString(search, "view"),
   }),
   head: () => ({

@@ -12,7 +12,7 @@ import { useT } from "@/lib/i18n";
 import { searchString, useSearchFilter } from "@/lib/use-search-filter";
 
 export const Route = createFileRoute("/documents")({
-  validateSearch: (search: Record<string, unknown>) => ({
+  validateSearch: (search: Record<string, unknown>): { category?: string | undefined} => ({
     category: searchString(search, "category"),
   }),
   head: () => ({
