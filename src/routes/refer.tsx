@@ -94,6 +94,7 @@ function ReferPage() {
             details: (parsed.data as z.infer<typeof selfSchema>).details || null,
             support_type: supportType,
             consent,
+            is_self: true,
           }
         : {
             referrer_name: (parsed.data as z.infer<typeof otherSchema>).referrer_name,
@@ -105,6 +106,7 @@ function ReferPage() {
             details: (parsed.data as z.infer<typeof otherSchema>).details || null,
             support_type: supportType,
             consent,
+            is_self: false,
           };
 
     const { error } = await supabase.from("referrals").insert(row);
