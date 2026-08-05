@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 
 import { PageHeader } from "@/components/site/PageHeader";
 import { FilterPage, FilterSelect } from "@/components/site/FilterPage";
@@ -8,9 +8,13 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { boardQuery, type BoardMember } from "@/lib/queries";
 import { useT } from "@/lib/i18n";
+import { searchString, useSearchFilter } from "@/lib/use-search-filter";
 import personFallback from "@/assets/person-fallback.jpg";
 
 export const Route = createFileRoute("/board")({
+  validateSearch: (search: Record<string, unknown>) => ({
+    team: searchString(search, "team"),
+  }),
   head: () => ({
     meta: [
       { title: "CCGMs Board — Current and Past Teams" },
@@ -72,7 +76,7 @@ function BoardPage() {
     [past],
   );
   // "current" or a past term label.
-  const [term, setTerm] = useState<string>("current");
+  const [term, setTerm] = useSearchFilter("team", "current");
   const showing = term === "current" ? current : past.filter((m) => m.term_label === term);
   return (
     <>

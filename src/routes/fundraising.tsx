@@ -9,9 +9,12 @@ import { Card, CardContent } from "@/components/ui/card";
 import { campaignsQuery, formatDate, formatMoney, type Campaign } from "@/lib/queries";
 import campaignFallback from "@/assets/campaign-fallback.jpg";
 import { useT } from "@/lib/i18n";
-import { useState } from "react";
+import { searchString, useSearchFilter } from "@/lib/use-search-filter";
 
 export const Route = createFileRoute("/fundraising")({
+  validateSearch: (search: Record<string, unknown>) => ({
+    view: searchString(search, "view"),
+  }),
   head: () => ({
     meta: [
       { title: "Fundraising — Support Our Causes" },
@@ -92,7 +95,7 @@ function FundraisingPage() {
   const { data: campaigns = [] } = useQuery(campaignsQuery);
   const active = campaigns.filter((c) => c.status === "active");
   const past = campaigns.filter((c) => c.status !== "active");
-  const [view, setView] = useState<"active" | "past">("active");
+  const [view, setView] = useSearchFilter("view", "active");
   const list = view === "active" ? active : past;
 
   return (
