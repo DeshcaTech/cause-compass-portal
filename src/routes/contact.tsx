@@ -5,6 +5,8 @@ import { Facebook, Instagram, Mail, MapPin, Phone, Twitter, Youtube } from "luci
 import { toast } from "sonner";
 import { z } from "zod";
 
+import { TikTok } from "@/components/site/icons/TikTok";
+
 import { PageHeader } from "@/components/site/PageHeader";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
