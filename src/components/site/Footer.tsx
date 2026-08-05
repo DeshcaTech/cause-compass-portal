@@ -28,10 +28,11 @@ const columns = [
   {
     title: "Quick links",
     links: [
+      { label: "Get Support", to: "/refer" },
+      { label: "Surveys", to: "/surveys" },
+      { label: "Become a Volunteer", to: "/volunteer" },
       { label: "Donate", to: "/donate" },
-      { label: "Fundraising", to: "/fundraising" },
-      { label: "Support Our Causes", to: "/fundraising" },
-      { label: "Contact", to: "/contact" },
+      { label: "Asset Rental", to: "/assets" },
     ],
   },
 ];
