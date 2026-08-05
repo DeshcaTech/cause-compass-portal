@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -11,6 +11,13 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { supabase } from "@/integrations/supabase/client";
 import { formatDate, surveysQuery, type Survey } from "@/lib/queries";
 import surveyFallback from "@/assets/survey-fallback.jpg";
@@ -18,8 +25,9 @@ import { useT } from "@/lib/i18n";
 import { searchString, useSearchFilter } from "@/lib/use-search-filter";
 
 export const Route = createFileRoute("/surveys")({
-  validateSearch: (search: Record<string, unknown>): { view?: string | undefined} => ({
+  validateSearch: (search: Record<string, unknown>): { view?: string | undefined; survey?: string | undefined } => ({
     view: searchString(search, "view"),
+    survey: searchString(search, "survey"),
   }),
   head: () => ({
     meta: [
@@ -37,6 +45,11 @@ export const Route = createFileRoute("/surveys")({
   }),
   component: SurveysPage,
 });
+
+type SurveysSearch = {
+  view?: string | undefined;
+  survey?: string | undefined;
+};
 
 function SurveyForm({ survey }: { survey: Survey }) {
   const t = useT();
@@ -69,87 +82,164 @@ function SurveyForm({ survey }: { survey: Survey }) {
 
   if (done) {
     return (
-      <Card className="border-border/70">
-        <CardContent className="p-8 text-center">
-          <h3 className="text-lg">{t("Response recorded")}</h3>
-          <p className="mt-2 text-sm text-muted-foreground">
-            {t('Thank you for helping shape "{title}".').replace("{title}", survey.title)}
-          </p>
-        </CardContent>
-      </Card>
+      <div className="space-y-3 rounded-xl border border-primary/40 bg-accent px-4 py-4 text-center">
+        <h3 className="text-lg">{t("Response recorded")}</h3>
+        <p className="text-sm text-muted-foreground">
+          {t('Thank you for helping shape "{title}".').replace("{title}", survey.title)}
+        </p>
+      </div>
     );
   }
 
   return (
-    <Card className="border-border/70">
-      <CardContent className="p-6 sm:p-8">
+    <form onSubmit={submit} className="space-y-6">
+      <div className="space-y-2">
+        <Label htmlFor={`m-${survey.id}`}>
+          {t("Membership number (optional, but recommended)")}
+        </Label>
+        <Input
+          id={`m-${survey.id}`}
+          value={membership}
+          onChange={(e) => setMembership(e.target.value)}
+          placeholder="CCGM-1000"
+          maxLength={30}
+        />
+      </div>
+
+      {survey.questions.map((question) => (
+        <div key={question.id} className="space-y-2">
+          <Label>{question.label}</Label>
+          {question.type === "choice" ? (
+            <div className="flex flex-wrap gap-2">
+              {(question.options ?? []).map((option) => (
+                <button
+                  key={option}
+                  type="button"
+                  onClick={() =>
+                    setAnswers((prev) => ({ ...prev, [question.id]: option }))
+                  }
+                  className={`rounded-full border px-4 py-1.5 text-sm transition-colors ${
+                    answers[question.id] === option
+                      ? "border-transparent bg-primary text-primary-foreground"
+                      : "border-border hover:bg-secondary"
+                  }`}
+                >
+                  {option}
+                </button>
+              ))}
+            </div>
+          ) : (
+            <Textarea
+              rows={3}
+              maxLength={1000}
+              value={answers[question.id] ?? ""}
+              onChange={(e) =>
+                setAnswers((prev) => ({ ...prev, [question.id]: e.target.value }))
+              }
+            />
+          )}
+        </div>
+      ))}
+
+      <Button type="submit" variant="hero" className="w-full" disabled={saving}>
+        {saving ? t("Submitting…") : t("Submit response")}
+      </Button>
+    </form>
+  );
+}
+
+function SurveyDialog({
+  survey,
+  onOpenChange,
+}: {
+  survey: Survey | null;
+  onOpenChange: (open: boolean) => void;
+}) {
+  const t = useT();
+
+  return (
+    <Dialog open={!!survey} onOpenChange={onOpenChange}>
+      <DialogContent className="max-h-[85dvh] overflow-y-auto sm:max-w-lg">
+        <DialogHeader>
+          <DialogTitle className="text-left">{survey?.title}</DialogTitle>
+          <DialogDescription className="text-left">
+            {survey
+              ? survey.closes_at
+                ? `${t("Closes")} ${formatDate(survey.closes_at)}`
+                : t("Active survey")
+              : null}
+          </DialogDescription>
+        </DialogHeader>
+        {survey ? (
+          <div className="space-y-4">
+            <img
+              src={survey.image_url ?? surveyFallback}
+              alt={survey.title}
+              loading="lazy"
+              className="aspect-[16/6] w-full rounded-xl object-cover"
+            />
+            <p className="text-sm text-foreground/85">{survey.description}</p>
+            <SurveyForm key={survey.id} survey={survey} />
+          </div>
+        ) : null}
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+function SurveyCard({
+  survey,
+  onOpen,
+  status,
+}: {
+  survey: Survey;
+  onOpen: () => void;
+  status: "active" | "closed";
+}) {
+  const t = useT();
+  const questionCount = survey.questions.length;
+  return (
+    <Card
+      className="cursor-pointer border-border/70 transition-all hover:-translate-y-1 hover:shadow-[var(--shadow-lift)]"
+      onClick={onOpen}
+      role="button"
+      tabIndex={0}
+      aria-label={`${t("Complete this survey")}: ${survey.title}`}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          onOpen();
+        }
+      }}
+    >
+      <CardContent className="p-6">
         <img
           src={survey.image_url ?? surveyFallback}
           alt={survey.title}
           loading="lazy"
-          className="mb-5 aspect-[16/6] w-full rounded-xl object-cover"
+          className="mb-4 aspect-[16/6] w-full rounded-xl object-cover"
         />
-        <div className="flex flex-wrap items-start justify-between gap-3">
-          <h3 className="text-xl">{survey.title}</h3>
-          {survey.closes_at ? (
-            <Badge variant="secondary">{t("Closes")} {formatDate(survey.closes_at)}</Badge>
-          ) : null}
+        <div className="flex items-start justify-between gap-3">
+          <h3 className="text-lg">{survey.title}</h3>
+          {status === "active" ? (
+            survey.closes_at ? (
+              <Badge variant="secondary">{t("Closes")} {formatDate(survey.closes_at)}</Badge>
+            ) : (
+              <Badge className="bg-primary text-primary-foreground">{t("Active")}</Badge>
+            )
+          ) : (
+            <Badge variant="secondary">{t("Closed")}</Badge>
+          )}
         </div>
-        <p className="mt-2 text-sm text-muted-foreground">{survey.description}</p>
-
-        <form onSubmit={submit} className="mt-6 space-y-6">
-          <div className="space-y-2">
-            <Label htmlFor={`m-${survey.id}`}>
-              {t("Membership number (optional, but recommended)")}
-            </Label>
-            <Input
-              id={`m-${survey.id}`}
-              value={membership}
-              onChange={(e) => setMembership(e.target.value)}
-              placeholder="CCGM-1000"
-              maxLength={30}
-            />
-          </div>
-
-          {survey.questions.map((question) => (
-            <div key={question.id} className="space-y-2">
-              <Label>{question.label}</Label>
-              {question.type === "choice" ? (
-                <div className="flex flex-wrap gap-2">
-                  {(question.options ?? []).map((option) => (
-                    <button
-                      key={option}
-                      type="button"
-                      onClick={() =>
-                        setAnswers((prev) => ({ ...prev, [question.id]: option }))
-                      }
-                      className={`rounded-full border px-4 py-1.5 text-sm transition-colors ${
-                        answers[question.id] === option
-                          ? "border-transparent bg-primary text-primary-foreground"
-                          : "border-border hover:bg-secondary"
-                      }`}
-                    >
-                      {option}
-                    </button>
-                  ))}
-                </div>
-              ) : (
-                <Textarea
-                  rows={3}
-                  maxLength={1000}
-                  value={answers[question.id] ?? ""}
-                  onChange={(e) =>
-                    setAnswers((prev) => ({ ...prev, [question.id]: e.target.value }))
-                  }
-                />
-              )}
-            </div>
-          ))}
-
-          <Button type="submit" variant="hero" disabled={saving}>
-            {saving ? t("Submitting…") : t("Submit response")}
+        <p className="mt-2 line-clamp-3 text-sm text-muted-foreground">{survey.description}</p>
+        <p className="mt-4 text-xs text-muted-foreground">
+          {questionCount} {questionCount === 1 ? t("question") : t("questions")}
+        </p>
+        {status === "active" ? (
+          <Button type="button" variant="soft" className="mt-4 w-full" onClick={onOpen}>
+            {t("Complete survey")}
           </Button>
-        </form>
+        ) : null}
       </CardContent>
     </Card>
   );
@@ -157,11 +247,17 @@ function SurveyForm({ survey }: { survey: Survey }) {
 
 function SurveysPage() {
   const t = useT();
+  const navigate = useNavigate({ from: "/surveys" });
+  const search = Route.useSearch();
   const { data: surveys = [] } = useQuery(surveysQuery);
   const active = surveys.filter((s) => s.is_active);
   const closed = surveys.filter((s) => !s.is_active);
   const [view, setView] = useSearchFilter("view", "active");
   const list = view === "active" ? active : closed;
+
+  const selected = surveys.find((s) => s.id === search.survey) ?? null;
+  const openSurvey = (survey: Survey | null) =>
+    navigate({ search: (prev: SurveysSearch) => ({ ...prev, survey: survey?.id }) });
 
   return (
     <>
@@ -191,40 +287,25 @@ function SurveysPage() {
           />
         )}
       >
-        {view === "active" ? (
-          <div className="space-y-6">
-            {active.length === 0 ? (
-              <p className="text-sm text-muted-foreground">{t("No active surveys right now.")}</p>
-            ) : (
-              active.map((survey) => <SurveyForm key={survey.id} survey={survey} />)
-            )}
-          </div>
+        {list.length === 0 ? (
+          <p className="text-sm text-muted-foreground">
+            {view === "active" ? t("No active surveys right now.") : t("No closed surveys yet.")}
+          </p>
         ) : (
-          <div className="space-y-4">
-            {closed.length === 0 ? (
-              <p className="text-sm text-muted-foreground">{t("No closed surveys yet.")}</p>
-            ) : (
-              closed.map((survey) => (
-                <Card key={survey.id} className="border-border/70">
-                  <CardContent className="p-6">
-                    <img
-                      src={survey.image_url ?? surveyFallback}
-                      alt={survey.title}
-                      loading="lazy"
-                      className="mb-4 aspect-[16/6] w-full rounded-xl object-cover"
-                    />
-                    <h3 className="text-lg">{survey.title}</h3>
-                    <p className="mt-2 text-sm text-muted-foreground">{survey.description}</p>
-                    <Badge variant="secondary" className="mt-3">
-                      {t("Closed")}
-                    </Badge>
-                  </CardContent>
-                </Card>
-              ))
-            )}
+          <div className="grid gap-5 sm:grid-cols-2">
+            {list.map((survey) => (
+              <SurveyCard
+                key={survey.id}
+                survey={survey}
+                status={view === "active" ? "active" : "closed"}
+                onOpen={() => openSurvey(survey)}
+              />
+            ))}
           </div>
         )}
       </FilterPage>
+
+      <SurveyDialog survey={selected} onOpenChange={(open) => !open && openSurvey(null)} />
     </>
   );
 }
