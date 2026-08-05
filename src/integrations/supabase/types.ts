@@ -1077,6 +1077,7 @@ export type Database = {
           org_name: string
           show_contact_whatsapp: boolean
           updated_at: string
+          whatsapp_message: string | null
         }
         Insert: {
           about_body_1?: string
@@ -1100,6 +1101,7 @@ export type Database = {
           org_name?: string
           show_contact_whatsapp?: boolean
           updated_at?: string
+          whatsapp_message?: string | null
         }
         Update: {
           about_body_1?: string
@@ -1123,6 +1125,7 @@ export type Database = {
           org_name?: string
           show_contact_whatsapp?: boolean
           updated_at?: string
+          whatsapp_message?: string | null
         }
         Relationships: []
       }
