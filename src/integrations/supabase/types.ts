@@ -1038,6 +1038,7 @@ export type Database = {
           contact_email: string
           contact_phone: string
           created_at: string
+          developer_whatsapp: string | null
           footer_blurb: string
           hero_eyebrow: string
           hero_intro: string
@@ -1058,6 +1059,7 @@ export type Database = {
           contact_email?: string
           contact_phone?: string
           created_at?: string
+          developer_whatsapp?: string | null
           footer_blurb?: string
           hero_eyebrow?: string
           hero_intro?: string
@@ -1078,6 +1080,7 @@ export type Database = {
           contact_email?: string
           contact_phone?: string
           created_at?: string
+          developer_whatsapp?: string | null
           footer_blurb?: string
           hero_eyebrow?: string
           hero_intro?: string
