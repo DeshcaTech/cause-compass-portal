@@ -74,29 +74,34 @@ function NewsPage() {
       />
       <FilterPage
         filters={(
-          <FilterSelect
-            label={t("Category")}
-            value={featuredOnly ? "featured" : "all"}
-            onChange={(value) => setFeaturedOnly(value === "featured")}
-            options={[
-              { value: "all", label: t("All news"), meta: `${news.length}` },
-              { value: "featured", label: t("Featured"), meta: `${featuredCount}` },
-            ]}
-          />
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-end">
+            <div className="sm:min-w-[200px]">
+              <FilterSelect
+                label={t("Category")}
+                value={featuredOnly ? "featured" : "all"}
+                onChange={(value) => setFeaturedOnly(value === "featured")}
+                options={[
+                  { value: "all", label: t("All news"), meta: `${news.length}` },
+                  { value: "featured", label: t("Featured"), meta: `${featuredCount}` },
+                ]}
+              />
+            </div>
+            <div className="relative flex-1">
+              <Label className="mb-1.5 block">{t("Search")}</Label>
+              <div className="relative">
+                <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+                <Input
+                  value={search}
+                  onChange={(event) => setSearch(event.target.value)}
+                  placeholder={t("Search news by title, summary or text")}
+                  aria-label={t("Search news")}
+                  className="pl-9"
+                />
+              </div>
+            </div>
+          </div>
         )}
       >
-        <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-center">
-          <div className="relative flex-1">
-            <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-            <Input
-              value={search}
-              onChange={(event) => setSearch(event.target.value)}
-              placeholder={t("Search news by title, summary or text")}
-              aria-label={t("Search news")}
-              className="pl-9"
-            />
-          </div>
-        </div>
 
         {filtered.length === 0 ? (
           <p className="text-sm text-muted-foreground">
