@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { CheckCircle2, Pencil, Plus, Trash2 } from "lucide-react";
 import { toast } from "sonner";
@@ -260,6 +260,11 @@ export type RecordManagerProps = {
   secondaryLabel?: (row: Record<string, any>) => string;
   /** When provided, returns a short label shown as a highlighted badge next to the title (return null/empty to hide). */
   badge?: (row: Record<string, any>) => string | null;
+  /** Optional extra per-row action buttons, with a helper to patch the row in place. */
+  rowActions?: (
+    row: Record<string, any>,
+    helpers: { update: (patch: Record<string, any>) => Promise<void>; isSaving: boolean },
+  ) => ReactNode;
   defaults?: Record<string, any>;
   filter?: { column: string; value: string } | null;
 };
@@ -296,6 +301,7 @@ export function RecordManager({
   primaryLabel,
   secondaryLabel,
   badge,
+  rowActions,
   defaults,
   filter = null,
 }: RecordManagerProps) {
@@ -353,6 +359,17 @@ export function RecordManager({
     onSuccess: () => {
       toast.success("Deleted");
       setDeleting(null);
+      invalidate();
+    },
+    onError: (error: Error) => toast.error(error.message),
+  });
+
+  const quickUpdate = useMutation({
+    mutationFn: async ({ row, patch }: { row: Record<string, any>; patch: Record<string, any> }) => {
+      const { error } = await db.from(table).update(patch).eq("id", row['id']);
+      if (error) throw new Error(error.message);
+    },
+    onSuccess: () => {
       invalidate();
     },
     onError: (error: Error) => toast.error(error.message),
@@ -416,7 +433,13 @@ export function RecordManager({
                   <p className="truncate text-xs text-muted-foreground">{secondaryLabel(row)}</p>
                 ) : null}
               </div>
-              <div className="flex gap-2">
+              <div className="flex flex-wrap gap-2">
+                {rowActions
+                  ? rowActions(row, {
+                      update: (patch) => quickUpdate.mutateAsync({ row, patch }),
+                      isSaving: quickUpdate.isPending,
+                    })
+                  : null}
                 <Button variant="soft" size="sm" onClick={() => openEdit(row)}>
                   <Pencil /> Edit
                 </Button>
