@@ -7,11 +7,13 @@ import { CalendarDays, Mail, Phone, Users } from "lucide-react";
 
 import { PageHeader } from "@/components/site/PageHeader";
 import { FilterPage, FilterSelect } from "@/components/site/FilterPage";
+import { SmartImage } from "@/components/site/SmartImage";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { villageGroupsQuery, type VillageGroup } from "@/lib/queries";
 import { useT } from "@/lib/i18n";
+import groupsBanner from "@/assets/community-together.jpg";
 
 const SITE_ORIGIN = "https://cause-compass-portal.lovable.app";
 const PAGE_URL = `${SITE_ORIGIN}/village-groups`;
@@ -120,8 +122,15 @@ function VillageGroupsPage() {
                   <Card
                     key={group.id}
                     onClick={() => setSelected(group)}
-                    className="cursor-pointer overflow-hidden border-border/70 transition-shadow hover:shadow-[var(--shadow-lift)]"
+                    className="cursor-pointer overflow-hidden py-0 border-border/70 transition-shadow hover:shadow-[var(--shadow-lift)]"
                   >
+                    <SmartImage
+                      src={group.image_url ?? groupsBanner}
+                      alt={group.name}
+                      loading="lazy"
+                      wrapperClassName="aspect-[16/9] w-full overflow-hidden rounded-t-xl border-b border-border/60"
+                      className="size-full object-cover"
+                    />
                     <CardContent className="p-6">
                       <div className="flex items-start justify-between gap-3">
                         <h3 className="text-lg font-medium leading-snug">{group.name}</h3>
@@ -153,6 +162,13 @@ function VillageGroupsPage() {
         <DialogContent className="max-w-lg">
           {selected ? (
             <div className="space-y-4">
+              <SmartImage
+                src={selected.image_url ?? groupsBanner}
+                alt={selected.name}
+                loading="lazy"
+                wrapperClassName="aspect-[16/9] w-full overflow-hidden rounded-xl"
+                className="size-full object-cover"
+              />
               <DialogHeader>
                 <DialogTitle className="text-2xl">{selected.name}</DialogTitle>
               </DialogHeader>

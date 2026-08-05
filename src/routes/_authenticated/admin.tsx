@@ -544,6 +544,7 @@ function AdminPage() {
                 },
                 { name: "short_description", label: "Short description" },
                 { name: "description", label: "Full description", type: "textarea" },
+                { name: "image_url", label: "Group picture", type: "image", crop: { aspect: 16 / 9, outputWidth: 1400 } },
                 { name: "meeting_info", label: "Meeting details" },
                 { name: "contact_name", label: "Contact name" },
                 { name: "contact_phone", label: "Contact phone" },
