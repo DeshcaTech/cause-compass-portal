@@ -17,9 +17,9 @@ export type FilterOption = { value: string; label: string; meta?: string | null 
  */
 export function FilterPage({ filters, children }: { filters: ReactNode; children: ReactNode }) {
   return (
-    <section className="container-page py-14">
+    <section className="container-page py-10">
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{filters}</div>
-      <div className="mt-8">{children}</div>
+      <div className="mt-6">{children}</div>
     </section>
   );
 }

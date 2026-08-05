@@ -167,7 +167,7 @@ function NewsPage() {
           </div>
         )}
 
-        <div className="mt-12">
+        <div className="mt-8">
           <NewsSubscribe />
         </div>
       </FilterPage>
