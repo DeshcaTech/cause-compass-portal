@@ -262,20 +262,20 @@ export function Footer() {
 
         <div className="col-span-2 lg:col-span-2">
           <p className="eyebrow text-gold">{t("From the gallery")}</p>
-          <div className="mt-4 grid grid-cols-3 gap-2">
+          <div className="mt-4 grid grid-cols-3 gap-2.5">
             {galleryTiles.map((tile) => (
               <Link
                 key={tile.key}
                 to="/gallery"
-                className="group overflow-hidden rounded-lg border border-primary-foreground/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
+                className="group block aspect-square overflow-hidden rounded-lg border border-primary-foreground/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
                 aria-label={t("View gallery")}
               >
                 <SmartImage
                   src={tile.src}
                   alt={tile.alt}
                   loading="lazy"
-                  wrapperClassName="aspect-square w-full"
-                  className="size-full object-cover transition-transform duration-300 group-hover:scale-105"
+                  wrapperClassName="size-full"
+                  className="size-full object-cover object-center transition-transform duration-300 group-hover:scale-105"
                 />
               </Link>
             ))}
