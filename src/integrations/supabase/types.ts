@@ -1067,17 +1067,21 @@ export type Database = {
           contact_whatsapp: string | null
           created_at: string
           developer_whatsapp: string | null
+          facebook_url: string | null
           footer_blurb: string
           hero_eyebrow: string
           hero_intro: string
           hero_title_line1: string
           hero_title_line2: string
           id: number
+          instagram_url: string | null
           ios_app_url: string | null
           org_name: string
           show_contact_whatsapp: boolean
           updated_at: string
           whatsapp_message: string | null
+          x_url: string | null
+          youtube_url: string | null
         }
         Insert: {
           about_body_1?: string
@@ -1091,17 +1095,21 @@ export type Database = {
           contact_whatsapp?: string | null
           created_at?: string
           developer_whatsapp?: string | null
+          facebook_url?: string | null
           footer_blurb?: string
           hero_eyebrow?: string
           hero_intro?: string
           hero_title_line1?: string
           hero_title_line2?: string
           id?: number
+          instagram_url?: string | null
           ios_app_url?: string | null
           org_name?: string
           show_contact_whatsapp?: boolean
           updated_at?: string
           whatsapp_message?: string | null
+          x_url?: string | null
+          youtube_url?: string | null
         }
         Update: {
           about_body_1?: string
@@ -1115,17 +1123,21 @@ export type Database = {
           contact_whatsapp?: string | null
           created_at?: string
           developer_whatsapp?: string | null
+          facebook_url?: string | null
           footer_blurb?: string
           hero_eyebrow?: string
           hero_intro?: string
           hero_title_line1?: string
           hero_title_line2?: string
           id?: number
+          instagram_url?: string | null
           ios_app_url?: string | null
           org_name?: string
           show_contact_whatsapp?: boolean
           updated_at?: string
           whatsapp_message?: string | null
+          x_url?: string | null
+          youtube_url?: string | null
         }
         Relationships: []
       }
