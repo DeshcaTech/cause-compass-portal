@@ -243,25 +243,47 @@ function VolunteerPage() {
               </div>
 
               <div className="space-y-3">
-                <Label>{t("Where would you like to help?")}</Label>
-                <div className="grid gap-2 sm:grid-cols-2">
-                  {AREAS.map((area) => (
-                    <label
-                      key={area}
-                      className="flex items-center gap-2 rounded-lg border border-border px-3 py-2 text-sm"
+                <Label>
+                  {t("Where would you like to help?")}
+                  <Req />
+                </Label>
+                <Popover open={areasOpen} onOpenChange={setAreasOpen}>
+                  <PopoverTrigger asChild>
+                    <button
+                      type="button"
+                      aria-haspopup="listbox"
+                      aria-expanded={areasOpen}
+                      className="flex w-full items-center justify-between gap-2 rounded-md border border-input bg-transparent px-3 py-2 text-left text-sm"
                     >
-                      <Checkbox
-                        checked={areas.includes(area)}
-                        onCheckedChange={(value) =>
-                          setAreas((prev) =>
-                            value === true ? [...prev, area] : prev.filter((a) => a !== area),
-                          )
-                        }
-                      />
-                      {t(area)}
-                    </label>
-                  ))}
-                </div>
+                      <span className={areas.length ? "" : "text-muted-foreground"}>
+                        {areas.length
+                          ? areas.map((area) => t(area)).join(", ")
+                          : t("Select one or more areas")}
+                      </span>
+                      <ChevronDown className="size-4 shrink-0 opacity-60" />
+                    </button>
+                  </PopoverTrigger>
+                  <PopoverContent align="start" className="w-[min(22rem,90vw)] p-2">
+                    <div role="listbox" aria-multiselectable className="grid gap-1">
+                      {AREAS.map((area) => (
+                        <label
+                          key={area}
+                          className="flex cursor-pointer items-center gap-2 rounded-lg px-2 py-2 text-sm hover:bg-secondary"
+                        >
+                          <Checkbox
+                            checked={areas.includes(area)}
+                            onCheckedChange={(value) =>
+                              setAreas((prev) =>
+                                value === true ? [...prev, area] : prev.filter((a) => a !== area),
+                              )
+                            }
+                          />
+                          {t(area)}
+                        </label>
+                      ))}
+                    </div>
+                  </PopoverContent>
+                </Popover>
               </div>
 
               <div className="space-y-2">
