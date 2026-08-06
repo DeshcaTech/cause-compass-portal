@@ -11,6 +11,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { ChevronDown } from "lucide-react";
 import { submitVolunteerApplication } from "@/lib/signup.functions";
 import volunteerHero from "@/assets/volunteer-hero.jpg";
 import { useT } from "@/lib/i18n";
@@ -72,6 +74,7 @@ const schema = z.object({
 function VolunteerPage() {
   const t = useT();
   const [areas, setAreas] = useState<string[]>([]);
+  const [areasOpen, setAreasOpen] = useState(false);
   const [slots, setSlots] = useState<Set<string>>(new Set());
   const [saving, setSaving] = useState(false);
   const [done, setDone] = useState(false);
@@ -176,6 +179,7 @@ function VolunteerPage() {
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="space-y-2">
                   <Label htmlFor="full_name">{t("Full name")}</Label>
+                  <Required />
                   <Input id="full_name" name="full_name" required maxLength={120} />
                 </div>
                 <div className="space-y-2">
