@@ -8,6 +8,7 @@ import { PageHeader } from "@/components/site/PageHeader";
 import { RecordManager } from "@/components/admin/RecordManager";
 import { SurveysManager } from "@/components/admin/SurveysManager";
 import { FundraisingReport } from "@/components/admin/FundraisingReport";
+import { CampaignStatusNotifier } from "@/components/admin/CampaignStatusNotifier";
 import { NewsNotifier } from "@/components/admin/NewsNotifier";
 import { RsvpManager } from "@/components/admin/RsvpManager";
 import { JobApplicationsManager } from "@/components/admin/JobApplicationsManager";
@@ -448,6 +449,7 @@ function AdminPage() {
                 { name: "phone", label: "Phone" },
                 { name: "email", label: "Email" },
                 { name: "website", label: "Website" },
+                { name: "whatsapp", label: "WhatsApp number", placeholder: "+44 7700 900000" },
                 { name: "address", label: "Address" },
                 { name: "is_published", label: "Published", type: "switch" },
               ]}
@@ -542,6 +544,7 @@ function AdminPage() {
                 { name: "ends_at", label: "Closing date", type: "date" },
               ]}
             />
+            <CampaignStatusNotifier />
           </TabsContent>}
 
           {can("fundraising") && <TabsContent value="reports" className="mt-8">

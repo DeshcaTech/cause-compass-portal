@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { Globe, Mail, MapPin, Phone } from "lucide-react";
+import { Globe, Mail, MapPin, MessageCircle, Phone } from "lucide-react";
 
 import { PageHeader } from "@/components/site/PageHeader";
 import { FilterPage, FilterSelect } from "@/components/site/FilterPage";
@@ -135,6 +135,16 @@ function PartnersPage() {
                 <Button asChild variant="hero" className="w-full">
                   <a href={selected.website} target="_blank" rel="noreferrer">
                     <Globe /> {t("Visit website")}
+                  </a>
+                </Button>
+              ) : selected.whatsapp ? (
+                <Button asChild variant="hero" className="w-full">
+                  <a
+                    href={`https://wa.me/${selected.whatsapp.replace(/[^\d]/g, "")}`}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <MessageCircle /> {t("Contact")}
                   </a>
                 </Button>
               ) : null}

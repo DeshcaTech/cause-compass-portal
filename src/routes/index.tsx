@@ -25,6 +25,13 @@ import badgeAppStore from "@/assets/badge-app-store.png?w=640&format=png";
 import badgeGooglePlay from "@/assets/badge-google-play.png?w=640&format=png";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Picture } from "@/components/site/Picture";
 import { EventDialog } from "@/components/site/EventDialog";
 import { useT } from "@/lib/i18n";
@@ -87,6 +94,12 @@ function Index() {
   const t = useT();
   const { data: events = [] } = useQuery(eventsQuery);
   const [selectedEvent, setSelectedEvent] = useState<EventRow | null>(null);
+  // Home cards open a quick popup with more information instead of leaving the page.
+  const [info, setInfo] = useState<{
+    title: string;
+    body: string;
+    action?: React.ReactNode;
+  } | null>(null);
   const { data: campaigns = [] } = useQuery(campaignsQuery);
   const { data: announcements = [] } = useQuery(announcementsQuery);
   const { data: partners = [] } = useQuery(partnersQuery);
@@ -330,7 +343,25 @@ function Index() {
           ) : (
           <div className="mt-6 grid gap-4 sm:mt-8 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3">
             {latestNews.map((item) => (
-              <Link key={item.id} to="/news/$id" params={{ id: item.id }} className="block">
+              <button
+                key={item.id}
+                type="button"
+                aria-haspopup="dialog"
+                className="block w-full text-left"
+                onClick={() =>
+                  setInfo({
+                    title: item.title,
+                    body: item.body ?? item.summary ?? "",
+                    action: (
+                      <Button asChild variant="hero" className="w-full">
+                        <Link to="/news/$id" params={{ id: item.id }}>
+                          {t("Read the full story")}
+                        </Link>
+                      </Button>
+                    ),
+                  })
+                }
+              >
               <Card className="h-full border-border/70 transition-shadow hover:shadow-lg">
                 <CardContent className="p-5 sm:p-6">
                   <p className="eyebrow text-terracotta">{formatDate(item.published_at)}</p>
@@ -340,7 +371,7 @@ function Index() {
                   </p>
                 </CardContent>
               </Card>
-              </Link>
+              </button>
             ))}
           </div>
           )}
@@ -427,6 +458,18 @@ function Index() {
         onOpenChange={(open) => !open && setSelectedEvent(null)}
       />
 
+      <Dialog open={!!info} onOpenChange={(open) => !open && setInfo(null)}>
+        <DialogContent className="max-h-[85dvh] overflow-y-auto sm:max-w-lg">
+          <DialogHeader>
+            <DialogTitle>{info?.title}</DialogTitle>
+            <DialogDescription className="whitespace-pre-line text-left">
+              {info?.body}
+            </DialogDescription>
+          </DialogHeader>
+          {info?.action}
+        </DialogContent>
+      </Dialog>
+
       <section className="container-page py-14 sm:py-16 md:py-20">
         <div className="flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-end sm:justify-between">
           <div>
@@ -444,7 +487,32 @@ function Index() {
               Math.round((campaign.raised_amount / Math.max(campaign.goal_amount, 1)) * 100),
             );
             return (
-              <Card key={campaign.id} className="border-border/70">
+              <Card
+                key={campaign.id}
+                role="button"
+                tabIndex={0}
+                aria-haspopup="dialog"
+                onClick={() =>
+                  setInfo({
+                    title: campaign.title,
+                    body: campaign.description ?? campaign.summary ?? "",
+                    action: (
+                      <Button asChild variant="hero" className="w-full">
+                        <Link to="/donate" search={{ campaign: campaign.id }}>
+                          {t("Donate to this campaign")}
+                        </Link>
+                      </Button>
+                    ),
+                  })
+                }
+                onKeyDown={(event) => {
+                  if (event.key === "Enter" || event.key === " ") {
+                    event.preventDefault();
+                    (event.currentTarget as HTMLElement).click();
+                  }
+                }}
+                className="cursor-pointer border-border/70 transition-all hover:-translate-y-1 hover:shadow-[var(--shadow-lift)]"
+              >
                 <CardContent className="p-5 sm:p-6">
                   <h3 className="text-base leading-snug sm:text-lg">{campaign.title}</h3>
                   <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">
@@ -463,7 +531,13 @@ function Index() {
                       {t("raised of")} {formatMoney(campaign.goal_amount)}
                     </span>
                   </p>
-                  <Button asChild variant="hero" size="sm" className="mt-5 w-full sm:w-auto">
+                  <Button
+                    asChild
+                    variant="hero"
+                    size="sm"
+                    className="mt-5 w-full sm:w-auto"
+                    onClick={(event) => event.stopPropagation()}
+                  >
                     <Link to="/donate" search={{ campaign: campaign.id }}>
                       {t("Donate")}
                     </Link>

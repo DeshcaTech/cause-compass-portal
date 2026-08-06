@@ -103,7 +103,7 @@ function SurveyForm({ survey, onClose }: { survey: Survey; onClose: () => void }
     <form onSubmit={submit} className="space-y-6">
       <div className="space-y-2">
         <Label htmlFor={`m-${survey.id}`}>
-          {t("Membership number (optional, but recommended)")}
+          {t("Membership number (Recommend)")}
         </Label>
         <Input
           id={`m-${survey.id}`}

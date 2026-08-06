@@ -11,6 +11,9 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { ChevronDown } from "lucide-react";
+import { Req } from "@/components/site/Req";
 import { submitVolunteerApplication } from "@/lib/signup.functions";
 import volunteerHero from "@/assets/volunteer-hero.jpg";
 import { useT } from "@/lib/i18n";
@@ -72,6 +75,7 @@ const schema = z.object({
 function VolunteerPage() {
   const t = useT();
   const [areas, setAreas] = useState<string[]>([]);
+  const [areasOpen, setAreasOpen] = useState(false);
   const [slots, setSlots] = useState<Set<string>>(new Set());
   const [saving, setSaving] = useState(false);
   const [done, setDone] = useState(false);
@@ -169,17 +173,23 @@ function VolunteerPage() {
             <form onSubmit={onSubmit} className="space-y-5">
               <div className="space-y-2">
                 <Label htmlFor="membership_number">
-                  {t("Membership number (optional, but recommended)")}
+                  {t("Membership number (Recommend)")}
                 </Label>
                 <Input id="membership_number" name="membership_number" placeholder="CCGM-1000" />
               </div>
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="space-y-2">
-                  <Label htmlFor="full_name">{t("Full name")}</Label>
+                  <Label htmlFor="full_name">
+                    {t("Full name")}
+                    <Req />
+                  </Label>
                   <Input id="full_name" name="full_name" required maxLength={120} />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="email">{t("Email")}</Label>
+                  <Label htmlFor="email">
+                    {t("Email")}
+                    <Req />
+                  </Label>
                   <Input id="email" name="email" type="email" required maxLength={255} />
                 </div>
                 <div className="space-y-2">
@@ -233,25 +243,47 @@ function VolunteerPage() {
               </div>
 
               <div className="space-y-3">
-                <Label>{t("Where would you like to help?")}</Label>
-                <div className="grid gap-2 sm:grid-cols-2">
-                  {AREAS.map((area) => (
-                    <label
-                      key={area}
-                      className="flex items-center gap-2 rounded-lg border border-border px-3 py-2 text-sm"
+                <Label>
+                  {t("Where would you like to help?")}
+                  <Req />
+                </Label>
+                <Popover open={areasOpen} onOpenChange={setAreasOpen}>
+                  <PopoverTrigger asChild>
+                    <button
+                      type="button"
+                      aria-haspopup="listbox"
+                      aria-expanded={areasOpen}
+                      className="flex w-full items-center justify-between gap-2 rounded-md border border-input bg-transparent px-3 py-2 text-left text-sm"
                     >
-                      <Checkbox
-                        checked={areas.includes(area)}
-                        onCheckedChange={(value) =>
-                          setAreas((prev) =>
-                            value === true ? [...prev, area] : prev.filter((a) => a !== area),
-                          )
-                        }
-                      />
-                      {t(area)}
-                    </label>
-                  ))}
-                </div>
+                      <span className={areas.length ? "" : "text-muted-foreground"}>
+                        {areas.length
+                          ? areas.map((area) => t(area)).join(", ")
+                          : t("Select one or more areas")}
+                      </span>
+                      <ChevronDown className="size-4 shrink-0 opacity-60" />
+                    </button>
+                  </PopoverTrigger>
+                  <PopoverContent align="start" className="w-[min(22rem,90vw)] p-2">
+                    <div role="listbox" aria-multiselectable className="grid gap-1">
+                      {AREAS.map((area) => (
+                        <label
+                          key={area}
+                          className="flex cursor-pointer items-center gap-2 rounded-lg px-2 py-2 text-sm hover:bg-secondary"
+                        >
+                          <Checkbox
+                            checked={areas.includes(area)}
+                            onCheckedChange={(value) =>
+                              setAreas((prev) =>
+                                value === true ? [...prev, area] : prev.filter((a) => a !== area),
+                              )
+                            }
+                          />
+                          {t(area)}
+                        </label>
+                      ))}
+                    </div>
+                  </PopoverContent>
+                </Popover>
               </div>
 
               <div className="space-y-2">

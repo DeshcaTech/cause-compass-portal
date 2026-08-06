@@ -39,7 +39,7 @@ export const NAV: NavGroup[] = [
   },
   { label: "Gallery", to: "/gallery" },
   {
-    label: "Get involved",
+    label: "Get Involve",
     items: [
       { label: "Fundraising", to: "/fundraising" },
       { label: "Donate", to: "/donate" },

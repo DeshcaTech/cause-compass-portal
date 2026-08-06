@@ -1,11 +1,19 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 
 import { PageHeader } from "@/components/site/PageHeader";
 import { FilterPage, FilterSelect } from "@/components/site/FilterPage";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { campaignsQuery, formatDate, formatMoney, type Campaign } from "@/lib/queries";
 import campaignFallback from "@/assets/campaign-fallback.jpg";
 import { useT } from "@/lib/i18n";
@@ -35,13 +43,24 @@ export const Route = createFileRoute("/fundraising")({
   component: FundraisingPage,
 });
 
-function CampaignCard({ campaign }: { campaign: Campaign }) {
+function CampaignCard({ campaign, onOpen }: { campaign: Campaign; onOpen: () => void }) {
   const t = useT();
   const pct = campaign.goal_amount
     ? Math.min(100, Math.round((campaign.raised_amount / campaign.goal_amount) * 100))
     : 0;
   return (
-    <Card className="flex flex-col border-border/70">
+    <Card
+      role="button"
+      tabIndex={0}
+      onClick={onOpen}
+      onKeyDown={(event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          onOpen();
+        }
+      }}
+      className="flex cursor-pointer flex-col border-border/70 transition-all hover:-translate-y-1 hover:shadow-[var(--shadow-lift)]"
+    >
       <CardContent className="flex flex-1 flex-col p-6">
         <img
           src={campaign.image_url ?? campaignFallback}
@@ -55,7 +74,7 @@ function CampaignCard({ campaign }: { campaign: Campaign }) {
             {campaign.status === "active" ? t("Active") : t("Completed")}
           </Badge>
         </div>
-        <p className="mt-2 flex-1 text-sm text-muted-foreground">
+        <p className="mt-2 line-clamp-3 flex-1 text-sm text-muted-foreground">
           {campaign.description ?? campaign.summary}
         </p>
         <div className="mt-5">
@@ -79,7 +98,7 @@ function CampaignCard({ campaign }: { campaign: Campaign }) {
           ) : null}
         </div>
         {campaign.status === "active" ? (
-          <Button asChild variant="hero" className="mt-5">
+          <Button asChild variant="hero" className="mt-5" onClick={(e) => e.stopPropagation()}>
             <Link to="/donate" search={{ campaign: campaign.id }}>
               {t("Donate to this campaign")}
             </Link>
@@ -90,6 +109,70 @@ function CampaignCard({ campaign }: { campaign: Campaign }) {
   );
 }
 
+function CampaignDialog({
+  campaign,
+  onClose,
+}: {
+  campaign: Campaign | null;
+  onClose: () => void;
+}) {
+  const t = useT();
+  const pct = campaign?.goal_amount
+    ? Math.min(100, Math.round((campaign.raised_amount / campaign.goal_amount) * 100))
+    : 0;
+  return (
+    <Dialog open={!!campaign} onOpenChange={(open) => !open && onClose()}>
+      <DialogContent className="max-h-[90dvh] overflow-y-auto sm:max-w-lg">
+        {campaign ? (
+          <>
+            <DialogHeader>
+              <DialogTitle>{campaign.title}</DialogTitle>
+              <DialogDescription>{campaign.summary}</DialogDescription>
+            </DialogHeader>
+            <img
+              src={campaign.image_url ?? campaignFallback}
+              alt={campaign.title}
+              className="aspect-[16/9] w-full rounded-xl object-cover"
+            />
+            <Badge variant={campaign.status === "active" ? "default" : "secondary"} className="w-fit">
+              {campaign.status === "active" ? t("Active") : t("Completed")}
+            </Badge>
+            <p className="text-sm text-foreground/85">{campaign.description ?? campaign.summary}</p>
+            <div>
+              <div className="h-2 w-full overflow-hidden rounded-full bg-secondary">
+                <div
+                  className="h-full rounded-full bg-[image:var(--gradient-gold)]"
+                  style={{ width: `${pct}%` }}
+                />
+              </div>
+              <p className="mt-2 text-sm">
+                <span className="font-semibold">{formatMoney(campaign.raised_amount)}</span>
+                <span className="text-muted-foreground">
+                  {" "}
+                  {t("raised of")} {formatMoney(campaign.goal_amount)} ({pct}%)
+                </span>
+              </p>
+              {campaign.ends_at ? (
+                <p className="mt-1 text-xs text-muted-foreground">
+                  {campaign.status === "active" ? t("Closes") : t("Closed")}{" "}
+                  {formatDate(campaign.ends_at)}
+                </p>
+              ) : null}
+            </div>
+            {campaign.status === "active" ? (
+              <Button asChild variant="hero" className="w-full">
+                <Link to="/donate" search={{ campaign: campaign.id }}>
+                  {t("Donate to this campaign")}
+                </Link>
+              </Button>
+            ) : null}
+          </>
+        ) : null}
+      </DialogContent>
+    </Dialog>
+  );
+}
+
 function FundraisingPage() {
   const t = useT();
   const { data: campaigns = [] } = useQuery(campaignsQuery);
@@ -97,6 +180,7 @@ function FundraisingPage() {
   const past = campaigns.filter((c) => c.status !== "active");
   const [view, setView] = useSearchFilter("view", "active");
   const list = view === "active" ? active : past;
+  const [selected, setSelected] = useState<Campaign | null>(null);
 
   return (
     <>
@@ -128,7 +212,11 @@ function FundraisingPage() {
       >
         <div className="grid gap-5 md:grid-cols-2">
           {list.map((campaign) => (
-            <CampaignCard key={campaign.id} campaign={campaign} />
+            <CampaignCard
+              key={campaign.id}
+              campaign={campaign}
+              onOpen={() => setSelected(campaign)}
+            />
           ))}
         </div>
         {list.length === 0 ? (
@@ -148,6 +236,7 @@ function FundraisingPage() {
           </CardContent>
         </Card>
       </FilterPage>
+      <CampaignDialog campaign={selected} onClose={() => setSelected(null)} />
     </>
   );
 }

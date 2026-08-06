@@ -222,7 +222,7 @@ function RsvpEditPage() {
                     </div>
                     <div className="space-y-1.5 sm:col-span-2">
                       <Label htmlFor="rsvp-edit-member">
-                        {t("Membership number (optional, but recommended)")}
+                        {t("Membership number (Recommend)")}
                       </Label>
                       <Input
                         id="rsvp-edit-member"
