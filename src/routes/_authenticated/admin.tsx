@@ -316,6 +316,12 @@ function AdminPage() {
                 },
                 { name: "organiser", label: "Organiser" },
                 {
+                  name: "fee",
+                  label: "Entry fee (£)",
+                  type: "number",
+                  help: "Use 0 for a free event. CCGMs events can be paid online once payments are switched on.",
+                },
+                {
                   name: "notify_email",
                   label: "Event contact email",
                   help: "Receives the daily RSVP status report for this event.",
