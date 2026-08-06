@@ -259,11 +259,16 @@ function Index() {
       <section className="container-page py-14 sm:py-16 md:py-20">
         <div className="grid items-start gap-8 md:gap-10 lg:grid-cols-[0.9fr_1.1fr]">
           <div>
-            <p className="eyebrow text-terracotta">{site ? site.about_eyebrow : t("Who we are")}</p>
-            <h2 className="mt-2 text-2xl sm:text-3xl md:text-[2rem]">
+            <p className="eyebrow inline-block rounded-md bg-accent px-3 py-1 text-accent-foreground">
+              {site ? site.about_eyebrow : t("Who we are")}
+            </p>
+            <h2 className="mt-3 text-2xl sm:text-3xl md:text-[2rem]">
               {site ? site.about_title : t("A family of families")}
             </h2>
-            <Picture
+            <div className="mt-1 h-1 w-20 rounded-full bg-gold" />
+            <div className="relative mt-8">
+              <div className="absolute -inset-3 -rotate-2 rounded-[2rem] bg-accent/60" aria-hidden />
+              <Picture
               avif={communityAvif}
               webp={communityWebp}
               src={communityTogether}
@@ -272,9 +277,10 @@ function Index() {
               width={1280}
               height={960}
               decoding="async"
-              pictureClassName="mt-6 block"
-              className="aspect-[4/3] w-full rounded-3xl object-cover shadow-[var(--shadow-lift)]"
-            />
+              pictureClassName="relative block"
+              className="aspect-[4/3] w-full rounded-[1.5rem] object-cover shadow-[var(--shadow-lift)]"
+              />
+            </div>
           </div>
           <div className="space-y-5">
             <p className="text-base text-muted-foreground md:text-lg">
