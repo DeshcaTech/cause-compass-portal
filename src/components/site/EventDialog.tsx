@@ -4,6 +4,7 @@ import {
   CalendarDays,
   CalendarPlus,
   Check,
+  ChevronDown,
   Clock,
   Download,
   MapPin,
@@ -36,7 +37,13 @@ import {
 import { SmartImage } from "@/components/site/SmartImage";
 import { supabase } from "@/integrations/supabase/client";
 import { downloadEventIcs } from "@/lib/ics";
-import { appleCalendarUrl, googleCalendarUrl, outlookCalendarUrl } from "@/lib/calendar-links";
+import { googleCalendarUrl, outlookCalendarUrl } from "@/lib/calendar-links";
+import {
+  calendarLabels,
+  preferredCalendarTarget,
+  rememberCalendar,
+  type CalendarTarget,
+} from "@/lib/calendar-detect";
 import { submitEventRsvp } from "@/lib/rsvp.functions";
 import { formatDate, type EventRow } from "@/lib/queries";
 import { useT } from "@/lib/i18n";
@@ -254,6 +261,26 @@ export function EventDialog({
   const t = useT();
   const isCcgms = event?.event_type === "ccgms";
 
+  // Detected on the client only (SSR has no navigator), so the label stays stable on hydration.
+  const [target, setTarget] = useState<CalendarTarget | null>(null);
+  useEffect(() => setTarget(preferredCalendarTarget()), []);
+
+  function addToCalendar(choice: CalendarTarget) {
+    if (!event) return;
+    rememberCalendar(choice);
+    setTarget(choice);
+    if (choice === "google") {
+      window.open(googleCalendarUrl(event), "_blank", "noopener,noreferrer");
+      return;
+    }
+    if (choice === "outlook") {
+      window.open(outlookCalendarUrl(event), "_blank", "noopener,noreferrer");
+      return;
+    }
+    // Apple Calendar (and any desktop default handler) opens the .ics file directly.
+    downloadEventIcs(event);
+  }
+
   async function share() {
     if (!event) return;
     const url =
@@ -297,41 +324,49 @@ export function EventDialog({
             />
             <p className="text-sm text-foreground/85">{event.description}</p>
             <div className="flex flex-wrap gap-2">
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button type="button" variant="soft" className="flex-1">
-                    <CalendarPlus aria-hidden="true" /> {t("Add to calendar")}
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="start" className="w-56">
-                  <DropdownMenuItem asChild>
-                    <a
-                      href={googleCalendarUrl(event)}
-                      target="_blank"
-                      rel="noreferrer noopener"
+              <div className="flex flex-1 min-w-0">
+                <Button
+                  type="button"
+                  variant="soft"
+                  className="flex-1 rounded-r-none"
+                  onClick={() => addToCalendar(target ?? "google")}
+                  title={target ? t(calendarLabels[target]) : t("Add to calendar")}
+                >
+                  <CalendarPlus aria-hidden="true" />
+                  <span className="truncate">
+                    {target
+                      ? `${t("Add to")} ${t(calendarLabels[target])}`
+                      : t("Add to calendar")}
+                  </span>
+                </Button>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      type="button"
+                      variant="soft"
+                      size="icon"
+                      className="rounded-l-none border-l border-border/60"
+                      aria-label={t("Choose another calendar")}
                     >
+                      <ChevronDown aria-hidden="true" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="start" className="w-56">
+                    <DropdownMenuItem onSelect={() => addToCalendar("google")}>
                       <CalendarDays aria-hidden="true" /> {t("Google Calendar")}
-                    </a>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <a href={appleCalendarUrl(event)} download={`${event.title}.ics`}>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onSelect={() => addToCalendar("apple")}>
                       <Apple aria-hidden="true" /> {t("Apple Calendar")}
-                    </a>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <a
-                      href={outlookCalendarUrl(event)}
-                      target="_blank"
-                      rel="noreferrer noopener"
-                    >
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onSelect={() => addToCalendar("outlook")}>
                       <CalendarDays aria-hidden="true" /> {t("Outlook")}
-                    </a>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onSelect={() => downloadEventIcs(event)}>
-                    <Download aria-hidden="true" /> {t("Download .ics file")}
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onSelect={() => downloadEventIcs(event)}>
+                      <Download aria-hidden="true" /> {t("Download .ics file")}
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
               <Button
                 type="button"
                 variant="soft"
