@@ -267,6 +267,10 @@ export type RecordManagerProps = {
   ) => ReactNode;
   defaults?: Record<string, any>;
   filter?: { column: string; value: string } | null;
+  /** When provided and it returns false, the row is read-only (no edit/delete buttons). */
+  canEdit?: (row: Record<string, any>) => boolean;
+  /** Shown next to a read-only row to explain why it cannot be changed. */
+  lockedNote?: string;
 };
 
 function toFormValue(field: AdminField, value: any) {
@@ -304,6 +308,8 @@ export function RecordManager({
   rowActions,
   defaults,
   filter = null,
+  canEdit,
+  lockedNote = "Locked",
 }: RecordManagerProps) {
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
@@ -440,12 +446,18 @@ export function RecordManager({
                       isSaving: quickUpdate.isPending,
                     })
                   : null}
-                <Button variant="soft" size="sm" onClick={() => openEdit(row)}>
-                  <Pencil /> Edit
-                </Button>
-                <Button variant="destructive" size="sm" onClick={() => setDeleting(row)}>
-                  <Trash2 /> Delete
-                </Button>
+                {canEdit && !canEdit(row) ? (
+                  <span className="self-center text-xs text-muted-foreground">{lockedNote}</span>
+                ) : (
+                  <>
+                    <Button variant="soft" size="sm" onClick={() => openEdit(row)}>
+                      <Pencil /> Edit
+                    </Button>
+                    <Button variant="destructive" size="sm" onClick={() => setDeleting(row)}>
+                      <Trash2 /> Delete
+                    </Button>
+                  </>
+                )}
               </div>
             </CardContent>
           </Card>
