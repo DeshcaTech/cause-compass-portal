@@ -13,6 +13,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { ChevronDown } from "lucide-react";
+import { Req } from "@/components/site/Req";
 import { submitVolunteerApplication } from "@/lib/signup.functions";
 import volunteerHero from "@/assets/volunteer-hero.jpg";
 import { useT } from "@/lib/i18n";
@@ -178,7 +179,6 @@ function VolunteerPage() {
               </div>
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="space-y-2">
-                  <Label htmlFor="full_name">{t("Full name")}</Label>
                   <Label htmlFor="full_name">
                     {t("Full name")}
                     <Req />
