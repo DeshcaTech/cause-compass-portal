@@ -344,7 +344,11 @@ export function Lightbox({
       <DialogContent
         ref={shellRef}
         aria-label={`${t("Photo viewer")} — ${caption}, ${position}`}
-        className="max-h-[92dvh] gap-3 overflow-y-auto bg-background sm:max-w-3xl"
+        className={
+          isFullscreen
+            ? "left-0 top-0 h-screen max-h-none w-screen max-w-none translate-x-0 translate-y-0 gap-3 overflow-y-auto rounded-none border-0 bg-background sm:max-w-none"
+            : "max-h-[92dvh] gap-3 overflow-y-auto bg-background sm:max-w-3xl"
+        }
       >
         <DialogHeader>
           <DialogTitle className="text-left text-base">{caption}</DialogTitle>
@@ -380,7 +384,9 @@ export function Lightbox({
                 alt={current.caption ?? fallbackTitle}
                 loading="eager"
                 wrapperClassName="w-full bg-transparent"
-                className="max-h-[60dvh] w-full select-none object-contain"
+                className={`w-full select-none object-contain ${
+                  isFullscreen ? "max-h-[72vh]" : "max-h-[60dvh]"
+                }`}
               />
             </div>
           ) : null}
