@@ -261,6 +261,26 @@ export function EventDialog({
   const t = useT();
   const isCcgms = event?.event_type === "ccgms";
 
+  // Detected on the client only (SSR has no navigator), so the label stays stable on hydration.
+  const [target, setTarget] = useState<CalendarTarget | null>(null);
+  useEffect(() => setTarget(preferredCalendarTarget()), []);
+
+  function addToCalendar(choice: CalendarTarget) {
+    if (!event) return;
+    rememberCalendar(choice);
+    setTarget(choice);
+    if (choice === "google") {
+      window.open(googleCalendarUrl(event), "_blank", "noopener,noreferrer");
+      return;
+    }
+    if (choice === "outlook") {
+      window.open(outlookCalendarUrl(event), "_blank", "noopener,noreferrer");
+      return;
+    }
+    // Apple Calendar (and any desktop default handler) opens the .ics file directly.
+    downloadEventIcs(event);
+  }
+
   async function share() {
     if (!event) return;
     const url =
