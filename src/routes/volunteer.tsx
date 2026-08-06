@@ -179,11 +179,17 @@ function VolunteerPage() {
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="space-y-2">
                   <Label htmlFor="full_name">{t("Full name")}</Label>
-                  <Required />
+                  <Label htmlFor="full_name">
+                    {t("Full name")}
+                    <Req />
+                  </Label>
                   <Input id="full_name" name="full_name" required maxLength={120} />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="email">{t("Email")}</Label>
+                  <Label htmlFor="email">
+                    {t("Email")}
+                    <Req />
+                  </Label>
                   <Input id="email" name="email" type="email" required maxLength={255} />
                 </div>
                 <div className="space-y-2">
