@@ -50,7 +50,7 @@ export const submitMembership = createServerFn({ method: 'POST' })
           membershipNumber,
           membershipType:
             data.membership_type.charAt(0).toUpperCase() + data.membership_type.slice(1),
-          amount: `£${data.amount}`,
+          amount: data.amount > 0 ? `£${data.amount}` : '',
         },
         idempotencyKey: `membership-confirmation-${membershipNumber}`,
       })
