@@ -256,16 +256,24 @@ function JobsPage() {
                   </li>
                 ) : null}
               </ul>
-              <Button
-                variant="hero"
-                className="w-full"
-                onClick={() => {
-                  setApplyFor(selected);
-                  setSelected(null);
-                }}
-              >
-                <ExternalLink /> {t("Apply now")}
-              </Button>
+              <div className="flex flex-wrap gap-2">
+                <Button
+                  variant="hero"
+                  className="flex-1"
+                  onClick={() => {
+                    setApplyFor(selected);
+                    setSelected(null);
+                  }}
+                >
+                  <ExternalLink /> {t("Apply now")}
+                </Button>
+                <ShareButton
+                  title={selected.title}
+                  path={`/jobs?job=${selected.id}`}
+                  label={t("Share job")}
+                  className="flex-1"
+                />
+              </div>
             </div>
           ) : null}
         </DialogContent>
