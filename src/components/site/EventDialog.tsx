@@ -37,7 +37,7 @@ import {
 import { SmartImage } from "@/components/site/SmartImage";
 import { supabase } from "@/integrations/supabase/client";
 import { downloadEventIcs } from "@/lib/ics";
-import { appleCalendarUrl, googleCalendarUrl, outlookCalendarUrl } from "@/lib/calendar-links";
+import { googleCalendarUrl, outlookCalendarUrl } from "@/lib/calendar-links";
 import {
   calendarLabels,
   preferredCalendarTarget,
