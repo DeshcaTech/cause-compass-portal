@@ -96,6 +96,7 @@ const highlights = [
 
 function Index() {
   const t = useT();
+  const appInstalled = useAppInstalled();
   const { data: events = [] } = useQuery(eventsQuery);
   const [selectedEvent, setSelectedEvent] = useState<EventRow | null>(null);
   const [selectedPartner, setSelectedPartner] = useState<Partner | null>(null);
