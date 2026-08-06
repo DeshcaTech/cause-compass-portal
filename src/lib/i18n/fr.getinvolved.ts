@@ -6,6 +6,8 @@ export const getinvolved: Record<string, string> = {
   "Closes": "Se termine le",
   "Closed": "Terminée le",
   "Donate to this campaign": "Faire un don à cette campagne",
+  "Select one or more areas": "Sélectionnez un ou plusieurs domaines",
+  "Read the full story": "Lire l'article complet",
   "Get involved": "S'impliquer",
   "Support our causes": "Soutenez nos causes",
   "Every campaign is proposed, voted on and reported back to the membership.": "Chaque campagne est proposée, votée puis fait l'objet d'un compte-rendu aux membres.",
