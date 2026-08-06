@@ -400,11 +400,17 @@ function MembershipPage() {
 
               <div className="flex flex-wrap items-center justify-between gap-4 border-t border-border pt-5">
                 <p className="text-sm text-muted-foreground">
-                  {t("Total due:")}{" "}
-                  <span className="text-base font-semibold text-foreground">
-                    {price === 0 ? t("Free") : formatMoney(price)}
-                  </span>{" "}
-                  {price === 0 ? "" : t("per year")}
+                  {price === 0 ? (
+                    t("This membership is free — no payment or bank details required.")
+                  ) : (
+                    <>
+                      {t("Total due:")}{" "}
+                      <span className="text-base font-semibold text-foreground">
+                        {formatMoney(price)}
+                      </span>{" "}
+                      {t("per year")}
+                    </>
+                  )}
                 </p>
                 <Button type="submit" variant="hero" size="lg" disabled={saving}>
                   {saving ? t("Registering…") : t("Complete registration")}
