@@ -21,8 +21,7 @@ import communityWebp from "@/assets/family-of-families.jpg?w=900&quality=70&form
 import eventFallback from "@/assets/event-fallback.jpg?w=1000&quality=72&format=jpg";
 import eventFallbackAvif from "@/assets/event-fallback.jpg?w=1000&quality=55&format=avif";
 import eventFallbackWebp from "@/assets/event-fallback.jpg?w=1000&quality=70&format=webp";
-import badgeAppStore from "@/assets/badge-app-store.png?w=640&format=png";
-import badgeGooglePlay from "@/assets/badge-google-play.png?w=640&format=png";
+import downloadAppBadge from "@/assets/download-app-now.png.asset.json";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -36,6 +35,7 @@ import { Picture } from "@/components/site/Picture";
 import { EventDialog } from "@/components/site/EventDialog";
 import { InstallAppDialog } from "@/components/site/InstallAppDialog";
 import { useAppInstalled } from "@/hooks/use-app-installed";
+import { useDevicePlatform } from "@/hooks/use-device-platform";
 import { PartnerDialog } from "@/components/site/PartnerDialog";
 import { ShareButton } from "@/components/site/ShareButton";
 import { useT } from "@/lib/i18n";
@@ -98,6 +98,7 @@ const highlights = [
 function Index() {
   const t = useT();
   const appInstalled = useAppInstalled();
+  const devicePlatform = useDevicePlatform();
   const { data: events = [] } = useQuery(eventsQuery);
   const [selectedEvent, setSelectedEvent] = useState<EventRow | null>(null);
   const [selectedPartner, setSelectedPartner] = useState<Partner | null>(null);
@@ -203,32 +204,23 @@ function Index() {
             {!appInstalled && (
               <div className="mt-6 flex flex-wrap items-center justify-center gap-4 sm:justify-start">
                 <InstallAppDialog
-                  platform="android"
-                  storeUrl={site?.android_app_url}
-                  label={t("Download for Android")}
+                  platform={devicePlatform}
+                  storeUrl={
+                    devicePlatform === "ios" ? site?.ios_app_url : site?.android_app_url
+                  }
+                  label={
+                    devicePlatform === "ios"
+                      ? t("Download for iPhone")
+                      : t("Download for Android")
+                  }
                 >
                   <img
-                    src={badgeGooglePlay}
-                    alt={t("Get it on Google Play")}
+                    src={downloadAppBadge.url}
+                    alt={t("Download the app now")}
                     loading="lazy"
-                    width={1280}
-                    height={512}
-                    className="h-12 w-auto"
-                    decoding="async"
-                  />
-                </InstallAppDialog>
-                <InstallAppDialog
-                  platform="ios"
-                  storeUrl={site?.ios_app_url}
-                  label={t("Download for iPhone")}
-                >
-                  <img
-                    src={badgeAppStore}
-                    alt={t("Download on the App Store")}
-                    loading="lazy"
-                    width={1280}
-                    height={512}
-                    className="h-12 w-auto"
+                    width={591}
+                    height={378}
+                    className="h-20 w-auto sm:h-24"
                     decoding="async"
                   />
                 </InstallAppDialog>

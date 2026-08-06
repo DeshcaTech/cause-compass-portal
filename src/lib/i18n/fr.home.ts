@@ -11,6 +11,7 @@ export const home: Record<string, string> = {
   "Download for": "Télécharger pour",
   "Download for Android": "Télécharger pour Android",
   "Download for iPhone": "Télécharger pour iPhone",
+  "Download the app now": "Téléchargez l'application maintenant",
   "Install CCGMs on your phone in seconds — it works just like an app, with its own icon on your home screen.":
     "Installez CCGMs sur votre téléphone en quelques secondes — cela fonctionne comme une application, avec son icône sur votre écran d'accueil.",
   "Open this website in Safari on your iPhone or iPad.":
