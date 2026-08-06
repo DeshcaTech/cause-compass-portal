@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { useT } from "@/lib/i18n";
+import { ShareButton } from "@/components/site/ShareButton";
 
 type InstallPromptEvent = Event & { prompt: () => Promise<void> };
 
@@ -90,16 +91,19 @@ export function InstallAppDialog({
             <li key={step}>{step}</li>
           ))}
         </ol>
-        {prompt && (
-          <Button
-            onClick={() => {
-              void prompt.prompt();
-              setPrompt(null);
-            }}
-          >
-            {t("Install now")}
-          </Button>
-        )}
+        <div className="flex flex-wrap gap-2">
+          {prompt && (
+            <Button
+              onClick={() => {
+                void prompt.prompt();
+                setPrompt(null);
+              }}
+            >
+              {t("Install now")}
+            </Button>
+          )}
+          <ShareButton title={label} path="/" label={t("Share")} />
+        </div>
       </DialogContent>
     </Dialog>
   );
