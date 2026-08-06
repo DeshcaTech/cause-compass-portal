@@ -138,7 +138,7 @@ function Index() {
         <div className="grain relative isolate overflow-hidden rounded-[2rem] bg-primary text-primary-foreground shadow-[var(--shadow-lift)] sm:rounded-[2.5rem]">
         <div className="grid items-center gap-10 px-6 py-12 sm:px-10 sm:py-14 lg:grid-cols-[1.05fr_0.95fr] lg:py-20">
           <div className="min-w-0">
-            <div className="flex items-center justify-end gap-3 rounded-full border border-primary-foreground/15 bg-primary-foreground/10 px-4 py-2 backdrop-blur-md sm:gap-4">
+            <div className="ml-auto inline-flex w-fit items-center justify-end gap-3 rounded-full border border-primary-foreground/15 bg-primary-foreground/10 px-4 py-2 backdrop-blur-md sm:gap-4">
               <p className="eyebrow min-w-0 text-right text-gold leading-relaxed">
                 {(site ? site.hero_eyebrow : t("Cameroonian Community in Greater Manchester and Surrounding area"))
                   .split("\n")
@@ -267,7 +267,7 @@ function Index() {
             </h2>
             <div className="mt-1 h-1 w-20 rounded-full bg-gold" />
             <div className="relative mt-8">
-              <div className="absolute -inset-3 -rotate-2 rounded-[2rem] bg-accent/60" aria-hidden />
+              <div className="absolute -inset-2 -rotate-1 rounded-[2rem] bg-accent/60" aria-hidden />
               <Picture
               avif={communityAvif}
               webp={communityWebp}
