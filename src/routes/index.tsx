@@ -188,6 +188,31 @@ function Index() {
                 <Link to="/fundraising">{t("Support Our Causes")}</Link>
               </Button>
             </div>
+            {!appInstalled && (
+              <div className="mt-6 hidden lg:flex">
+                <InstallAppDialog
+                  platform={devicePlatform}
+                  storeUrl={
+                    devicePlatform === "ios" ? site?.ios_app_url : site?.android_app_url
+                  }
+                  label={
+                    devicePlatform === "ios"
+                      ? t("Download for iPhone")
+                      : t("Download for Android")
+                  }
+                >
+                  <img
+                    src={downloadAppBadge.url}
+                    alt={t("Download the app now")}
+                    loading="lazy"
+                    width={591}
+                    height={378}
+                    className="h-24 w-auto"
+                    decoding="async"
+                  />
+                </InstallAppDialog>
+              </div>
+            )}
           </div>
           <div className="relative">
             <Picture
@@ -202,7 +227,7 @@ function Index() {
               className="aspect-[4/3] w-full rounded-3xl object-cover shadow-[var(--shadow-lift)]"
             />
             {!appInstalled && (
-              <div className="mt-6 flex flex-wrap items-center justify-center gap-4 sm:justify-start">
+              <div className="mt-6 flex flex-wrap items-center justify-center gap-4 sm:justify-start lg:hidden">
                 <InstallAppDialog
                   platform={devicePlatform}
                   storeUrl={
