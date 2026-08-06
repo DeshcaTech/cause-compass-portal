@@ -458,6 +458,18 @@ function Index() {
         onOpenChange={(open) => !open && setSelectedEvent(null)}
       />
 
+      <Dialog open={!!info} onOpenChange={(open) => !open && setInfo(null)}>
+        <DialogContent className="max-h-[85dvh] overflow-y-auto sm:max-w-lg">
+          <DialogHeader>
+            <DialogTitle>{info?.title}</DialogTitle>
+            <DialogDescription className="whitespace-pre-line text-left">
+              {info?.body}
+            </DialogDescription>
+          </DialogHeader>
+          {info?.action}
+        </DialogContent>
+      </Dialog>
+
       <section className="container-page py-14 sm:py-16 md:py-20">
         <div className="flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-end sm:justify-between">
           <div>
