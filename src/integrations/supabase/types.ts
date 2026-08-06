@@ -308,6 +308,7 @@ export type Database = {
           image_url: string | null
           raised_amount: number
           status: Database["public"]["Enums"]["campaign_status"]
+          status_notified_at: string | null
           summary: string | null
           title: string
         }
@@ -320,6 +321,7 @@ export type Database = {
           image_url?: string | null
           raised_amount?: number
           status?: Database["public"]["Enums"]["campaign_status"]
+          status_notified_at?: string | null
           summary?: string | null
           title: string
         }
@@ -332,6 +334,7 @@ export type Database = {
           image_url?: string | null
           raised_amount?: number
           status?: Database["public"]["Enums"]["campaign_status"]
+          status_notified_at?: string | null
           summary?: string | null
           title?: string
         }
@@ -943,6 +946,7 @@ export type Database = {
           phone: string | null
           short_description: string | null
           website: string | null
+          whatsapp: string | null
         }
         Insert: {
           address?: string | null
@@ -958,6 +962,7 @@ export type Database = {
           phone?: string | null
           short_description?: string | null
           website?: string | null
+          whatsapp?: string | null
         }
         Update: {
           address?: string | null
@@ -973,6 +978,7 @@ export type Database = {
           phone?: string | null
           short_description?: string | null
           website?: string | null
+          whatsapp?: string | null
         }
         Relationships: []
       }
