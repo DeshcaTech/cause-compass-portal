@@ -8,6 +8,7 @@ import { PageHeader } from "@/components/site/PageHeader";
 import { RecordManager } from "@/components/admin/RecordManager";
 import { SurveysManager } from "@/components/admin/SurveysManager";
 import { FundraisingReport } from "@/components/admin/FundraisingReport";
+import { CampaignStatusNotifier } from "@/components/admin/CampaignStatusNotifier";
 import { NewsNotifier } from "@/components/admin/NewsNotifier";
 import { RsvpManager } from "@/components/admin/RsvpManager";
 import { JobApplicationsManager } from "@/components/admin/JobApplicationsManager";
