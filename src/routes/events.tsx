@@ -95,6 +95,9 @@ function EventCard({ event, onOpen }: { event: EventRow; onOpen: () => void }) {
         <p className="mt-4 flex items-center gap-2 text-xs text-muted-foreground">
           <MapPin className="size-3.5" /> {event.location}
         </p>
+        <p className="mt-2 text-xs font-semibold text-foreground">
+          {Number(event.fee) > 0 ? formatMoney(Number(event.fee)) : t("Free")}
+        </p>
       </CardContent>
     </Card>
   );
