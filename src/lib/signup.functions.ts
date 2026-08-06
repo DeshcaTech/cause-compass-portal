@@ -106,5 +106,32 @@ export const submitVolunteerApplication = createServerFn({ method: 'POST' })
       console.error('Volunteer confirmation email failed', err)
     }
 
+    try {
+      const { data: settings } = await supabase
+        .from('site_settings')
+        .select('contact_email')
+        .eq('id', 1)
+        .maybeSingle()
+      const adminEmail = settings?.contact_email
+      if (adminEmail) {
+        const { sendTemplateEmail } = await import('./email-templates/send-email')
+        await sendTemplateEmail('volunteer-admin-notification', adminEmail, {
+          templateData: {
+            fullName: data.full_name,
+            email: data.email,
+            phone: data.phone || '',
+            membershipNumber: data.membership_number || '',
+            areas: data.areas,
+            availability: data.availability || '',
+            message: data.message || '',
+          },
+          idempotencyKey: `volunteer-admin-${row?.id ?? data.email}`,
+          replyTo: data.email,
+        })
+      }
+    } catch (err) {
+      console.error('Volunteer admin notification failed', err)
+    }
+
     return { ok: true }
   })
