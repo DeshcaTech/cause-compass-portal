@@ -37,6 +37,7 @@ import { EventDialog } from "@/components/site/EventDialog";
 import { InstallAppDialog } from "@/components/site/InstallAppDialog";
 import { useAppInstalled } from "@/hooks/use-app-installed";
 import { PartnerDialog } from "@/components/site/PartnerDialog";
+import { ShareButton } from "@/components/site/ShareButton";
 import { useT } from "@/lib/i18n";
 import { siteSettingsQuery } from "@/lib/site-settings";
 import {
