@@ -293,11 +293,13 @@ function AdminPage() {
               title="Events"
               description="Coming and past events shown on the events page and calendar."
               orderBy={{ column: "start_at", ascending: false }}
+              canEdit={(row) => isAdmin || row['event_type'] !== "ccgms"}
+              lockedNote="CCGMs event — level 1 or 2 admins only"
               primaryLabel={(row) => String(row['title'])}
               secondaryLabel={(row) =>
                 `${new Date(String(row['start_at'])).toLocaleString("en-GB")} · ${row['location'] ?? "No location"}`
               }
-              defaults={{ event_type: "ccgms" }}
+              defaults={{ event_type: isAdmin ? "ccgms" : "other" }}
               fields={[
                 { name: "title", label: "Title", required: true },
                 { name: "description", label: "Description", type: "textarea" },
@@ -309,10 +311,15 @@ function AdminPage() {
                   label: "Event type",
                   type: "select",
                   required: true,
-                  options: [
-                    { value: "ccgms", label: "CCGMs event" },
-                    { value: "other", label: "Other event" },
-                  ],
+                  options: isAdmin
+                    ? [
+                        { value: "ccgms", label: "CCGMs event" },
+                        { value: "other", label: "Other event" },
+                      ]
+                    : [{ value: "other", label: "Other event" }],
+                  ...(isAdmin
+                    ? {}
+                    : { help: "Only level 1 and level 2 admins can manage CCGMs events." }),
                 },
                 { name: "organiser", label: "Organiser" },
                 {
