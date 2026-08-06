@@ -4,6 +4,7 @@ import {
   CalendarDays,
   CalendarPlus,
   Check,
+  ChevronDown,
   Clock,
   Download,
   MapPin,
@@ -37,6 +38,12 @@ import { SmartImage } from "@/components/site/SmartImage";
 import { supabase } from "@/integrations/supabase/client";
 import { downloadEventIcs } from "@/lib/ics";
 import { appleCalendarUrl, googleCalendarUrl, outlookCalendarUrl } from "@/lib/calendar-links";
+import {
+  calendarLabels,
+  preferredCalendarTarget,
+  rememberCalendar,
+  type CalendarTarget,
+} from "@/lib/calendar-detect";
 import { submitEventRsvp } from "@/lib/rsvp.functions";
 import { formatDate, type EventRow } from "@/lib/queries";
 import { useT } from "@/lib/i18n";
