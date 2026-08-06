@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { Check, Plus, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -18,6 +19,7 @@ import {
 } from "@/components/ui/select";
 import { formatMoney } from "@/lib/queries";
 import { submitMembership } from "@/lib/signup.functions";
+import { siteSettingsQuery, DEFAULT_SITE_SETTINGS } from "@/lib/site-settings";
 import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/membership")({
@@ -45,21 +47,18 @@ const TIERS = [
   {
     key: "individual" as const,
     name: "Individual",
-    price: 30,
     blurb: "For one adult member.",
     perks: ["Voting rights at the AGM", "Member rates on assets", "Event discounts"],
   },
   {
     key: "student" as const,
     name: "Student",
-    price: 15,
     blurb: "For students in full-time education.",
     perks: ["All individual benefits", "Mentoring & study support", "Youth programme access"],
   },
   {
     key: "family" as const,
     name: "Family",
-    price: 60,
     blurb: "Mum, dad and children up to 21 years old.",
     perks: ["Covers partner & dependents", "One number for the household", "Family event rates"],
   },
@@ -93,9 +92,17 @@ function MembershipPage() {
   const [family, setFamily] = useState<FamilyMember[]>([]);
   const [saving, setSaving] = useState(false);
   const [number, setNumber] = useState<string | null>(null);
+  const { data: settings } = useQuery(siteSettingsQuery);
+  const s = settings ?? DEFAULT_SITE_SETTINGS;
+  const fees: Record<(typeof TIERS)[number]["key"], number> = s.membership_free
+    ? { individual: 0, student: 0, family: 0 }
+    : {
+        individual: Number(s.membership_fee_individual),
+        student: Number(s.membership_fee_student),
+        family: Number(s.membership_fee_family),
+      };
 
-  const selectedTier = TIERS.find((item) => item.key === tier)!;
-  const price = selectedTier.price;
+  const price = fees[tier];
 
   function updateFamily(index: number, patch: Partial<FamilyMember>) {
     setFamily((prev) => prev.map((item, i) => (i === index ? { ...item, ...patch } : item)));
@@ -197,8 +204,12 @@ function MembershipPage() {
               }`}
             >
               <h2 className="text-xl">{t(item.name)}</h2>
-              <p className="mt-3 font-display text-4xl text-primary">{formatMoney(item.price)}</p>
-              <p className="text-sm text-muted-foreground">{t("per year")}</p>
+              <p className="mt-3 font-display text-4xl text-primary">
+                {fees[item.key] === 0 ? t("Free") : formatMoney(fees[item.key])}
+              </p>
+              {fees[item.key] === 0 ? null : (
+                <p className="text-sm text-muted-foreground">{t("per year")}</p>
+              )}
               <p className="mt-3 text-sm text-muted-foreground">{t(item.blurb)}</p>
               <ul className="mt-4 grid gap-1.5 text-sm">
                 {item.perks.map((perk) => (
@@ -391,9 +402,9 @@ function MembershipPage() {
                 <p className="text-sm text-muted-foreground">
                   {t("Total due:")}{" "}
                   <span className="text-base font-semibold text-foreground">
-                    {formatMoney(price)}
+                    {price === 0 ? t("Free") : formatMoney(price)}
                   </span>{" "}
-                  {t("per year")}
+                  {price === 0 ? "" : t("per year")}
                 </p>
                 <Button type="submit" variant="hero" size="lg" disabled={saving}>
                   {saving ? t("Registering…") : t("Complete registration")}

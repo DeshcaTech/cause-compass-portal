@@ -1109,6 +1109,10 @@ export type Database = {
           id: number
           instagram_url: string | null
           ios_app_url: string | null
+          membership_fee_family: number
+          membership_fee_individual: number
+          membership_fee_student: number
+          membership_free: boolean
           org_name: string
           show_contact_whatsapp: boolean
           tiktok_url: string | null
@@ -1138,6 +1142,10 @@ export type Database = {
           id?: number
           instagram_url?: string | null
           ios_app_url?: string | null
+          membership_fee_family?: number
+          membership_fee_individual?: number
+          membership_fee_student?: number
+          membership_free?: boolean
           org_name?: string
           show_contact_whatsapp?: boolean
           tiktok_url?: string | null
@@ -1167,6 +1175,10 @@ export type Database = {
           id?: number
           instagram_url?: string | null
           ios_app_url?: string | null
+          membership_fee_family?: number
+          membership_fee_individual?: number
+          membership_fee_student?: number
+          membership_free?: boolean
           org_name?: string
           show_contact_whatsapp?: boolean
           tiktok_url?: string | null

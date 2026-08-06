@@ -22,6 +22,7 @@ type Field = {
   hint?: string;
   multiline?: boolean;
   toggle?: boolean;
+  number?: boolean;
 };
 
 type Group = {
@@ -85,6 +86,18 @@ const GROUPS: Group[] = [
     ],
   },
   {
+    title: "Membership fees (level 1 & 2)",
+    description:
+      "Yearly price for each membership type. Turn on free membership to waive all fees.",
+    whatsappAdminOnly: true,
+    fields: [
+      { key: "membership_free", label: "Make membership free for everyone", toggle: true },
+      { key: "membership_fee_individual", label: "Individual fee (£ per year)", number: true },
+      { key: "membership_fee_student", label: "Student fee (£ per year)", number: true },
+      { key: "membership_fee_family", label: "Family fee (£ per year)", number: true },
+    ],
+  },
+  {
     title: "Developer credit (level 1 only)",
     description:
       "WhatsApp number behind the 'Powered by DeshcaTech' link in the footer. Use the international format, e.g. 447700900000.",
@@ -137,7 +150,7 @@ export function SiteContentSettings({
     [draft, data],
   );
 
-  function set(key: keyof SiteSettings, value: string | boolean) {
+  function set(key: keyof SiteSettings, value: string | boolean | number) {
     setDraft((prev) => ({ ...prev, [key]: value }));
   }
 
@@ -166,6 +179,10 @@ export function SiteContentSettings({
         delete (payload as Partial<SiteSettings>).contact_whatsapp;
         delete (payload as Partial<SiteSettings>).show_contact_whatsapp;
         delete (payload as Partial<SiteSettings>).whatsapp_message;
+        delete (payload as Partial<SiteSettings>).membership_free;
+        delete (payload as Partial<SiteSettings>).membership_fee_individual;
+        delete (payload as Partial<SiteSettings>).membership_fee_student;
+        delete (payload as Partial<SiteSettings>).membership_fee_family;
       }
       const { error } = await supabase.from("site_settings").update(payload).eq("id", 1);
       if (error) throw new Error(error.message);
@@ -223,6 +240,15 @@ export function SiteContentSettings({
                       rows={4}
                       value={String(draft[field.key] ?? "")}
                       onChange={(e) => set(field.key, e.target.value)}
+                    />
+                  ) : field.number ? (
+                    <Input
+                      id={String(field.key)}
+                      type="number"
+                      min={0}
+                      step="0.01"
+                      value={String(draft[field.key] ?? 0)}
+                      onChange={(e) => set(field.key, Number(e.target.value))}
                     />
                   ) : (
                     <Input
