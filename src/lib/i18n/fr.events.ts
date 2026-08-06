@@ -29,6 +29,8 @@ export const events: Record<string, string> = {
   "Type": "Type",
   "To be confirmed": "À confirmer",
   "Add to calendar": "Ajouter au calendrier",
+  "Add to": "Ajouter à",
+  "Choose another calendar": "Choisir un autre calendrier",
   "Filter by type": "Filtrer par type",
   "All types": "Tous les types",
   "No events match these filters.": "Aucun événement ne correspond à ces filtres.",
