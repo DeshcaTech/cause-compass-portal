@@ -133,11 +133,12 @@ function Index() {
 
   return (
     <>
-      {/* Magazine masthead hero: editorial split */}
-      <section className="relative isolate overflow-hidden bg-primary text-primary-foreground">
-        <div className="container-page grid items-center gap-10 py-14 sm:py-16 lg:grid-cols-[1.05fr_0.95fr] lg:py-24">
+      {/* Refined organic hero: emerald panel floating on cream */}
+      <section className="container-page pt-6 sm:pt-8">
+        <div className="grain relative isolate overflow-hidden rounded-[2rem] bg-primary text-primary-foreground shadow-[var(--shadow-lift)] sm:rounded-[2.5rem]">
+        <div className="grid items-center gap-10 px-6 py-12 sm:px-10 sm:py-14 lg:grid-cols-[1.05fr_0.95fr] lg:py-20">
           <div className="min-w-0">
-            <div className="flex items-center justify-end gap-3 sm:gap-4">
+            <div className="ml-auto flex w-fit items-center justify-end gap-3 rounded-full border border-primary-foreground/15 bg-primary-foreground/10 px-4 py-2 backdrop-blur-md sm:gap-4">
               <p className="eyebrow min-w-0 text-right text-gold leading-relaxed">
                 {(site ? site.hero_eyebrow : t("Cameroonian Community in Greater Manchester and Surrounding area"))
                   .split("\n")
@@ -159,14 +160,14 @@ function Index() {
                 className="h-8 w-auto shrink-0 rounded-md object-cover sm:h-10"
               />
             </div>
-            <h1 className="mt-6 text-[1.91rem] leading-[1.02] sm:mt-7 sm:text-[2.31rem] sm:leading-[0.98] lg:text-[3.73rem]">
+            <h1 className="mt-7 text-[1.91rem] leading-[1.02] sm:mt-8 sm:text-[2.31rem] sm:leading-[0.98] lg:text-[3.73rem]">
               {site ? site.hero_title_line1 : t("Stronger together,")}
               <br />
-              <span className="text-gold">
+              <span className="text-gold-leaf">
                 {site ? site.hero_title_line2 : t("generation after generation")}
               </span>
             </h1>
-            <p className="mt-5 max-w-xl text-[16px] text-primary-foreground/80">
+            <p className="mt-5 max-w-xl text-[16px] font-light leading-relaxed text-primary-foreground/75">
               {site
                 ? site.hero_intro
                 : t("CCGMs is built on family, culture and mutual support. Join us, give to a cause, and be part of everything we build together.")}
@@ -192,7 +193,7 @@ function Index() {
               height={1200}
               fetchPriority="high"
               decoding="async"
-              className="aspect-[4/3] w-full rounded-3xl object-cover shadow-[var(--shadow-lift)]"
+              className="aspect-[4/3] w-full rounded-[1.5rem] object-cover shadow-[var(--shadow-lift)] ring-1 ring-primary-foreground/10"
             />
             <div className="mt-6 flex flex-wrap items-center justify-center gap-4 sm:justify-start">
               <a
@@ -230,13 +231,17 @@ function Index() {
             </div>
           </div>
         </div>
+        </div>
       </section>
 
       {/* Community at a glance */}
-      <section className="border-b border-border bg-card">
-        <div className="container-page grid grid-cols-2 gap-x-2 gap-y-1 divide-border py-8 sm:grid-cols-3 sm:py-10 lg:grid-cols-5">
+      <section className="relative z-10 -mt-8 sm:-mt-10">
+        <div className="container-page grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
           {statTiles.map(({ icon: Icon, label, value }) => (
-            <div key={label} className="flex min-w-0 items-center gap-3 px-1 py-3 sm:px-2">
+            <div
+              key={label}
+              className="flex min-w-0 items-center gap-3 rounded-2xl border border-border/60 bg-card px-4 py-4 shadow-[var(--shadow-lift)]"
+            >
               <span className="inline-flex size-9 shrink-0 items-center justify-center rounded-2xl bg-accent text-accent-foreground sm:size-10">
                 <Icon className="size-4 sm:size-5" />
               </span>
@@ -254,11 +259,16 @@ function Index() {
       <section className="container-page py-14 sm:py-16 md:py-20">
         <div className="grid items-start gap-8 md:gap-10 lg:grid-cols-[0.9fr_1.1fr]">
           <div>
-            <p className="eyebrow text-terracotta">{site ? site.about_eyebrow : t("Who we are")}</p>
-            <h2 className="mt-2 text-2xl sm:text-3xl md:text-[2rem]">
+            <p className="eyebrow inline-block rounded-md bg-accent px-3 py-1 text-accent-foreground">
+              {site ? site.about_eyebrow : t("Who we are")}
+            </p>
+            <h2 className="mt-3 text-2xl sm:text-3xl md:text-[2rem]">
               {site ? site.about_title : t("A family of families")}
             </h2>
-            <Picture
+            <div className="mt-1 h-1 w-20 rounded-full bg-gold" />
+            <div className="relative mt-8">
+              <div className="absolute -inset-2 -rotate-1 rounded-[2rem] bg-accent/60" aria-hidden />
+              <Picture
               avif={communityAvif}
               webp={communityWebp}
               src={communityTogether}
@@ -267,9 +277,10 @@ function Index() {
               width={1280}
               height={960}
               decoding="async"
-              pictureClassName="mt-6 block"
-              className="aspect-[4/3] w-full rounded-3xl object-cover shadow-[var(--shadow-lift)]"
-            />
+              pictureClassName="relative block"
+              className="aspect-[4/3] w-full rounded-[1.5rem] object-cover shadow-[var(--shadow-lift)]"
+              />
+            </div>
           </div>
           <div className="space-y-5">
             <p className="text-base text-muted-foreground md:text-lg">
