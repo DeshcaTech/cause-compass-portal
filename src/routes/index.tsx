@@ -34,6 +34,7 @@ import {
 } from "@/components/ui/dialog";
 import { Picture } from "@/components/site/Picture";
 import { EventDialog } from "@/components/site/EventDialog";
+import { PartnerDialog } from "@/components/site/PartnerDialog";
 import { useT } from "@/lib/i18n";
 import { siteSettingsQuery } from "@/lib/site-settings";
 import {
@@ -45,6 +46,7 @@ import {
   homeStatsQuery,
   partnersQuery,
   type EventRow,
+  type Partner,
 } from "@/lib/queries";
 
 export const Route = createFileRoute("/")({
@@ -94,6 +96,7 @@ function Index() {
   const t = useT();
   const { data: events = [] } = useQuery(eventsQuery);
   const [selectedEvent, setSelectedEvent] = useState<EventRow | null>(null);
+  const [selectedPartner, setSelectedPartner] = useState<Partner | null>(null);
   // Home cards open a quick popup with more information instead of leaving the page.
   const [info, setInfo] = useState<{
     title: string;
@@ -566,8 +569,14 @@ function Index() {
             </div>
             <div className="mt-6 grid gap-4 sm:mt-8 sm:grid-cols-2 sm:gap-5 lg:grid-cols-4">
               {featuredPartners.map((partner) => (
-                <Link key={partner.id} to="/partners" className="group">
-                  <Card className="h-full border-border/70 transition-all group-hover:-translate-y-1 group-hover:shadow-[var(--shadow-lift)]">
+                <button
+                  key={partner.id}
+                  type="button"
+                  aria-haspopup="dialog"
+                  onClick={() => setSelectedPartner(partner)}
+                  className="group block h-full w-full text-left"
+                >
+                  <Card className="h-full cursor-pointer border-border/70 transition-all group-hover:-translate-y-1 group-hover:shadow-[var(--shadow-lift)]">
                     <CardContent className="p-5 sm:p-6">
                       {partner.logo_url ? (
                         <img
@@ -595,12 +604,17 @@ function Index() {
                       </p>
                     </CardContent>
                   </Card>
-                </Link>
+                </button>
               ))}
             </div>
           </div>
         </section>
       )}
+
+      <PartnerDialog
+        partner={selectedPartner}
+        onOpenChange={(open) => !open && setSelectedPartner(null)}
+      />
     </>
   );
 }
