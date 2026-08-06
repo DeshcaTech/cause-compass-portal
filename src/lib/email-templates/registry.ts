@@ -27,6 +27,7 @@ import { template as rsvpDigest } from './rsvp-digest'
 import { template as jobApplication } from './job-application'
 import { template as adminInvite } from './admin-invite'
 import { template as adminAccessRequest } from './admin-access-request'
+import { template as campaignStatus } from './campaign-status'
 
 export const TEMPLATES: Record<string, TemplateEntry> = {
   'membership-confirmation': membershipConfirmation,
@@ -39,4 +40,5 @@ export const TEMPLATES: Record<string, TemplateEntry> = {
   'job-application': jobApplication,
   'admin-invite': adminInvite,
   'admin-access-request': adminAccessRequest,
+  'campaign-status': campaignStatus,
 }
