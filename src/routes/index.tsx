@@ -34,6 +34,7 @@ import {
 } from "@/components/ui/dialog";
 import { Picture } from "@/components/site/Picture";
 import { EventDialog } from "@/components/site/EventDialog";
+import { InstallAppDialog } from "@/components/site/InstallAppDialog";
 import { PartnerDialog } from "@/components/site/PartnerDialog";
 import { useT } from "@/lib/i18n";
 import { siteSettingsQuery } from "@/lib/site-settings";
@@ -195,11 +196,10 @@ function Index() {
               className="aspect-[4/3] w-full rounded-3xl object-cover shadow-[var(--shadow-lift)]"
             />
             <div className="mt-6 flex flex-wrap items-center justify-center gap-4 sm:justify-start">
-              <a
-                href={site?.android_app_url || "#"}
-                {...(site?.android_app_url ? { target: "_blank", rel: "noreferrer" } : {})}
-                className="inline-flex min-w-0 shrink-0 transition-transform hover:scale-[1.03]"
-                aria-label={t("Download for Android")}
+              <InstallAppDialog
+                platform="android"
+                storeUrl={site?.android_app_url}
+                label={t("Download for Android")}
               >
                 <img
                   src={badgeGooglePlay}
@@ -210,12 +210,11 @@ function Index() {
                   className="h-12 w-auto"
                   decoding="async"
                 />
-              </a>
-              <a
-                href={site?.ios_app_url || "#"}
-                {...(site?.ios_app_url ? { target: "_blank", rel: "noreferrer" } : {})}
-                className="inline-flex min-w-0 shrink-0 transition-transform hover:scale-[1.03]"
-                aria-label={t("Download for iPhone")}
+              </InstallAppDialog>
+              <InstallAppDialog
+                platform="ios"
+                storeUrl={site?.ios_app_url}
+                label={t("Download for iPhone")}
               >
                 <img
                   src={badgeAppStore}
@@ -226,7 +225,7 @@ function Index() {
                   className="h-12 w-auto"
                   decoding="async"
                 />
-              </a>
+              </InstallAppDialog>
             </div>
           </div>
         </div>
