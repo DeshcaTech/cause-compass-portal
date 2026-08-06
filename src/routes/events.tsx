@@ -8,7 +8,7 @@ import { FilterPage, FilterSelect } from "@/components/site/FilterPage";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { eventsQuery, formatDate, type EventRow } from "@/lib/queries";
+import { eventsQuery, formatDate, formatMoney, type EventRow } from "@/lib/queries";
 import { EventDialog, eventFallbackImage } from "@/components/site/EventDialog";
 import { SmartImage } from "@/components/site/SmartImage";
 import { useT } from "@/lib/i18n";
