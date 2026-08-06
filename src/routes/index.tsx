@@ -207,7 +207,7 @@ function Index() {
                     loading="lazy"
                     width={591}
                     height={378}
-                    className="h-24 w-auto"
+                    className="h-auto w-full max-w-[420px]"
                     decoding="async"
                   />
                 </InstallAppDialog>
@@ -245,7 +245,7 @@ function Index() {
                     loading="lazy"
                     width={591}
                     height={378}
-                    className="h-20 w-auto sm:h-24"
+                    className="h-auto w-full max-w-[380px]"
                     decoding="async"
                   />
                 </InstallAppDialog>
