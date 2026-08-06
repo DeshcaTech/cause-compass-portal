@@ -4,6 +4,7 @@ import {
   Check,
   Clock,
   MapPin,
+  PoundSterling,
   Share2,
   Tag,
   UserRound,
@@ -28,7 +29,7 @@ import { SmartImage } from "@/components/site/SmartImage";
 import { AddToCalendarButton } from "@/components/site/AddToCalendarButton";
 import { supabase } from "@/integrations/supabase/client";
 import { submitEventRsvp } from "@/lib/rsvp.functions";
-import { formatDate, type EventRow } from "@/lib/queries";
+import { formatDate, formatMoney, type EventRow } from "@/lib/queries";
 import { useT } from "@/lib/i18n";
 import eventFallback from "@/assets/event-fallback.jpg";
 import communityTogether from "@/assets/community-together.jpg";
@@ -316,6 +317,15 @@ export function EventDialog({
               {event.organiser ? (
                 <DetailRow icon={UserRound} label={t("Organiser")} value={event.organiser} />
               ) : null}
+              <DetailRow
+                icon={PoundSterling}
+                label={t("Entry fee")}
+                value={
+                  Number(event.fee) > 0
+                    ? `${formatMoney(Number(event.fee))}${isCcgms ? ` · ${t("Payable online")}` : ""}`
+                    : t("Free")
+                }
+              />
               <li className="flex items-start gap-3 rounded-xl border border-border/70 bg-card px-4 py-3">
                 <Tag className="mt-0.5 size-4 shrink-0 text-primary" aria-hidden="true" />
                 <span className="min-w-0">
