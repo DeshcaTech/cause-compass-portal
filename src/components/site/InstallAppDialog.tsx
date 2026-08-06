@@ -9,7 +9,6 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { DialogLogo } from "@/components/site/DialogLogo";
 import { useT } from "@/lib/i18n";
 
 type InstallPromptEvent = Event & { prompt: () => Promise<void> };
@@ -78,7 +77,6 @@ export function InstallAppDialog({
         {children}
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">
-        <DialogLogo />
         <DialogHeader>
           <DialogTitle>{label}</DialogTitle>
           <DialogDescription>
