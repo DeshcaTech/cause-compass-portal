@@ -2,12 +2,12 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { zodValidator, fallback } from "@tanstack/zod-adapter";
 import { z } from "zod";
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
 import { CalendarDays, Mail, Phone, Users } from "lucide-react";
 
 import { PageHeader } from "@/components/site/PageHeader";
 import { FilterPage, FilterSelect } from "@/components/site/FilterPage";
 import { SmartImage } from "@/components/site/SmartImage";
+import { ShareButton } from "@/components/site/ShareButton";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -23,6 +23,7 @@ type CategoryKey = (typeof CATEGORIES)[number];
 
 const searchSchema = z.object({
   category: fallback(z.string(), "all").default("all"),
+  group: z.string().optional(),
 });
 
 export const Route = createFileRoute("/village-groups")({
@@ -64,7 +65,13 @@ function VillageGroupsPage() {
     ? (search.category as CategoryKey)
     : "all";
   const { data: groups = [] } = useQuery(villageGroupsQuery);
-  const [selected, setSelected] = useState<VillageGroup | null>(null);
+  // The open group lives in the URL so the popup can be shared as a link.
+  const selected = groups.find((g) => g.id === search.group) ?? null;
+  const setSelected = (group: VillageGroup | null) =>
+    navigate({
+      search: (prev: Record<string, string | undefined>) => ({ ...prev, group: group?.id }),
+      replace: !group,
+    });
 
   const categories = [
     { key: "all" as const, label: t("All groups") },
@@ -191,6 +198,12 @@ function VillageGroupsPage() {
                   </li>
                 ) : null}
               </ul>
+              <ShareButton
+                title={selected.name}
+                path={`/village-groups?group=${selected.id}`}
+                label={t("Share group")}
+                className="w-full"
+              />
             </div>
           ) : null}
         </DialogContent>

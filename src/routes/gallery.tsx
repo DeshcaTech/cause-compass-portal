@@ -6,6 +6,7 @@ import { ImageIcon } from "lucide-react";
 import { PageHeader } from "@/components/site/PageHeader";
 import { FilterPage, FilterSelect } from "@/components/site/FilterPage";
 import { Lightbox } from "@/components/site/Lightbox";
+import { ShareButton } from "@/components/site/ShareButton";
 import { SmartImage } from "@/components/site/SmartImage";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
@@ -148,6 +149,16 @@ function GalleryPage() {
           ) : (
             <h2 className="text-2xl">{t("Gallery")}</h2>
           )}
+
+          {active ? (
+            <div className="mt-4 flex justify-end">
+              <ShareButton
+                title={active.title}
+                path={`/gallery?gallery=${active.id}`}
+                label={t("Share album")}
+              />
+            </div>
+          ) : null}
 
           <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {tiles.map((tile, index) => (

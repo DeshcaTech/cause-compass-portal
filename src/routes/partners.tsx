@@ -1,6 +1,5 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
 
 import { PageHeader } from "@/components/site/PageHeader";
 import { FilterPage, FilterSelect } from "@/components/site/FilterPage";
@@ -13,8 +12,9 @@ import { useT } from "@/lib/i18n";
 import { searchString, useSearchFilter } from "@/lib/use-search-filter";
 
 export const Route = createFileRoute("/partners")({
-  validateSearch: (search: Record<string, unknown>): { category?: string | undefined} => ({
+  validateSearch: (search: Record<string, unknown>): { category?: string | undefined; partner?: string | undefined} => ({
     category: searchString(search, "category"),
+    partner: searchString(search, "partner"),
   }),
   head: () => ({
     meta: [
@@ -39,7 +39,15 @@ export const Route = createFileRoute("/partners")({
 function PartnersPage() {
   const t = useT();
   const { data: partners = [] } = useQuery(partnersQuery);
-  const [selected, setSelected] = useState<Partner | null>(null);
+  // The open business lives in the URL so the popup can be shared as a link.
+  const navigate = useNavigate({ from: "/partners" });
+  const search = Route.useSearch();
+  const selected = partners.find((p) => p.id === search.partner) ?? null;
+  const setSelected = (partner: Partner | null) =>
+    navigate({
+      search: (prev: Record<string, string | undefined>) => ({ ...prev, partner: partner?.id }),
+      replace: !partner,
+    });
   const [category, setCategory] = useSearchFilter("category", "All");
   const categories = ["All", ...Array.from(new Set(partners.map((p) => p.category)))];
   const filtered = category === "All" ? partners : partners.filter((p) => p.category === category);

@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import type { Partner } from "@/lib/queries";
 import { useT } from "@/lib/i18n";
+import { ShareButton } from "@/components/site/ShareButton";
 import businessFallback from "@/assets/business-fallback.jpg";
 
 /** Shared business popup used on the home page and the partners directory. */
@@ -51,19 +52,27 @@ export function PartnerDialog({
                 </li>
               ) : null}
             </ul>
-            {partner.website ? (
-              <Button asChild variant="hero" className="w-full">
-                <a href={partner.website} target="_blank" rel="noreferrer">
-                  <Globe /> {t("View website")}
-                </a>
-              </Button>
-            ) : whatsapp ? (
-              <Button asChild variant="hero" className="w-full">
-                <a href={`https://wa.me/${whatsapp}`} target="_blank" rel="noreferrer">
-                  <MessageCircle /> {t("Contact")}
-                </a>
-              </Button>
-            ) : null}
+            <div className="flex flex-wrap gap-2">
+              {partner.website ? (
+                <Button asChild variant="hero" className="flex-1">
+                  <a href={partner.website} target="_blank" rel="noreferrer">
+                    <Globe /> {t("View website")}
+                  </a>
+                </Button>
+              ) : whatsapp ? (
+                <Button asChild variant="hero" className="flex-1">
+                  <a href={`https://wa.me/${whatsapp}`} target="_blank" rel="noreferrer">
+                    <MessageCircle /> {t("Contact")}
+                  </a>
+                </Button>
+              ) : null}
+              <ShareButton
+                title={partner.business_name}
+                path={`/partners?partner=${partner.id}`}
+                label={t("Share business")}
+                className="flex-1"
+              />
+            </div>
           </div>
         ) : null}
       </DialogContent>

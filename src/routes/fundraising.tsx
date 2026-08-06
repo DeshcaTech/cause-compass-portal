@@ -1,8 +1,8 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
 
 import { PageHeader } from "@/components/site/PageHeader";
+import { ShareButton } from "@/components/site/ShareButton";
 import { FilterPage, FilterSelect } from "@/components/site/FilterPage";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -20,8 +20,9 @@ import { useT } from "@/lib/i18n";
 import { searchString, useSearchFilter } from "@/lib/use-search-filter";
 
 export const Route = createFileRoute("/fundraising")({
-  validateSearch: (search: Record<string, unknown>): { view?: string | undefined} => ({
+  validateSearch: (search: Record<string, unknown>): { view?: string | undefined; campaign?: string | undefined} => ({
     view: searchString(search, "view"),
+    campaign: searchString(search, "campaign"),
   }),
   head: () => ({
     meta: [
@@ -159,13 +160,21 @@ function CampaignDialog({
                 </p>
               ) : null}
             </div>
-            {campaign.status === "active" ? (
-              <Button asChild variant="hero" className="w-full">
-                <Link to="/donate" search={{ campaign: campaign.id }}>
-                  {t("Donate to this campaign")}
-                </Link>
-              </Button>
-            ) : null}
+            <div className="flex flex-wrap gap-2">
+              {campaign.status === "active" ? (
+                <Button asChild variant="hero" className="flex-1">
+                  <Link to="/donate" search={{ campaign: campaign.id }}>
+                    {t("Donate to this campaign")}
+                  </Link>
+                </Button>
+              ) : null}
+              <ShareButton
+                title={campaign.title}
+                path={`/fundraising?campaign=${campaign.id}`}
+                label={t("Share campaign")}
+                className="flex-1"
+              />
+            </div>
           </>
         ) : null}
       </DialogContent>
@@ -180,7 +189,15 @@ function FundraisingPage() {
   const past = campaigns.filter((c) => c.status !== "active");
   const [view, setView] = useSearchFilter("view", "active");
   const list = view === "active" ? active : past;
-  const [selected, setSelected] = useState<Campaign | null>(null);
+  // The open campaign lives in the URL so the popup can be shared as a link.
+  const navigate = useNavigate({ from: "/fundraising" });
+  const search = Route.useSearch();
+  const selected = campaigns.find((c) => c.id === search.campaign) ?? null;
+  const setSelected = (campaign: Campaign | null) =>
+    navigate({
+      search: (prev: Record<string, string | undefined>) => ({ ...prev, campaign: campaign?.id }),
+      replace: !campaign,
+    });
 
   return (
     <>

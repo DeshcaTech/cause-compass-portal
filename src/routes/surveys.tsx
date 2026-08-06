@@ -4,6 +4,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { CheckCircle2 } from "lucide-react";
 
+import { ShareButton } from "@/components/site/ShareButton";
 import { PageHeader } from "@/components/site/PageHeader";
 import { FilterPage, FilterSelect } from "@/components/site/FilterPage";
 import { Badge } from "@/components/ui/badge";
@@ -188,6 +189,12 @@ function SurveyDialog({
             />
             <p className="text-sm text-foreground/85">{survey.description}</p>
             <SurveyForm key={survey.id} survey={survey} onClose={() => onOpenChange(false)} />
+            <ShareButton
+              title={survey.title}
+              path={`/surveys?survey=${survey.id}`}
+              label={t("Share survey")}
+              className="w-full"
+            />
           </div>
         ) : null}
       </DialogContent>

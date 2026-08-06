@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { Banknote, Briefcase, CalendarClock, ExternalLink, Mail, MapPin, Phone } from "lucide-react";
@@ -13,6 +13,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { ShareButton } from "@/components/site/ShareButton";
 import {
   Select,
   SelectContent,
@@ -27,10 +28,11 @@ import { useT } from "@/lib/i18n";
 import { searchString, useSearchFilter } from "@/lib/use-search-filter";
 
 export const Route = createFileRoute("/jobs")({
-  validateSearch: (search: Record<string, unknown>): { category?: string | undefined; location?: string | undefined; type?: string | undefined} => ({
+  validateSearch: (search: Record<string, unknown>): { category?: string | undefined; location?: string | undefined; type?: string | undefined; job?: string | undefined} => ({
     category: searchString(search, "category"),
     location: searchString(search, "location"),
     type: searchString(search, "type"),
+    job: searchString(search, "job"),
   }),
   head: () => ({
     meta: [
@@ -67,7 +69,15 @@ function JobsPage() {
   const t = useT();
   const { data: allJobs = [] } = useQuery(jobsQuery);
   const jobs = useMemo(() => allJobs.filter((job) => !isExpired(job)), [allJobs]);
-  const [selected, setSelected] = useState<Job | null>(null);
+  // The open job lives in the URL so the popup can be shared as a link.
+  const navigate = useNavigate({ from: "/jobs" });
+  const search = Route.useSearch();
+  const selected = jobs.find((job) => job.id === search.job) ?? null;
+  const setSelected = (job: Job | null) =>
+    navigate({
+      search: (prev: Record<string, string | undefined>) => ({ ...prev, job: job?.id }),
+      replace: !job,
+    });
   const [applyFor, setApplyFor] = useState<Job | null>(null);
   const [category, setCategory] = useSearchFilter("category", ALL);
   const [location, setLocation] = useSearchFilter("location", ALL);
@@ -246,16 +256,24 @@ function JobsPage() {
                   </li>
                 ) : null}
               </ul>
-              <Button
-                variant="hero"
-                className="w-full"
-                onClick={() => {
-                  setApplyFor(selected);
-                  setSelected(null);
-                }}
-              >
-                <ExternalLink /> {t("Apply now")}
-              </Button>
+              <div className="flex flex-wrap gap-2">
+                <Button
+                  variant="hero"
+                  className="flex-1"
+                  onClick={() => {
+                    setApplyFor(selected);
+                    setSelected(null);
+                  }}
+                >
+                  <ExternalLink /> {t("Apply now")}
+                </Button>
+                <ShareButton
+                  title={selected.title}
+                  path={`/jobs?job=${selected.id}`}
+                  label={t("Share job")}
+                  className="flex-1"
+                />
+              </div>
             </div>
           ) : null}
         </DialogContent>
