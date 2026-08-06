@@ -86,8 +86,19 @@ const GROUPS: Group[] = [
     ],
   },
   {
+    title: "Membership fees (level 1 & 2)",
+    description:
+      "Yearly price for each membership type. Turn on free membership to waive all fees.",
+    whatsappAdminOnly: true,
+    fields: [
+      { key: "membership_free", label: "Make membership free for everyone", toggle: true },
+      { key: "membership_fee_individual", label: "Individual fee (£ per year)", number: true },
+      { key: "membership_fee_student", label: "Student fee (£ per year)", number: true },
+      { key: "membership_fee_family", label: "Family fee (£ per year)", number: true },
+    ],
+  },
+  {
     title: "Developer credit (level 1 only)",
-*** End Patch
     description:
       "WhatsApp number behind the 'Powered by DeshcaTech' link in the footer. Use the international format, e.g. 447700900000.",
     superAdminOnly: true,
