@@ -76,6 +76,8 @@ const rsvpSchema = z.object({
 function RsvpForm({ event }: { event: EventRow }) {
   const t = useT();
   const [status, setStatus] = useState<"going" | "interested">("going");
+  const requiresPayment =
+    event.event_type === "ccgms" && Number(event.fee) > 0 && status === "going";
   const [saving, setSaving] = useState(false);
   const [done, setDone] = useState(false);
   const [editUrl, setEditUrl] = useState<string | null>(null);
@@ -227,7 +229,7 @@ function RsvpForm({ event }: { event: EventRow }) {
       </div>
 
       <Button type="submit" variant="hero" className="w-full" disabled={saving}>
-        {saving ? t("Sending…") : t("Send RSVP")}
+        {saving ? t("Sending…") : requiresPayment ? t("Book Now") : t("Send RSVP")}
       </Button>
     </form>
   );
