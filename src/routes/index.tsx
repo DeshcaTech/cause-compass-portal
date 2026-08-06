@@ -21,7 +21,7 @@ import communityWebp from "@/assets/family-of-families.jpg?w=900&quality=70&form
 import eventFallback from "@/assets/event-fallback.jpg?w=1000&quality=72&format=jpg";
 import eventFallbackAvif from "@/assets/event-fallback.jpg?w=1000&quality=55&format=avif";
 import eventFallbackWebp from "@/assets/event-fallback.jpg?w=1000&quality=70&format=webp";
-import downloadAppBadge from "@/assets/download-app-now.png.asset.json";
+import downloadAppBadge from "@/assets/download-app-now-v2.png.asset.json";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
