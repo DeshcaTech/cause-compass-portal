@@ -475,7 +475,32 @@ function Index() {
               Math.round((campaign.raised_amount / Math.max(campaign.goal_amount, 1)) * 100),
             );
             return (
-              <Card key={campaign.id} className="border-border/70">
+              <Card
+                key={campaign.id}
+                role="button"
+                tabIndex={0}
+                aria-haspopup="dialog"
+                onClick={() =>
+                  setInfo({
+                    title: campaign.title,
+                    body: campaign.description ?? campaign.summary ?? "",
+                    action: (
+                      <Button asChild variant="hero" className="w-full">
+                        <Link to="/donate" search={{ campaign: campaign.id }}>
+                          {t("Donate to this campaign")}
+                        </Link>
+                      </Button>
+                    ),
+                  })
+                }
+                onKeyDown={(event) => {
+                  if (event.key === "Enter" || event.key === " ") {
+                    event.preventDefault();
+                    (event.currentTarget as HTMLElement).click();
+                  }
+                }}
+                className="cursor-pointer border-border/70 transition-all hover:-translate-y-1 hover:shadow-[var(--shadow-lift)]"
+              >
                 <CardContent className="p-5 sm:p-6">
                   <h3 className="text-base leading-snug sm:text-lg">{campaign.title}</h3>
                   <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">
@@ -494,7 +519,13 @@ function Index() {
                       {t("raised of")} {formatMoney(campaign.goal_amount)}
                     </span>
                   </p>
-                  <Button asChild variant="hero" size="sm" className="mt-5 w-full sm:w-auto">
+                  <Button
+                    asChild
+                    variant="hero"
+                    size="sm"
+                    className="mt-5 w-full sm:w-auto"
+                    onClick={(event) => event.stopPropagation()}
+                  >
                     <Link to="/donate" search={{ campaign: campaign.id }}>
                       {t("Donate")}
                     </Link>
