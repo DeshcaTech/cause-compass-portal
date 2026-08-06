@@ -169,7 +169,7 @@ function VolunteerPage() {
             <form onSubmit={onSubmit} className="space-y-5">
               <div className="space-y-2">
                 <Label htmlFor="membership_number">
-                  {t("Membership number (optional, but recommended)")}
+                  {t("Membership number (Recommend)")}
                 </Label>
                 <Input id="membership_number" name="membership_number" placeholder="CCGM-1000" />
               </div>

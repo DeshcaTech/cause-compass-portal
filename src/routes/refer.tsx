@@ -179,7 +179,7 @@ function ReferPage() {
             <form onSubmit={onSubmit} className="mt-6 space-y-5">
               <div className="space-y-2">
                 <Label htmlFor="membership_number">
-                  {t("Your membership number (optional, but recommended)")}
+                  {t("Your membership number (Recommend)")}
                 </Label>
                 <Input id="membership_number" name="membership_number" placeholder="CCGM-1000" />
               </div>

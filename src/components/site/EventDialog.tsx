@@ -219,7 +219,7 @@ function RsvpForm({ event }: { event: EventRow }) {
         </div>
         <div className="space-y-1.5 sm:col-span-2">
           <Label htmlFor={`rsvp-member-${event.id}`}>
-            {t("Membership number (optional, but recommended)")}
+            {t("Membership number (Recommend)")}
           </Label>
           <Input
             id={`rsvp-member-${event.id}`}

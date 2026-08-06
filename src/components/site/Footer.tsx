@@ -46,12 +46,12 @@ const columns = [
     ],
   },
   {
-    title: "Get Involved",
+    title: "Get Involve",
     links: [
       { label: "Membership", to: "/membership" },
       { label: "Get Support", to: "/refer" },
       { label: "Surveys", to: "/surveys" },
-      { label: "Become a Volunteer", to: "/volunteer" },
+      { label: "Volunteer", to: "/volunteer" },
       { label: "Donate", to: "/donate" },
       { label: "Asset Rental", to: "/assets" },
     ],

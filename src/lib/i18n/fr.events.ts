@@ -39,7 +39,7 @@ export const events: Record<string, string> = {
   "I'm going": "Je participe",
   "Interested": "Intéressé(e)",
   "Extra guests": "Invités supplémentaires",
-  "Membership number (optional, but recommended)":
+  "Membership number (Recommend)":
     "Numéro de membre (facultatif, mais recommandé)",
   "Anything we should know? (optional)": "Quelque chose à nous signaler ? (facultatif)",
   "Send RSVP": "Envoyer ma réponse",

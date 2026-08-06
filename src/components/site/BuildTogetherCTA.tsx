@@ -5,7 +5,7 @@ import { useT } from "@/lib/i18n";
 export function BuildTogetherCTA() {
   const t = useT();
   const pathname = useRouter().state.location.pathname.replace(/\/$/, "") || "/";
-  if (pathname === "/" || pathname === "/membership") return null;
+  if (pathname === "/membership") return null;
 
   return (
     <div className="container-page flex justify-center py-10">
