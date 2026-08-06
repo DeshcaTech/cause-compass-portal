@@ -74,7 +74,10 @@ function JobsPage() {
   const search = Route.useSearch();
   const selected = jobs.find((job) => job.id === search.job) ?? null;
   const setSelected = (job: Job | null) =>
-    navigate({ search: (prev) => ({ ...prev, job: job?.id }), replace: !job });
+    navigate({
+      search: (prev: Record<string, string | undefined>) => ({ ...prev, job: job?.id }),
+      replace: !job,
+    });
   const [applyFor, setApplyFor] = useState<Job | null>(null);
   const [category, setCategory] = useSearchFilter("category", ALL);
   const [location, setLocation] = useSearchFilter("location", ALL);
