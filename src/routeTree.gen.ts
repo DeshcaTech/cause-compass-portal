@@ -36,6 +36,7 @@ import { Route as NewsIdRouteImport } from './routes/news.$id'
 import { Route as NewsUnsubscribeRouteImport } from './routes/news.unsubscribe'
 import { Route as RsvpReportEventIdRouteImport } from './routes/rsvp-report.$eventId'
 import { Route as RsvpTokenRouteImport } from './routes/rsvp.$token'
+import { Route as ApiPublicHooksCampaignStatusRouteImport } from './routes/api/public/hooks/campaign-status'
 import { Route as ApiPublicHooksDailyRsvpDigestRouteImport } from './routes/api/public/hooks/daily-rsvp-digest'
 import { Route as LovableEmailTransactionalPreviewRouteImport } from './routes/lovable/email/transactional/preview'
 
@@ -173,6 +174,12 @@ const RsvpTokenRoute = RsvpTokenRouteImport.update({
   path: '/rsvp/$token',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicHooksCampaignStatusRoute =
+  ApiPublicHooksCampaignStatusRouteImport.update({
+    id: '/api/public/hooks/campaign-status',
+    path: '/api/public/hooks/campaign-status',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiPublicHooksDailyRsvpDigestRoute =
   ApiPublicHooksDailyRsvpDigestRouteImport.update({
     id: '/api/public/hooks/daily-rsvp-digest',
@@ -213,6 +220,7 @@ export interface FileRoutesByFullPath {
   '/rsvp-report/$eventId': typeof RsvpReportEventIdRoute
   '/rsvp/$token': typeof RsvpTokenRoute
   '/news/': typeof NewsIndexRoute
+  '/api/public/hooks/campaign-status': typeof ApiPublicHooksCampaignStatusRoute
   '/api/public/hooks/daily-rsvp-digest': typeof ApiPublicHooksDailyRsvpDigestRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
 }
@@ -243,6 +251,7 @@ export interface FileRoutesByTo {
   '/rsvp-report/$eventId': typeof RsvpReportEventIdRoute
   '/rsvp/$token': typeof RsvpTokenRoute
   '/news': typeof NewsIndexRoute
+  '/api/public/hooks/campaign-status': typeof ApiPublicHooksCampaignStatusRoute
   '/api/public/hooks/daily-rsvp-digest': typeof ApiPublicHooksDailyRsvpDigestRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
 }
@@ -275,6 +284,7 @@ export interface FileRoutesById {
   '/rsvp-report/$eventId': typeof RsvpReportEventIdRoute
   '/rsvp/$token': typeof RsvpTokenRoute
   '/news/': typeof NewsIndexRoute
+  '/api/public/hooks/campaign-status': typeof ApiPublicHooksCampaignStatusRoute
   '/api/public/hooks/daily-rsvp-digest': typeof ApiPublicHooksDailyRsvpDigestRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
 }
@@ -307,6 +317,7 @@ export interface FileRouteTypes {
     | '/rsvp-report/$eventId'
     | '/rsvp/$token'
     | '/news/'
+    | '/api/public/hooks/campaign-status'
     | '/api/public/hooks/daily-rsvp-digest'
     | '/lovable/email/transactional/preview'
   fileRoutesByTo: FileRoutesByTo
@@ -337,6 +348,7 @@ export interface FileRouteTypes {
     | '/rsvp-report/$eventId'
     | '/rsvp/$token'
     | '/news'
+    | '/api/public/hooks/campaign-status'
     | '/api/public/hooks/daily-rsvp-digest'
     | '/lovable/email/transactional/preview'
   id:
@@ -368,6 +380,7 @@ export interface FileRouteTypes {
     | '/rsvp-report/$eventId'
     | '/rsvp/$token'
     | '/news/'
+    | '/api/public/hooks/campaign-status'
     | '/api/public/hooks/daily-rsvp-digest'
     | '/lovable/email/transactional/preview'
   fileRoutesById: FileRoutesById
@@ -399,6 +412,7 @@ export interface RootRouteChildren {
   RsvpReportEventIdRoute: typeof RsvpReportEventIdRoute
   RsvpTokenRoute: typeof RsvpTokenRoute
   NewsIndexRoute: typeof NewsIndexRoute
+  ApiPublicHooksCampaignStatusRoute: typeof ApiPublicHooksCampaignStatusRoute
   ApiPublicHooksDailyRsvpDigestRoute: typeof ApiPublicHooksDailyRsvpDigestRoute
   LovableEmailTransactionalPreviewRoute: typeof LovableEmailTransactionalPreviewRoute
 }
@@ -594,6 +608,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RsvpTokenRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/hooks/campaign-status': {
+      id: '/api/public/hooks/campaign-status'
+      path: '/api/public/hooks/campaign-status'
+      fullPath: '/api/public/hooks/campaign-status'
+      preLoaderRoute: typeof ApiPublicHooksCampaignStatusRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/hooks/daily-rsvp-digest': {
       id: '/api/public/hooks/daily-rsvp-digest'
       path: '/api/public/hooks/daily-rsvp-digest'
@@ -649,9 +670,20 @@ const rootRouteChildren: RootRouteChildren = {
   RsvpReportEventIdRoute: RsvpReportEventIdRoute,
   RsvpTokenRoute: RsvpTokenRoute,
   NewsIndexRoute: NewsIndexRoute,
+  ApiPublicHooksCampaignStatusRoute: ApiPublicHooksCampaignStatusRoute,
   ApiPublicHooksDailyRsvpDigestRoute: ApiPublicHooksDailyRsvpDigestRoute,
   LovableEmailTransactionalPreviewRoute: LovableEmailTransactionalPreviewRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
