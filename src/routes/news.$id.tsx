@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { ShareButton } from "@/components/site/ShareButton";
 import { announcementQuery } from "@/lib/queries";
 import newsFallback from "@/assets/news-fallback.jpg";
 import { useT } from "@/lib/i18n";
@@ -44,12 +45,17 @@ function NewsDetailPage() {
 
   return (
     <article className="container-page py-14 md:py-20">
-      <Button asChild variant="soft" size="sm">
-        <Link to="/news">
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          {t("All news")}
-        </Link>
-      </Button>
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <Button asChild variant="soft" size="sm">
+          <Link to="/news">
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            {t("All news")}
+          </Link>
+        </Button>
+        {item ? (
+          <ShareButton title={item.title} path={`/news/${id}`} label={t("Share article")} />
+        ) : null}
+      </div>
 
       {isPending ? (
         <p className="mt-10 text-sm text-muted-foreground">{t("Loading article…")}</p>
