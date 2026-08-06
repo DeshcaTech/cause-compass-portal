@@ -25,6 +25,13 @@ import badgeAppStore from "@/assets/badge-app-store.png?w=640&format=png";
 import badgeGooglePlay from "@/assets/badge-google-play.png?w=640&format=png";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Picture } from "@/components/site/Picture";
 import { EventDialog } from "@/components/site/EventDialog";
 import { useT } from "@/lib/i18n";
