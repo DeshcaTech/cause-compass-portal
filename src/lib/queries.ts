@@ -53,6 +53,7 @@ export type Partner = {
   email: string | null;
   website: string | null;
   address: string | null;
+  whatsapp: string | null;
 };
 
 export type SurveyQuestion = {
