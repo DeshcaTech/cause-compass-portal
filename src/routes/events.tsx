@@ -8,7 +8,7 @@ import { FilterPage, FilterSelect } from "@/components/site/FilterPage";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { eventsQuery, formatDate, type EventRow } from "@/lib/queries";
+import { eventsQuery, formatDate, formatMoney, type EventRow } from "@/lib/queries";
 import { EventDialog, eventFallbackImage } from "@/components/site/EventDialog";
 import { SmartImage } from "@/components/site/SmartImage";
 import { useT } from "@/lib/i18n";
@@ -94,6 +94,9 @@ function EventCard({ event, onOpen }: { event: EventRow; onOpen: () => void }) {
         <p className="mt-2 line-clamp-3 text-sm text-muted-foreground">{event.description}</p>
         <p className="mt-4 flex items-center gap-2 text-xs text-muted-foreground">
           <MapPin className="size-3.5" /> {event.location}
+        </p>
+        <p className="mt-2 text-xs font-semibold text-foreground">
+          {Number(event.fee) > 0 ? formatMoney(Number(event.fee)) : t("Free")}
         </p>
       </CardContent>
     </Card>
