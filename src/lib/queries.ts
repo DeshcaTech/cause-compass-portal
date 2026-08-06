@@ -28,6 +28,7 @@ export type EventRow = {
   event_type: "ccgms" | "other";
   organiser: string | null;
   ticket_url: string | null;
+  fee: number;
 };
 
 export type Campaign = {
@@ -171,7 +172,7 @@ export const eventsQuery = queryOptions({
       await supabase
         .from("events")
         .select(
-          "id, title, description, start_at, end_at, location, image_url, event_type, organiser, ticket_url",
+          "id, title, description, start_at, end_at, location, image_url, event_type, organiser, ticket_url, fee",
         )
         .order("start_at"),
     ),
