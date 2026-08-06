@@ -9,6 +9,23 @@ export const home: Record<string, string> = {
   "Join": "Rejoindre",
   "Support Our Causes": "Soutenir nos causes",
   "Download for": "Télécharger pour",
+  "Download for Android": "Télécharger pour Android",
+  "Download for iPhone": "Télécharger pour iPhone",
+  "Install CCGMs on your phone in seconds — it works just like an app, with its own icon on your home screen.":
+    "Installez CCGMs sur votre téléphone en quelques secondes — cela fonctionne comme une application, avec son icône sur votre écran d'accueil.",
+  "Open this website in Safari on your iPhone or iPad.":
+    "Ouvrez ce site dans Safari sur votre iPhone ou iPad.",
+  "Tap the Share button at the bottom of the screen.":
+    "Appuyez sur le bouton Partager en bas de l'écran.",
+  "Choose “Add to Home Screen”, then tap Add.":
+    "Choisissez « Sur l'écran d'accueil », puis appuyez sur Ajouter.",
+  "Open this website in Chrome on your Android phone.":
+    "Ouvrez ce site dans Chrome sur votre téléphone Android.",
+  "Tap the menu button (three dots) at the top right.":
+    "Appuyez sur le bouton menu (trois points) en haut à droite.",
+  "Choose “Install app” or “Add to Home screen”.":
+    "Choisissez « Installer l'application » ou « Ajouter à l'écran d'accueil ».",
+  "Install now": "Installer maintenant",
   "CCGMs members of all generations celebrating together":
     "Des membres de CCGMs de toutes générations qui célèbrent ensemble",
   "Who we are": "Qui nous sommes",
