@@ -35,6 +35,7 @@ import {
 import { Picture } from "@/components/site/Picture";
 import { EventDialog } from "@/components/site/EventDialog";
 import { InstallAppDialog } from "@/components/site/InstallAppDialog";
+import { useAppInstalled } from "@/hooks/use-app-installed";
 import { PartnerDialog } from "@/components/site/PartnerDialog";
 import { useT } from "@/lib/i18n";
 import { siteSettingsQuery } from "@/lib/site-settings";
@@ -195,38 +196,40 @@ function Index() {
               decoding="async"
               className="aspect-[4/3] w-full rounded-3xl object-cover shadow-[var(--shadow-lift)]"
             />
-            <div className="mt-6 flex flex-wrap items-center justify-center gap-4 sm:justify-start">
-              <InstallAppDialog
-                platform="android"
-                storeUrl={site?.android_app_url}
-                label={t("Download for Android")}
-              >
-                <img
-                  src={badgeGooglePlay}
-                  alt={t("Get it on Google Play")}
-                  loading="lazy"
-                  width={1280}
-                  height={512}
-                  className="h-12 w-auto"
-                  decoding="async"
-                />
-              </InstallAppDialog>
-              <InstallAppDialog
-                platform="ios"
-                storeUrl={site?.ios_app_url}
-                label={t("Download for iPhone")}
-              >
-                <img
-                  src={badgeAppStore}
-                  alt={t("Download on the App Store")}
-                  loading="lazy"
-                  width={1280}
-                  height={512}
-                  className="h-12 w-auto"
-                  decoding="async"
-                />
-              </InstallAppDialog>
-            </div>
+            {!appInstalled && (
+              <div className="mt-6 flex flex-wrap items-center justify-center gap-4 sm:justify-start">
+                <InstallAppDialog
+                  platform="android"
+                  storeUrl={site?.android_app_url}
+                  label={t("Download for Android")}
+                >
+                  <img
+                    src={badgeGooglePlay}
+                    alt={t("Get it on Google Play")}
+                    loading="lazy"
+                    width={1280}
+                    height={512}
+                    className="h-12 w-auto"
+                    decoding="async"
+                  />
+                </InstallAppDialog>
+                <InstallAppDialog
+                  platform="ios"
+                  storeUrl={site?.ios_app_url}
+                  label={t("Download for iPhone")}
+                >
+                  <img
+                    src={badgeAppStore}
+                    alt={t("Download on the App Store")}
+                    loading="lazy"
+                    width={1280}
+                    height={512}
+                    className="h-12 w-auto"
+                    decoding="async"
+                  />
+                </InstallAppDialog>
+              </div>
+            )}
           </div>
         </div>
       </section>
