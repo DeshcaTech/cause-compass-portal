@@ -34,6 +34,7 @@ import {
 } from "@/components/ui/dialog";
 import { Picture } from "@/components/site/Picture";
 import { EventDialog } from "@/components/site/EventDialog";
+import { InstallAppDialog } from "@/components/site/InstallAppDialog";
 import { PartnerDialog } from "@/components/site/PartnerDialog";
 import { useT } from "@/lib/i18n";
 import { siteSettingsQuery } from "@/lib/site-settings";
