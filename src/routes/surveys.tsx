@@ -188,6 +188,12 @@ function SurveyDialog({
             />
             <p className="text-sm text-foreground/85">{survey.description}</p>
             <SurveyForm key={survey.id} survey={survey} onClose={() => onOpenChange(false)} />
+            <ShareButton
+              title={survey.title}
+              path={`/surveys?survey=${survey.id}`}
+              label={t("Share survey")}
+              className="w-full"
+            />
           </div>
         ) : null}
       </DialogContent>
