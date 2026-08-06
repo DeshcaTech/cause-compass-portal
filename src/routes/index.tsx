@@ -37,6 +37,7 @@ import { EventDialog } from "@/components/site/EventDialog";
 import { InstallAppDialog } from "@/components/site/InstallAppDialog";
 import { useAppInstalled } from "@/hooks/use-app-installed";
 import { PartnerDialog } from "@/components/site/PartnerDialog";
+import { ShareButton } from "@/components/site/ShareButton";
 import { useT } from "@/lib/i18n";
 import { siteSettingsQuery } from "@/lib/site-settings";
 import {
@@ -104,6 +105,8 @@ function Index() {
   const [info, setInfo] = useState<{
     title: string;
     body: string;
+    /** Deep link to the full item so the popup can be shared. */
+    sharePath?: string;
     action?: React.ReactNode;
   } | null>(null);
   const { data: campaigns = [] } = useQuery(campaignsQuery);
@@ -358,6 +361,7 @@ function Index() {
                   setInfo({
                     title: item.title,
                     body: item.body ?? item.summary ?? "",
+                    sharePath: `/news/${item.id}`,
                     action: (
                       <Button asChild variant="hero" className="w-full">
                         <Link to="/news/$id" params={{ id: item.id }}>
@@ -473,6 +477,9 @@ function Index() {
             </DialogDescription>
           </DialogHeader>
           {info?.action}
+          {info?.sharePath ? (
+            <ShareButton title={info.title} path={info.sharePath} className="w-full" />
+          ) : null}
         </DialogContent>
       </Dialog>
 
@@ -502,6 +509,7 @@ function Index() {
                   setInfo({
                     title: campaign.title,
                     body: campaign.description ?? campaign.summary ?? "",
+                    sharePath: `/fundraising?campaign=${campaign.id}`,
                     action: (
                       <Button asChild variant="hero" className="w-full">
                         <Link to="/donate" search={{ campaign: campaign.id }}>
