@@ -48,6 +48,7 @@ export const events: Record<string, string> = {
     "Numéro de membre (facultatif, mais recommandé)",
   "Anything we should know? (optional)": "Quelque chose à nous signaler ? (facultatif)",
   "Send RSVP": "Envoyer ma réponse",
+  "Book Now": "Réserver maintenant",
   "Your RSVP could not be sent. Please try again.":
     "Votre réponse n'a pas pu être envoyée. Veuillez réessayer.",
   "Thanks — we've noted your RSVP.": "Merci — votre réponse a bien été enregistrée.",
