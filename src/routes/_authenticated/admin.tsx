@@ -543,6 +543,7 @@ function AdminPage() {
                 { name: "ends_at", label: "Closing date", type: "date" },
               ]}
             />
+            <CampaignStatusNotifier />
           </TabsContent>}
 
           {can("fundraising") && <TabsContent value="reports" className="mt-8">
