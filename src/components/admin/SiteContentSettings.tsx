@@ -87,6 +87,7 @@ const GROUPS: Group[] = [
   },
   {
     title: "Developer credit (level 1 only)",
+*** End Patch
     description:
       "WhatsApp number behind the 'Powered by DeshcaTech' link in the footer. Use the international format, e.g. 447700900000.",
     superAdminOnly: true,
