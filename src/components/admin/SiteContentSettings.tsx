@@ -22,6 +22,7 @@ type Field = {
   hint?: string;
   multiline?: boolean;
   toggle?: boolean;
+  number?: boolean;
 };
 
 type Group = {
