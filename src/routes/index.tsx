@@ -94,6 +94,12 @@ function Index() {
   const t = useT();
   const { data: events = [] } = useQuery(eventsQuery);
   const [selectedEvent, setSelectedEvent] = useState<EventRow | null>(null);
+  // Home cards open a quick popup with more information instead of leaving the page.
+  const [info, setInfo] = useState<{
+    title: string;
+    body: string;
+    action?: React.ReactNode;
+  } | null>(null);
   const { data: campaigns = [] } = useQuery(campaignsQuery);
   const { data: announcements = [] } = useQuery(announcementsQuery);
   const { data: partners = [] } = useQuery(partnersQuery);
@@ -337,7 +343,25 @@ function Index() {
           ) : (
           <div className="mt-6 grid gap-4 sm:mt-8 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3">
             {latestNews.map((item) => (
-              <Link key={item.id} to="/news/$id" params={{ id: item.id }} className="block">
+              <button
+                key={item.id}
+                type="button"
+                aria-haspopup="dialog"
+                className="block w-full text-left"
+                onClick={() =>
+                  setInfo({
+                    title: item.title,
+                    body: item.body ?? item.summary ?? "",
+                    action: (
+                      <Button asChild variant="hero" className="w-full">
+                        <Link to="/news/$id" params={{ id: item.id }}>
+                          {t("Read the full story")}
+                        </Link>
+                      </Button>
+                    ),
+                  })
+                }
+              >
               <Card className="h-full border-border/70 transition-shadow hover:shadow-lg">
                 <CardContent className="p-5 sm:p-6">
                   <p className="eyebrow text-terracotta">{formatDate(item.published_at)}</p>
@@ -347,7 +371,7 @@ function Index() {
                   </p>
                 </CardContent>
               </Card>
-              </Link>
+              </button>
             ))}
           </div>
           )}
