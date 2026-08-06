@@ -66,6 +66,7 @@ export const common: Record<string, string> = {
   All: "Tous",
   Upcoming: "À venir",
   "Let's Build It Together!": "Bâtissons ensemble !",
+  "Join your Community": "Rejoignez votre communauté",
   "Share": "Partager",
   "Link copied — paste it to share.": "Lien copié — collez-le pour le partager.",
   "Share job": "Partager l'offre",
