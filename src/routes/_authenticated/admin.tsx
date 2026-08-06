@@ -448,6 +448,7 @@ function AdminPage() {
                 { name: "phone", label: "Phone" },
                 { name: "email", label: "Email" },
                 { name: "website", label: "Website" },
+                { name: "whatsapp", label: "WhatsApp number", placeholder: "+44 7700 900000" },
                 { name: "address", label: "Address" },
                 { name: "is_published", label: "Published", type: "switch" },
               ]}
