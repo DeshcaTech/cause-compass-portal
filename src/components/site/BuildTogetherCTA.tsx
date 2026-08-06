@@ -21,7 +21,11 @@ export function BuildTogetherCTA() {
       {!onVolunteer && (
         <Link
           to="/volunteer"
-          className="inline-flex items-center justify-center rounded-full bg-[image:var(--gradient-gold)] px-6 py-2.5 text-sm font-semibold text-gold-foreground shadow-[var(--shadow-soft)] transition-transform hover:scale-[1.03]"
+          className={
+            onMembership
+              ? "inline-flex items-center justify-center rounded-full bg-terracotta px-6 py-2.5 text-sm font-semibold text-terracotta-foreground shadow-sm transition-transform hover:scale-[1.03]"
+              : "inline-flex items-center justify-center rounded-full bg-[image:var(--gradient-gold)] px-6 py-2.5 text-sm font-semibold text-gold-foreground shadow-[var(--shadow-soft)] transition-transform hover:scale-[1.03]"
+          }
         >
           {t("Become a volunteer")}
         </Link>
