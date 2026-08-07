@@ -15,7 +15,7 @@ import { useI18n } from "./index";
 
 type Dyn = (text: string | null | undefined) => string;
 
-const DynContext = createContext<Dyn>((text) => text ?? "");
+const DynContext = createContext<Dyn>((text) => (text ?? "") + "×");
 
 const MAX_LEN = 4000;
 const BATCH = 40;
