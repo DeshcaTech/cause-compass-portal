@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import type { Partner } from "@/lib/queries";
 import { useT } from "@/lib/i18n";
+import { useDyn } from "@/lib/i18n/dynamic";
 import { ShareButton } from "@/components/site/ShareButton";
 import businessFallback from "@/assets/business-fallback.jpg";
 
@@ -17,6 +18,7 @@ export function PartnerDialog({
   onOpenChange: (open: boolean) => void;
 }) {
   const t = useT();
+  const dyn = useDyn();
   const whatsapp = partner?.whatsapp?.replace(/[^\d]/g, "") ?? "";
   return (
     <Dialog open={!!partner} onOpenChange={onOpenChange}>
@@ -31,9 +33,9 @@ export function PartnerDialog({
               alt={`${partner.business_name} logo`}
               className="aspect-[16/9] w-full rounded-xl object-cover"
             />
-            <Badge variant="secondary">{partner.category}</Badge>
+            <Badge variant="secondary">{dyn(partner.category)}</Badge>
             <p className="text-sm text-foreground/85">
-              {partner.description ?? partner.short_description}
+              {dyn(partner.description ?? partner.short_description)}
             </p>
             <ul className="space-y-2 text-sm text-muted-foreground">
               {partner.phone ? (
@@ -48,7 +50,7 @@ export function PartnerDialog({
               ) : null}
               {partner.address ? (
                 <li className="flex items-center gap-2">
-                  <MapPin className="size-4" /> {partner.address}
+                  <MapPin className="size-4" /> {dyn(partner.address)}
                 </li>
               ) : null}
             </ul>

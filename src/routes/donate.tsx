@@ -22,6 +22,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { supabase } from "@/integrations/supabase/client";
 import { campaignsQuery, formatMoney } from "@/lib/queries";
 import { useT } from "@/lib/i18n";
+import { useDyn } from "@/lib/i18n/dynamic";
 
 export const Route = createFileRoute("/donate")({
   validateSearch: (search: Record<string, unknown>): { campaign?: string | undefined } => ({
@@ -56,6 +57,7 @@ const schema = z.object({
 
 function DonatePage() {
   const t = useT();
+  const dyn = useDyn();
   const { campaign: campaignParam } = Route.useSearch();
   const { data: campaigns = [] } = useQuery(campaignsQuery);
   const active = campaigns.filter((c) => c.status === "active");
@@ -137,7 +139,7 @@ function DonatePage() {
                     </SelectItem>
                     {active.map((campaign) => (
                       <SelectItem key={campaign.id} value={campaign.id}>
-                        {campaign.title}
+                        {dyn(campaign.title)}
                       </SelectItem>
                     ))}
                   </SelectContent>

@@ -9,6 +9,7 @@ import { PartnerDialog } from "@/components/site/PartnerDialog";
 import { partnersQuery, type Partner } from "@/lib/queries";
 import businessFallback from "@/assets/business-fallback.jpg";
 import { useT } from "@/lib/i18n";
+import { useDyn } from "@/lib/i18n/dynamic";
 import { searchString, useSearchFilter } from "@/lib/use-search-filter";
 
 export const Route = createFileRoute("/partners")({
@@ -38,6 +39,7 @@ export const Route = createFileRoute("/partners")({
 
 function PartnersPage() {
   const t = useT();
+  const dyn = useDyn();
   const { data: partners = [] } = useQuery(partnersQuery);
   // The open business lives in the URL so the popup can be shared as a link.
   const navigate = useNavigate({ from: "/partners" });
@@ -66,7 +68,7 @@ function PartnersPage() {
             onChange={setCategory}
             options={categories.map((item) => ({
               value: item,
-              label: item === "All" ? t("All") : item,
+              label: item === "All" ? t("All") : dyn(item),
               meta: `${
                 item === "All"
                   ? partners.length
@@ -92,9 +94,9 @@ function PartnersPage() {
                 />
                 <h2 className="mt-4 text-lg">{partner.business_name}</h2>
                 <Badge variant="secondary" className="mt-2">
-                  {partner.category}
+                  {dyn(partner.category)}
                 </Badge>
-                <p className="mt-3 text-sm text-muted-foreground">{partner.short_description}</p>
+                <p className="mt-3 text-sm text-muted-foreground">{dyn(partner.short_description)}</p>
               </CardContent>
             </Card>
           ))}
