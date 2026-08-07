@@ -10,6 +10,7 @@ import { gallery } from "./fr.gallery";
 import { getinvolved } from "./fr.getinvolved";
 import { contact } from "./fr.contact";
 import { misc } from "./fr.misc";
+import { extra } from "./fr.extra";
 
 /** English source string -> French translation. */
 export const fr: Record<string, string> = {
@@ -25,4 +26,5 @@ export const fr: Record<string, string> = {
   ...getinvolved,
   ...contact,
   ...misc,
+  ...extra,
 };
