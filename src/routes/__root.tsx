@@ -15,6 +15,7 @@ import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { Toaster } from "@/components/ui/sonner";
 import { LanguageProvider } from "@/lib/i18n";
+import { DynamicTranslationProvider } from "@/lib/i18n/dynamic";
 import { BrandStyles } from "@/components/site/BrandStyles";
 import { BuildTogetherCTA } from "@/components/site/BuildTogetherCTA";
 
@@ -142,17 +143,19 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <LanguageProvider>
-        <BrandStyles />
-        <div className="flex min-h-screen flex-col">
-          <Header />
-          <main className="flex-1">
-            {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-            <Outlet />
-            <BuildTogetherCTA />
-          </main>
-          <Footer />
-        </div>
-        <Toaster />
+        <DynamicTranslationProvider>
+          <BrandStyles />
+          <div className="flex min-h-screen flex-col">
+            <Header />
+            <main className="flex-1">
+              {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+              <Outlet />
+              <BuildTogetherCTA />
+            </main>
+            <Footer />
+          </div>
+          <Toaster />
+        </DynamicTranslationProvider>
       </LanguageProvider>
     </QueryClientProvider>
   );
