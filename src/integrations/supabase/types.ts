@@ -406,6 +406,33 @@ export type Database = {
         }
         Relationships: []
       }
+      content_translations: {
+        Row: {
+          created_at: string
+          id: string
+          lang: string
+          source_hash: string
+          source_text: string
+          translated_text: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          lang: string
+          source_hash: string
+          source_text: string
+          translated_text: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          lang?: string
+          source_hash?: string
+          source_text?: string
+          translated_text?: string
+        }
+        Relationships: []
+      }
       documents: {
         Row: {
           category: string

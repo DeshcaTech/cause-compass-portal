@@ -161,7 +161,7 @@ export function Footer() {
                   href={whatsappHref(site?.contact_whatsapp || site?.contact_phone, site?.whatsapp_message)!}
                   target="_blank"
                   rel="noreferrer"
-                  aria-label="Chat with CCGMs on WhatsApp"
+                  aria-label={t("Chat with CCGMs on WhatsApp")}
                   onClick={() => void trackEvent("whatsapp_us_click", { source: "footer" })}
                   className="block transition-transform hover:scale-[1.02]"
                 >
@@ -183,7 +183,7 @@ export function Footer() {
           <div className="mt-6 flex flex-wrap items-center gap-2.5">
             <a
               href={`tel:${(site?.contact_phone ?? "07700900000").replace(/[^\d]/g, "")}`}
-              aria-label="Call us"
+              aria-label={t("Call us")}
               onClick={() => void trackEvent("footer_contact_click", { channel: "phone" })}
               className="grid size-9 place-items-center rounded-full bg-primary-foreground/10 text-primary-foreground transition-colors hover:bg-primary-foreground/20"
             >
@@ -191,7 +191,7 @@ export function Footer() {
             </a>
             <a
               href={`mailto:${site?.contact_email ?? "hello@ccgms.org"}`}
-              aria-label="Email us"
+              aria-label={t("Email us")}
               onClick={() => void trackEvent("footer_contact_click", { channel: "email" })}
               className="grid size-9 place-items-center rounded-full bg-primary-foreground/10 text-primary-foreground transition-colors hover:bg-primary-foreground/20"
             >

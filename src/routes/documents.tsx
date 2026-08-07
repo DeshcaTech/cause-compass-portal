@@ -9,6 +9,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { documentsQuery } from "@/lib/queries";
 import { useT } from "@/lib/i18n";
+import { useDyn } from "@/lib/i18n/dynamic";
 import { searchString, useSearchFilter } from "@/lib/use-search-filter";
 
 export const Route = createFileRoute("/documents")({
@@ -37,6 +38,7 @@ export const Route = createFileRoute("/documents")({
 
 function DocumentsPage() {
   const t = useT();
+  const dyn = useDyn();
   const { data: documents = [] } = useQuery(documentsQuery);
   const categories = Array.from(new Set(documents.map((d) => d.category)));
   const [active, setActive] = useSearchFilter("category", "All");
@@ -59,7 +61,7 @@ function DocumentsPage() {
             onChange={setActive}
             options={filters.map((category) => ({
               value: category,
-              label: category === "All" ? t("All") : category,
+              label: category === "All" ? t("All") : dyn(category),
               meta: `${
                 category === "All"
                   ? documents.length
@@ -77,11 +79,11 @@ function DocumentsPage() {
                   <FileText className="size-5" />
                 </span>
                 <div className="min-w-0 flex-1">
-                  <h2 className="text-lg font-medium leading-snug">{doc.title}</h2>
-                  <p className="mt-2 text-sm text-muted-foreground">{doc.description}</p>
+                  <h2 className="text-lg font-medium leading-snug">{dyn(doc.title)}</h2>
+                  <p className="mt-2 text-sm text-muted-foreground">{dyn(doc.description)}</p>
                 </div>
                 <div className="flex items-center justify-between gap-3 border-t border-border/60 pt-4">
-                  <Badge variant="secondary">{doc.category}</Badge>
+                  <Badge variant="secondary">{dyn(doc.category)}</Badge>
                   <Button asChild variant="soft" size="sm">
                     <a href={doc.file_url} download>
                       <Download /> {doc.file_type ?? t("Download")}

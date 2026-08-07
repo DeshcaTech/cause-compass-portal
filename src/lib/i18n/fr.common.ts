@@ -76,4 +76,8 @@ export const common: Record<string, string> = {
   "Share survey": "Partager le sondage",
   "Share album": "Partager l'album",
   "Share article": "Partager l'article",
+  "Open menu": "Ouvrir le menu",
+  "Call us": "Appelez-nous",
+  "Email us": "Écrivez-nous",
+  "Chat with CCGMs on WhatsApp": "Discuter avec CCGMs sur WhatsApp",
 };

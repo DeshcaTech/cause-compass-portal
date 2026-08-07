@@ -24,6 +24,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { formatDateShort, surveysQuery, surveyStatus, type Survey } from "@/lib/queries";
 import surveyFallback from "@/assets/survey-fallback.jpg";
 import { useT } from "@/lib/i18n";
+import { useDyn } from "@/lib/i18n/dynamic";
 import { searchString, useSearchFilter } from "@/lib/use-search-filter";
 
 export const Route = createFileRoute("/surveys")({
@@ -55,6 +56,7 @@ type SurveysSearch = {
 
 function SurveyForm({ survey, onClose }: { survey: Survey; onClose: () => void }) {
   const t = useT();
+  const dyn = useDyn();
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [membership, setMembership] = useState("");
   const [saving, setSaving] = useState(false);
@@ -88,7 +90,7 @@ function SurveyForm({ survey, onClose }: { survey: Survey; onClose: () => void }
         <CheckCircle2 className="mx-auto size-10 text-primary" aria-hidden />
         <h3 className="text-lg">{t("Response recorded")}</h3>
         <p className="text-sm text-muted-foreground">
-          {t('Thank you for helping shape "{title}".').replace("{title}", survey.title)}
+          {t('Thank you for helping shape "{title}".').replace("{title}", dyn(survey.title))}
         </p>
         <p className="text-sm text-muted-foreground">
           {t("Your answers have been saved. You can close this window and browse the other surveys.")}
@@ -117,7 +119,7 @@ function SurveyForm({ survey, onClose }: { survey: Survey; onClose: () => void }
 
       {survey.questions.map((question) => (
         <div key={question.id} className="space-y-2">
-          <Label>{question.label}</Label>
+          <Label>{dyn(question.label)}</Label>
           {question.type === "choice" ? (
             <div className="flex flex-wrap gap-2">
               {(question.options ?? []).map((option) => (
@@ -133,7 +135,7 @@ function SurveyForm({ survey, onClose }: { survey: Survey; onClose: () => void }
                       : "border-border hover:bg-secondary"
                   }`}
                 >
-                  {option}
+                  {dyn(option)}
                 </button>
               ))}
             </div>
@@ -165,12 +167,13 @@ function SurveyDialog({
   onOpenChange: (open: boolean) => void;
 }) {
   const t = useT();
+  const dyn = useDyn();
 
   return (
     <Dialog open={!!survey} onOpenChange={onOpenChange}>
       <DialogContent className="max-h-[85dvh] overflow-y-auto sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle className="text-left">{survey?.title}</DialogTitle>
+          <DialogTitle className="text-left">{dyn(survey?.title)}</DialogTitle>
           <DialogDescription className="text-left">
             {survey
               ? survey.closes_at
@@ -183,14 +186,14 @@ function SurveyDialog({
           <div className="space-y-4">
             <img
               src={survey.image_url ?? surveyFallback}
-              alt={survey.title}
+              alt={dyn(survey.title)}
               loading="lazy"
               className="aspect-[16/6] w-full rounded-xl object-cover"
             />
-            <p className="text-sm text-foreground/85">{survey.description}</p>
+            <p className="text-sm text-foreground/85">{dyn(survey.description)}</p>
             <SurveyForm key={survey.id} survey={survey} onClose={() => onOpenChange(false)} />
             <ShareButton
-              title={survey.title}
+              title={dyn(survey.title)}
               path={`/surveys?survey=${survey.id}`}
               label={t("Share survey")}
               className="w-full"
@@ -212,6 +215,7 @@ function SurveyCard({
   status: "active" | "closed";
 }) {
   const t = useT();
+  const dyn = useDyn();
   const questionCount = survey.questions.length;
   return (
     <Card
@@ -219,7 +223,7 @@ function SurveyCard({
       onClick={onOpen}
       role="button"
       tabIndex={0}
-      aria-label={`${t("Complete this survey")}: ${survey.title}`}
+      aria-label={`${t("Complete this survey")}: ${dyn(survey.title)}`}
       onKeyDown={(e) => {
         if (e.key === "Enter" || e.key === " ") {
           e.preventDefault();
@@ -230,12 +234,12 @@ function SurveyCard({
       <CardContent className="p-6">
         <img
           src={survey.image_url ?? surveyFallback}
-          alt={survey.title}
+          alt={dyn(survey.title)}
           loading="lazy"
           className="mb-4 aspect-[16/6] w-full rounded-xl object-cover"
         />
         <div className="flex items-start justify-between gap-3">
-          <h3 className="text-lg">{survey.title}</h3>
+          <h3 className="text-lg">{dyn(survey.title)}</h3>
           {status === "active" ? (
             survey.closes_at ? (
               <Badge variant="secondary">{t("Closes")} {formatDateShort(survey.closes_at)}</Badge>
@@ -246,7 +250,7 @@ function SurveyCard({
             <Badge variant="secondary">{t("Closed")}</Badge>
           )}
         </div>
-        <p className="mt-2 line-clamp-3 text-sm text-muted-foreground">{survey.description}</p>
+        <p className="mt-2 line-clamp-3 text-sm text-muted-foreground">{dyn(survey.description)}</p>
         <p className="mt-4 text-xs text-muted-foreground">
           {questionCount} {questionCount === 1 ? t("question") : t("questions")}
         </p>

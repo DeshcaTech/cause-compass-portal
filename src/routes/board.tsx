@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { boardQuery, type BoardMember } from "@/lib/queries";
 import { useT } from "@/lib/i18n";
+import { useDyn } from "@/lib/i18n/dynamic";
 import { searchString, useSearchFilter } from "@/lib/use-search-filter";
 import personFallback from "@/assets/person-fallback.jpg";
 import presidentPhoto from "@/assets/president-fallback.jpg";
@@ -79,6 +80,7 @@ export const Route = createFileRoute("/board")({
 
 function MemberGrid({ members }: { members: BoardMember[] }) {
   const t = useT();
+  const dyn = useDyn();
   if (members.length === 0) {
     return <p className="text-sm text-muted-foreground">{t("No members recorded for this term yet.")}</p>;
   }
@@ -95,11 +97,11 @@ function MemberGrid({ members }: { members: BoardMember[] }) {
             />
             <p className="mt-4 font-display text-lg">{member.full_name}</p>
             <div className="mt-1 flex items-center gap-2">
-              <p className="text-sm text-primary">{member.role_title}</p>
+              <p className="text-sm text-primary">{dyn(member.role_title)}</p>
               <Badge variant="secondary">{member.term_label}</Badge>
             </div>
             {member.bio ? (
-              <p className="mt-3 text-sm text-muted-foreground">{member.bio}</p>
+              <p className="mt-3 text-sm text-muted-foreground">{dyn(member.bio)}</p>
             ) : null}
           </CardContent>
         </Card>

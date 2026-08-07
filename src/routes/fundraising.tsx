@@ -17,6 +17,7 @@ import {
 import { campaignsQuery, formatDate, formatMoney, type Campaign } from "@/lib/queries";
 import campaignFallback from "@/assets/campaign-fallback.jpg";
 import { useT } from "@/lib/i18n";
+import { useDyn } from "@/lib/i18n/dynamic";
 import { searchString, useSearchFilter } from "@/lib/use-search-filter";
 
 export const Route = createFileRoute("/fundraising")({
@@ -46,6 +47,7 @@ export const Route = createFileRoute("/fundraising")({
 
 function CampaignCard({ campaign, onOpen }: { campaign: Campaign; onOpen: () => void }) {
   const t = useT();
+  const dyn = useDyn();
   const pct = campaign.goal_amount
     ? Math.min(100, Math.round((campaign.raised_amount / campaign.goal_amount) * 100))
     : 0;
@@ -65,18 +67,18 @@ function CampaignCard({ campaign, onOpen }: { campaign: Campaign; onOpen: () => 
       <CardContent className="flex flex-1 flex-col p-6">
         <img
           src={campaign.image_url ?? campaignFallback}
-          alt={campaign.title}
+          alt={dyn(campaign.title)}
           loading="lazy"
           className="mb-4 aspect-[16/9] w-full rounded-xl object-cover"
         />
         <div className="flex items-start justify-between gap-3">
-          <h2 className="text-lg">{campaign.title}</h2>
+          <h2 className="text-lg">{dyn(campaign.title)}</h2>
           <Badge variant={campaign.status === "active" ? "default" : "secondary"}>
             {campaign.status === "active" ? t("Active") : t("Completed")}
           </Badge>
         </div>
         <p className="mt-2 line-clamp-3 flex-1 text-sm text-muted-foreground">
-          {campaign.description ?? campaign.summary}
+          {dyn(campaign.description ?? campaign.summary)}
         </p>
         <div className="mt-5">
           <div className="h-2 w-full overflow-hidden rounded-full bg-secondary">
@@ -118,6 +120,7 @@ function CampaignDialog({
   onClose: () => void;
 }) {
   const t = useT();
+  const dyn = useDyn();
   const pct = campaign?.goal_amount
     ? Math.min(100, Math.round((campaign.raised_amount / campaign.goal_amount) * 100))
     : 0;
@@ -127,18 +130,18 @@ function CampaignDialog({
         {campaign ? (
           <>
             <DialogHeader>
-              <DialogTitle>{campaign.title}</DialogTitle>
-              <DialogDescription>{campaign.summary}</DialogDescription>
+              <DialogTitle>{dyn(campaign.title)}</DialogTitle>
+              <DialogDescription>{dyn(campaign.summary)}</DialogDescription>
             </DialogHeader>
             <img
               src={campaign.image_url ?? campaignFallback}
-              alt={campaign.title}
+              alt={dyn(campaign.title)}
               className="aspect-[16/9] w-full rounded-xl object-cover"
             />
             <Badge variant={campaign.status === "active" ? "default" : "secondary"} className="w-fit">
               {campaign.status === "active" ? t("Active") : t("Completed")}
             </Badge>
-            <p className="text-sm text-foreground/85">{campaign.description ?? campaign.summary}</p>
+            <p className="text-sm text-foreground/85">{dyn(campaign.description ?? campaign.summary)}</p>
             <div>
               <div className="h-2 w-full overflow-hidden rounded-full bg-secondary">
                 <div
@@ -169,7 +172,7 @@ function CampaignDialog({
                 </Button>
               ) : null}
               <ShareButton
-                title={campaign.title}
+                title={dyn(campaign.title)}
                 path={`/fundraising?campaign=${campaign.id}`}
                 label={t("Share campaign")}
                 className="flex-1"

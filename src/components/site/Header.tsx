@@ -161,7 +161,7 @@ export function Header() {
             variant="ghost"
             size="icon"
             className="lg:hidden"
-            aria-label="Open menu"
+            aria-label={t("Open menu")}
             onClick={() => setOpen(true)}
           >
             <Menu />

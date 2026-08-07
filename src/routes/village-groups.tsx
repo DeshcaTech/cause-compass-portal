@@ -13,6 +13,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { villageGroupsQuery, type VillageGroup } from "@/lib/queries";
 import { useT } from "@/lib/i18n";
+import { useDyn } from "@/lib/i18n/dynamic";
 import groupsBanner from "@/assets/community-together.jpg";
 
 const SITE_ORIGIN = "https://cause-compass-portal.lovable.app";
@@ -59,6 +60,7 @@ export const Route = createFileRoute("/village-groups")({
 
 function VillageGroupsPage() {
   const t = useT();
+  const dyn = useDyn();
   const navigate = useNavigate({ from: "/village-groups" });
   const search = Route.useSearch();
   const category: CategoryKey = CATEGORIES.includes(search.category as CategoryKey)
@@ -137,11 +139,11 @@ function VillageGroupsPage() {
                         <Badge variant="secondary">{group.region}</Badge>
                       </div>
                       {group.short_description ? (
-                        <p className="mt-2 text-sm text-muted-foreground">{group.short_description}</p>
+                        <p className="mt-2 text-sm text-muted-foreground">{dyn(group.short_description)}</p>
                       ) : null}
                       {group.meeting_info ? (
                         <p className="mt-4 flex items-center gap-2 border-t border-border/60 pt-4 text-xs text-muted-foreground">
-                          <CalendarDays className="size-4 shrink-0" /> {group.meeting_info}
+                          <CalendarDays className="size-4 shrink-0" /> {dyn(group.meeting_info)}
                         </p>
                       ) : null}
                     </CardContent>
@@ -174,12 +176,12 @@ function VillageGroupsPage() {
               </DialogHeader>
               <Badge variant="secondary">{selected.region}</Badge>
               <p className="text-sm leading-relaxed text-muted-foreground">
-                {selected.description ?? selected.short_description}
+                {dyn(selected.description ?? selected.short_description)}
               </p>
               <ul className="space-y-2 text-sm">
                 {selected.meeting_info ? (
                   <li className="flex items-center gap-2">
-                    <CalendarDays className="size-4" /> {selected.meeting_info}
+                    <CalendarDays className="size-4" /> {dyn(selected.meeting_info)}
                   </li>
                 ) : null}
                 {selected.contact_name ? (

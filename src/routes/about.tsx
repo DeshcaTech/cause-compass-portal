@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { boardQuery, presidentQuery } from "@/lib/queries";
 import { useT } from "@/lib/i18n";
+import { useDyn } from "@/lib/i18n/dynamic";
 import presidentFallback from "@/assets/president-fallback.jpg";
 
 const coreValues = [
@@ -94,6 +95,7 @@ export const Route = createFileRoute("/about")({
 
 function AboutPage() {
   const t = useT();
+  const dyn = useDyn();
   const { data: president } = useQuery(presidentQuery);
   const { data: board = [] } = useQuery(boardQuery);
   const current = board.filter((m) => m.is_current).slice(0, 6);
@@ -131,13 +133,13 @@ function AboutPage() {
                   </>
                 );
               })()}
-              <p className="text-sm text-primary-foreground/70">{president?.title}</p>
+              <p className="text-sm text-primary-foreground/70">{dyn(president?.title)}</p>
             </CardContent>
           </Card>
 
           <article className="space-y-5 text-base leading-relaxed text-foreground/85">
             {(president?.message ?? "").split("\n\n").map((paragraph, index) => (
-              <p key={index}>{paragraph}</p>
+              <p key={index}>{dyn(paragraph)}</p>
             ))}
           </article>
         </div>
@@ -213,8 +215,8 @@ function AboutPage() {
             <Card key={member.id} className="border-border/70">
               <CardContent className="p-6">
                 <p className="font-display text-lg">{member.full_name}</p>
-                <p className="text-sm text-primary">{member.role_title}</p>
-                <p className="mt-3 text-sm text-muted-foreground">{member.bio}</p>
+                <p className="text-sm text-primary">{dyn(member.role_title)}</p>
+                <p className="mt-3 text-sm text-muted-foreground">{dyn(member.bio)}</p>
               </CardContent>
             </Card>
           ))}

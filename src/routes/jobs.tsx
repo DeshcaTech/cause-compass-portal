@@ -25,6 +25,7 @@ import { jobsQuery, type Job } from "@/lib/queries";
 import { submitJobApplication } from "@/lib/jobs.functions";
 import { supabase } from "@/integrations/supabase/client";
 import { useT } from "@/lib/i18n";
+import { useDyn } from "@/lib/i18n/dynamic";
 import { searchString, useSearchFilter } from "@/lib/use-search-filter";
 
 export const Route = createFileRoute("/jobs")({
@@ -67,6 +68,7 @@ const isExpired = (job: Job) => {
 
 function JobsPage() {
   const t = useT();
+  const dyn = useDyn();
   const { data: allJobs = [] } = useQuery(jobsQuery);
   const jobs = useMemo(() => allJobs.filter((job) => !isExpired(job)), [allJobs]);
   // The open job lives in the URL so the popup can be shared as a link.
@@ -133,7 +135,7 @@ function JobsPage() {
                 { value: ALL, label: t("All categories"), meta: `${jobs.length} ${t("roles")}` },
                 ...allCategories.map((item) => ({
                   value: item,
-                  label: item,
+                  label: dyn(item),
                   meta: `${jobs.filter((job) => job.category === item).length} ${t("roles")}`,
                 })),
               ]}
@@ -144,7 +146,7 @@ function JobsPage() {
               onChange={setLocation}
               options={[
                 { value: ALL, label: t("All locations") },
-                ...options.locations.map((item) => ({ value: item, label: item })),
+                ...options.locations.map((item) => ({ value: item, label: dyn(item) })),
               ]}
             />
             <FilterSelect
@@ -153,7 +155,7 @@ function JobsPage() {
               onChange={setJobType}
               options={[
                 { value: ALL, label: t("All job types") },
-                ...options.jobTypes.map((item) => ({ value: item, label: item })),
+                ...options.jobTypes.map((item) => ({ value: item, label: dyn(item) })),
               ]}
             />
           </>
@@ -186,14 +188,14 @@ function JobsPage() {
                 className="cursor-pointer border-border/70 transition-all hover:-translate-y-1 hover:shadow-[var(--shadow-lift)]"
               >
                 <CardContent className="p-6">
-                  <h3 className="text-lg">{job.title}</h3>
+                  <h3 className="text-lg">{dyn(job.title)}</h3>
                   <p className="text-sm text-muted-foreground">{job.company}</p>
                   <div className="mt-2 flex flex-wrap gap-2">
-                    <Badge variant="outline">{job.job_type}</Badge>
-                    <Badge variant="secondary">{job.category}</Badge>
-                    {job.location ? <Badge variant="secondary">{job.location}</Badge> : null}
+                    <Badge variant="outline">{dyn(job.job_type)}</Badge>
+                    <Badge variant="secondary">{dyn(job.category)}</Badge>
+                    {job.location ? <Badge variant="secondary">{dyn(job.location)}</Badge> : null}
                   </div>
-                  <p className="mt-3 text-sm text-muted-foreground">{job.short_description}</p>
+                  <p className="mt-3 text-sm text-muted-foreground">{dyn(job.short_description)}</p>
                   {job.closes_at ? (
                     <p className="mt-3 flex items-center gap-2 text-xs text-muted-foreground">
                       <CalendarClock className="size-3.5" /> {t("Closing date")}:{" "}
@@ -210,22 +212,22 @@ function JobsPage() {
       <Dialog open={!!selected} onOpenChange={(open) => !open && setSelected(null)}>
         <DialogContent className="sm:max-w-lg">
           <DialogHeader>
-            <DialogTitle>{selected?.title}</DialogTitle>
+            <DialogTitle>{dyn(selected?.title)}</DialogTitle>
           </DialogHeader>
           {selected ? (
             <div className="space-y-4">
               <div className="flex flex-wrap gap-2">
-                <Badge variant="secondary">{selected.category}</Badge>
-                <Badge variant="outline">{selected.job_type}</Badge>
+                <Badge variant="secondary">{dyn(selected.category)}</Badge>
+                <Badge variant="outline">{dyn(selected.job_type)}</Badge>
               </div>
-              <p className="text-sm text-foreground/85">{selected.description}</p>
+              <p className="text-sm text-foreground/85">{dyn(selected.description)}</p>
               <ul className="space-y-2 text-sm text-muted-foreground">
                 <li className="flex items-center gap-2">
                   <Briefcase className="size-4" /> {selected.company}
                 </li>
                 {selected.location ? (
                   <li className="flex items-center gap-2">
-                    <MapPin className="size-4" /> {selected.location}
+                    <MapPin className="size-4" /> {dyn(selected.location)}
                   </li>
                 ) : null}
                 {selected.salary_range ? (
@@ -268,7 +270,7 @@ function JobsPage() {
                   <ExternalLink /> {t("Apply now")}
                 </Button>
                 <ShareButton
-                  title={selected.title}
+                  title={dyn(selected.title)}
                   path={`/jobs?job=${selected.id}`}
                   label={t("Share job")}
                   className="flex-1"
@@ -286,6 +288,7 @@ function JobsPage() {
 
 function ApplyDialog({ job, onClose }: { job: Job | null; onClose: () => void }) {
   const t = useT();
+  const dyn = useDyn();
   const [form, setForm] = useState({
     full_name: "",
     email: "",
@@ -332,7 +335,7 @@ function ApplyDialog({ job, onClose }: { job: Job | null; onClose: () => void })
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>
-            {t("Apply")}: {job?.title}
+            {t("Apply")}: {dyn(job?.title)}
           </DialogTitle>
         </DialogHeader>
         <form className="space-y-3" onSubmit={submit}>
