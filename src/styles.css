@@ -225,6 +225,22 @@
     font-family: var(--font-display);
     font-weight: 700;
     letter-spacing: -0.03em;
+    text-wrap: balance;
+    overflow-wrap: break-word;
+    hyphens: auto;
+  }
+
+  /* Longer languages (e.g. French) must never overflow buttons, chips or nav */
+  button,
+  a,
+  label,
+  p,
+  li {
+    overflow-wrap: break-word;
+  }
+
+  p {
+    text-wrap: pretty;
   }
 }
 
