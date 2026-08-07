@@ -111,4 +111,8 @@ export const extra: Record<string, string> = {
   "Re-enabling…": "Réactivation en cours…",
   "Changed your mind? Re-enable news emails":
     "Vous avez changé d'avis ? Réactiver les e-mails d'actualités",
+
+  // Admin-managed home page copy (current values)
+  "CCGMs brings together members of our community across generations — parents, students, elders and children — around culture, faith, friendship and mutual support.":
+    "Les CCGMs rassemblent les membres de notre communauté à travers les générations — parents, étudiants, aînés et enfants — autour de la culture, de la foi, de l'amitié et de l'entraide.",
 };
