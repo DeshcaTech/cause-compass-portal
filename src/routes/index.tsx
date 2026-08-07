@@ -195,7 +195,7 @@ function Index() {
               </Button>
             </div>
             {!appInstalled && (
-              <div className="mt-6 hidden lg:flex">
+              <div className="mt-6 hidden w-full max-w-[420px] lg:flex [&>*]:w-full">
                 <InstallAppDialog
                   platform={devicePlatform}
                   storeUrl={
@@ -213,7 +213,7 @@ function Index() {
                     loading="lazy"
                     width={591}
                     height={378}
-                    className="h-auto w-full max-w-[420px]"
+                    className="h-auto w-full object-contain"
                     decoding="async"
                   />
                 </InstallAppDialog>
@@ -233,7 +233,7 @@ function Index() {
               className="aspect-[4/3] w-full rounded-3xl object-cover shadow-[var(--shadow-lift)]"
             />
             {!appInstalled && (
-              <div className="mt-6 flex flex-wrap items-center justify-center gap-4 sm:justify-start lg:hidden">
+              <div className="mt-6 flex w-full max-w-[380px] items-center gap-4 sm:mx-0 mx-auto lg:hidden [&>*]:w-full">
                 <InstallAppDialog
                   platform={devicePlatform}
                   storeUrl={
@@ -251,7 +251,7 @@ function Index() {
                     loading="lazy"
                     width={591}
                     height={378}
-                    className="h-auto w-full max-w-[380px]"
+                    className="h-auto w-full object-contain"
                     decoding="async"
                   />
                 </InstallAppDialog>
