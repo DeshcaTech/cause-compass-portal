@@ -15,7 +15,7 @@ import { useI18n } from "./index";
 
 type Dyn = (text: string | null | undefined) => string;
 
-const DynContext = createContext<Dyn>((text) => (text ?? "") + "×");
+const DynContext = createContext<Dyn>((text) => text ?? "");
 
 const MAX_LEN = 4000;
 const BATCH = 40;
@@ -78,19 +78,14 @@ function DynamicTranslations({ lang, children }: { lang: string; children: React
         pending.current.add(source);
         if (typeof window !== "undefined") queueMicrotask(() => setTick((n) => n + 1));
       }
-      return source + "·";
+      return source;
     },
     [cache, lang],
   );
 
   const value = useMemo(() => dyn, [dyn]);
 
-  return (
-    <DynContext.Provider value={value}>
-      <div data-dyn-lang={lang} hidden />
-      {children}
-    </DynContext.Provider>
-  );
+  return <DynContext.Provider value={value}>{children}</DynContext.Provider>;
 }
 
 /** Returns a function that translates admin-authored text into the active language. */
