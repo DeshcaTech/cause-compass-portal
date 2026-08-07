@@ -7,8 +7,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { subscribeToNews } from "@/lib/news.functions";
+import { useT } from "@/lib/i18n";
 
 export function NewsSubscribe() {
+  const t = useT();
   const subscribe = useServerFn(subscribeToNews);
   const [email, setEmail] = useState("");
   const [fullName, setFullName] = useState("");
@@ -26,12 +28,14 @@ export function NewsSubscribe() {
           membership_number: membershipNumber || undefined,
         },
       });
-      toast.success("You're subscribed — we'll email you when new news is published.");
+      toast.success(t("You're subscribed — we'll email you when new news is published."));
       setEmail("");
       setFullName("");
       setMembershipNumber("");
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Could not subscribe, please try again.");
+      toast.error(
+        error instanceof Error ? error.message : t("Could not subscribe, please try again."),
+      );
     } finally {
       setBusy(false);
     }
@@ -45,9 +49,9 @@ export function NewsSubscribe() {
             <Mail className="size-5" />
           </span>
           <div>
-            <h2 className="text-xl">Get news by email</h2>
-            <p className="text-sm text-muted-foreground">
-              Subscribe and we'll send you every new announcement.
+            <h2 className="text-h4 text-balance">{t("Get news by email")}</h2>
+            <p className="text-body-sm text-muted-foreground">
+              {t("Subscribe and we'll send you every new announcement.")}
             </p>
           </div>
         </div>
@@ -55,25 +59,25 @@ export function NewsSubscribe() {
           <Input
             type="email"
             required
-            placeholder="Email address"
+            placeholder={t("Email address")}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            aria-label="Email address"
+            aria-label={t("Email address")}
           />
           <Input
-            placeholder="Full name (optional)"
+            placeholder={t("Full name (optional)")}
             value={fullName}
             onChange={(e) => setFullName(e.target.value)}
-            aria-label="Full name"
+            aria-label={t("Full name")}
           />
           <Input
-            placeholder="Membership number (optional)"
+            placeholder={t("Membership number (optional)")}
             value={membershipNumber}
             onChange={(e) => setMembershipNumber(e.target.value)}
-            aria-label="Membership number"
+            aria-label={t("Membership number")}
           />
           <Button type="submit" disabled={busy}>
-            {busy ? "Subscribing…" : "Subscribe"}
+            {busy ? t("Subscribing…") : t("Subscribe")}
           </Button>
         </form>
       </CardContent>
