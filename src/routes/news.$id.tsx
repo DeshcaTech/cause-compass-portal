@@ -7,6 +7,7 @@ import { ShareButton } from "@/components/site/ShareButton";
 import { announcementQuery } from "@/lib/queries";
 import newsFallback from "@/assets/news-fallback.jpg";
 import { useT } from "@/lib/i18n";
+import { useDyn } from "@/lib/i18n/dynamic";
 
 export const Route = createFileRoute("/news/$id")({
   head: () => ({
@@ -40,6 +41,7 @@ function formatDate(value: string) {
 
 function NewsDetailPage() {
   const t = useT();
+  const dyn = useDyn();
   const { id } = Route.useParams();
   const { data: item, isPending } = useQuery(announcementQuery(id));
 
@@ -53,7 +55,7 @@ function NewsDetailPage() {
           </Link>
         </Button>
         {item ? (
-          <ShareButton title={item.title} path={`/news/${id}`} label={t("Share article")} />
+          <ShareButton title={dyn(item.title)} path={`/news/${id}`} label={t("Share article")} />
         ) : null}
       </div>
 
@@ -66,18 +68,18 @@ function NewsDetailPage() {
       ) : (
         <div className="mt-8 max-w-3xl">
           <p className="eyebrow text-terracotta">{formatDate(item.published_at)}</p>
-          <h1 className="mt-3 text-4xl leading-tight md:text-5xl">{item.title}</h1>
+          <h1 className="mt-3 text-4xl leading-tight md:text-5xl">{dyn(item.title)}</h1>
           {item.summary && (
-            <p className="mt-4 text-lg text-muted-foreground">{item.summary}</p>
+            <p className="mt-4 text-lg text-muted-foreground">{dyn(item.summary)}</p>
           )}
           <img
             src={item.image_url ?? newsFallback}
-            alt={item.title}
+            alt={dyn(item.title)}
             className="mt-8 aspect-[16/9] w-full rounded-xl object-cover"
           />
           {item.body && (
             <div className="mt-8 whitespace-pre-line text-base leading-relaxed text-foreground/85">
-              {item.body}
+              {dyn(item.body)}
             </div>
           )}
         </div>

@@ -13,6 +13,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { announcementsQuery } from "@/lib/queries";
 import { useT } from "@/lib/i18n";
+import { useDyn } from "@/lib/i18n/dynamic";
 import { searchString, useSearchFilter } from "@/lib/use-search-filter";
 
 export const Route = createFileRoute("/news/")({
@@ -52,6 +53,7 @@ function formatDate(value: string) {
 
 function NewsPage() {
   const t = useT();
+  const dyn = useDyn();
   const { data: news = [] } = useQuery(announcementsQuery);
   const [search, setSearch] = useSearchFilter("q", "");
   const [view, setView] = useSearchFilter("view", "all");
@@ -132,7 +134,7 @@ function NewsPage() {
                   {item.is_pinned && (
                     <img
                       src={item.image_url || newsFallback}
-                      alt={item.title}
+                      alt={dyn(item.title)}
                       loading="lazy"
                       className="aspect-[16/9] w-full object-cover"
                     />
@@ -151,13 +153,13 @@ function NewsPage() {
                         </span>
                       )}
                     </div>
-                    <h2 className="mt-2 text-xl">{item.title}</h2>
+                    <h2 className="mt-2 text-xl">{dyn(item.title)}</h2>
                     {item.summary && (
-                      <p className="mt-2 text-sm text-muted-foreground">{item.summary}</p>
+                      <p className="mt-2 text-sm text-muted-foreground">{dyn(item.summary)}</p>
                     )}
                     {item.body && (
                       <p className="mt-3 line-clamp-3 whitespace-pre-line text-sm text-foreground/80">
-                        {item.body}
+                        {dyn(item.body)}
                       </p>
                     )}
                   </CardContent>
