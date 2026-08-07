@@ -78,7 +78,7 @@ function DynamicTranslations({ lang, children }: { lang: string; children: React
         pending.current.add(source);
         if (typeof window !== "undefined") queueMicrotask(() => setTick((n) => n + 1));
       }
-      return source;
+      return source + "·";
     },
     [cache, lang],
   );
