@@ -43,12 +43,13 @@ function DynamicTranslations({ lang, children }: { lang: string; children: React
   const [tick, setTick] = useState(0);
 
   useEffect(() => {
-    console.log("[dyn] flush", lang, pending.current.size);
     if (lang === "en" || pending.current.size === 0) return;
-    const texts = Array.from(pending.current).slice(0, BATCH);
-    texts.forEach((text) => pending.current.delete(text));
     let cancelled = false;
     const id = window.setTimeout(async () => {
+      // Drain only once the timer fires, so a cancelled batch is never lost.
+      const texts = Array.from(pending.current).slice(0, BATCH);
+      texts.forEach((text) => pending.current.delete(text));
+      if (texts.length === 0) return;
       try {
         const data = await translate({ data: { lang: "fr", texts } });
         if (!cancelled) {
