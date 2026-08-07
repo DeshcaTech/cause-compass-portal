@@ -179,14 +179,19 @@ function Index() {
                   "CCGMs is built on family, culture and mutual support. Join us, give to a cause, and be part of everything we build together.",
               )}
             </p>
-            <div className="mt-8 flex flex-row flex-wrap gap-3">
-              <Button asChild variant="gold" size="xl">
-                <Link to="/membership">
+            <div className="mt-8 flex flex-row flex-nowrap items-stretch gap-3">
+              <Button asChild variant="gold" size="xl" className="min-w-0 shrink px-5 sm:px-7">
+                <Link to="/membership" className="whitespace-nowrap">
                   {t("Join")} <ArrowRight />
                 </Link>
               </Button>
-              <Button asChild variant="onHero" size="xl">
-                <Link to="/fundraising">{t("Support Our Causes")}</Link>
+              <Button asChild variant="onHero" size="xl" className="min-w-0 shrink px-4 sm:px-7">
+                <Link
+                  to="/fundraising"
+                  className="min-w-0 truncate text-[0.9rem] sm:text-btn-lg"
+                >
+                  {t("Support Our Causes")}
+                </Link>
               </Button>
             </div>
             {!appInstalled && (
