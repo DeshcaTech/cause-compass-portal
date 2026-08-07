@@ -115,21 +115,27 @@ export function Footer() {
         <div className="col-span-2 lg:col-span-2">
           <div className="flex flex-wrap items-center justify-between gap-4">
             {showLogo ? (
-              customLogo ? (
-                <img src={customLogo} alt="" className="h-12 w-auto max-w-[12rem] shrink-0 object-contain sm:max-w-[16rem]" loading="lazy" decoding="async" />
-              ) : (
-                <Picture
-                  avif={logoAvif}
-                  webp={logoWebp}
-                  src={logo}
-                  alt=""
-                  width={640}
-                  height={162}
-                  className="h-12 w-auto max-w-[12rem] shrink-0 rounded-md bg-background/95 px-2 py-1 object-contain sm:max-w-[16rem]"
-                  loading="lazy"
-                  decoding="async"
-                />
-              )
+              <Link
+                to="/"
+                aria-label={t("Go to homepage")}
+                className="shrink-0 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
+              >
+                {customLogo ? (
+                  <img src={customLogo} alt="" className="h-12 w-auto max-w-[12rem] shrink-0 object-contain sm:max-w-[16rem]" loading="lazy" decoding="async" />
+                ) : (
+                  <Picture
+                    avif={logoAvif}
+                    webp={logoWebp}
+                    src={logo}
+                    alt=""
+                    width={640}
+                    height={162}
+                    className="h-12 w-auto max-w-[12rem] shrink-0 rounded-md bg-background/95 px-2 py-1 object-contain sm:max-w-[16rem]"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                )}
+              </Link>
             ) : null}
             <span className={`font-display text-xl font-semibold ${showLogo ? "sr-only" : ""}`}>CCGMs</span>
             <img
