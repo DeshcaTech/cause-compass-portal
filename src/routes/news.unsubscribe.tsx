@@ -5,6 +5,7 @@ import { resubscribeByToken, unsubscribeByToken } from '@/lib/news.functions'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Link } from '@tanstack/react-router'
+import { useT } from '@/lib/i18n'
 
 export const Route = createFileRoute('/news/unsubscribe')({
   validateSearch: z.object({ token: z.string().optional(), action: z.string().optional() }),
@@ -30,6 +31,7 @@ export const Route = createFileRoute('/news/unsubscribe')({
 
 function UnsubscribePage() {
   const { token, action } = Route.useSearch()
+  const t = useT()
   const [state, setState] = useState<'working' | 'done' | 'invalid' | 'resubscribed'>('working')
   const [email, setEmail] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
@@ -82,46 +84,53 @@ function UnsubscribePage() {
   return (
     <section className="container-page py-20">
       <div className="mx-auto max-w-xl rounded-3xl border border-border/70 bg-card p-8 text-center">
-        <p className="eyebrow text-terracotta">CCGMs news</p>
-        {state === 'working' && <h1 className="mt-3 text-3xl">Updating your preferences…</h1>}
+        <p className="eyebrow text-terracotta">{t('CCGMs news')}</p>
+        {state === 'working' && (
+          <h1 className="mt-3 text-h3 text-balance">{t('Updating your preferences…')}</h1>
+        )}
         {state === 'done' && (
           <>
-            <h1 className="mt-3 text-3xl">You have been unsubscribed</h1>
+            <h1 className="mt-3 text-h3 text-balance">{t('You have been unsubscribed')}</h1>
             <p className="mt-4 text-muted-foreground">
-              {email ? `${email} will ` : 'You will '}no longer receive CCGMs news and announcement
-              emails. You can re-subscribe any time from the news page.
+              {email ? `${email} — ` : ''}
+              {t(
+                'You will no longer receive CCGMs news and announcement emails. You can re-subscribe any time from the news page.',
+              )}
             </p>
             <div className="mt-6">
               <Button onClick={onResubscribe} disabled={busy}>
-                {busy ? 'Re-enabling…' : 'Changed your mind? Re-enable news emails'}
+                {busy ? t('Re-enabling…') : t('Changed your mind? Re-enable news emails')}
               </Button>
             </div>
           </>
         )}
         {state === 'resubscribed' && (
           <>
-            <h1 className="mt-3 text-3xl">You&apos;re subscribed again</h1>
+            <h1 className="mt-3 text-h3 text-balance">{t("You're subscribed again")}</h1>
             <p className="mt-4 text-muted-foreground">
-              {email ? `${email} will ` : 'You will '}receive CCGMs news and announcements again. A
-              confirmation email is on its way.
+              {email ? `${email} — ` : ''}
+              {t(
+                'You will receive CCGMs news and announcements again. A confirmation email is on its way.',
+              )}
             </p>
           </>
         )}
         {state === 'invalid' && (
           <>
-            <h1 className="mt-3 text-3xl">This link is not valid</h1>
+            <h1 className="mt-3 text-h3 text-balance">{t('This link is not valid')}</h1>
             <p className="mt-4 text-muted-foreground">
-              The unsubscribe link is missing or has already been used. If you still receive
-              emails, please contact us and we will remove you.
+              {t(
+                'The unsubscribe link is missing or has already been used. If you still receive emails, please contact us and we will remove you.',
+              )}
             </p>
           </>
         )}
-        <div className="mt-8 flex justify-center gap-3">
+        <div className="mt-8 flex flex-wrap justify-center gap-3">
           <Button asChild variant="soft">
-            <Link to="/news">Back to news</Link>
+            <Link to="/news">{t('Back to news')}</Link>
           </Button>
           <Button asChild variant="ghost">
-            <Link to="/contact">Contact us</Link>
+            <Link to="/contact">{t('Contact us')}</Link>
           </Button>
         </div>
       </div>
