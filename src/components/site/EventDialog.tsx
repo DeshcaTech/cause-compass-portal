@@ -31,6 +31,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { submitEventRsvp } from "@/lib/rsvp.functions";
 import { formatDate, formatMoney, type EventRow } from "@/lib/queries";
 import { useT } from "@/lib/i18n";
+import { useDyn } from "@/lib/i18n/dynamic";
 import eventFallback from "@/assets/event-fallback.jpg";
 import communityTogether from "@/assets/community-together.jpg";
 
@@ -246,6 +247,7 @@ export function EventDialog({
   shareUrl?: string | undefined;
 }) {
   const t = useT();
+  const dyn = useDyn();
   const isCcgms = event?.event_type === "ccgms";
 
   async function share() {
@@ -257,7 +259,7 @@ export function EventDialog({
         : "");
     try {
       if (navigator.share) {
-        await navigator.share({ title: event.title, url });
+        await navigator.share({ title: dyn(event.title), url });
         return;
       }
       await navigator.clipboard.writeText(url);
@@ -271,10 +273,10 @@ export function EventDialog({
     <Dialog open={!!event} onOpenChange={onOpenChange}>
       <DialogContent className="max-h-[85dvh] overflow-y-auto sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle className="text-left">{event?.title}</DialogTitle>
+          <DialogTitle className="text-left">{dyn(event?.title)}</DialogTitle>
           <DialogDescription className="text-left">
             {event
-              ? `${formatDate(event.start_at, true)}${event.location ? ` · ${event.location}` : ""}`
+              ? `${formatDate(event.start_at, true)}${event.location ? ` · ${dyn(event.location)}` : ""}`
               : null}
           </DialogDescription>
         </DialogHeader>
@@ -282,14 +284,14 @@ export function EventDialog({
           <div className="space-y-4">
             <SmartImage
               src={event.image_url ?? eventFallbackImage(event.id)}
-              alt={event.image_url ? event.title : t("Community members celebrating together")}
+              alt={event.image_url ? dyn(event.title) : t("Community members celebrating together")}
               loading="lazy"
               width={1280}
               height={720}
               wrapperClassName="aspect-[16/9] w-full rounded-xl border border-border/70"
               className="size-full object-cover"
             />
-            <p className="text-sm text-foreground/85">{event.description}</p>
+            <p className="text-sm text-foreground/85">{dyn(event.description)}</p>
             <div className="flex flex-wrap gap-2">
               <AddToCalendarButton event={event} className="flex-1" />
               <Button
@@ -314,7 +316,7 @@ export function EventDialog({
               <DetailRow
                 icon={MapPin}
                 label={t("Location")}
-                value={event.location ?? t("To be confirmed")}
+                value={event.location ? dyn(event.location) : t("To be confirmed")}
               />
               {event.organiser ? (
                 <DetailRow icon={UserRound} label={t("Organiser")} value={event.organiser} />
