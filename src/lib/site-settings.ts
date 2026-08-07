@@ -35,7 +35,7 @@ export type SiteSettings = {
 export const DEFAULT_SITE_SETTINGS: SiteSettings = {
   org_name: "CCGMs",
   hero_eyebrow: "Cameroonian Community in Greater Manchester and Surrounding area",
-  hero_title_line1: "Strongerr together,",
+  hero_title_line1: "Stronger together,",
   hero_title_line2: "generation after generation",
   hero_intro:
     "CCGMs is built on family, culture and mutual support. Join us, give to a cause, and be part of everything we build together.",
