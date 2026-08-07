@@ -85,7 +85,12 @@ function DynamicTranslations({ lang, children }: { lang: string; children: React
 
   const value = useMemo(() => dyn, [dyn]);
 
-  return <DynContext.Provider value={value}>{children}</DynContext.Provider>;
+  return (
+    <DynContext.Provider value={value}>
+      <div data-dyn-lang={lang} hidden />
+      {children}
+    </DynContext.Provider>
+  );
 }
 
 /** Returns a function that translates admin-authored text into the active language. */
