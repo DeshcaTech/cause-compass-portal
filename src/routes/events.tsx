@@ -12,6 +12,7 @@ import { eventsQuery, formatDate, formatMoney, type EventRow } from "@/lib/queri
 import { EventDialog, eventFallbackImage } from "@/components/site/EventDialog";
 import { SmartImage } from "@/components/site/SmartImage";
 import { useT } from "@/lib/i18n";
+import { useDyn } from "@/lib/i18n/dynamic";
 
 export const Route = createFileRoute("/events")({
   // Filters, the open tab and the open event live in the URL so links can be shared.
@@ -62,13 +63,14 @@ function TypeBadge({ type }: { type: EventRow["event_type"] }) {
 
 function EventCard({ event, onOpen }: { event: EventRow; onOpen: () => void }) {
   const t = useT();
+  const dyn = useDyn();
   return (
     <Card
       className="cursor-pointer border-border/70 transition-all hover:-translate-y-1 hover:shadow-[var(--shadow-lift)]"
       onClick={onOpen}
       role="button"
       tabIndex={0}
-      aria-label={`${t("View event details")}: ${event.title}`}
+      aria-label={`${t("View event details")}: ${dyn(event.title)}`}
       onKeyDown={(e) => {
         if (e.key === "Enter" || e.key === " ") {
           e.preventDefault();
@@ -79,7 +81,7 @@ function EventCard({ event, onOpen }: { event: EventRow; onOpen: () => void }) {
       <CardContent className="p-6">
         <SmartImage
           src={event.image_url ?? eventFallbackImage(event.id)}
-          alt={event.image_url ? event.title : t("Community members celebrating together")}
+          alt={event.image_url ? dyn(event.title) : t("Community members celebrating together")}
           loading="lazy"
           width={1280}
           height={720}
@@ -90,10 +92,10 @@ function EventCard({ event, onOpen }: { event: EventRow; onOpen: () => void }) {
           <p className="eyebrow text-primary">{formatDate(event.start_at)}</p>
           <TypeBadge type={event.event_type} />
         </div>
-        <h3 className="mt-3 text-lg">{event.title}</h3>
-        <p className="mt-2 line-clamp-3 text-sm text-muted-foreground">{event.description}</p>
+        <h3 className="mt-3 text-lg">{dyn(event.title)}</h3>
+        <p className="mt-2 line-clamp-3 text-sm text-muted-foreground">{dyn(event.description)}</p>
         <p className="mt-4 flex items-center gap-2 text-xs text-muted-foreground">
-          <MapPin className="size-3.5" /> {event.location}
+          <MapPin className="size-3.5" /> {dyn(event.location)}
         </p>
         <p className="mt-2 text-xs font-semibold text-foreground">
           {Number(event.fee) > 0 ? formatMoney(Number(event.fee)) : t("Free")}
@@ -111,6 +113,7 @@ type EventsSearch = {
 
 function EventsPage() {
   const t = useT();
+  const dyn = useDyn();
   const navigate = useNavigate({ from: "/events" });
   const search = Route.useSearch();
   const { data: events = [] } = useQuery(eventsQuery);
@@ -329,7 +332,7 @@ function EventsPage() {
                                   : "bg-terracotta text-terracotta-foreground"
                               }`}
                             >
-                              {item.title}
+                              {dyn(item.title)}
                             </span>
                           ))}
                           {dayItems.length > 2 ? (
@@ -355,9 +358,9 @@ function EventsPage() {
                               onClick={() => openEvent(event)}
                               className="w-full rounded-lg border border-border/70 px-4 py-3 text-left text-sm hover:bg-secondary"
                             >
-                              <span className="font-medium">{event.title}</span>
+                              <span className="font-medium">{dyn(event.title)}</span>
                               <span className="block text-xs text-muted-foreground">
-                                {event.location}
+                                {dyn(event.location)}
                               </span>
                             </button>
                           </li>
