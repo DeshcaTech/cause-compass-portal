@@ -27,28 +27,34 @@ const BATCH = 40;
  */
 export function DynamicTranslationProvider({ children }: { children: ReactNode }) {
   const { lang } = useI18n();
+  // Remounting on language change resets every cache without racing renders.
+  return (
+    <DynamicTranslations key={lang} lang={lang}>
+      {children}
+    </DynamicTranslations>
+  );
+}
+
+function DynamicTranslations({ lang, children }: { lang: string; children: ReactNode }) {
   const translate = useServerFn(translateContent);
   const [cache, setCache] = useState<Record<string, string>>({});
   const pending = useRef(new Set<string>());
   const requested = useRef(new Set<string>());
   const [tick, setTick] = useState(0);
 
-  // Language switch invalidates everything collected so far.
-  useEffect(() => {
-    setCache({});
-    pending.current.clear();
-    requested.current.clear();
-  }, [lang]);
-
   useEffect(() => {
     if (lang === "en" || pending.current.size === 0) return;
     const texts = Array.from(pending.current).slice(0, BATCH);
-    pending.current.clear();
+    texts.forEach((text) => pending.current.delete(text));
     let cancelled = false;
     const id = window.setTimeout(async () => {
       try {
         const data = await translate({ data: { lang: "fr", texts } });
-        if (!cancelled) setCache((prev) => ({ ...prev, ...data }));
+        if (!cancelled) {
+          setCache((prev) => ({ ...prev, ...data }));
+          // Anything still queued (or a further batch) is flushed on the next tick.
+          if (pending.current.size > 0) setTick((n) => n + 1);
+        }
       } catch {
         /* keep English on failure */
       }
@@ -68,7 +74,7 @@ export function DynamicTranslationProvider({ children }: { children: ReactNode }
       if (!requested.current.has(source)) {
         requested.current.add(source);
         pending.current.add(source);
-        queueMicrotask(() => setTick((n) => n + 1));
+        if (typeof window !== "undefined") queueMicrotask(() => setTick((n) => n + 1));
       }
       return source;
     },
