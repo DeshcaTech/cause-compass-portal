@@ -102,4 +102,13 @@ export const extra: Record<string, string> = {
   "This link is not valid": "Ce lien n'est pas valide",
   "Back to news": "Retour aux actualités",
   "Contact us": "Nous contacter",
+  "You will no longer receive CCGMs news and announcement emails. You can re-subscribe any time from the news page.":
+    "Vous ne recevrez plus les e-mails d'actualités et d'annonces des CCGMs. Vous pouvez vous réabonner à tout moment depuis la page Actualités.",
+  "You will receive CCGMs news and announcements again. A confirmation email is on its way.":
+    "Vous recevrez de nouveau les actualités et annonces des CCGMs. Un e-mail de confirmation est en route.",
+  "The unsubscribe link is missing or has already been used. If you still receive emails, please contact us and we will remove you.":
+    "Le lien de désabonnement est manquant ou a déjà été utilisé. Si vous recevez encore des e-mails, contactez-nous et nous vous retirerons de la liste.",
+  "Re-enabling…": "Réactivation en cours…",
+  "Changed your mind? Re-enable news emails":
+    "Vous avez changé d'avis ? Réactiver les e-mails d'actualités",
 };
