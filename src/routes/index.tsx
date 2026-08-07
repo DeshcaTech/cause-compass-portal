@@ -135,7 +135,7 @@ function Index() {
       { icon: UserRound, label: t("Board members"), value: stats?.board_members ?? 0 },
       { icon: HeartHandshake, label: t("Active campaigns"), value: stats?.active_campaigns ?? 0 },
     ],
-    [stats],
+    [stats, t],
   );
 
   return (
@@ -146,7 +146,7 @@ function Index() {
           <div className="min-w-0">
             <div className="flex items-center justify-end gap-3 sm:gap-4">
               <p className="eyebrow min-w-0 text-right text-gold leading-relaxed">
-                {(site ? site.hero_eyebrow : t("Cameroonian Community in Greater Manchester and Surrounding area"))
+                {t(site?.hero_eyebrow || "Cameroonian Community in Greater Manchester and Surrounding area")
                   .split("\n")
                   .flatMap((line) => line.split(/\s+/).filter(Boolean))
                   .reduce<string[][]>((acc, word, i, arr) => {
@@ -166,19 +166,20 @@ function Index() {
                 className="h-8 w-auto shrink-0 rounded-md object-cover sm:h-10"
               />
             </div>
-            <h1 className="mt-6 text-[1.91rem] leading-[1.02] sm:mt-7 sm:text-[2.31rem] sm:leading-[0.98] lg:text-[3.73rem]">
-              {site ? site.hero_title_line1 : t("Stronger together,")}
+            <h1 className="mt-6 text-balance text-[1.75rem] leading-[1.05] sm:mt-7 sm:text-[2.31rem] sm:leading-[0.98] lg:text-[3.5rem]">
+              {t(site?.hero_title_line1 || "Stronger together,")}
               <br />
               <span className="text-gold">
-                {site ? site.hero_title_line2 : t("generation after generation")}
+                {t(site?.hero_title_line2 || "generation after generation")}
               </span>
             </h1>
-            <p className="mt-5 max-w-xl text-[16px] text-primary-foreground/80">
-              {site
-                ? site.hero_intro
-                : t("CCGMs is built on family, culture and mutual support. Join us, give to a cause, and be part of everything we build together.")}
+            <p className="mt-5 max-w-xl text-body-sm text-pretty text-primary-foreground/80">
+              {t(
+                site?.hero_intro ||
+                  "CCGMs is built on family, culture and mutual support. Join us, give to a cause, and be part of everything we build together.",
+              )}
             </p>
-            <div className="mt-8 flex flex-row gap-3 sm:flex-wrap">
+            <div className="mt-8 flex flex-row flex-wrap gap-3">
               <Button asChild variant="gold" size="xl">
                 <Link to="/membership">
                   {t("Join")} <ArrowRight />
@@ -277,9 +278,9 @@ function Index() {
       <section className="container-page py-14 sm:py-16 md:py-20">
         <div className="grid items-start gap-8 md:gap-10 lg:grid-cols-[0.9fr_1.1fr]">
           <div>
-            <p className="eyebrow text-terracotta">{site ? site.about_eyebrow : t("Who we are")}</p>
-            <h2 className="mt-2 text-2xl sm:text-3xl md:text-[2rem]">
-              {site ? site.about_title : t("A family of families")}
+            <p className="eyebrow text-terracotta">{t(site?.about_eyebrow || "Who we are")}</p>
+            <h2 className="mt-2 text-balance text-h2">
+              {t(site?.about_title || "A family of families")}
             </h2>
             <Picture
               avif={communityAvif}
@@ -295,15 +296,17 @@ function Index() {
             />
           </div>
           <div className="space-y-5">
-            <p className="text-base text-muted-foreground md:text-lg">
-              {site
-                ? site.about_body_1
-                : t("CCGMs brings together members of our community across generations — parents, students, elders and children — around culture, faith, friendship and mutual support. What began as a handful of families sharing meals and traditions is now an association with a board, an events calendar and campaigns that back people when life gets hard.")}
+            <p className="text-body text-pretty text-muted-foreground">
+              {t(
+                site?.about_body_1 ||
+                  "CCGMs brings together members of our community across generations — parents, students, elders and children — around culture, faith, friendship and mutual support. What began as a handful of families sharing meals and traditions is now an association with a board, an events calendar and campaigns that back people when life gets hard.",
+              )}
             </p>
-            <p className="text-sm text-muted-foreground md:text-base">
-              {site
-                ? site.about_body_2
-                : t("We celebrate together, raise funds for causes that matter to our members, promote businesses run by our community, and stand beside anyone who needs a hand.")}
+            <p className="text-body-sm text-pretty text-muted-foreground">
+              {t(
+                site?.about_body_2 ||
+                  "We celebrate together, raise funds for causes that matter to our members, promote businesses run by our community, and stand beside anyone who needs a hand.",
+              )}
             </p>
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {[
