@@ -43,6 +43,7 @@ function DynamicTranslations({ lang, children }: { lang: string; children: React
   const [tick, setTick] = useState(0);
 
   useEffect(() => {
+    console.log("[dyn] flush", lang, pending.current.size);
     if (lang === "en" || pending.current.size === 0) return;
     const texts = Array.from(pending.current).slice(0, BATCH);
     texts.forEach((text) => pending.current.delete(text));
