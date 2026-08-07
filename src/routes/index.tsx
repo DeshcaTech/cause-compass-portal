@@ -39,6 +39,7 @@ import { useDevicePlatform } from "@/hooks/use-device-platform";
 import { PartnerDialog } from "@/components/site/PartnerDialog";
 import { ShareButton } from "@/components/site/ShareButton";
 import { useT } from "@/lib/i18n";
+import { useDyn } from "@/lib/i18n/dynamic";
 import { siteSettingsQuery } from "@/lib/site-settings";
 import {
   announcementsQuery,
@@ -97,6 +98,7 @@ const highlights = [
 
 function Index() {
   const t = useT();
+  const dyn = useDyn();
   const appInstalled = useAppInstalled();
   const devicePlatform = useDevicePlatform();
   const { data: events = [] } = useQuery(eventsQuery);
@@ -384,8 +386,8 @@ function Index() {
                 className="block w-full text-left"
                 onClick={() =>
                   setInfo({
-                    title: item.title,
-                    body: item.body ?? item.summary ?? "",
+                    title: dyn(item.title),
+                    body: dyn(item.body ?? item.summary ?? ""),
                     sharePath: `/news/${item.id}`,
                     action: (
                       <Button asChild variant="hero" className="w-full">
@@ -400,9 +402,9 @@ function Index() {
               <Card className="h-full border-border/70 transition-shadow hover:shadow-lg">
                 <CardContent className="p-5 sm:p-6">
                   <p className="eyebrow text-terracotta">{formatDate(item.published_at)}</p>
-                  <h3 className="mt-2 text-base leading-snug sm:text-lg">{item.title}</h3>
+                  <h3 className="mt-2 text-base leading-snug sm:text-lg">{dyn(item.title)}</h3>
                   <p className="mt-2 line-clamp-3 text-sm text-muted-foreground">
-                    {item.summary ?? item.body}
+                    {dyn(item.summary ?? item.body)}
                   </p>
                 </CardContent>
               </Card>
@@ -444,7 +446,7 @@ function Index() {
                   {...(upcoming[0]!.image_url
                     ? { src: upcoming[0]!.image_url }
                     : { src: eventFallback, avif: eventFallbackAvif, webp: eventFallbackWebp })}
-                  alt={upcoming[0]!.title}
+                  alt={dyn(upcoming[0]!.title)}
                   loading="lazy"
                   decoding="async"
                   width={1280}
@@ -455,10 +457,10 @@ function Index() {
                 <CardContent className="flex h-full flex-col p-6 sm:p-8 md:p-10">
                   <p className="eyebrow text-gold">{formatDate(upcoming[0]!.start_at)}</p>
                   <h3 className="mt-3 text-2xl leading-tight sm:text-3xl md:text-4xl">
-                    {upcoming[0]!.title}
+                    {dyn(upcoming[0]!.title)}
                   </h3>
                   <p className="mt-4 line-clamp-4 text-sm text-primary-foreground/80 md:text-base">
-                    {upcoming[0]!.description}
+                    {dyn(upcoming[0]!.description)}
                   </p>
                   <p className="mt-auto break-words pt-6 text-[11px] uppercase tracking-wider text-primary-foreground/60 sm:text-xs sm:tracking-widest">
                     {upcoming[0]!.location}
@@ -475,9 +477,9 @@ function Index() {
                     className="block w-full cursor-pointer p-5 text-left transition-colors hover:bg-secondary sm:p-6"
                   >
                     <p className="eyebrow text-terracotta">{formatDate(event.start_at)}</p>
-                    <h3 className="mt-2 text-base leading-snug sm:text-lg">{event.title}</h3>
+                    <h3 className="mt-2 text-base leading-snug sm:text-lg">{dyn(event.title)}</h3>
                     <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">
-                      {event.description}
+                      {dyn(event.description)}
                     </p>
                     <p className="mt-3 text-xs text-muted-foreground">{event.location}</p>
                   </button>
@@ -532,8 +534,8 @@ function Index() {
                 aria-haspopup="dialog"
                 onClick={() =>
                   setInfo({
-                    title: campaign.title,
-                    body: campaign.description ?? campaign.summary ?? "",
+                    title: dyn(campaign.title),
+                    body: dyn(campaign.description ?? campaign.summary ?? ""),
                     sharePath: `/fundraising?campaign=${campaign.id}`,
                     action: (
                       <Button asChild variant="hero" className="w-full">
@@ -553,9 +555,9 @@ function Index() {
                 className="cursor-pointer border-border/70 transition-all hover:-translate-y-1 hover:shadow-[var(--shadow-lift)]"
               >
                 <CardContent className="p-5 sm:p-6">
-                  <h3 className="text-base leading-snug sm:text-lg">{campaign.title}</h3>
+                  <h3 className="text-base leading-snug sm:text-lg">{dyn(campaign.title)}</h3>
                   <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">
-                    {campaign.summary}
+                    {dyn(campaign.summary)}
                   </p>
                   <div className="mt-5 h-2 w-full overflow-hidden rounded-full bg-secondary">
                     <div
@@ -630,13 +632,13 @@ function Index() {
                         </span>
                       )}
                       <p className="mt-4 text-[11px] uppercase tracking-wider text-muted-foreground sm:text-xs">
-                        {partner.category}
+                        {dyn(partner.category)}
                       </p>
                       <h3 className="mt-1 text-base leading-snug sm:text-lg">
                         {partner.business_name}
                       </h3>
                       <p className="mt-2 line-clamp-3 text-sm text-muted-foreground">
-                        {partner.short_description ?? partner.description}
+                        {dyn(partner.short_description ?? partner.description)}
                       </p>
                     </CardContent>
                   </Card>
