@@ -17,6 +17,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { assetsQuery, formatMoney, type CommunityAsset } from "@/lib/queries";
 import assetFallback from "@/assets/asset-fallback.jpg";
 import { useT } from "@/lib/i18n";
+import { useDyn } from "@/lib/i18n/dynamic";
 
 export const Route = createFileRoute("/assets")({
   head: () => ({
@@ -52,6 +53,7 @@ const schema = z.object({
 
 function AssetsPage() {
   const t = useT();
+  const dyn = useDyn();
   const { data: assets = [] } = useQuery(assetsQuery);
   const [selected, setSelected] = useState<CommunityAsset | null>(null);
   const [saving, setSaving] = useState(false);
@@ -99,17 +101,17 @@ function AssetsPage() {
               <CardContent className="flex flex-1 flex-col p-6">
                 <img
                   src={asset.image_url ?? assetFallback}
-                  alt={asset.name}
+                  alt={dyn(asset.name)}
                   loading="lazy"
                   className="aspect-[16/9] w-full rounded-xl object-cover"
                 />
                 <div className="mt-4 flex items-start justify-between gap-3">
-                  <h2 className="text-lg">{asset.name}</h2>
+                  <h2 className="text-lg">{dyn(asset.name)}</h2>
                   <Badge variant={asset.is_available ? "secondary" : "outline"}>
                     {asset.quantity} {t("available")}
                   </Badge>
                 </div>
-                <p className="mt-2 flex-1 text-sm text-muted-foreground">{asset.description}</p>
+                <p className="mt-2 flex-1 text-sm text-muted-foreground">{dyn(asset.description)}</p>
                 <dl className="mt-4 space-y-1 text-sm">
                   <div className="flex justify-between">
                     <dt className="text-muted-foreground">{t("Member rate")}</dt>
@@ -132,7 +134,7 @@ function AssetsPage() {
       <Dialog open={!!selected} onOpenChange={(open) => !open && setSelected(null)}>
         <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-lg">
           <DialogHeader>
-            <DialogTitle>{t("Request:")} {selected?.name}</DialogTitle>
+            <DialogTitle>{t("Request:")} {dyn(selected?.name)}</DialogTitle>
           </DialogHeader>
           <form onSubmit={onSubmit} className="space-y-4">
             <div className="space-y-2">
