@@ -18,6 +18,7 @@ import heroCommunity from "@/assets/hero-community.jpg";
 import surveyFallback from "@/assets/survey-fallback.jpg";
 import volunteerHero from "@/assets/volunteer-hero.jpg";
 import { useT } from "@/lib/i18n";
+import { useDyn } from "@/lib/i18n/dynamic";
 import { searchString, useSearchFilter } from "@/lib/use-search-filter";
 
 const PLACEHOLDER_PHOTOS = [
@@ -59,6 +60,7 @@ export const Route = createFileRoute("/gallery")({
 
 function GalleryPage() {
   const t = useT();
+  const dyn = useDyn();
   const { data: rawGalleries = [] } = useQuery(galleriesQuery);
   const galleries = [...rawGalleries].sort(
     (a, b) => Number(b.is_default) - Number(a.is_default),
@@ -83,12 +85,12 @@ function GalleryPage() {
     const real = activePhotos.map((photo) => ({
       key: photo.id,
       src: photo.photo_url,
-      caption: photo.caption ?? null,
+      caption: dyn(photo.caption) || null,
     }));
     // The album's main photo leads the viewer when it isn't already a photo.
     const cover = active?.cover_url;
     if (cover && !real.some((tile) => tile.src === cover)) {
-      real.unshift({ key: `cover-${active!.id}`, src: cover, caption: active!.title });
+      real.unshift({ key: `cover-${active!.id}`, src: cover, caption: dyn(active!.title) });
     }
     const fillers = placeholdersFor(activeId ?? "gallery")
       .slice(0, Math.max(0, 6 - real.length))
@@ -118,7 +120,7 @@ function GalleryPage() {
             onChange={setActiveId}
             options={galleries.map((gallery) => ({
               value: gallery.id,
-              label: gallery.title,
+              label: dyn(gallery.title),
               meta: gallery.event_date
                 ? new Date(gallery.event_date).toLocaleDateString("en-GB", {
                     month: "long",
@@ -134,15 +136,15 @@ function GalleryPage() {
             <div className="relative overflow-hidden rounded-2xl border border-border">
               <SmartImage
                 src={mainPhoto(active.id, active.cover_url)}
-                alt={`${active.title} — ${t("main photo")}`}
+                alt={`${dyn(active.title)} — ${t("main photo")}`}
                 loading="eager"
                 wrapperClassName="aspect-[16/7] w-full"
                 className="size-full object-cover"
               />
               <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent p-5">
-                <h2 className="text-2xl text-white">{active.title}</h2>
+                <h2 className="text-2xl text-white">{dyn(active.title)}</h2>
                 {active.description ? (
-                  <p className="mt-1 max-w-2xl text-sm text-white/85">{active.description}</p>
+                  <p className="mt-1 max-w-2xl text-sm text-white/85">{dyn(active.description)}</p>
                 ) : null}
               </div>
             </div>
@@ -153,7 +155,7 @@ function GalleryPage() {
           {active ? (
             <div className="mt-4 flex justify-end">
               <ShareButton
-                title={active.title}
+                title={dyn(active.title)}
                 path={`/gallery?gallery=${active.id}`}
                 label={t("Share album")}
               />
@@ -175,7 +177,7 @@ function GalleryPage() {
               >
                 <SmartImage
                   src={tile.src}
-                  alt={tile.caption ?? active?.title ?? t("Community photo")}
+                  alt={tile.caption ?? dyn(active?.title) || t("Community photo")}
                   loading="lazy"
                   wrapperClassName="aspect-[4/3] h-56 w-full"
                   className="size-full object-cover transition-transform group-hover:scale-105"
@@ -206,7 +208,7 @@ function GalleryPage() {
           // so the originating thumbnail is always the one focused.
           window.setTimeout(() => triggerRef.current?.focus(), 0);
         }}
-        fallbackTitle={active?.title ?? t("Community photo")}
+        fallbackTitle={dyn(active?.title) || t("Community photo")}
       />
     </>
   );
