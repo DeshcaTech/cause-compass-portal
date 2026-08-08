@@ -24,6 +24,10 @@ export const extra: Record<string, string> = {
   // Gallery
   "From the gallery": "Depuis la galerie",
   "View gallery": "Voir la galerie",
+  "View gallery photos": "Voir les photos de la galerie",
+  "View full gallery": "Voir toute la galerie",
+  "Previous photo": "Photo précédente",
+  "Next photo": "Photo suivante",
   "Photos are grouped per event — pick an album to browse its moments.":
     "Les photos sont regroupées par événement — choisissez un album pour parcourir ses moments.",
 
