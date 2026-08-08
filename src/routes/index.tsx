@@ -144,13 +144,7 @@ function Index() {
       <section className="relative isolate flex overflow-hidden bg-primary text-primary-foreground lg:min-h-[calc(100svh-var(--header-height,7rem))]">
         <div className="container-page grid w-full items-center gap-10 pb-3.5 pt-[1.09375rem] sm:pb-4 sm:pt-5 lg:grid-cols-[1.05fr_0.95fr] lg:pb-6 lg:pt-[1.875rem]">
           <div className="min-w-0">
-            <div className="flex w-full items-center justify-end gap-3 sm:gap-4">
-              <img
-                src={flagsAsset.url}
-                alt="Cameroon and United Kingdom flags"
-                loading="eager"
-                className="order-last h-8 w-auto shrink-0 rounded-md object-cover sm:h-10"
-              />
+            <div className="flex items-center justify-end gap-3 sm:gap-4">
               <p className="eyebrow min-w-0 text-right text-gold leading-relaxed">
                 {t(site?.hero_eyebrow || "Cameroonian Community in Greater Manchester and Surrounding area")
                   .split("\n")
@@ -168,6 +162,12 @@ function Index() {
                     </span>
                   ))}
               </p>
+              <img
+                src={flagsAsset.url}
+                alt="Cameroon and United Kingdom flags"
+                loading="eager"
+                className="h-8 w-auto shrink-0 rounded-md object-cover sm:h-10"
+              />
             </div>
             <h1 className="mt-6 text-balance text-[1.75rem] leading-[1.05] sm:mt-7 sm:text-[2.31rem] sm:leading-[0.98] lg:text-[3.5rem]">
               {t(site?.hero_title_line1 || "Stronger together,")}
