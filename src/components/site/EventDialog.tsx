@@ -237,7 +237,7 @@ function RsvpForm({ event }: { event: EventRow }) {
         </div>
       </div>
 
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-row flex-wrap items-center justify-between gap-3">
         {isPaidCcgms ? (
           <div className="text-sm">
             <span className="text-muted-foreground">{t("Total fee")}: </span>
@@ -250,7 +250,7 @@ function RsvpForm({ event }: { event: EventRow }) {
         <Button
           type="submit"
           variant="hero"
-          className={isPaidCcgms ? "w-full sm:w-auto" : "w-full"}
+          className={isPaidCcgms ? "flex-1 min-w-[9rem]" : "w-full"}
           disabled={saving}
         >
           {saving ? t("Sending…") : requiresPayment ? t("Book Now") : t("Send RSVP")}
