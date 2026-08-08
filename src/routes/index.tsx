@@ -107,6 +107,8 @@ function Index() {
   const [info, setInfo] = useState<{
     title: string;
     body: string;
+    /** Card image shown at the top of the popup, like the business popup. */
+    image?: string;
     /** Deep link to the full item so the popup can be shared. */
     sharePath?: string;
     action?: React.ReactNode;
@@ -395,6 +397,7 @@ function Index() {
                   setInfo({
                     title: dyn(item.title),
                     body: dyn(item.body ?? item.summary ?? ""),
+                    image: item.image_url ?? newsFallbackImg,
                     sharePath: `/news/${item.id}`,
                     action: (
                       <Button asChild variant="hero" className="w-full">
@@ -506,10 +509,17 @@ function Index() {
         <DialogContent className="max-h-[85dvh] overflow-y-auto sm:max-w-lg">
           <DialogHeader>
             <DialogTitle>{info?.title}</DialogTitle>
-            <DialogDescription className="whitespace-pre-line text-left">
+          </DialogHeader>
+          {info?.image ? (
+            <img
+              src={info.image}
+              alt=""
+              className="aspect-[16/9] w-full rounded-xl object-cover"
+            />
+          ) : null}
+          <DialogDescription className="whitespace-pre-line text-left">
               {info?.body}
             </DialogDescription>
-          </DialogHeader>
           {info?.action}
           {info?.sharePath ? (
             <ShareButton title={info.title} path={info.sharePath} className="w-full" />
@@ -543,6 +553,7 @@ function Index() {
                   setInfo({
                     title: dyn(campaign.title),
                     body: dyn(campaign.description ?? campaign.summary ?? ""),
+                    image: campaign.image_url ?? campaignFallbackImg,
                     sharePath: `/fundraising?campaign=${campaign.id}`,
                     action: (
                       <Button asChild variant="hero" className="w-full">
