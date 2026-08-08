@@ -77,8 +77,11 @@ const rsvpSchema = z.object({
 function RsvpForm({ event }: { event: EventRow }) {
   const t = useT();
   const [status, setStatus] = useState<"going" | "interested">("going");
+  const [guests, setGuests] = useState(0);
   const requiresPayment =
     event.event_type === "ccgms" && Number(event.fee) > 0 && status === "going";
+  const isPaidCcgms = event.event_type === "ccgms" && Number(event.fee) > 0;
+  const totalFee = (guests + 1) * Number(event.fee ?? 0);
   const [saving, setSaving] = useState(false);
   const [done, setDone] = useState(false);
   const [editUrl, setEditUrl] = useState<string | null>(null);
@@ -87,6 +90,7 @@ function RsvpForm({ event }: { event: EventRow }) {
   useEffect(() => {
     setDone(false);
     setStatus("going");
+    setGuests(0);
     setEditUrl(null);
   }, [event.id]);
 
@@ -209,7 +213,11 @@ function RsvpForm({ event }: { event: EventRow }) {
             type="number"
             min={0}
             max={20}
-            defaultValue={0}
+            value={guests}
+            onChange={(e) => {
+              const n = Number(e.target.value);
+              setGuests(Number.isFinite(n) ? Math.min(20, Math.max(0, Math.trunc(n))) : 0);
+            }}
           />
         </div>
         <div className="space-y-1.5 sm:col-span-2">
@@ -229,9 +237,25 @@ function RsvpForm({ event }: { event: EventRow }) {
         </div>
       </div>
 
-      <Button type="submit" variant="hero" className="w-full" disabled={saving}>
-        {saving ? t("Sending…") : requiresPayment ? t("Book Now") : t("Send RSVP")}
-      </Button>
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        {isPaidCcgms ? (
+          <div className="text-sm">
+            <span className="text-muted-foreground">{t("Total fee")}: </span>
+            <span className="font-semibold">{formatMoney(totalFee)}</span>
+            <span className="block text-xs text-muted-foreground">
+              {`${guests + 1} × ${formatMoney(Number(event.fee))}`}
+            </span>
+          </div>
+        ) : null}
+        <Button
+          type="submit"
+          variant="hero"
+          className={isPaidCcgms ? "w-full sm:w-auto" : "w-full"}
+          disabled={saving}
+        >
+          {saving ? t("Sending…") : requiresPayment ? t("Book Now") : t("Send RSVP")}
+        </Button>
+      </div>
     </form>
   );
 }
