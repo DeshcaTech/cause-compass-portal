@@ -285,12 +285,14 @@ function Index() {
       </section>
 
       <section className="container-page py-14 sm:py-16 md:py-20">
+        <div className="mb-6 md:mb-8">
+          <p className="eyebrow text-terracotta">{t(site?.about_eyebrow || "Who we are")}</p>
+          <h2 className="mt-2 text-balance text-h2">
+            {t(site?.about_title || "A family of families")}
+          </h2>
+        </div>
         <div className="grid items-start gap-8 md:gap-10 lg:grid-cols-[0.9fr_1.1fr]">
           <div>
-            <p className="eyebrow text-terracotta">{t(site?.about_eyebrow || "Who we are")}</p>
-            <h2 className="mt-2 text-balance text-h2">
-              {t(site?.about_title || "A family of families")}
-            </h2>
             <Picture
               avif={communityAvif}
               webp={communityWebp}
@@ -300,7 +302,7 @@ function Index() {
               width={1280}
               height={960}
               decoding="async"
-              pictureClassName="mt-6 block"
+              pictureClassName="block"
               className="aspect-[4/3] w-full rounded-3xl object-cover shadow-[var(--shadow-lift)]"
             />
           </div>
