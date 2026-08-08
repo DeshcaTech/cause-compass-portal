@@ -263,7 +263,7 @@ function Index() {
 
       {/* Community at a glance */}
       <section className="border-b border-border bg-card">
-        <div className="container-page grid grid-cols-2 place-items-center gap-x-2 gap-y-1 divide-border py-2 sm:grid-cols-3 sm:py-2.5 lg:grid-cols-5">
+        <div className="container-page flex flex-wrap items-center justify-center gap-x-2 gap-y-1 py-2 sm:py-2.5">
           {statTiles.filter(({ value }) => Number(value) > 0).map(({ icon: Icon, label, value, to }) => (
             <Link
               key={label}
