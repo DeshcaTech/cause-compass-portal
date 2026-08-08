@@ -109,8 +109,6 @@ function Index() {
     body: string;
     /** Deep link to the full item so the popup can be shared. */
     sharePath?: string;
-    /** Card image/logo shown at the top of the popup. */
-    image?: string | null;
     action?: React.ReactNode;
   } | null>(null);
   const { data: campaigns = [] } = useQuery(campaignsQuery);
@@ -398,7 +396,6 @@ function Index() {
                     title: dyn(item.title),
                     body: dyn(item.body ?? item.summary ?? ""),
                     sharePath: `/news/${item.id}`,
-                    image: item.image_url ?? null,
                     action: (
                       <Button asChild variant="hero" className="w-full">
                         <Link to="/news/$id" params={{ id: item.id }}>
@@ -513,14 +510,6 @@ function Index() {
               {info?.body}
             </DialogDescription>
           </DialogHeader>
-          {info?.image ? (
-            <img
-              src={info.image}
-              alt={info.title}
-              loading="lazy"
-              className="max-h-64 w-full rounded-md object-cover"
-            />
-          ) : null}
           {info?.action}
           {info?.sharePath ? (
             <ShareButton title={info.title} path={info.sharePath} className="w-full" />
@@ -555,7 +544,6 @@ function Index() {
                     title: dyn(campaign.title),
                     body: dyn(campaign.description ?? campaign.summary ?? ""),
                     sharePath: `/fundraising?campaign=${campaign.id}`,
-                    image: campaign.image_url ?? null,
                     action: (
                       <Button asChild variant="hero" className="w-full">
                         <Link to="/donate" search={{ campaign: campaign.id }}>
