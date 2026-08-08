@@ -264,14 +264,14 @@ function Index() {
       {/* Community at a glance */}
       <section className="border-b border-border bg-card">
         <div className="container-page grid grid-cols-2 gap-x-2 gap-y-1 divide-border py-8 sm:grid-cols-3 sm:py-10 lg:grid-cols-5">
-          {statTiles.map(({ icon: Icon, label, value }) => (
+          {statTiles.filter(({ value }) => Number(value) > 0).map(({ icon: Icon, label, value }) => (
             <div key={label} className="flex min-w-0 items-center gap-3 px-1 py-3 sm:px-2">
               <span className="inline-flex size-9 shrink-0 items-center justify-center rounded-2xl bg-accent text-accent-foreground sm:size-10">
                 <Icon className="size-4 sm:size-5" />
               </span>
-              <span className="min-w-0">
-                <span className="block text-xl font-semibold leading-none sm:text-2xl">{value}</span>
-                <span className="mt-1 block text-[10px] uppercase tracking-wider text-muted-foreground sm:text-xs sm:tracking-widest">
+              <span className="flex min-w-0 items-baseline gap-1.5">
+                <span className="text-xl font-semibold leading-none sm:text-2xl">{value}</span>
+                <span className="truncate text-[10px] uppercase tracking-wider text-muted-foreground sm:text-xs sm:tracking-widest">
                   {label}
                 </span>
               </span>
