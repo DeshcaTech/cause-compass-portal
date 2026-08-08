@@ -65,6 +65,7 @@ export const home: Record<string, string> = {
   "Fundraising": "Collecte de fonds",
   "Active campaigns": "Campagnes actives",
   "See all campaigns": "Voir toutes les campagnes",
+  "See all news": "Voir toutes les actualités",
   "raised of": "collectés sur",
   "Donate": "Faire un don",
   "Our members at work": "Nos membres au travail",
