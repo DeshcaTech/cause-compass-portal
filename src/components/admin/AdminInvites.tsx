@@ -29,7 +29,8 @@ const STATUS_LABEL: Record<string, string> = {
   expired: "Expired",
 };
 
-export function AdminInvites() {
+export function AdminInvites({ adminLevel = 1 }: { adminLevel?: 1 | 2 }) {
+  const allowedRoles = adminLevel === 1 ? ADMIN_ROLES : (['admin_l3'] as const);
   const queryClient = useQueryClient();
   const list = useServerFn(listAdminInvites);
   const create = useServerFn(createAdminInvite);
@@ -106,7 +107,7 @@ export function AdminInvites() {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {ADMIN_ROLES.map((value) => (
+                  {allowedRoles.map((value) => (
                     <SelectItem key={value} value={value}>
                       {ROLE_LABELS[value]}
                     </SelectItem>

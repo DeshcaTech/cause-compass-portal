@@ -5,7 +5,8 @@ import { z } from 'zod'
 import { requireSupabaseAuth } from '@/integrations/supabase/auth-middleware'
 import { ADMIN_ROLES, ROLE_LABELS, type AdminRole } from './admin-levels'
 import {
-  assertSuperAdmin,
+  assertAdminManager,
+  assertCanTargetRole,
   hashToken,
   randomToken,
   statusOf,
@@ -27,11 +28,13 @@ export type AdminInvite = {
 export const listAdminInvites = createServerFn({ method: 'GET' })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }): Promise<AdminInvite[]> => {
-    await assertSuperAdmin(context.supabase, context.userId)
+    const level = await assertAdminManager(context.supabase, context.userId)
     const { supabaseAdmin } = await import('@/integrations/supabase/client.server')
-    const { data, error } = await supabaseAdmin
+    let query = supabaseAdmin
       .from('admin_invites')
       .select('id, email, role, invited_by_email, expires_at, accepted_at, revoked_at, created_at')
+    if (level === 2) query = query.eq('role', 'admin_l3')
+    const { data, error } = await query
       .order('created_at', { ascending: false })
       .limit(100)
     if (error) throw new Error(error.message)
@@ -60,7 +63,8 @@ export const createAdminInvite = createServerFn({ method: 'POST' })
       .parse(input),
   )
   .handler(async ({ data, context }) => {
-    await assertSuperAdmin(context.supabase, context.userId)
+    const level = await assertAdminManager(context.supabase, context.userId)
+    assertCanTargetRole(level, data.role)
     const { supabaseAdmin } = await import('@/integrations/supabase/client.server')
 
     const email = data.email.toLowerCase()
@@ -124,8 +128,16 @@ export const revokeAdminInvite = createServerFn({ method: 'POST' })
   .middleware([requireSupabaseAuth])
   .inputValidator((input: unknown) => z.object({ id: z.string().uuid() }).parse(input))
   .handler(async ({ data, context }) => {
-    await assertSuperAdmin(context.supabase, context.userId)
+    const level = await assertAdminManager(context.supabase, context.userId)
     const { supabaseAdmin } = await import('@/integrations/supabase/client.server')
+    if (level === 2) {
+      const { data: invite } = await supabaseAdmin
+        .from('admin_invites')
+        .select('role')
+        .eq('id', data.id)
+        .maybeSingle()
+      assertCanTargetRole(level, invite?.role ?? '')
+    }
     const { error } = await supabaseAdmin
       .from('admin_invites')
       .update({ revoked_at: new Date().toISOString() })

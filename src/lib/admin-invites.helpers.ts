@@ -21,6 +21,28 @@ export async function assertSuperAdmin(supabase: SupabaseClient<Database>, userI
   if (!data) throw new Error('Only a level 1 administrator can invite administrators')
 }
 
+/**
+ * Level 1 manages every admin account; level 2 manages level 3 accounts only.
+ * Returns the caller's admin level so callers can scope what they touch.
+ */
+export async function assertAdminManager(
+  supabase: SupabaseClient<Database>,
+  userId: string,
+): Promise<1 | 2> {
+  const { data, error } = await supabase.rpc('admin_level', { _user_id: userId })
+  if (error) throw new Error(error.message)
+  if (data === 1) return 1
+  if (data === 2) return 2
+  throw new Error('Only level 1 and level 2 administrators can manage admin accounts')
+}
+
+export function assertCanTargetRole(level: 1 | 2, role: string) {
+  if (level === 1) return
+  if (role !== 'admin_l3') {
+    throw new Error('Level 2 administrators can only create or manage level 3 accounts')
+  }
+}
+
 export function statusOf(row: {
   accepted_at: string | null
   revoked_at: string | null

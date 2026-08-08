@@ -142,7 +142,7 @@ function AdminPage() {
     "village-groups": { label: "Groups", allowed: isContentAdmin, requirement: "Admin level 1, 2 or 3" },
     surveys: { label: "Surveys", allowed: isAdmin, requirement: "Admin level 1 or 2" },
     roles: { label: "Roles", allowed: isContentAdmin, requirement: "Admin level 1, 2 or 3" },
-    admins: { label: "Admin accounts", allowed: isSuperAdmin, requirement: "Admin level 1 (super admin)" },
+    admins: { label: "Admin accounts", allowed: isAdmin, requirement: "Admin level 1 or 2" },
     activity: { label: "Activity log", allowed: isContentAdmin, requirement: "Admin level 1, 2 or 3" },
   };
   const blocked = requestedTab ? access[requestedTab] : undefined;
@@ -210,7 +210,7 @@ function AdminPage() {
             {isContentAdmin && <TabsTrigger value="village-groups">Groups</TabsTrigger>}
             {isAdmin && <TabsTrigger value="surveys">Surveys</TabsTrigger>}
             {isContentAdmin && <TabsTrigger value="roles">Roles</TabsTrigger>}
-            {isSuperAdmin && <TabsTrigger value="admins">Admin accounts</TabsTrigger>}
+            {isAdmin && <TabsTrigger value="admins">Admin accounts</TabsTrigger>}
             {isContentAdmin && <TabsTrigger value="activity">Activity log</TabsTrigger>}
           </TabsList>
 
@@ -676,8 +676,8 @@ function AdminPage() {
             <SurveysManager />
           </TabsContent>}
 
-          {isSuperAdmin && <TabsContent value="admins" className="mt-8">
-            <AdminAccounts />
+          {isAdmin && <TabsContent value="admins" className="mt-8">
+            <AdminAccounts adminLevel={isSuperAdmin ? 1 : 2} />
           </TabsContent>}
 
           {isContentAdmin && <TabsContent value="activity" className="mt-8">

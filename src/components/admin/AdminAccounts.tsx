@@ -31,7 +31,8 @@ const LEVELS = [
 
 type Level = (typeof LEVELS)[number]["value"];
 
-export function AdminAccounts() {
+export function AdminAccounts({ adminLevel = 1 }: { adminLevel?: 1 | 2 }) {
+  const levelOptions = adminLevel === 1 ? LEVELS : LEVELS.filter((l) => l.value === "admin_l3");
   const queryClient = useQueryClient();
   const list = useServerFn(listAdminAccounts);
   const create = useServerFn(createAdminAccount);
@@ -85,11 +86,13 @@ export function AdminAccounts() {
       <div>
         <h2 className="text-xl">Admin accounts</h2>
         <p className="text-sm text-muted-foreground">
-          Only level 1 administrators can create accounts or change admin levels.
+          {adminLevel === 1
+            ? "Only level 1 administrators can create accounts or change admin levels."
+            : "As a level 2 administrator you can create and manage level 3 accounts."}
         </p>
       </div>
 
-      <AdminInvites />
+      <AdminInvites adminLevel={adminLevel} />
 
       <Card className="border-border/70">
         <CardContent className="space-y-4 p-6">
@@ -128,7 +131,7 @@ export function AdminAccounts() {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {LEVELS.map((level) => (
+                  {levelOptions.map((level) => (
                     <SelectItem key={level.value} value={level.value}>
                       {level.label}
                     </SelectItem>
@@ -176,7 +179,7 @@ export function AdminAccounts() {
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        {LEVELS.map((level) => (
+                        {levelOptions.map((level) => (
                           <SelectItem key={level.value} value={level.value}>
                             {level.label}
                           </SelectItem>
