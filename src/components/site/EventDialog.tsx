@@ -296,6 +296,14 @@ export function EventDialog({
   return (
     <Dialog open={!!event} onOpenChange={onOpenChange}>
       <DialogContent className="max-h-[85dvh] overflow-y-auto sm:max-w-lg">
+        {event && isCcgms ? (
+          <div className="absolute right-12 top-6 flex h-7 items-center">
+            <span className="rounded-full border border-primary/30 bg-accent px-3 py-1 text-xs font-semibold text-foreground">
+              <span className="text-muted-foreground">{t("Entry fee")}: </span>
+              {Number(event.fee) > 0 ? formatMoney(Number(event.fee)) : t("Free")}
+            </span>
+          </div>
+        ) : null}
         <DialogHeader>
           <DialogTitle className="text-left">{dyn(event?.title)}</DialogTitle>
           <DialogDescription className="text-left">
