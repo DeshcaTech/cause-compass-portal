@@ -263,9 +263,9 @@ function Index() {
 
       {/* Community at a glance */}
       <section className="border-b border-border bg-card">
-        <div className="container-page grid grid-cols-2 gap-x-2 gap-y-1 divide-border py-8 sm:grid-cols-3 sm:py-10 lg:grid-cols-5">
+        <div className="container-page grid grid-cols-2 place-items-center gap-x-2 gap-y-1 divide-border py-2 sm:grid-cols-3 sm:py-2.5 lg:grid-cols-5">
           {statTiles.filter(({ value }) => Number(value) > 0).map(({ icon: Icon, label, value }) => (
-            <div key={label} className="flex min-w-0 items-center gap-3 px-1 py-3 sm:px-2">
+            <div key={label} className="flex min-w-0 items-center justify-center gap-3 px-1 py-1 sm:px-2">
               <span className="inline-flex size-9 shrink-0 items-center justify-center rounded-2xl bg-accent text-accent-foreground sm:size-10">
                 <Icon className="size-4 sm:size-5" />
               </span>
