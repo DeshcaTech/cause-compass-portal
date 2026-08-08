@@ -7,6 +7,14 @@ import { Facebook, Instagram, Mail, MapPin, Phone, Twitter, Youtube } from "luci
 import whatsappUs from "@/assets/whatsapp-us.png";
 import { TikTok } from "@/components/site/icons/TikTok";
 import { SmartImage } from "@/components/site/SmartImage";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 import galleryFallback from "@/assets/gallery-fallback.jpg";
 import communityTogether from "@/assets/community-together.jpg";
@@ -74,11 +82,13 @@ export function Footer() {
   );
   const showLogo = brand?.show_logo_footer ?? true;
   const customLogo = brand?.logo_url ?? null;
+  // Lightbox for the footer gallery strip: shows up to 10 selected photos.
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
   // Six showcase photos for the desktop footer strip: prefer the
   // admin-chosen default gallery's photos, then any gallery photos, then
   // placeholders so the strip always looks complete.
-  const galleryTiles = useMemo(() => {
+  const showcasePhotos = useMemo(() => {
     if (curated.length > 0) {
       const pool = [...curated];
       if (shuffleSeed) {
@@ -87,7 +97,7 @@ export function Footer() {
           [pool[i], pool[j]] = [pool[j]!, pool[i]!];
         }
       }
-      return pool.slice(0, 6).map((p) => ({
+      return pool.slice(0, 10).map((p) => ({
         key: p.id,
         src: p.photo_url,
         alt: p.caption ?? "Community photo",
@@ -99,7 +109,7 @@ export function Footer() {
       .map((p) => ({ key: p.id, src: p.photo_url, alt: p.caption ?? defaultGallery?.title ?? "Community photo" }));
     if (real.length === 0) {
       real = photos
-        .slice(0, 6)
+        .slice(0, 10)
         .map((p) => ({ key: p.id, src: p.photo_url, alt: p.caption ?? "Community photo" }));
     }
     const fillers = FOOTER_PLACEHOLDERS.slice(0, Math.max(0, 6 - real.length)).map((src, i) => ({
@@ -107,8 +117,14 @@ export function Footer() {
       src,
       alt: "Community photo",
     }));
-    return [...real, ...fillers].slice(0, 6);
+    return [...real, ...fillers].slice(0, 10);
   }, [galleries, photos, curated, shuffleSeed]);
+  const galleryTiles = useMemo(() => showcasePhotos.slice(0, 6), [showcasePhotos]);
+  const activePhoto = lightboxIndex === null ? null : showcasePhotos[lightboxIndex] ?? null;
+  const step = (delta: number) =>
+    setLightboxIndex((i) =>
+      i === null ? i : (i + delta + showcasePhotos.length) % showcasePhotos.length,
+    );
   return (
     <footer className="mt-24 border-t border-border bg-primary text-primary-foreground">
       <div className="container-page grid grid-cols-2 gap-8 py-12 sm:gap-10 lg:grid-cols-6">
@@ -287,12 +303,14 @@ export function Footer() {
         <div className="col-span-2 lg:col-span-2">
           <p className="eyebrow text-gold">{t("From the gallery")}</p>
           <div className="mt-4 grid grid-cols-3 gap-2.5">
-            {galleryTiles.map((tile) => (
-              <Link
+            {galleryTiles.map((tile, i) => (
+              <button
                 key={tile.key}
-                to="/gallery"
-                className="group block aspect-square overflow-hidden rounded-lg border border-primary-foreground/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
-                aria-label={t("View gallery")}
+                type="button"
+                aria-haspopup="dialog"
+                onClick={() => setLightboxIndex(i)}
+                className="group block aspect-square w-full overflow-hidden rounded-lg border border-primary-foreground/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
+                aria-label={t("View gallery photos")}
               >
                 <SmartImage
                   src={tile.src}
@@ -301,11 +319,80 @@ export function Footer() {
                   wrapperClassName="size-full"
                   className="size-full object-cover object-center transition-transform duration-300 group-hover:scale-105"
                 />
-              </Link>
+              </button>
             ))}
           </div>
         </div>
       </div>
+
+      <Dialog open={lightboxIndex !== null} onOpenChange={(open) => !open && setLightboxIndex(null)}>
+        <DialogContent className="max-h-[90dvh] overflow-y-auto sm:max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>{t("From the gallery")}</DialogTitle>
+          </DialogHeader>
+          {activePhoto ? (
+            <div className="space-y-3">
+              <div className="relative overflow-hidden rounded-xl bg-muted">
+                <SmartImage
+                  src={activePhoto.src}
+                  alt={activePhoto.alt}
+                  wrapperClassName="block w-full"
+                  className="max-h-[60dvh] w-full object-contain"
+                />
+                {showcasePhotos.length > 1 ? (
+                  <>
+                    <button
+                      type="button"
+                      onClick={() => step(-1)}
+                      aria-label={t("Previous photo")}
+                      className="absolute left-2 top-1/2 grid size-9 -translate-y-1/2 place-items-center rounded-full bg-background/80 text-foreground shadow hover:bg-background"
+                    >
+                      <ChevronLeft className="size-5" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => step(1)}
+                      aria-label={t("Next photo")}
+                      className="absolute right-2 top-1/2 grid size-9 -translate-y-1/2 place-items-center rounded-full bg-background/80 text-foreground shadow hover:bg-background"
+                    >
+                      <ChevronRight className="size-5" />
+                    </button>
+                  </>
+                ) : null}
+              </div>
+              <p className="text-sm text-muted-foreground">
+                {activePhoto.alt} · {(lightboxIndex ?? 0) + 1}/{showcasePhotos.length}
+              </p>
+              <div className="grid grid-cols-5 gap-2">
+                {showcasePhotos.map((p, i) => (
+                  <button
+                    key={p.key}
+                    type="button"
+                    onClick={() => setLightboxIndex(i)}
+                    aria-label={p.alt}
+                    className={`aspect-square overflow-hidden rounded-md border transition-opacity ${
+                      i === lightboxIndex ? "border-primary" : "border-border opacity-70 hover:opacity-100"
+                    }`}
+                  >
+                    <SmartImage
+                      src={p.src}
+                      alt=""
+                      loading="lazy"
+                      wrapperClassName="size-full"
+                      className="size-full object-cover object-center"
+                    />
+                  </button>
+                ))}
+              </div>
+              <Button asChild variant="hero" className="w-full">
+                <Link to="/gallery" onClick={() => setLightboxIndex(null)}>
+                  {t("View full gallery")}
+                </Link>
+              </Button>
+            </div>
+          ) : null}
+        </DialogContent>
+      </Dialog>
       <div className="border-t border-primary-foreground/15">
         <div className="container-page flex flex-col gap-2 py-5 text-xs text-primary-foreground/60 sm:flex-row sm:items-center sm:justify-between">
           <p>
