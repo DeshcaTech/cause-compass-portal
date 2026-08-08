@@ -241,7 +241,7 @@ function RsvpForm({ event }: { event: EventRow }) {
         {isPaidCcgms ? (
           <div className="text-sm">
             <span className="text-muted-foreground">{t("Total fee")}: </span>
-            <span className="font-semibold">{formatMoney(totalFee)}</span>
+            <span className="text-[2.6rem] font-bold leading-none">{formatMoney(totalFee)}</span>
             <span className="block text-xs text-muted-foreground">
               {`${guests + 1} × ${formatMoney(Number(event.fee))}`}
             </span>
