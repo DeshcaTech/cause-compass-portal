@@ -149,7 +149,7 @@ function Index() {
                 src={flagsAsset.url}
                 alt="Cameroon and United Kingdom flags"
                 loading="eager"
-                className="order-first h-8 w-auto shrink-0 rounded-md object-cover sm:h-10"
+                className="order-last h-8 w-auto shrink-0 rounded-md object-cover sm:h-10"
               />
               <p className="eyebrow min-w-0 text-right text-gold leading-relaxed">
                 {t(site?.hero_eyebrow || "Cameroonian Community in Greater Manchester and Surrounding area")
