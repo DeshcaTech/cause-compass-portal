@@ -380,7 +380,7 @@ function Index() {
               </h2>
             </div>
             <Button asChild variant="soft" className="w-full sm:w-auto">
-              <Link to="/news">{t("See all news")}</Link>
+              <Link to="/news">{t("See all News")}</Link>
             </Button>
           </div>
           {latestNews.length === 0 ? (
@@ -434,7 +434,7 @@ function Index() {
               <h2 className="mt-2 text-2xl sm:text-3xl md:text-[2rem]">{t("Coming events")}</h2>
             </div>
             <Button asChild variant="soft" className="w-full sm:w-auto">
-              <Link to="/events">{t("All events")}</Link>
+              <Link to="/events">{t("See all Events")}</Link>
             </Button>
           </div>
           {upcoming.length === 0 ? (
@@ -536,7 +536,7 @@ function Index() {
             <h2 className="mt-2 text-2xl sm:text-3xl md:text-[2rem]">{t("Active campaigns")}</h2>
           </div>
           <Button asChild variant="soft" className="w-full sm:w-auto">
-            <Link to="/fundraising">{t("See all campaigns")}</Link>
+            <Link to="/fundraising">{t("See all Campaigns")}</Link>
           </Button>
         </div>
         <div className="mt-6 grid gap-4 sm:mt-8 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3">
