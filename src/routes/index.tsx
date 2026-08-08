@@ -130,10 +130,10 @@ function Index() {
 
   const statTiles = useMemo(
     () => [
-      { icon: Users, label: t("Members"), value: stats?.members ?? 0 },
-      { icon: Building2, label: t("BUSINESSES"), value: stats?.businesses ?? 0 },
-      { icon: CalendarDays, label: t("EVENTS"), value: stats?.upcoming_events ?? 0 },
-      { icon: HeartHandshake, label: t("CAMPAIGNS"), value: stats?.active_campaigns ?? 0 },
+      { icon: Users, label: t("Members"), value: stats?.members ?? 0, to: "/membership" as const },
+      { icon: Building2, label: t("BUSINESSES"), value: stats?.businesses ?? 0, to: "/partners" as const },
+      { icon: CalendarDays, label: t("EVENTS"), value: stats?.upcoming_events ?? 0, to: "/events" as const },
+      { icon: HeartHandshake, label: t("CAMPAIGNS"), value: stats?.active_campaigns ?? 0, to: "/fundraising" as const },
     ],
     [stats, t],
   );
@@ -264,8 +264,12 @@ function Index() {
       {/* Community at a glance */}
       <section className="border-b border-border bg-card">
         <div className="container-page grid grid-cols-2 place-items-center gap-x-2 gap-y-1 divide-border py-2 sm:grid-cols-3 sm:py-2.5 lg:grid-cols-5">
-          {statTiles.filter(({ value }) => Number(value) > 0).map(({ icon: Icon, label, value }) => (
-            <div key={label} className="flex min-w-0 items-center justify-center gap-3 px-1 py-1 sm:px-2">
+          {statTiles.filter(({ value }) => Number(value) > 0).map(({ icon: Icon, label, value, to }) => (
+            <Link
+              key={label}
+              to={to}
+              className="flex min-w-0 items-center justify-center gap-3 rounded-2xl px-1 py-1 transition-colors hover:bg-accent/40 sm:px-2"
+            >
               <span className="inline-flex size-9 shrink-0 items-center justify-center rounded-2xl bg-accent text-accent-foreground sm:size-10">
                 <Icon className="size-4 sm:size-5" />
               </span>
@@ -275,7 +279,7 @@ function Index() {
                   {label}
                 </span>
               </span>
-            </div>
+            </Link>
           ))}
         </div>
       </section>
