@@ -375,6 +375,9 @@ function Index() {
                 {t("Latest news & announcements")}
               </h2>
             </div>
+            <Button asChild variant="soft" className="w-full sm:w-auto">
+              <Link to="/news">{t("See all news")}</Link>
+            </Button>
           </div>
           {latestNews.length === 0 ? (
             <p className="mt-8 text-sm text-muted-foreground">
