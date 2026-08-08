@@ -340,7 +340,7 @@ function Index() {
                 </div>
               ))}
             </div>
-            <p className="text-center font-display text-xl font-semibold text-terracotta sm:text-left sm:text-2xl">
+            <p className="text-center font-display text-xl font-semibold text-terracotta sm:text-2xl">
               {t("Let's Build It Together!")}
             </p>
             <Button asChild variant="soft" className="w-full sm:w-auto">
