@@ -620,22 +620,7 @@ function Index() {
                 >
                   <Card className="h-full cursor-pointer border-border/70 transition-all group-hover:-translate-y-1 group-hover:shadow-[var(--shadow-lift)]">
                     <CardContent className="p-5 sm:p-6">
-                      {partner.logo_url ? (
-                        <img
-                          src={partner.logo_url}
-                          alt={`${partner.business_name} logo`}
-                          loading="lazy"
-                          decoding="async"
-                          width={112}
-                          height={112}
-                          className="h-14 w-14 rounded-2xl object-cover"
-                        />
-                      ) : (
-                        <span className="inline-flex size-14 items-center justify-center rounded-2xl bg-accent text-accent-foreground">
-                          <Building2 className="size-6" />
-                        </span>
-                      )}
-                      <p className="mt-4 text-[11px] uppercase tracking-wider text-muted-foreground sm:text-xs">
+                      <p className="text-[11px] uppercase tracking-wider text-muted-foreground sm:text-xs">
                         {dyn(partner.category)}
                       </p>
                       <h3 className="mt-1 text-base leading-snug sm:text-lg">
