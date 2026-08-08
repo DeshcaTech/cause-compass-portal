@@ -144,7 +144,7 @@ function Index() {
     <>
       {/* Magazine masthead hero: editorial split */}
       <section className="relative isolate overflow-hidden bg-primary text-primary-foreground">
-        <div className="container-page grid items-center gap-10 pb-14 pt-7 sm:pb-16 sm:pt-8 lg:grid-cols-[1.05fr_0.95fr] lg:pb-24 lg:pt-12">
+        <div className="container-page grid items-center gap-10 pb-3.5 pt-3.5 sm:pb-4 sm:pt-4 lg:grid-cols-[1.05fr_0.95fr] lg:pb-6 lg:pt-6">
           <div className="min-w-0">
             <div className="flex items-center justify-end gap-3 sm:gap-4">
               <p className="eyebrow min-w-0 text-right text-gold leading-relaxed">
