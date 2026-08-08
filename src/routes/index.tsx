@@ -7,7 +7,6 @@ import {
   CalendarDays,
   HandHeart,
   HeartHandshake,
-  UserRound,
   Users,
 } from "lucide-react";
 
@@ -134,7 +133,6 @@ function Index() {
       { icon: Users, label: t("Members"), value: stats?.members ?? 0 },
       { icon: Building2, label: t("BUSINESSES"), value: stats?.businesses ?? 0 },
       { icon: CalendarDays, label: t("EVENTS"), value: stats?.upcoming_events ?? 0 },
-      { icon: UserRound, label: t("Board members"), value: stats?.board_members ?? 0 },
       { icon: HeartHandshake, label: t("CAMPAIGNS"), value: stats?.active_campaigns ?? 0 },
     ],
     [stats, t],
