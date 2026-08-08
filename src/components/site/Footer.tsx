@@ -303,12 +303,14 @@ export function Footer() {
         <div className="col-span-2 lg:col-span-2">
           <p className="eyebrow text-gold">{t("From the gallery")}</p>
           <div className="mt-4 grid grid-cols-3 gap-2.5">
-            {galleryTiles.map((tile) => (
-              <Link
+            {galleryTiles.map((tile, i) => (
+              <button
                 key={tile.key}
-                to="/gallery"
-                className="group block aspect-square overflow-hidden rounded-lg border border-primary-foreground/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
-                aria-label={t("View gallery")}
+                type="button"
+                aria-haspopup="dialog"
+                onClick={() => setLightboxIndex(i)}
+                className="group block aspect-square w-full overflow-hidden rounded-lg border border-primary-foreground/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
+                aria-label={t("View gallery photos")}
               >
                 <SmartImage
                   src={tile.src}
@@ -317,11 +319,80 @@ export function Footer() {
                   wrapperClassName="size-full"
                   className="size-full object-cover object-center transition-transform duration-300 group-hover:scale-105"
                 />
-              </Link>
+              </button>
             ))}
           </div>
         </div>
       </div>
+
+      <Dialog open={lightboxIndex !== null} onOpenChange={(open) => !open && setLightboxIndex(null)}>
+        <DialogContent className="max-h-[90dvh] overflow-y-auto sm:max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>{t("From the gallery")}</DialogTitle>
+          </DialogHeader>
+          {activePhoto ? (
+            <div className="space-y-3">
+              <div className="relative overflow-hidden rounded-xl bg-muted">
+                <SmartImage
+                  src={activePhoto.src}
+                  alt={activePhoto.alt}
+                  wrapperClassName="block w-full"
+                  className="max-h-[60dvh] w-full object-contain"
+                />
+                {showcasePhotos.length > 1 ? (
+                  <>
+                    <button
+                      type="button"
+                      onClick={() => step(-1)}
+                      aria-label={t("Previous photo")}
+                      className="absolute left-2 top-1/2 grid size-9 -translate-y-1/2 place-items-center rounded-full bg-background/80 text-foreground shadow hover:bg-background"
+                    >
+                      <ChevronLeft className="size-5" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => step(1)}
+                      aria-label={t("Next photo")}
+                      className="absolute right-2 top-1/2 grid size-9 -translate-y-1/2 place-items-center rounded-full bg-background/80 text-foreground shadow hover:bg-background"
+                    >
+                      <ChevronRight className="size-5" />
+                    </button>
+                  </>
+                ) : null}
+              </div>
+              <p className="text-sm text-muted-foreground">
+                {activePhoto.alt} · {(lightboxIndex ?? 0) + 1}/{showcasePhotos.length}
+              </p>
+              <div className="grid grid-cols-5 gap-2">
+                {showcasePhotos.map((p, i) => (
+                  <button
+                    key={p.key}
+                    type="button"
+                    onClick={() => setLightboxIndex(i)}
+                    aria-label={p.alt}
+                    className={`aspect-square overflow-hidden rounded-md border transition-opacity ${
+                      i === lightboxIndex ? "border-primary" : "border-border opacity-70 hover:opacity-100"
+                    }`}
+                  >
+                    <SmartImage
+                      src={p.src}
+                      alt=""
+                      loading="lazy"
+                      wrapperClassName="size-full"
+                      className="size-full object-cover object-center"
+                    />
+                  </button>
+                ))}
+              </div>
+              <Button asChild variant="hero" className="w-full">
+                <Link to="/gallery" onClick={() => setLightboxIndex(null)}>
+                  {t("View full gallery")}
+                </Link>
+              </Button>
+            </div>
+          ) : null}
+        </DialogContent>
+      </Dialog>
       <div className="border-t border-primary-foreground/15">
         <div className="container-page flex flex-col gap-2 py-5 text-xs text-primary-foreground/60 sm:flex-row sm:items-center sm:justify-between">
           <p>
