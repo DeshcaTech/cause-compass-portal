@@ -156,10 +156,7 @@ function Index() {
                     return acc;
                   }, [[], [], []])
                   .map((line, i) => (
-                    <span key={i} className="block lg:inline lg:whitespace-nowrap">
-                      {line.join(" ")}
-                      {i < 2 ? <span className="hidden lg:inline"> </span> : null}
-                    </span>
+                    <span key={i} className="block">{line.join(" ")}</span>
                   ))}
               </p>
               <img
