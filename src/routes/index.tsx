@@ -21,6 +21,8 @@ import eventFallback from "@/assets/event-fallback.jpg?w=1000&quality=72&format=
 import eventFallbackAvif from "@/assets/event-fallback.jpg?w=1000&quality=55&format=avif";
 import eventFallbackWebp from "@/assets/event-fallback.jpg?w=1000&quality=70&format=webp";
 import downloadAppBadge from "@/assets/download-app-now-v2.png.asset.json";
+import newsFallbackImg from "@/assets/news-fallback.jpg?w=1000&quality=72&format=jpg";
+import campaignFallbackImg from "@/assets/campaign-fallback.jpg?w=1000&quality=72&format=jpg";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
