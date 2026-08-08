@@ -35,7 +35,7 @@ export const listAdminAccounts = createServerFn({ method: 'GET' })
     const level = await assertAdminManager(context.supabase, context.userId)
     const { supabaseAdmin } = await import('@/integrations/supabase/client.server')
 
-    const visibleRoles = level === 1 ? [...ADMIN_ROLES] : ['admin_l3']
+    const visibleRoles: AdminRole[] = level === 1 ? [...ADMIN_ROLES] : ['admin_l3']
     const { data: roles, error } = await supabaseAdmin
       .from('user_roles')
       .select('user_id, role')
