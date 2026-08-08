@@ -179,7 +179,8 @@ function Index() {
                   "CCGMs is built on family, culture and mutual support. Join us, give to a cause, and be part of everything we build together.",
               )}
             </p>
-            <div className="mt-8 flex flex-row flex-nowrap items-stretch gap-3">
+            <div className="mt-8 flex flex-row flex-wrap items-center gap-3 lg:flex-nowrap">
+              <div className="flex flex-row flex-nowrap items-stretch gap-3">
               <Button asChild variant="gold" size="xl" className="min-w-0 shrink px-5 sm:px-7">
                 <Link to="/membership" className="whitespace-nowrap">
                   {t("Join")} <ArrowRight />
@@ -193,9 +194,9 @@ function Index() {
                   {t("Support Our Causes")}
                 </Link>
               </Button>
-            </div>
-            {!appInstalled && (
-              <div className="mt-6 hidden w-full max-w-[420px] lg:flex [&>*]:w-full">
+              </div>
+              {!appInstalled && (
+              <div className="hidden w-full max-w-[260px] lg:flex [&>*]:w-full">
                 <InstallAppDialog
                   platform={devicePlatform}
                   storeUrl={
@@ -218,7 +219,8 @@ function Index() {
                   />
                 </InstallAppDialog>
               </div>
-            )}
+              )}
+            </div>
           </div>
           <div className="relative">
             <Picture
