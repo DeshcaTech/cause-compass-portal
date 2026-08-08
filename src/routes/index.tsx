@@ -7,7 +7,6 @@ import {
   CalendarDays,
   HandHeart,
   HeartHandshake,
-  UserRound,
   Users,
 } from "lucide-react";
 
