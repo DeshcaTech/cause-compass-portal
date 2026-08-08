@@ -7,6 +7,14 @@ import { Facebook, Instagram, Mail, MapPin, Phone, Twitter, Youtube } from "luci
 import whatsappUs from "@/assets/whatsapp-us.png";
 import { TikTok } from "@/components/site/icons/TikTok";
 import { SmartImage } from "@/components/site/SmartImage";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 import galleryFallback from "@/assets/gallery-fallback.jpg";
 import communityTogether from "@/assets/community-together.jpg";
@@ -74,11 +82,13 @@ export function Footer() {
   );
   const showLogo = brand?.show_logo_footer ?? true;
   const customLogo = brand?.logo_url ?? null;
+  // Lightbox for the footer gallery strip: shows up to 10 selected photos.
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
   // Six showcase photos for the desktop footer strip: prefer the
   // admin-chosen default gallery's photos, then any gallery photos, then
   // placeholders so the strip always looks complete.
-  const galleryTiles = useMemo(() => {
+  const showcasePhotos = useMemo(() => {
     if (curated.length > 0) {
       const pool = [...curated];
       if (shuffleSeed) {
@@ -87,7 +97,7 @@ export function Footer() {
           [pool[i], pool[j]] = [pool[j]!, pool[i]!];
         }
       }
-      return pool.slice(0, 6).map((p) => ({
+      return pool.slice(0, 10).map((p) => ({
         key: p.id,
         src: p.photo_url,
         alt: p.caption ?? "Community photo",
@@ -99,7 +109,7 @@ export function Footer() {
       .map((p) => ({ key: p.id, src: p.photo_url, alt: p.caption ?? defaultGallery?.title ?? "Community photo" }));
     if (real.length === 0) {
       real = photos
-        .slice(0, 6)
+        .slice(0, 10)
         .map((p) => ({ key: p.id, src: p.photo_url, alt: p.caption ?? "Community photo" }));
     }
     const fillers = FOOTER_PLACEHOLDERS.slice(0, Math.max(0, 6 - real.length)).map((src, i) => ({
@@ -107,8 +117,14 @@ export function Footer() {
       src,
       alt: "Community photo",
     }));
-    return [...real, ...fillers].slice(0, 6);
+    return [...real, ...fillers].slice(0, 10);
   }, [galleries, photos, curated, shuffleSeed]);
+  const galleryTiles = useMemo(() => showcasePhotos.slice(0, 6), [showcasePhotos]);
+  const activePhoto = lightboxIndex === null ? null : showcasePhotos[lightboxIndex] ?? null;
+  const step = (delta: number) =>
+    setLightboxIndex((i) =>
+      i === null ? i : (i + delta + showcasePhotos.length) % showcasePhotos.length,
+    );
   return (
     <footer className="mt-24 border-t border-border bg-primary text-primary-foreground">
       <div className="container-page grid grid-cols-2 gap-8 py-12 sm:gap-10 lg:grid-cols-6">
