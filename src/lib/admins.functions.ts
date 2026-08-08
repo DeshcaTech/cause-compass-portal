@@ -1,10 +1,8 @@
 import { createServerFn } from '@tanstack/react-start'
 import { z } from 'zod'
 
-import type { SupabaseClient } from '@supabase/supabase-js'
-
 import { requireSupabaseAuth } from '@/integrations/supabase/auth-middleware'
-import type { Database } from '@/integrations/supabase/types'
+import { assertAdminManager, assertCanTargetRole } from './admin-invites.helpers'
 
 const ADMIN_ROLES = ['admin', 'admin_l2', 'admin_l3'] as const
 type AdminRole = (typeof ADMIN_ROLES)[number]
@@ -16,22 +14,32 @@ export type AdminAccount = {
   role: AdminRole
 }
 
-async function assertSuperAdmin(supabase: SupabaseClient<Database>, userId: string) {
-  const { data, error } = await supabase.rpc('is_super_admin', { _user_id: userId })
-  if (error) throw new Error(error.message)
-  if (!data) throw new Error('Only a level 1 administrator can manage admin accounts')
+/** Level 2 may only touch accounts that are currently level 3. */
+async function assertTargetIsManageable(level: 1 | 2, targetUserId: string) {
+  if (level === 1) return
+  const { supabaseAdmin } = await import('@/integrations/supabase/client.server')
+  const { data } = await supabaseAdmin
+    .from('user_roles')
+    .select('role')
+    .eq('user_id', targetUserId)
+    .in('role', [...ADMIN_ROLES])
+  const roles = (data ?? []).map((r) => r.role as string)
+  if (roles.length > 0 && roles.some((r) => r !== 'admin_l3')) {
+    throw new Error('Level 2 administrators can only manage level 3 accounts')
+  }
 }
 
 export const listAdminAccounts = createServerFn({ method: 'GET' })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }): Promise<AdminAccount[]> => {
-    await assertSuperAdmin(context.supabase, context.userId)
+    const level = await assertAdminManager(context.supabase, context.userId)
     const { supabaseAdmin } = await import('@/integrations/supabase/client.server')
 
+    const visibleRoles = level === 1 ? [...ADMIN_ROLES] : ['admin_l3']
     const { data: roles, error } = await supabaseAdmin
       .from('user_roles')
       .select('user_id, role')
-      .in('role', [...ADMIN_ROLES])
+      .in('role', visibleRoles)
     if (error) throw new Error(error.message)
 
     const ids = [...new Set((roles ?? []).map((r) => r.user_id))]
@@ -65,7 +73,8 @@ export const createAdminAccount = createServerFn({ method: 'POST' })
   .middleware([requireSupabaseAuth])
   .inputValidator((input: unknown) => createSchema.parse(input))
   .handler(async ({ data, context }) => {
-    await assertSuperAdmin(context.supabase, context.userId)
+    const level = await assertAdminManager(context.supabase, context.userId)
+    assertCanTargetRole(level, data.role)
     const { supabaseAdmin } = await import('@/integrations/supabase/client.server')
 
     const { data: created, error } = await supabaseAdmin.auth.admin.createUser({
@@ -100,9 +109,11 @@ export const setAdminLevel = createServerFn({ method: 'POST' })
   .middleware([requireSupabaseAuth])
   .inputValidator((input: unknown) => roleSchema.parse(input))
   .handler(async ({ data, context }) => {
-    await assertSuperAdmin(context.supabase, context.userId)
+    const level = await assertAdminManager(context.supabase, context.userId)
+    assertCanTargetRole(level, data.role)
     if (data.userId === context.userId) throw new Error('You cannot change your own admin level')
     const { supabaseAdmin } = await import('@/integrations/supabase/client.server')
+    await assertTargetIsManageable(level, data.userId)
 
     await supabaseAdmin
       .from('user_roles')
@@ -120,9 +131,10 @@ export const revokeAdminAccess = createServerFn({ method: 'POST' })
   .middleware([requireSupabaseAuth])
   .inputValidator((input: unknown) => z.object({ userId: z.string().uuid() }).parse(input))
   .handler(async ({ data, context }) => {
-    await assertSuperAdmin(context.supabase, context.userId)
+    const level = await assertAdminManager(context.supabase, context.userId)
     if (data.userId === context.userId) throw new Error('You cannot remove your own admin access')
     const { supabaseAdmin } = await import('@/integrations/supabase/client.server')
+    await assertTargetIsManageable(level, data.userId)
     const { error } = await supabaseAdmin
       .from('user_roles')
       .delete()
