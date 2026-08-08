@@ -72,5 +72,8 @@ export const home: Record<string, string> = {
   "All businesses": "Toutes les entreprises",
   "Members": "Membres",
   "Member businesses": "Entreprises membres",
+  "BUSINESSES": "ENTREPRISES",
+  "EVENTS": "ÉVÉNEMENTS",
+  "CAMPAIGNS": "CAMPAGNES",
   "Board members": "Membres du conseil",
 };
