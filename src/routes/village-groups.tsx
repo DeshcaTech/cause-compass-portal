@@ -14,6 +14,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { villageGroupsQuery, type VillageGroup } from "@/lib/queries";
 import { useT } from "@/lib/i18n";
 import { useDyn } from "@/lib/i18n/dynamic";
+import { mergeShareMeta } from "@/lib/share-meta";
+import { useDialogParam } from "@/lib/use-dialog-param";
 import groupsBanner from "@/assets/community-together.jpg";
 
 const SITE_ORIGIN = "https://cause-compass-portal.lovable.app";
@@ -25,12 +27,14 @@ type CategoryKey = (typeof CATEGORIES)[number];
 const searchSchema = z.object({
   category: fallback(z.string(), "all").default("all"),
   group: z.string().optional(),
+  st: z.string().optional(),
+  si: z.string().optional(),
 });
 
 export const Route = createFileRoute("/village-groups")({
   validateSearch: zodValidator(searchSchema),
-  head: () => ({
-    meta: [
+  head: ({ match }) => ({
+    meta: mergeShareMeta([
       { title: "Our Groups — CCGMs Community" },
       {
         name: "description",
@@ -52,7 +56,7 @@ export const Route = createFileRoute("/village-groups")({
         content: "Community groups within CCGMs, with meeting details and contacts.",
       },
       { name: "twitter:image", content: `${SITE_ORIGIN}/og-ccgms.jpg` },
-    ],
+    ], match.search as Record<string, unknown>),
     links: [{ rel: "canonical", href: PAGE_URL }],
   }),
   component: VillageGroupsPage,
@@ -61,6 +65,7 @@ export const Route = createFileRoute("/village-groups")({
 function VillageGroupsPage() {
   const t = useT();
   const dyn = useDyn();
+  const navigate = useNavigate({ from: "/village-groups" });
   const search = Route.useSearch();
   const category: CategoryKey = CATEGORIES.includes(search.category as CategoryKey)
     ? (search.category as CategoryKey)
