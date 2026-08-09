@@ -76,14 +76,10 @@ function JobsPage() {
   const { data: allJobs = [] } = useQuery(jobsQuery);
   const jobs = useMemo(() => allJobs.filter((job) => !isExpired(job)), [allJobs]);
   // The open job lives in the URL so the popup can be shared as a link.
-  const navigate = useNavigate({ from: "/jobs" });
   const search = Route.useSearch();
   const selected = jobs.find((job) => job.id === search.job) ?? null;
-  const setSelected = (job: Job | null) =>
-    navigate({
-      search: (prev: Record<string, string | undefined>) => ({ ...prev, job: job?.id }),
-      replace: !job,
-    });
+  const openJob = useDialogParam("job");
+  const setSelected = (job: Job | null) => openJob(job?.id ?? null);
   const [applyFor, setApplyFor] = useState<Job | null>(null);
   const [category, setCategory] = useSearchFilter("category", ALL);
   const [location, setLocation] = useSearchFilter("location", ALL);
@@ -276,6 +272,7 @@ function JobsPage() {
                 <ShareButton
                   title={dyn(selected.title)}
                   path={`/jobs?job=${selected.id}`}
+                  image={selected.image_url ?? null}
                   label={t("Share job")}
                   className="flex-1"
                 />
