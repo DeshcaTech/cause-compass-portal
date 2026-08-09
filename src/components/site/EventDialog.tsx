@@ -276,11 +276,17 @@ export function EventDialog({
 
   async function share() {
     if (!event) return;
-    const url =
-      shareUrl ??
-      (typeof window !== "undefined"
-        ? `${window.location.origin}/events?event=${event.id}`
-        : "");
+    const basePath = shareUrl ?? `/events?event=${event.id}`;
+    const withMeta = withShareMeta(
+      basePath,
+      dyn(event.title),
+      event.image_url ?? eventFallbackImage(event.id),
+    );
+    const url = /^https?:\/\//i.test(withMeta)
+      ? withMeta
+      : typeof window !== "undefined"
+        ? `${window.location.origin}${withMeta}`
+        : withMeta;
     try {
       if (navigator.share) {
         await navigator.share({ title: dyn(event.title), url });
