@@ -19,14 +19,18 @@ import campaignFallback from "@/assets/campaign-fallback.jpg";
 import { useT } from "@/lib/i18n";
 import { useDyn } from "@/lib/i18n/dynamic";
 import { searchString, useSearchFilter } from "@/lib/use-search-filter";
+import { mergeShareMeta } from "@/lib/share-meta";
+import { useDialogParam } from "@/lib/use-dialog-param";
 
 export const Route = createFileRoute("/fundraising")({
-  validateSearch: (search: Record<string, unknown>): { view?: string | undefined; campaign?: string | undefined} => ({
+  validateSearch: (search: Record<string, unknown>): { view?: string | undefined; campaign?: string | undefined; st?: string | undefined; si?: string | undefined} => ({
     view: searchString(search, "view"),
     campaign: searchString(search, "campaign"),
+    st: searchString(search, "st"),
+    si: searchString(search, "si"),
   }),
-  head: () => ({
-    meta: [
+  head: ({ match }) => ({
+    meta: mergeShareMeta([
       { title: "Fundraising — Support Our Causes" },
       {
         name: "description",
@@ -40,7 +44,7 @@ export const Route = createFileRoute("/fundraising")({
         property: "og:description",
         content: "See active and past campaigns and give to the cause that matters to you.",
       },
-    ],
+    ], match.search as Record<string, unknown>),
   }),
   component: FundraisingPage,
 });
@@ -174,6 +178,7 @@ function CampaignDialog({
               <ShareButton
                 title={dyn(campaign.title)}
                 path={`/fundraising?campaign=${campaign.id}`}
+                image={campaign.image_url ?? null}
                 label={t("Share campaign")}
                 className="flex-1"
               />
@@ -193,14 +198,10 @@ function FundraisingPage() {
   const [view, setView] = useSearchFilter("view", "active");
   const list = view === "active" ? active : past;
   // The open campaign lives in the URL so the popup can be shared as a link.
-  const navigate = useNavigate({ from: "/fundraising" });
   const search = Route.useSearch();
   const selected = campaigns.find((c) => c.id === search.campaign) ?? null;
-  const setSelected = (campaign: Campaign | null) =>
-    navigate({
-      search: (prev: Record<string, string | undefined>) => ({ ...prev, campaign: campaign?.id }),
-      replace: !campaign,
-    });
+  const openCampaign = useDialogParam("campaign");
+  const setSelected = (campaign: Campaign | null) => openCampaign(campaign?.id ?? null);
 
   return (
     <>
