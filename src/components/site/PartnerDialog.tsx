@@ -71,6 +71,7 @@ export function PartnerDialog({
               <ShareButton
                 title={partner.business_name}
                 path={`/partners?partner=${partner.id}`}
+                image={partner.logo_url ?? null}
                 label={t("Share business")}
                 className="flex-1"
               />
