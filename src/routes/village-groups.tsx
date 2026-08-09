@@ -61,7 +61,6 @@ export const Route = createFileRoute("/village-groups")({
 function VillageGroupsPage() {
   const t = useT();
   const dyn = useDyn();
-  const navigate = useNavigate({ from: "/village-groups" });
   const search = Route.useSearch();
   const category: CategoryKey = CATEGORIES.includes(search.category as CategoryKey)
     ? (search.category as CategoryKey)
@@ -69,11 +68,8 @@ function VillageGroupsPage() {
   const { data: groups = [] } = useQuery(villageGroupsQuery);
   // The open group lives in the URL so the popup can be shared as a link.
   const selected = groups.find((g) => g.id === search.group) ?? null;
-  const setSelected = (group: VillageGroup | null) =>
-    navigate({
-      search: (prev: Record<string, string | undefined>) => ({ ...prev, group: group?.id }),
-      replace: !group,
-    });
+  const openGroup = useDialogParam("group");
+  const setSelected = (group: VillageGroup | null) => openGroup(group?.id ?? null);
 
   const categories = [
     { key: "all" as const, label: t("All groups") },
@@ -203,6 +199,7 @@ function VillageGroupsPage() {
               <ShareButton
                 title={selected.name}
                 path={`/village-groups?group=${selected.id}`}
+                image={selected.image_url ?? null}
                 label={t("Share group")}
                 className="w-full"
               />
