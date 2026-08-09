@@ -1,0 +1,1 @@
+UPDATE public.village_groups SET name = 'Le Taro' WHERE name = 'Taro';
