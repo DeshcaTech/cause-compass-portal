@@ -17,9 +17,11 @@ export function useDialogParam(key: string) {
     if (typeof window === "undefined") return;
     const y = scrollRef.current;
     // Wait for the dialog's scroll lock to release before restoring.
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => window.scrollTo({ top: y, behavior: "instant" as ScrollBehavior }));
-    });
+    const apply = () => window.scrollTo({ top: y, behavior: "instant" as ScrollBehavior });
+    requestAnimationFrame(() => requestAnimationFrame(apply));
+    // Images finishing their lazy load can shorten the page for a frame or two.
+    window.setTimeout(apply, 120);
+    window.setTimeout(apply, 350);
   };
 
   return (id: string | null | undefined) => {
