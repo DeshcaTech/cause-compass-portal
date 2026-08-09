@@ -27,16 +27,20 @@ import { supabase } from "@/integrations/supabase/client";
 import { useT } from "@/lib/i18n";
 import { useDyn } from "@/lib/i18n/dynamic";
 import { searchString, useSearchFilter } from "@/lib/use-search-filter";
+import { mergeShareMeta } from "@/lib/share-meta";
+import { useDialogParam } from "@/lib/use-dialog-param";
 
 export const Route = createFileRoute("/jobs")({
-  validateSearch: (search: Record<string, unknown>): { category?: string | undefined; location?: string | undefined; type?: string | undefined; job?: string | undefined} => ({
+  validateSearch: (search: Record<string, unknown>): { category?: string | undefined; location?: string | undefined; type?: string | undefined; job?: string | undefined; st?: string | undefined; si?: string | undefined} => ({
     category: searchString(search, "category"),
     location: searchString(search, "location"),
     type: searchString(search, "type"),
     job: searchString(search, "job"),
+    st: searchString(search, "st"),
+    si: searchString(search, "si"),
   }),
-  head: () => ({
-    meta: [
+  head: ({ match }) => ({
+    meta: mergeShareMeta([
       { title: "Jobs — Opportunities Shared by the CCGMs Community" },
       {
         name: "description",
@@ -52,7 +56,7 @@ export const Route = createFileRoute("/jobs")({
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-    ],
+    ], match.search as Record<string, unknown>),
   }),
   component: JobsPage,
 });
