@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { Banknote, Briefcase, CalendarClock, ExternalLink, Mail, MapPin, Phone } from "lucide-react";
@@ -27,16 +27,20 @@ import { supabase } from "@/integrations/supabase/client";
 import { useT } from "@/lib/i18n";
 import { useDyn } from "@/lib/i18n/dynamic";
 import { searchString, useSearchFilter } from "@/lib/use-search-filter";
+import { mergeShareMeta } from "@/lib/share-meta";
+import { useDialogParam } from "@/lib/use-dialog-param";
 
 export const Route = createFileRoute("/jobs")({
-  validateSearch: (search: Record<string, unknown>): { category?: string | undefined; location?: string | undefined; type?: string | undefined; job?: string | undefined} => ({
+  validateSearch: (search: Record<string, unknown>): { category?: string | undefined; location?: string | undefined; type?: string | undefined; job?: string | undefined; st?: string | undefined; si?: string | undefined} => ({
     category: searchString(search, "category"),
     location: searchString(search, "location"),
     type: searchString(search, "type"),
     job: searchString(search, "job"),
+    st: searchString(search, "st"),
+    si: searchString(search, "si"),
   }),
-  head: () => ({
-    meta: [
+  head: ({ match }) => ({
+    meta: mergeShareMeta([
       { title: "Jobs — Opportunities Shared by the CCGMs Community" },
       {
         name: "description",
@@ -52,7 +56,7 @@ export const Route = createFileRoute("/jobs")({
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-    ],
+    ], match.search as Record<string, unknown>),
   }),
   component: JobsPage,
 });
@@ -72,14 +76,10 @@ function JobsPage() {
   const { data: allJobs = [] } = useQuery(jobsQuery);
   const jobs = useMemo(() => allJobs.filter((job) => !isExpired(job)), [allJobs]);
   // The open job lives in the URL so the popup can be shared as a link.
-  const navigate = useNavigate({ from: "/jobs" });
   const search = Route.useSearch();
   const selected = jobs.find((job) => job.id === search.job) ?? null;
-  const setSelected = (job: Job | null) =>
-    navigate({
-      search: (prev: Record<string, string | undefined>) => ({ ...prev, job: job?.id }),
-      replace: !job,
-    });
+  const openJob = useDialogParam("job");
+  const setSelected = (job: Job | null) => openJob(job?.id ?? null);
   const [applyFor, setApplyFor] = useState<Job | null>(null);
   const [category, setCategory] = useSearchFilter("category", ALL);
   const [location, setLocation] = useSearchFilter("location", ALL);
@@ -272,6 +272,7 @@ function JobsPage() {
                 <ShareButton
                   title={dyn(selected.title)}
                   path={`/jobs?job=${selected.id}`}
+                  image={selected.image_url ?? null}
                   label={t("Share job")}
                   className="flex-1"
                 />

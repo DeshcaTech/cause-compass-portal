@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 
 import { PageHeader } from "@/components/site/PageHeader";
@@ -11,14 +11,18 @@ import businessFallback from "@/assets/business-fallback.jpg";
 import { useT } from "@/lib/i18n";
 import { useDyn } from "@/lib/i18n/dynamic";
 import { searchString, useSearchFilter } from "@/lib/use-search-filter";
+import { mergeShareMeta } from "@/lib/share-meta";
+import { useDialogParam } from "@/lib/use-dialog-param";
 
 export const Route = createFileRoute("/partners")({
-  validateSearch: (search: Record<string, unknown>): { category?: string | undefined; partner?: string | undefined} => ({
+  validateSearch: (search: Record<string, unknown>): { category?: string | undefined; partner?: string | undefined; st?: string | undefined; si?: string | undefined} => ({
     category: searchString(search, "category"),
     partner: searchString(search, "partner"),
+    st: searchString(search, "st"),
+    si: searchString(search, "si"),
   }),
-  head: () => ({
-    meta: [
+  head: ({ match }) => ({
+    meta: mergeShareMeta([
       { title: "Partners — Businesses Owned by CCGMs Members" },
       {
         name: "description",
@@ -32,7 +36,7 @@ export const Route = createFileRoute("/partners")({
         property: "og:description",
         content: "A directory of member-owned businesses serving the community.",
       },
-    ],
+    ], match.search as Record<string, unknown>),
   }),
   component: PartnersPage,
 });
@@ -42,14 +46,10 @@ function PartnersPage() {
   const dyn = useDyn();
   const { data: partners = [] } = useQuery(partnersQuery);
   // The open business lives in the URL so the popup can be shared as a link.
-  const navigate = useNavigate({ from: "/partners" });
   const search = Route.useSearch();
   const selected = partners.find((p) => p.id === search.partner) ?? null;
-  const setSelected = (partner: Partner | null) =>
-    navigate({
-      search: (prev: Record<string, string | undefined>) => ({ ...prev, partner: partner?.id }),
-      replace: !partner,
-    });
+  const openPartner = useDialogParam("partner");
+  const setSelected = (partner: Partner | null) => openPartner(partner?.id ?? null);
   const [category, setCategory] = useSearchFilter("category", "All");
   const categories = ["All", ...Array.from(new Set(partners.map((p) => p.category)))];
   const filtered = category === "All" ? partners : partners.filter((p) => p.category === category);

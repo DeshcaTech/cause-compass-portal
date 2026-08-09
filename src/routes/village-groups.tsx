@@ -14,6 +14,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { villageGroupsQuery, type VillageGroup } from "@/lib/queries";
 import { useT } from "@/lib/i18n";
 import { useDyn } from "@/lib/i18n/dynamic";
+import { mergeShareMeta } from "@/lib/share-meta";
+import { useDialogParam } from "@/lib/use-dialog-param";
 import groupsBanner from "@/assets/community-together.jpg";
 
 const SITE_ORIGIN = "https://cause-compass-portal.lovable.app";
@@ -25,12 +27,14 @@ type CategoryKey = (typeof CATEGORIES)[number];
 const searchSchema = z.object({
   category: fallback(z.string(), "all").default("all"),
   group: z.string().optional(),
+  st: z.string().optional(),
+  si: z.string().optional(),
 });
 
 export const Route = createFileRoute("/village-groups")({
   validateSearch: zodValidator(searchSchema),
-  head: () => ({
-    meta: [
+  head: ({ match }) => ({
+    meta: mergeShareMeta([
       { title: "Our Groups — CCGMs Community" },
       {
         name: "description",
@@ -52,7 +56,7 @@ export const Route = createFileRoute("/village-groups")({
         content: "Community groups within CCGMs, with meeting details and contacts.",
       },
       { name: "twitter:image", content: `${SITE_ORIGIN}/og-ccgms.jpg` },
-    ],
+    ], match.search as Record<string, unknown>),
     links: [{ rel: "canonical", href: PAGE_URL }],
   }),
   component: VillageGroupsPage,
@@ -69,11 +73,8 @@ function VillageGroupsPage() {
   const { data: groups = [] } = useQuery(villageGroupsQuery);
   // The open group lives in the URL so the popup can be shared as a link.
   const selected = groups.find((g) => g.id === search.group) ?? null;
-  const setSelected = (group: VillageGroup | null) =>
-    navigate({
-      search: (prev: Record<string, string | undefined>) => ({ ...prev, group: group?.id }),
-      replace: !group,
-    });
+  const openGroup = useDialogParam("group");
+  const setSelected = (group: VillageGroup | null) => openGroup(group?.id ?? null);
 
   const categories = [
     { key: "all" as const, label: t("All groups") },
@@ -203,6 +204,7 @@ function VillageGroupsPage() {
               <ShareButton
                 title={selected.name}
                 path={`/village-groups?group=${selected.id}`}
+                image={selected.image_url ?? null}
                 label={t("Share group")}
                 className="w-full"
               />

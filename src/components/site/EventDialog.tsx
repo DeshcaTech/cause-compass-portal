@@ -32,6 +32,7 @@ import { submitEventRsvp } from "@/lib/rsvp.functions";
 import { formatDate, formatMoney, type EventRow } from "@/lib/queries";
 import { useT } from "@/lib/i18n";
 import { useDyn } from "@/lib/i18n/dynamic";
+import { withShareMeta } from "@/lib/share-meta";
 import eventFallback from "@/assets/event-fallback.jpg";
 import communityTogether from "@/assets/community-together.jpg";
 
@@ -276,11 +277,17 @@ export function EventDialog({
 
   async function share() {
     if (!event) return;
-    const url =
-      shareUrl ??
-      (typeof window !== "undefined"
-        ? `${window.location.origin}/events?event=${event.id}`
-        : "");
+    const basePath = shareUrl ?? `/events?event=${event.id}`;
+    const withMeta = withShareMeta(
+      basePath,
+      dyn(event.title),
+      event.image_url ?? eventFallbackImage(event.id),
+    );
+    const url = /^https?:\/\//i.test(withMeta)
+      ? withMeta
+      : typeof window !== "undefined"
+        ? `${window.location.origin}${withMeta}`
+        : withMeta;
     try {
       if (navigator.share) {
         await navigator.share({ title: dyn(event.title), url });

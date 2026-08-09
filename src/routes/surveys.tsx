@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -26,14 +26,18 @@ import surveyFallback from "@/assets/survey-fallback.jpg";
 import { useT } from "@/lib/i18n";
 import { useDyn } from "@/lib/i18n/dynamic";
 import { searchString, useSearchFilter } from "@/lib/use-search-filter";
+import { mergeShareMeta } from "@/lib/share-meta";
+import { useDialogParam } from "@/lib/use-dialog-param";
 
 export const Route = createFileRoute("/surveys")({
-  validateSearch: (search: Record<string, unknown>): { view?: string | undefined; survey?: string | undefined } => ({
+  validateSearch: (search: Record<string, unknown>): { view?: string | undefined; survey?: string | undefined; st?: string | undefined; si?: string | undefined } => ({
     view: searchString(search, "view"),
     survey: searchString(search, "survey"),
+    st: searchString(search, "st"),
+    si: searchString(search, "si"),
   }),
-  head: () => ({
-    meta: [
+  head: ({ match }) => ({
+    meta: mergeShareMeta([
       { title: "Surveys — Have Your Say at CCGMs" },
       {
         name: "description",
@@ -44,15 +48,11 @@ export const Route = createFileRoute("/surveys")({
       { property: "og:image", content: "https://cause-compass-portal.lovable.app/og-ccgms.jpg" },
       { name: "twitter:image", content: "https://cause-compass-portal.lovable.app/og-ccgms.jpg" },
       { property: "og:description", content: "Answer active surveys and shape community decisions." },
-    ],
+    ], match.search as Record<string, unknown>),
   }),
   component: SurveysPage,
 });
 
-type SurveysSearch = {
-  view?: string | undefined;
-  survey?: string | undefined;
-};
 
 function SurveyForm({ survey, onClose }: { survey: Survey; onClose: () => void }) {
   const t = useT();
@@ -195,6 +195,7 @@ function SurveyDialog({
             <ShareButton
               title={dyn(survey.title)}
               path={`/surveys?survey=${survey.id}`}
+              image={survey.image_url ?? null}
               label={t("Share survey")}
               className="w-full"
             />
@@ -266,7 +267,6 @@ function SurveyCard({
 
 function SurveysPage() {
   const t = useT();
-  const navigate = useNavigate({ from: "/surveys" });
   const search = Route.useSearch();
   const { data: surveys = [] } = useQuery(surveysQuery);
   const active = surveys.filter((s) => surveyStatus(s) === "active");
@@ -275,8 +275,8 @@ function SurveysPage() {
   const list = view === "active" ? active : closed;
 
   const selected = surveys.find((s) => s.id === search.survey) ?? null;
-  const openSurvey = (survey: Survey | null) =>
-    navigate({ search: (prev: SurveysSearch) => ({ ...prev, survey: survey?.id }) });
+  const setSurveyParam = useDialogParam("survey");
+  const openSurvey = (survey: Survey | null) => setSurveyParam(survey?.id ?? null);
 
   return (
     <>

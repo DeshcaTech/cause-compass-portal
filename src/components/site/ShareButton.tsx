@@ -3,6 +3,7 @@ import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { useT } from "@/lib/i18n";
+import { withShareMeta } from "@/lib/share-meta";
 
 /**
  * Shares a deep link to the current item — native share sheet on mobile,
@@ -11,6 +12,8 @@ import { useT } from "@/lib/i18n";
 export function ShareButton({
   title,
   path,
+  image,
+  description,
   label,
   className,
   variant = "soft",
@@ -18,6 +21,9 @@ export function ShareButton({
   title: string;
   /** Path with query, e.g. "/jobs?job=123". */
   path: string;
+  /** Picture shown in the link preview (absolute URL or site-relative path). */
+  image?: string | null;
+  description?: string | null;
   label?: string;
   className?: string;
   variant?: "soft" | "outline" | "ghost";
@@ -25,10 +31,11 @@ export function ShareButton({
   const t = useT();
 
   async function share() {
-    const url = typeof window === "undefined" ? path : `${window.location.origin}${path}`;
+    const withMeta = withShareMeta(path, title, image);
+    const url = typeof window === "undefined" ? withMeta : `${window.location.origin}${withMeta}`;
     try {
       if (typeof navigator !== "undefined" && navigator.share) {
-        await navigator.share({ title, url });
+        await navigator.share({ title, url, ...(description ? { text: description } : {}) });
         return;
       }
       await navigator.clipboard.writeText(url);
