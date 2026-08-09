@@ -199,6 +199,7 @@ function SurveyDialog({
             <ShareButton
               title={dyn(survey.title)}
               path={`/surveys?survey=${survey.id}`}
+              image={survey.image_url ?? null}
               label={t("Share survey")}
               className="w-full"
             />
