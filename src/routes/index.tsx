@@ -527,7 +527,12 @@ function Index() {
             </DialogDescription>
           {info?.action}
           {info?.sharePath ? (
-            <ShareButton title={info.title} path={info.sharePath} className="w-full" />
+            <ShareButton
+              title={info.title}
+              path={info.sharePath}
+              image={info.image ?? null}
+              className="w-full"
+            />
           ) : null}
         </DialogContent>
       </Dialog>
