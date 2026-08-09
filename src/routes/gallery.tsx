@@ -20,6 +20,7 @@ import volunteerHero from "@/assets/volunteer-hero.jpg";
 import { useT } from "@/lib/i18n";
 import { useDyn } from "@/lib/i18n/dynamic";
 import { searchString, useSearchFilter } from "@/lib/use-search-filter";
+import { mergeShareMeta } from "@/lib/share-meta";
 
 const PLACEHOLDER_PHOTOS = [
   galleryFallback,
@@ -39,11 +40,13 @@ function placeholdersFor(seed: string) {
 }
 
 export const Route = createFileRoute("/gallery")({
-  validateSearch: (search: Record<string, unknown>): { gallery?: string | undefined} => ({
+  validateSearch: (search: Record<string, unknown>): { gallery?: string | undefined; st?: string | undefined; si?: string | undefined} => ({
     gallery: searchString(search, "gallery"),
+    st: searchString(search, "st"),
+    si: searchString(search, "si"),
   }),
-  head: () => ({
-    meta: [
+  head: ({ match }) => ({
+    meta: mergeShareMeta([
       { title: "Gallery — CCGMs Photos by Event" },
       {
         name: "description",
@@ -53,7 +56,7 @@ export const Route = createFileRoute("/gallery")({
       { property: "og:image", content: "https://cause-compass-portal.lovable.app/og-ccgms.jpg" },
       { name: "twitter:image", content: "https://cause-compass-portal.lovable.app/og-ccgms.jpg" },
       { property: "og:description", content: "Browse community photos grouped by event." },
-    ],
+    ], match.search as Record<string, unknown>),
   }),
   component: GalleryPage,
 });
@@ -157,6 +160,7 @@ function GalleryPage() {
               <ShareButton
                 title={dyn(active.title)}
                 path={`/gallery?gallery=${active.id}`}
+                image={active.cover_url ?? null}
                 label={t("Share album")}
               />
             </div>
