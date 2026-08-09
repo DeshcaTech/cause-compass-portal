@@ -36,9 +36,9 @@ export function mergeShareMeta(meta: Meta[], search: Record<string, unknown> | u
 
   return meta.map((entry) => {
     if (title && "title" in entry) return { ...entry, title };
-    if (title && entry.property === "og:title") return { ...entry, content: title };
-    if (title && entry.name === "twitter:title") return { ...entry, content: title };
-    if (image && (entry.property === "og:image" || entry.name === "twitter:image")) {
+    if (title && entry["property"] === "og:title") return { ...entry, content: title };
+    if (title && entry["name"] === "twitter:title") return { ...entry, content: title };
+    if (image && (entry["property"] === "og:image" || entry["name"] === "twitter:image")) {
       return { ...entry, content: image };
     }
     return entry;
