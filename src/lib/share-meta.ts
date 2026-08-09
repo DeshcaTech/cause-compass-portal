@@ -9,8 +9,9 @@ type Meta = Record<string, string>;
 
 /** Appends the share title / image params to a popup deep link. */
 export function withShareMeta(path: string, title?: string | null, image?: string | null) {
-  const [base, query = ""] = path.split("?");
-  const params = new URLSearchParams(query);
+  const parts = path.split("?");
+  const base = parts[0] ?? path;
+  const params = new URLSearchParams(parts[1] ?? "");
   if (title) params.set(SHARE_TITLE_PARAM, title.slice(0, 120));
   if (image) params.set(SHARE_IMAGE_PARAM, image);
   const qs = params.toString();
