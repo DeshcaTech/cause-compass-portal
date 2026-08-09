@@ -13,11 +13,15 @@ import { EventDialog, eventFallbackImage } from "@/components/site/EventDialog";
 import { SmartImage } from "@/components/site/SmartImage";
 import { useT } from "@/lib/i18n";
 import { useDyn } from "@/lib/i18n/dynamic";
+import { mergeShareMeta } from "@/lib/share-meta";
+import { useDialogParam } from "@/lib/use-dialog-param";
 
 export const Route = createFileRoute("/events")({
   // Filters, the open tab and the open event live in the URL so links can be shared.
-  validateSearch: (search: Record<string, unknown>): { event?: string | undefined; type?: "all" | "ccgms" | "other" | undefined; tab?: "all" | "calendar" | "coming" | "past" | undefined} => ({
+  validateSearch: (search: Record<string, unknown>): { event?: string | undefined; type?: "all" | "ccgms" | "other" | undefined; tab?: "all" | "calendar" | "coming" | "past" | undefined; st?: string | undefined; si?: string | undefined} => ({
     event: typeof search['event'] === "string" ? search['event'] : undefined,
+    st: typeof search['st'] === "string" ? search['st'] : undefined,
+    si: typeof search['si'] === "string" ? search['si'] : undefined,
     type:
       search['type'] === "ccgms" || search['type'] === "other" || search['type'] === "all"
         ? (search['type'] as "all" | "ccgms" | "other")
@@ -30,8 +34,8 @@ export const Route = createFileRoute("/events")({
         ? (search['tab'] as "coming" | "past" | "all" | "calendar")
         : undefined,
   }),
-  head: () => ({
-    meta: [
+  head: ({ match }) => ({
+    meta: mergeShareMeta([
       { title: "Events — CCGMs Community Calendar" },
       {
         name: "description",
@@ -45,7 +49,7 @@ export const Route = createFileRoute("/events")({
         property: "og:description",
         content: "Browse coming and past events, or explore the monthly community calendar.",
       },
-    ],
+    ], match.search as Record<string, unknown>),
   }),
   component: EventsPage,
 });
@@ -139,8 +143,8 @@ function EventsPage() {
     () => events.find((e) => e.id === search.event) ?? null,
     [events, search.event],
   );
-  const openEvent = (event: EventRow | null) =>
-    navigate({ search: (prev: EventsSearch) => ({ ...prev, event: event?.id }) });
+  const setEventParam = useDialogParam("event");
+  const openEvent = (event: EventRow | null) => setEventParam(event?.id ?? null);
 
   // Shared link keeps the open event plus the current type filter and tab.
   const shareUrl = useMemo(() => {
