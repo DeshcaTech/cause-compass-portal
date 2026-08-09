@@ -32,6 +32,7 @@ import { submitEventRsvp } from "@/lib/rsvp.functions";
 import { formatDate, formatMoney, type EventRow } from "@/lib/queries";
 import { useT } from "@/lib/i18n";
 import { useDyn } from "@/lib/i18n/dynamic";
+import { withShareMeta } from "@/lib/share-meta";
 import eventFallback from "@/assets/event-fallback.jpg";
 import communityTogether from "@/assets/community-together.jpg";
 
