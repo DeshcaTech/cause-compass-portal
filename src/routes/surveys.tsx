@@ -53,10 +53,6 @@ export const Route = createFileRoute("/surveys")({
   component: SurveysPage,
 });
 
-type SurveysSearch = {
-  view?: string | undefined;
-  survey?: string | undefined;
-};
 
 function SurveyForm({ survey, onClose }: { survey: Survey; onClose: () => void }) {
   const t = useT();
