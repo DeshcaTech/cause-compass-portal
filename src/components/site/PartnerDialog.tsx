@@ -67,7 +67,15 @@ export function PartnerDialog({
             <div className="flex flex-wrap gap-2">
               {website ? (
                 <Button asChild variant="hero" className="flex-1">
-                  <a href={website} target="_blank" rel="noopener noreferrer">
+                  <a
+                    href={website}
+                    target="_blank"
+                    rel="noopener noreferrer external"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      window.open(website, "_blank", "noopener,noreferrer");
+                    }}
+                  >
                     <Globe /> {t("View website")}
                   </a>
                 </Button>
