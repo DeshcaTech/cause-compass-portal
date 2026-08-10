@@ -188,31 +188,85 @@ function AdminPage() {
         </div>
 
         <Tabs defaultValue={requestedTab ?? defaultTab} onValueChange={(value) => navigate({ to: "/admin", search: (prev: Record<string, unknown>) => ({ ...prev, tab: value }), replace: true })}>
-          <TabsList>
-            {isContentAdmin && <TabsTrigger value="events">Events</TabsTrigger>}
-            {isContentAdmin && <TabsTrigger value="news">News</TabsTrigger>}
-            {can("event") && <TabsTrigger value="rsvps">RSVPs</TabsTrigger>}
-            {isContentAdmin && <TabsTrigger value="gallery">Gallery</TabsTrigger>}
-            {isContentAdmin && <TabsTrigger value="partners">Partners</TabsTrigger>}
-            {isContentAdmin && <TabsTrigger value="jobs">Jobs</TabsTrigger>}
-            {isContentAdmin && <TabsTrigger value="job-applications">Applications</TabsTrigger>}
-            {isAdmin && <TabsTrigger value="referrals">Get Support</TabsTrigger>}
-            {isAdmin && <TabsTrigger value="volunteers">Volunteers</TabsTrigger>}
-            {isAdmin && <TabsTrigger value="engagement">Engagement</TabsTrigger>}
-            {isContentAdmin && <TabsTrigger value="brand">Brand</TabsTrigger>}
-            {isContentAdmin && <TabsTrigger value="site-content">Site content</TabsTrigger>}
-            {isContentAdmin && <TabsTrigger value="documents">Documents</TabsTrigger>}
-            {can("fundraising") && <TabsTrigger value="campaigns">Campaigns</TabsTrigger>}
-            {can("fundraising") && <TabsTrigger value="reports">Reports</TabsTrigger>}
-            {can("board") && <TabsTrigger value="board">Board</TabsTrigger>}
-            {can("president") && <TabsTrigger value="president">President</TabsTrigger>}
-            {isAdmin && <TabsTrigger value="assets">Assets</TabsTrigger>}
-            {isContentAdmin && <TabsTrigger value="village-groups">Groups</TabsTrigger>}
-            {isAdmin && <TabsTrigger value="surveys">Surveys</TabsTrigger>}
-            {isContentAdmin && <TabsTrigger value="roles">Roles</TabsTrigger>}
-            {isAdmin && <TabsTrigger value="admins">Admin accounts</TabsTrigger>}
-            {isContentAdmin && <TabsTrigger value="activity">Activity log</TabsTrigger>}
-          </TabsList>
+          <div className="space-y-3">
+            {(
+              [
+                {
+                  group: "About CCGMs",
+                  items: [
+                    { value: "president", label: "President's message", show: can("president") },
+                    { value: "board", label: "Board Members", show: can("board") },
+                    { value: "news", label: "News", show: isContentAdmin },
+                    { value: "village-groups", label: "Our Groups", show: isContentAdmin },
+                    { value: "documents", label: "Documents", show: isContentAdmin },
+                    { value: "assets", label: "Assets rent", show: isAdmin },
+                  ],
+                },
+                {
+                  group: "Events",
+                  items: [
+                    { value: "events", label: "Events", show: isContentAdmin },
+                    { value: "rsvps", label: "RSVPs", show: can("event") },
+                  ],
+                },
+                {
+                  group: "Partners",
+                  items: [
+                    { value: "partners", label: "Our Businesses", show: isContentAdmin },
+                    { value: "jobs", label: "Jobs", show: isContentAdmin },
+                    { value: "job-applications", label: "Applications", show: isContentAdmin },
+                  ],
+                },
+                {
+                  group: "Gallery",
+                  items: [{ value: "gallery", label: "Gallery", show: isContentAdmin }],
+                },
+                {
+                  group: "Get Involve",
+                  items: [
+                    { value: "campaigns", label: "Fundraising", show: can("fundraising") },
+                    { value: "reports", label: "Fundraising reports", show: can("fundraising") },
+                    { value: "surveys", label: "Surveys", show: isAdmin },
+                    { value: "volunteers", label: "Volunteers", show: isAdmin },
+                    { value: "referrals", label: "Get Support", show: isAdmin },
+                  ],
+                },
+                {
+                  group: "Contact Us",
+                  items: [{ value: "engagement", label: "Engagement", show: isAdmin }],
+                },
+                {
+                  group: "Site & administration",
+                  items: [
+                    { value: "brand", label: "Brand", show: isContentAdmin },
+                    { value: "site-content", label: "Site content", show: isContentAdmin },
+                    { value: "admins", label: "Admin accounts", show: isAdmin },
+                    { value: "roles", label: "Roles", show: isContentAdmin },
+                    { value: "activity", label: "Activity log", show: isContentAdmin },
+                  ],
+                },
+              ] as const
+            )
+              .map((section) => ({ ...section, items: section.items.filter((i) => i.show) }))
+              .filter((section) => section.items.length > 0)
+              .map((section) => (
+                <div
+                  key={section.group}
+                  className="flex flex-wrap items-center gap-x-3 gap-y-2"
+                >
+                  <span className="w-full shrink-0 text-xs font-bold uppercase tracking-wide text-muted-foreground sm:w-44">
+                    {section.group}
+                  </span>
+                  <TabsList className="flex-wrap">
+                    {section.items.map((item) => (
+                      <TabsTrigger key={item.value} value={item.value}>
+                        {item.label}
+                      </TabsTrigger>
+                    ))}
+                  </TabsList>
+                </div>
+              ))}
+          </div>
 
           {isContentAdmin && <TabsContent value="news" className="mt-8">
             <NewsNotifier />
