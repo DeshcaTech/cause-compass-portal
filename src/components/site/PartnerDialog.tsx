@@ -9,6 +9,15 @@ import { useDyn } from "@/lib/i18n/dynamic";
 import { ShareButton } from "@/components/site/ShareButton";
 import businessFallback from "@/assets/business-fallback.jpg";
 
+/** Admins often type "example.com" — make sure it opens as an external site. */
+function externalUrl(raw: string) {
+  const url = raw.trim();
+  if (!url) return "";
+  if (/^https?:\/\//i.test(url)) return url;
+  if (/^\/\//.test(url)) return `https:${url}`;
+  return `https://${url.replace(/^\/+/, "")}`;
+}
+
 /** Shared business popup used on the home page and the partners directory. */
 export function PartnerDialog({
   partner,
@@ -20,6 +29,7 @@ export function PartnerDialog({
   const t = useT();
   const dyn = useDyn();
   const whatsapp = partner?.whatsapp?.replace(/[^\d]/g, "") ?? "";
+  const website = externalUrl(partner?.website ?? "");
   return (
     <Dialog open={!!partner} onOpenChange={onOpenChange}>
       <DialogContent className="max-h-[85dvh] overflow-y-auto sm:max-w-lg">
@@ -55,9 +65,9 @@ export function PartnerDialog({
               ) : null}
             </ul>
             <div className="flex flex-wrap gap-2">
-              {partner.website ? (
+              {website ? (
                 <Button asChild variant="hero" className="flex-1">
-                  <a href={partner.website} target="_blank" rel="noreferrer">
+                  <a href={website} target="_blank" rel="noopener noreferrer">
                     <Globe /> {t("View website")}
                   </a>
                 </Button>
