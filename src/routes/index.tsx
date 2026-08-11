@@ -43,7 +43,6 @@ import { useT } from "@/lib/i18n";
 import { useDyn } from "@/lib/i18n/dynamic";
 import { siteSettingsQuery } from "@/lib/site-settings";
 import {
-import { useCardAspect } from "@/lib/card-image";
   announcementsQuery,
   campaignsQuery,
   eventsQuery,
@@ -54,6 +53,7 @@ import { useCardAspect } from "@/lib/card-image";
   type EventRow,
   type Partner,
 } from "@/lib/queries";
+import { useCardAspect } from "@/lib/card-image";
 
 export const Route = createFileRoute("/")({
   head: () => ({
