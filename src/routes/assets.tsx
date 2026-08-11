@@ -105,7 +105,8 @@ function AssetsPage() {
                   src={asset.image_url ?? assetFallback}
                   alt={dyn(asset.name)}
                   loading="lazy"
-                  className="aspect-[16/9] w-full rounded-xl object-cover"
+                  style={cardAspect}
+                  className="w-full rounded-xl object-cover"
                 />
                 <div className="mt-4 flex items-start justify-between gap-3">
                   <h2 className="text-lg">{dyn(asset.name)}</h2>
