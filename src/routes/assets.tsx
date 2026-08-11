@@ -136,12 +136,12 @@ function AssetsPage() {
                   </div>
                 </dl>
                 <div className="mt-5 flex flex-wrap gap-2">
-                  {asset.owner_type === "partner" ? (
+                  {asset.owner_type === "partner" && whatsappDigits(asset.whatsapp) ? (
                     <Button
                       asChild
                       variant="hero"
                       className="flex-1"
-                      disabled={!whatsappDigits(asset.whatsapp)}
+
                     >
                       <a
                         href={`https://wa.me/${whatsappDigits(asset.whatsapp)}`}
