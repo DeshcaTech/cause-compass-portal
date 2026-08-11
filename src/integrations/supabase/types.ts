@@ -1135,6 +1135,7 @@ export type Database = {
           android_app_url: string | null
           asset_whatsapp_message_ccgms: string | null
           asset_whatsapp_message_other: string | null
+          business_whatsapp_message: string | null
           card_image_ratio: number
           contact_address: string
           contact_email: string
@@ -1144,6 +1145,7 @@ export type Database = {
           developer_whatsapp: string | null
           facebook_url: string | null
           footer_blurb: string
+          group_whatsapp_message: string | null
           hero_eyebrow: string
           hero_intro: string
           hero_title_line1: string
@@ -1171,6 +1173,7 @@ export type Database = {
           android_app_url?: string | null
           asset_whatsapp_message_ccgms?: string | null
           asset_whatsapp_message_other?: string | null
+          business_whatsapp_message?: string | null
           card_image_ratio?: number
           contact_address?: string
           contact_email?: string
@@ -1180,6 +1183,7 @@ export type Database = {
           developer_whatsapp?: string | null
           facebook_url?: string | null
           footer_blurb?: string
+          group_whatsapp_message?: string | null
           hero_eyebrow?: string
           hero_intro?: string
           hero_title_line1?: string
@@ -1207,6 +1211,7 @@ export type Database = {
           android_app_url?: string | null
           asset_whatsapp_message_ccgms?: string | null
           asset_whatsapp_message_other?: string | null
+          business_whatsapp_message?: string | null
           card_image_ratio?: number
           contact_address?: string
           contact_email?: string
@@ -1216,6 +1221,7 @@ export type Database = {
           developer_whatsapp?: string | null
           facebook_url?: string | null
           footer_blurb?: string
+          group_whatsapp_message?: string | null
           hero_eyebrow?: string
           hero_intro?: string
           hero_title_line1?: string
