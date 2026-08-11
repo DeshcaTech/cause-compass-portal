@@ -125,7 +125,7 @@ function NewsPage() {
               : t("No news matches your search.")}
           </p>
         ) : (
-          <div className="grid gap-6 md:grid-cols-2">
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {filtered.map((item) => (
               <Link key={item.id} to="/news/$id" params={{ id: item.id }} className="block">
                 <Card

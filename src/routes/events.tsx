@@ -383,7 +383,7 @@ function EventsPage() {
             {listForTab.length === 0 ? (
               <p className="text-sm text-muted-foreground">{t("No events match these filters.")}</p>
             ) : null}
-            <div className="grid gap-5 sm:grid-cols-2">
+            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
               {listForTab.map((event) => (
                 <EventCard key={event.id} event={event} onOpen={() => openEvent(event)} />
               ))}

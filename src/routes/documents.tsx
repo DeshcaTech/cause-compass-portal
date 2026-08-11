@@ -71,7 +71,7 @@ function DocumentsPage() {
           />
         )}
       >
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-2">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {visible.map((doc) => (
             <Card key={doc.id} className="flex h-full flex-col border-border/70">
               <CardContent className="flex h-full flex-col gap-4 p-6">

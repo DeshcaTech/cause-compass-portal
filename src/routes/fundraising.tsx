@@ -234,7 +234,7 @@ function FundraisingPage() {
           />
         )}
       >
-        <div className="grid gap-5 md:grid-cols-2">
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {list.map((campaign) => (
             <CampaignCard
               key={campaign.id}

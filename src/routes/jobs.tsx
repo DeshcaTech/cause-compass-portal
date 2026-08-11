@@ -180,7 +180,7 @@ function JobsPage() {
             {t("No job adverts at the moment. Please check back soon.")}
           </p>
         ) : (
-          <div className="mt-10 grid gap-5 sm:grid-cols-2">
+          <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {filtered.map((job) => (
               <Card
                 key={job.id}

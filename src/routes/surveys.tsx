@@ -314,7 +314,7 @@ function SurveysPage() {
             {view === "active" ? t("No active surveys right now.") : t("No closed surveys yet.")}
           </p>
         ) : (
-          <div className="grid gap-5 sm:grid-cols-2">
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {list.map((survey) => (
               <SurveyCard
                 key={survey.id}
