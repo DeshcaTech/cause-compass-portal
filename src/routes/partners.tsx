@@ -92,7 +92,8 @@ function PartnersPage() {
                   src={partner.logo_url ?? businessFallback}
                   alt={partner.business_name}
                   loading="lazy"
-                  className="mb-4 aspect-[16/9] w-full rounded-xl object-cover"
+                  style={cardAspect}
+                  className="mb-4 w-full rounded-xl object-cover"
                 />
                 <h2 className="mt-4 text-lg">{partner.business_name}</h2>
                 <Badge variant="secondary" className="mt-2">
