@@ -709,8 +709,7 @@ function AdminPage() {
               secondaryLabel={(row) =>
                 `${row['quantity']} available${row['is_available'] ? "" : " · hidden"}`
               }
-              defaults={{ is_available: true, quantity: 1 }}
-              // owner_type defaults to CCGMs kit unless a partner business is chosen.
+              defaults={{ is_available: true, quantity: 1, owner_type: "ccgms" }}
               fields={[
                 { name: "name", label: "Asset name", required: true },
                 { name: "description", label: "Description", type: "textarea" },
