@@ -21,6 +21,7 @@ import { useDyn } from "@/lib/i18n/dynamic";
 import { searchString, useSearchFilter } from "@/lib/use-search-filter";
 import { mergeShareMeta } from "@/lib/share-meta";
 import { useDialogParam } from "@/lib/use-dialog-param";
+import { useCardAspect } from "@/lib/card-image";
 
 export const Route = createFileRoute("/fundraising")({
   validateSearch: (search: Record<string, unknown>): { view?: string | undefined; campaign?: string | undefined; st?: string | undefined; si?: string | undefined} => ({
@@ -52,6 +53,7 @@ export const Route = createFileRoute("/fundraising")({
 function CampaignCard({ campaign, onOpen }: { campaign: Campaign; onOpen: () => void }) {
   const t = useT();
   const dyn = useDyn();
+  const cardAspect = useCardAspect();
   const pct = campaign.goal_amount
     ? Math.min(100, Math.round((campaign.raised_amount / campaign.goal_amount) * 100))
     : 0;
