@@ -80,7 +80,7 @@ function PartnersPage() {
           />
         )}
       >
-        <div className="grid gap-5 sm:grid-cols-2">
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {filtered.map((partner) => (
             <Card
               key={partner.id}
