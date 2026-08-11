@@ -189,7 +189,7 @@ function SurveyDialog({
               src={survey.image_url ?? surveyFallback}
               alt={dyn(survey.title)}
               loading="lazy"
-              className="aspect-[16/6] w-full rounded-xl object-cover"
+              className="max-h-[60vh] w-full rounded-xl bg-secondary object-contain"
             />
             <p className="text-sm text-foreground/85">{dyn(survey.description)}</p>
             <SurveyForm key={survey.id} survey={survey} onClose={() => onOpenChange(false)} />
@@ -239,7 +239,8 @@ function SurveyCard({
           src={survey.image_url ?? surveyFallback}
           alt={dyn(survey.title)}
           loading="lazy"
-          className="mb-4 aspect-[16/6] w-full rounded-xl object-cover"
+          style={cardAspect}
+          className="mb-4 w-full rounded-xl object-cover"
         />
         <div className="flex items-start justify-between gap-3">
           <h3 className="text-lg">{dyn(survey.title)}</h3>
