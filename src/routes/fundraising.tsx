@@ -73,7 +73,8 @@ function CampaignCard({ campaign, onOpen }: { campaign: Campaign; onOpen: () => 
           src={campaign.image_url ?? campaignFallback}
           alt={dyn(campaign.title)}
           loading="lazy"
-          className="mb-4 aspect-[16/9] w-full rounded-xl object-cover"
+          style={cardAspect}
+          className="mb-4 w-full rounded-xl object-cover"
         />
         <div className="flex items-start justify-between gap-3">
           <h2 className="text-lg">{dyn(campaign.title)}</h2>
@@ -140,7 +141,7 @@ function CampaignDialog({
             <img
               src={campaign.image_url ?? campaignFallback}
               alt={dyn(campaign.title)}
-              className="aspect-[16/9] w-full rounded-xl object-cover"
+              className="max-h-[60vh] w-full rounded-xl bg-secondary object-contain"
             />
             <Badge variant={campaign.status === "active" ? "default" : "secondary"} className="w-fit">
               {campaign.status === "active" ? t("Active") : t("Completed")}
