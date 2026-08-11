@@ -187,8 +187,8 @@ function AdminPage() {
           </Button>
         </div>
 
-        <Tabs defaultValue={requestedTab ?? defaultTab} onValueChange={(value) => navigate({ to: "/admin", search: (prev: Record<string, unknown>) => ({ ...prev, tab: value }), replace: true })}>
-          <div className="space-y-3">
+        <Tabs value={requestedTab ?? defaultTab} onValueChange={(value) => navigate({ to: "/admin", search: (prev: Record<string, unknown>) => ({ ...prev, tab: value }), replace: true })}>
+          <div className="flex flex-wrap items-center gap-2">
             {(
               [
                 {
@@ -247,25 +247,49 @@ function AdminPage() {
                 },
               ] as const
             )
-              .map((section) => ({ ...section, items: section.items.filter((i) => i.show) }))
+              .map((section) => ({
+                ...section,
+                items: section.items.filter((i) => i.show) as { value: string; label: string }[],
+              }))
               .filter((section) => section.items.length > 0)
-              .map((section) => (
-                <div
-                  key={section.group}
-                  className="flex flex-wrap items-center gap-x-3 gap-y-2"
-                >
-                  <span className="w-full shrink-0 text-xs font-bold uppercase tracking-wide text-muted-foreground sm:w-44">
-                    {section.group}
-                  </span>
-                  <TabsList className="flex-wrap">
-                    {section.items.map((item) => (
-                      <TabsTrigger key={item.value} value={item.value}>
-                        {item.label}
-                      </TabsTrigger>
-                    ))}
-                  </TabsList>
-                </div>
-              ))}
+              .map((section) => {
+                const activeTab = requestedTab ?? defaultTab;
+                const current = section.items.find((item) => item.value === activeTab);
+                return (
+                  <DropdownMenu key={section.group}>
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        variant={current ? "default" : "soft"}
+                        size="sm"
+                        className="font-bold"
+                      >
+                        {section.group}
+                        {current ? (
+                          <span className="font-normal opacity-80">· {current.label}</span>
+                        ) : null}
+                        <ChevronDown className="size-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="start" className="min-w-52">
+                      {section.items.map((item) => (
+                        <DropdownMenuItem
+                          key={item.value}
+                          onSelect={() =>
+                            navigate({
+                              to: "/admin",
+                              search: (prev: Record<string, unknown>) => ({ ...prev, tab: item.value }),
+                              replace: true,
+                            })
+                          }
+                          className={item.value === activeTab ? "font-semibold" : undefined}
+                        >
+                          {item.label}
+                        </DropdownMenuItem>
+                      ))}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                );
+              })}
           </div>
 
           {isContentAdmin && <TabsContent value="news" className="mt-8">
