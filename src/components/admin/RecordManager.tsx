@@ -23,6 +23,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { ImageCropper, type CropSpec } from "@/components/admin/ImageCropper";
+import { A6_LANDSCAPE } from "@/lib/card-image";
 
 // Loosely typed table access — the manager is generic over admin content tables.
 const db = supabase as unknown as {
@@ -137,7 +138,7 @@ function ImageField({
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState<{ src: string; type: string } | null>(null);
   const rules: ImageRules = { ...DEFAULT_IMAGE_RULES, ...overrides };
-  const spec: CropSpec = { aspect: 16 / 9, outputWidth: 1600, ...cropOverrides };
+  const spec: CropSpec = { aspect: A6_LANDSCAPE, outputWidth: 1600, ...cropOverrides };
 
   useEffect(() => {
     return () => {

@@ -1,7 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { LogOut } from "lucide-react";
+import { ChevronDown, LogOut } from "lucide-react";
 import { toast } from "sonner";
 
 import { PageHeader } from "@/components/site/PageHeader";
@@ -24,9 +24,16 @@ import { AuditLog } from "@/components/admin/AuditLog";
 import { AccessDenied } from "@/components/admin/AccessDenied";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent } from "@/components/ui/tabs";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { supabase } from "@/integrations/supabase/client";
 import { galleriesQuery } from "@/lib/queries";
+import { A6_LANDSCAPE } from "@/lib/card-image";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   // Drilldown dialog state lives in the URL so back/forward reopen it.
@@ -187,8 +194,8 @@ function AdminPage() {
           </Button>
         </div>
 
-        <Tabs defaultValue={requestedTab ?? defaultTab} onValueChange={(value) => navigate({ to: "/admin", search: (prev: Record<string, unknown>) => ({ ...prev, tab: value }), replace: true })}>
-          <div className="space-y-3">
+        <Tabs value={requestedTab ?? defaultTab} onValueChange={(value) => navigate({ to: "/admin", search: (prev: Record<string, unknown>) => ({ ...prev, tab: value }), replace: true })}>
+          <div className="flex flex-wrap items-center gap-2">
             {(
               [
                 {
@@ -247,25 +254,49 @@ function AdminPage() {
                 },
               ] as const
             )
-              .map((section) => ({ ...section, items: section.items.filter((i) => i.show) }))
+              .map((section) => ({
+                ...section,
+                items: section.items.filter((i) => i.show) as { value: string; label: string }[],
+              }))
               .filter((section) => section.items.length > 0)
-              .map((section) => (
-                <div
-                  key={section.group}
-                  className="flex flex-wrap items-center gap-x-3 gap-y-2"
-                >
-                  <span className="w-full shrink-0 text-xs font-bold uppercase tracking-wide text-muted-foreground sm:w-44">
-                    {section.group}
-                  </span>
-                  <TabsList className="flex-wrap">
-                    {section.items.map((item) => (
-                      <TabsTrigger key={item.value} value={item.value}>
-                        {item.label}
-                      </TabsTrigger>
-                    ))}
-                  </TabsList>
-                </div>
-              ))}
+              .map((section) => {
+                const activeTab = requestedTab ?? defaultTab;
+                const current = section.items.find((item) => item.value === activeTab);
+                return (
+                  <DropdownMenu key={section.group}>
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        variant={current ? "default" : "soft"}
+                        size="sm"
+                        className="font-bold"
+                      >
+                        {section.group}
+                        {current ? (
+                          <span className="font-normal opacity-80">· {current.label}</span>
+                        ) : null}
+                        <ChevronDown className="size-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="start" className="min-w-52">
+                      {section.items.map((item) => (
+                        <DropdownMenuItem
+                          key={item.value}
+                          onSelect={() =>
+                            navigate({
+                              to: "/admin",
+                              search: (prev: Record<string, unknown>) => ({ ...prev, tab: item.value }),
+                              replace: true,
+                            })
+                          }
+                          className={item.value === activeTab ? "font-semibold" : undefined}
+                        >
+                          {item.label}
+                        </DropdownMenuItem>
+                      ))}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                );
+              })}
           </div>
 
           {isContentAdmin && <TabsContent value="news" className="mt-8">
@@ -286,7 +317,7 @@ function AdminPage() {
                 { name: "summary", label: "Short summary", type: "textarea" },
                 { name: "body", label: "Full text", type: "textarea" },
                 { name: "published_at", label: "Published", type: "datetime" },
-                { name: "image_url", label: "Picture", type: "image", crop: { aspect: 16 / 9, outputWidth: 1600 } },
+                { name: "image_url", label: "Picture", type: "image", crop: { aspect: A6_LANDSCAPE, outputWidth: 1600 } },
                 { name: "is_published", label: "Published", type: "switch" },
                 { name: "is_featured", label: "Featured", type: "switch" },
                 { name: "is_pinned", label: "Pinned to top (max 3)", type: "switch" },
@@ -392,7 +423,7 @@ function AdminPage() {
                   label: "Event contact WhatsApp",
                   help: "Include the country code, e.g. +447700900123.",
                 },
-                { name: "image_url", label: "Event picture", type: "image", crop: { aspect: 16 / 9, outputWidth: 1600 } },
+                { name: "image_url", label: "Event picture", type: "image", crop: { aspect: A6_LANDSCAPE, outputWidth: 1600 } },
                 { name: "ticket_url", label: "Ticket link" },
               ]}
             />
@@ -427,7 +458,7 @@ function AdminPage() {
                 { name: "title", label: "Album title", required: true },
                 { name: "description", label: "Description", type: "textarea" },
                 { name: "event_date", label: "Event date", type: "date" },
-                { name: "cover_url", label: "Main photo (album cover)", type: "image", crop: { aspect: 16 / 9, outputWidth: 1600 } },
+                { name: "cover_url", label: "Main photo (album cover)", type: "image", crop: { aspect: A6_LANDSCAPE, outputWidth: 1600 } },
                 {
                   name: "is_default",
                   label: "Open by default",
@@ -466,7 +497,7 @@ function AdminPage() {
                     secondaryLabel={(row) => String(row['photo_url'])}
                     defaults={{ sort_order: 0 }}
                     fields={[
-                      { name: "photo_url", label: "Photo", type: "image", required: true, crop: { aspect: 4 / 3, outputWidth: 1600 } },
+                      { name: "photo_url", label: "Photo", type: "image", required: true, crop: { aspect: A6_LANDSCAPE, outputWidth: 1600 } },
                       { name: "caption", label: "Caption" },
                       { name: "sort_order", label: "Sort order", type: "number" },
                     ]}
@@ -512,7 +543,7 @@ function AdminPage() {
                 { name: "category", label: "Category", required: true },
                 { name: "short_description", label: "Short description" },
                 { name: "description", label: "Full description", type: "textarea" },
-                { name: "logo_url", label: "Logo / advert picture", type: "image", crop: { aspect: 16 / 9, outputWidth: 1400 } },
+                { name: "logo_url", label: "Logo / advert picture", type: "image", crop: { aspect: A6_LANDSCAPE, outputWidth: 1400 } },
                 { name: "phone", label: "Phone" },
                 { name: "email", label: "Email" },
                 { name: "website", label: "Website" },
@@ -548,7 +579,7 @@ function AdminPage() {
                 { name: "salary_range", label: "Salary range" },
                 { name: "short_description", label: "Short description" },
                 { name: "description", label: "Full description", type: "textarea" },
-                { name: "image_url", label: "Advert picture", type: "image", crop: { aspect: 16 / 9, outputWidth: 1400 } },
+                { name: "image_url", label: "Advert picture", type: "image", crop: { aspect: A6_LANDSCAPE, outputWidth: 1400 } },
                 { name: "apply_url", label: "Apply link" },
                 { name: "contact_email", label: "Contact email" },
                 { name: "contact_phone", label: "Contact phone" },
@@ -595,7 +626,7 @@ function AdminPage() {
                 { name: "title", label: "Title", required: true },
                 { name: "summary", label: "Summary" },
                 { name: "description", label: "Description", type: "textarea" },
-                { name: "image_url", label: "Campaign picture", type: "image", crop: { aspect: 16 / 9, outputWidth: 1600 } },
+                { name: "image_url", label: "Campaign picture", type: "image", crop: { aspect: A6_LANDSCAPE, outputWidth: 1600 } },
                 { name: "goal_amount", label: "Goal amount", type: "number", required: true },
                 { name: "raised_amount", label: "Raised amount", type: "number", required: true },
                 {
@@ -662,7 +693,7 @@ function AdminPage() {
                 { name: "president_name", label: "President name", required: true },
                 { name: "title", label: "Title", required: true },
                 { name: "message", label: "Message", type: "textarea", required: true },
-                { name: "photo_url", label: "Photo", type: "image", crop: { aspect: 4 / 3, outputWidth: 1200 } },
+                { name: "photo_url", label: "Photo", type: "image", crop: { aspect: 3 / 4, outputWidth: 1200 } },
                 { name: "is_published", label: "Published", type: "switch" },
               ]}
             />
@@ -682,7 +713,7 @@ function AdminPage() {
               fields={[
                 { name: "name", label: "Asset name", required: true },
                 { name: "description", label: "Description", type: "textarea" },
-                { name: "image_url", label: "Asset picture", type: "image", crop: { aspect: 16 / 9, outputWidth: 1400 } },
+                { name: "image_url", label: "Asset picture", type: "image", crop: { aspect: A6_LANDSCAPE, outputWidth: 1400 } },
                 { name: "quantity", label: "Quantity", type: "number", required: true },
                 { name: "member_price", label: "Member price", type: "number" },
                 { name: "non_member_price", label: "Non-member price", type: "number" },
@@ -716,7 +747,7 @@ function AdminPage() {
                 },
                 { name: "short_description", label: "Short description" },
                 { name: "description", label: "Full description", type: "textarea" },
-                { name: "image_url", label: "Group picture", type: "image", crop: { aspect: 16 / 9, outputWidth: 1400 } },
+                { name: "image_url", label: "Group picture", type: "image", crop: { aspect: A6_LANDSCAPE, outputWidth: 1400 } },
                 { name: "meeting_info", label: "Meeting details" },
                 { name: "contact_name", label: "Contact name" },
                 { name: "contact_phone", label: "Contact phone" },
