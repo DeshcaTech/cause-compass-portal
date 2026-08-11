@@ -15,6 +15,7 @@ import { announcementsQuery } from "@/lib/queries";
 import { useT } from "@/lib/i18n";
 import { useDyn } from "@/lib/i18n/dynamic";
 import { searchString, useSearchFilter } from "@/lib/use-search-filter";
+import { useCardAspect } from "@/lib/card-image";
 
 export const Route = createFileRoute("/news/")({
   validateSearch: (search: Record<string, unknown>): { view?: string | undefined; q?: string | undefined} => ({
@@ -54,6 +55,7 @@ function formatDate(value: string) {
 function NewsPage() {
   const t = useT();
   const dyn = useDyn();
+  const cardAspect = useCardAspect();
   const { data: news = [] } = useQuery(announcementsQuery);
   const [search, setSearch] = useSearchFilter("q", "");
   const [view, setView] = useSearchFilter("view", "all");
@@ -136,7 +138,8 @@ function NewsPage() {
                       src={item.image_url || newsFallback}
                       alt={dyn(item.title)}
                       loading="lazy"
-                      className="aspect-[16/9] w-full object-cover"
+                      style={cardAspect}
+                      className="w-full object-cover"
                     />
                   )}
                   <CardContent className="p-6">

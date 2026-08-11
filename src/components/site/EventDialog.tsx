@@ -327,8 +327,8 @@ export function EventDialog({
               loading="lazy"
               width={1280}
               height={720}
-              wrapperClassName="aspect-[16/9] w-full rounded-xl border border-border/70"
-              className="size-full object-cover"
+              wrapperClassName="max-h-[60vh] w-full rounded-xl border border-border/70"
+              className="max-h-[60vh] w-full object-contain"
             />
             <p className="text-sm text-foreground/85">{dyn(event.description)}</p>
             <div className="flex flex-wrap gap-2">

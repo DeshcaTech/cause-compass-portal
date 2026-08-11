@@ -21,6 +21,7 @@ import { useT } from "@/lib/i18n";
 import { useDyn } from "@/lib/i18n/dynamic";
 import { searchString, useSearchFilter } from "@/lib/use-search-filter";
 import { mergeShareMeta } from "@/lib/share-meta";
+import { useCardAspect } from "@/lib/card-image";
 
 const PLACEHOLDER_PHOTOS = [
   galleryFallback,
@@ -64,6 +65,7 @@ export const Route = createFileRoute("/gallery")({
 function GalleryPage() {
   const t = useT();
   const dyn = useDyn();
+  const cardAspect = useCardAspect();
   const { data: rawGalleries = [] } = useQuery(galleriesQuery);
   const galleries = [...rawGalleries].sort(
     (a, b) => Number(b.is_default) - Number(a.is_default),
@@ -183,7 +185,8 @@ function GalleryPage() {
                   src={tile.src}
                   alt={dyn(tile.caption) || dyn(active?.title) || t("Community photo")}
                   loading="lazy"
-                  wrapperClassName="aspect-[4/3] h-56 w-full"
+                  wrapperStyle={cardAspect}
+                  wrapperClassName="w-full"
                   className="size-full object-cover transition-transform group-hover:scale-105"
                 />
               </button>

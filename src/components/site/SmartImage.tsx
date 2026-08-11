@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { ImageOff, RotateCw } from "lucide-react";
 
 import { Skeleton } from "@/components/ui/skeleton";
@@ -17,6 +17,7 @@ export function SmartImage({
   loading = "lazy",
   width,
   height,
+  wrapperStyle,
 }: {
   src: string;
   alt: string;
@@ -25,6 +26,7 @@ export function SmartImage({
   loading?: "lazy" | "eager";
   width?: number;
   height?: number;
+  wrapperStyle?: CSSProperties;
 }) {
   const t = useT();
   const imageRef = useRef<HTMLImageElement>(null);
@@ -52,7 +54,10 @@ export function SmartImage({
   }
 
   return (
-    <div className={cn("relative overflow-hidden bg-secondary", wrapperClassName)}>
+    <div
+      className={cn("relative overflow-hidden bg-secondary", wrapperClassName)}
+      style={wrapperStyle}
+    >
       {status !== "error" ? (
         <img
           ref={imageRef}

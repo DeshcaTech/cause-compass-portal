@@ -15,6 +15,7 @@ import { useT } from "@/lib/i18n";
 import { useDyn } from "@/lib/i18n/dynamic";
 import { mergeShareMeta } from "@/lib/share-meta";
 import { useDialogParam } from "@/lib/use-dialog-param";
+import { useCardAspect } from "@/lib/card-image";
 
 export const Route = createFileRoute("/events")({
   // Filters, the open tab and the open event live in the URL so links can be shared.
@@ -68,6 +69,7 @@ function TypeBadge({ type }: { type: EventRow["event_type"] }) {
 function EventCard({ event, onOpen }: { event: EventRow; onOpen: () => void }) {
   const t = useT();
   const dyn = useDyn();
+  const cardAspect = useCardAspect();
   return (
     <Card
       className="cursor-pointer border-border/70 transition-all hover:-translate-y-1 hover:shadow-[var(--shadow-lift)]"
@@ -89,7 +91,8 @@ function EventCard({ event, onOpen }: { event: EventRow; onOpen: () => void }) {
           loading="lazy"
           width={1280}
           height={720}
-          wrapperClassName="mb-4 aspect-[16/9] w-full rounded-xl"
+          wrapperStyle={cardAspect}
+          wrapperClassName="mb-4 w-full rounded-xl"
           className="size-full object-cover"
         />
         <div className="flex items-start justify-between gap-3">

@@ -21,6 +21,7 @@ import { useDyn } from "@/lib/i18n/dynamic";
 import { searchString, useSearchFilter } from "@/lib/use-search-filter";
 import { mergeShareMeta } from "@/lib/share-meta";
 import { useDialogParam } from "@/lib/use-dialog-param";
+import { useCardAspect } from "@/lib/card-image";
 
 export const Route = createFileRoute("/fundraising")({
   validateSearch: (search: Record<string, unknown>): { view?: string | undefined; campaign?: string | undefined; st?: string | undefined; si?: string | undefined} => ({
@@ -52,6 +53,7 @@ export const Route = createFileRoute("/fundraising")({
 function CampaignCard({ campaign, onOpen }: { campaign: Campaign; onOpen: () => void }) {
   const t = useT();
   const dyn = useDyn();
+  const cardAspect = useCardAspect();
   const pct = campaign.goal_amount
     ? Math.min(100, Math.round((campaign.raised_amount / campaign.goal_amount) * 100))
     : 0;
@@ -73,7 +75,8 @@ function CampaignCard({ campaign, onOpen }: { campaign: Campaign; onOpen: () => 
           src={campaign.image_url ?? campaignFallback}
           alt={dyn(campaign.title)}
           loading="lazy"
-          className="mb-4 aspect-[16/9] w-full rounded-xl object-cover"
+          style={cardAspect}
+          className="mb-4 w-full rounded-xl object-cover"
         />
         <div className="flex items-start justify-between gap-3">
           <h2 className="text-lg">{dyn(campaign.title)}</h2>
@@ -140,7 +143,7 @@ function CampaignDialog({
             <img
               src={campaign.image_url ?? campaignFallback}
               alt={dyn(campaign.title)}
-              className="aspect-[16/9] w-full rounded-xl object-cover"
+              className="max-h-[60vh] w-full rounded-xl bg-secondary object-contain"
             />
             <Badge variant={campaign.status === "active" ? "default" : "secondary"} className="w-fit">
               {campaign.status === "active" ? t("Active") : t("Completed")}

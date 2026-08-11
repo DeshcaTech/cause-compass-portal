@@ -13,6 +13,7 @@ import { useDyn } from "@/lib/i18n/dynamic";
 import { searchString, useSearchFilter } from "@/lib/use-search-filter";
 import { mergeShareMeta } from "@/lib/share-meta";
 import { useDialogParam } from "@/lib/use-dialog-param";
+import { useCardAspect } from "@/lib/card-image";
 
 export const Route = createFileRoute("/partners")({
   validateSearch: (search: Record<string, unknown>): { category?: string | undefined; partner?: string | undefined; st?: string | undefined; si?: string | undefined} => ({
@@ -44,6 +45,7 @@ export const Route = createFileRoute("/partners")({
 function PartnersPage() {
   const t = useT();
   const dyn = useDyn();
+  const cardAspect = useCardAspect();
   const { data: partners = [] } = useQuery(partnersQuery);
   // The open business lives in the URL so the popup can be shared as a link.
   const search = Route.useSearch();
@@ -90,7 +92,8 @@ function PartnersPage() {
                   src={partner.logo_url ?? businessFallback}
                   alt={partner.business_name}
                   loading="lazy"
-                  className="mb-4 aspect-[16/9] w-full rounded-xl object-cover"
+                  style={cardAspect}
+                  className="mb-4 w-full rounded-xl object-cover"
                 />
                 <h2 className="mt-4 text-lg">{partner.business_name}</h2>
                 <Badge variant="secondary" className="mt-2">

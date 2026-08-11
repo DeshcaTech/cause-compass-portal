@@ -74,6 +74,19 @@ const GROUPS: Group[] = [
     ],
   },
   {
+    title: "Card pictures",
+    description:
+      "Shape of the pictures on cards across the site, as width ÷ height. A6 landscape is 1.41, A6 portrait is 0.71, square is 1.",
+    fields: [
+      {
+        key: "card_image_ratio",
+        label: "Picture shape (width ÷ height)",
+        hint: "1.41",
+        number: true,
+      },
+    ],
+  },
+  {
     title: "Social media",
     description:
       "Links to your community profiles. Shown as quick-contact icons in the footer. Leave empty to hide an icon.",

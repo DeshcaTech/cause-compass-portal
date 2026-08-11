@@ -18,6 +18,7 @@ import { assetsQuery, formatMoney, type CommunityAsset } from "@/lib/queries";
 import assetFallback from "@/assets/asset-fallback.jpg";
 import { useT } from "@/lib/i18n";
 import { useDyn } from "@/lib/i18n/dynamic";
+import { useCardAspect } from "@/lib/card-image";
 
 export const Route = createFileRoute("/assets")({
   head: () => ({
@@ -54,6 +55,7 @@ const schema = z.object({
 function AssetsPage() {
   const t = useT();
   const dyn = useDyn();
+  const cardAspect = useCardAspect();
   const { data: assets = [] } = useQuery(assetsQuery);
   const [selected, setSelected] = useState<CommunityAsset | null>(null);
   const [saving, setSaving] = useState(false);
@@ -103,7 +105,8 @@ function AssetsPage() {
                   src={asset.image_url ?? assetFallback}
                   alt={dyn(asset.name)}
                   loading="lazy"
-                  className="aspect-[16/9] w-full rounded-xl object-cover"
+                  style={cardAspect}
+                  className="w-full rounded-xl object-cover"
                 />
                 <div className="mt-4 flex items-start justify-between gap-3">
                   <h2 className="text-lg">{dyn(asset.name)}</h2>
