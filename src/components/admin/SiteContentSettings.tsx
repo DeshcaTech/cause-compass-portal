@@ -279,6 +279,7 @@ export function SiteContentSettings({
                     <Textarea
                       id={String(field.key)}
                       rows={4}
+                      placeholder={field.hint ?? ""}
                       value={String(draft[field.key] ?? "")}
                       onChange={(e) => set(field.key, e.target.value)}
                     />

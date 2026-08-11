@@ -17,6 +17,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { supabase } from "@/integrations/supabase/client";
 import { assetsQuery, formatMoney, type CommunityAsset } from "@/lib/queries";
+import { fillAssetMessage, siteSettingsQuery, whatsappHref } from "@/lib/site-settings";
 import assetFallback from "@/assets/asset-fallback.jpg";
 import { useT } from "@/lib/i18n";
 import { useDyn } from "@/lib/i18n/dynamic";
@@ -25,8 +26,8 @@ import { ShareButton } from "@/components/site/ShareButton";
 import { WhatsAppIcon } from "@/components/site/icons/WhatsApp";
 
 /** Partner-owned kit is contacted directly on the business's own WhatsApp. */
-function whatsappDigits(raw: string | null | undefined) {
-  return (raw ?? "").replace(/[^\d]/g, "");
+function hasWhatsapp(raw: string | null | undefined) {
+  return (raw ?? "").replace(/[^\d]/g, "").length >= 9;
 }
 
 export const Route = createFileRoute("/assets")({
@@ -66,9 +67,33 @@ function AssetsPage() {
   const dyn = useDyn();
   const cardAspect = useCardAspect();
   const { data: assets = [] } = useQuery(assetsQuery);
+  const { data: site } = useQuery(siteSettingsQuery);
   const [ownerFilter, setOwnerFilter] = useSearchFilter("owner", "all");
   const [selected, setSelected] = useState<CommunityAsset | null>(null);
+  const [contactAsset, setContactAsset] = useState<CommunityAsset | null>(null);
+  const [dates, setDates] = useState({ start: "", end: "" });
   const [saving, setSaving] = useState(false);
+
+  /** Builds the wa.me link for an asset using the admin-set template for its category. */
+  function assetWhatsappHref(
+    asset: CommunityAsset | null,
+    range: { start: string; end: string },
+  ) {
+    if (!asset) return null;
+    const isPartner = asset.owner_type === "partner";
+    const number = isPartner ? asset.whatsapp : asset.whatsapp || site?.contact_whatsapp;
+    const template = isPartner
+      ? site?.asset_whatsapp_message_other
+      : site?.asset_whatsapp_message_ccgms;
+    return whatsappHref(
+      number,
+      fillAssetMessage(template, {
+        asset: asset.name,
+        start: range.start,
+        end: range.end,
+      }),
+    );
+  }
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -157,23 +182,26 @@ function AssetsPage() {
                   </div>
                 </dl>
                 <div className="mt-5 flex flex-wrap gap-2">
-                  {asset.owner_type === "partner" && whatsappDigits(asset.whatsapp) ? (
+                  {asset.owner_type === "partner" && hasWhatsapp(asset.whatsapp) ? (
                     <Button
-                      asChild
                       variant="hero"
                       className="flex-1"
-
+                      onClick={() => {
+                        setDates({ start: "", end: "" });
+                        setContactAsset(asset);
+                      }}
                     >
-                      <a
-                        href={`https://wa.me/${whatsappDigits(asset.whatsapp)}`}
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        <WhatsAppIcon className="size-4" /> {t("Contact")}
-                      </a>
+                      <WhatsAppIcon className="size-4" /> {t("Contact")}
                     </Button>
                   ) : (
-                    <Button variant="hero" className="flex-1" onClick={() => setSelected(asset)}>
+                    <Button
+                      variant="hero"
+                      className="flex-1"
+                      onClick={() => {
+                        setDates({ start: "", end: "" });
+                        setSelected(asset);
+                      }}
+                    >
                       {t("Request this asset")}
                     </Button>
                   )}
@@ -220,21 +248,91 @@ function AssetsPage() {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="start_date">{t("Collection date")}</Label>
-                <Input id="start_date" name="start_date" type="date" required />
+                <Input
+                  id="start_date"
+                  name="start_date"
+                  type="date"
+                  required
+                  value={dates.start}
+                  onChange={(e) => setDates((d) => ({ ...d, start: e.target.value }))}
+                />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="end_date">{t("Return date")}</Label>
-                <Input id="end_date" name="end_date" type="date" required />
+                <Input
+                  id="end_date"
+                  name="end_date"
+                  type="date"
+                  required
+                  value={dates.end}
+                  onChange={(e) => setDates((d) => ({ ...d, end: e.target.value }))}
+                />
               </div>
             </div>
             <div className="space-y-2">
               <Label htmlFor="purpose">{t("What is it for?")}</Label>
               <Textarea id="purpose" name="purpose" rows={3} maxLength={500} />
             </div>
-            <Button type="submit" variant="hero" className="w-full" disabled={saving}>
-              {saving ? t("Sending…") : t("Send request")}
-            </Button>
+            <div className="flex flex-wrap gap-2">
+              <Button type="submit" variant="hero" className="flex-1" disabled={saving}>
+                {saving ? t("Sending…") : t("Send request")}
+              </Button>
+              {assetWhatsappHref(selected, dates) ? (
+                <Button asChild variant="soft" className="flex-1">
+                  <a
+                    href={assetWhatsappHref(selected, dates)!}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <WhatsAppIcon className="size-4" /> {t("Ask on WhatsApp")}
+                  </a>
+                </Button>
+              ) : null}
+            </div>
           </form>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={!!contactAsset} onOpenChange={(open) => !open && setContactAsset(null)}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>{t("Request:")} {dyn(contactAsset?.name)}</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <p className="text-sm text-muted-foreground">
+              {t("Choose your dates — we will pre-fill the WhatsApp message for you.")}
+            </p>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div className="space-y-2">
+                <Label htmlFor="contact_start">{t("Collection date")}</Label>
+                <Input
+                  id="contact_start"
+                  type="date"
+                  value={dates.start}
+                  onChange={(e) => setDates((d) => ({ ...d, start: e.target.value }))}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="contact_end">{t("Return date")}</Label>
+                <Input
+                  id="contact_end"
+                  type="date"
+                  value={dates.end}
+                  onChange={(e) => setDates((d) => ({ ...d, end: e.target.value }))}
+                />
+              </div>
+            </div>
+            <Button asChild variant="hero" className="w-full">
+              <a
+                href={assetWhatsappHref(contactAsset, dates) ?? "#"}
+                target="_blank"
+                rel="noreferrer"
+                onClick={() => setContactAsset(null)}
+              >
+                <WhatsAppIcon className="size-4" /> {t("Contact")}
+              </a>
+            </Button>
+          </div>
         </DialogContent>
       </Dialog>
     </>
