@@ -218,6 +218,7 @@ function SurveyCard({
 }) {
   const t = useT();
   const dyn = useDyn();
+  const cardAspect = useCardAspect();
   const questionCount = survey.questions.length;
   return (
     <Card

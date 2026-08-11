@@ -45,6 +45,7 @@ export const Route = createFileRoute("/partners")({
 function PartnersPage() {
   const t = useT();
   const dyn = useDyn();
+  const cardAspect = useCardAspect();
   const { data: partners = [] } = useQuery(partnersQuery);
   // The open business lives in the URL so the popup can be shared as a link.
   const search = Route.useSearch();

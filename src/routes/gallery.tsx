@@ -65,6 +65,7 @@ export const Route = createFileRoute("/gallery")({
 function GalleryPage() {
   const t = useT();
   const dyn = useDyn();
+  const cardAspect = useCardAspect();
   const { data: rawGalleries = [] } = useQuery(galleriesQuery);
   const galleries = [...rawGalleries].sort(
     (a, b) => Number(b.is_default) - Number(a.is_default),

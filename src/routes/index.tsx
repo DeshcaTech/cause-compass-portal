@@ -101,6 +101,7 @@ const highlights = [
 function Index() {
   const t = useT();
   const dyn = useDyn();
+  const cardAspect = useCardAspect();
   const appInstalled = useAppInstalled();
   const devicePlatform = useDevicePlatform();
   const { data: events = [] } = useQuery(eventsQuery);

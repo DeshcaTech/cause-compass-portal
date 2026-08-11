@@ -55,6 +55,7 @@ function formatDate(value: string) {
 function NewsPage() {
   const t = useT();
   const dyn = useDyn();
+  const cardAspect = useCardAspect();
   const { data: news = [] } = useQuery(announcementsQuery);
   const [search, setSearch] = useSearchFilter("q", "");
   const [view, setView] = useSearchFilter("view", "all");

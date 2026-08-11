@@ -55,6 +55,7 @@ const schema = z.object({
 function AssetsPage() {
   const t = useT();
   const dyn = useDyn();
+  const cardAspect = useCardAspect();
   const { data: assets = [] } = useQuery(assetsQuery);
   const [selected, setSelected] = useState<CommunityAsset | null>(null);
   const [saving, setSaving] = useState(false);
