@@ -87,16 +87,6 @@ const GROUPS: Group[] = [
     ],
   },
   {
-    title: "Contact details (legacy)",
-    description: "Shown in the footer and on the contact page.",
-    fields: [
-      { key: "contact_address", label: "Address" },
-      { key: "contact_phone", label: "Phone" },
-      { key: "contact_email", label: "Email" },
-      { key: "footer_blurb", label: "Footer description", multiline: true },
-    ],
-  },
-  {
     title: "Social media",
     description:
       "Links to your community profiles. Shown as quick-contact icons in the footer. Leave empty to hide an icon.",
