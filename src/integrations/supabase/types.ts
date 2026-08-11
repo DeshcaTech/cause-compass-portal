@@ -350,7 +350,10 @@ export type Database = {
           member_price: number | null
           name: string
           non_member_price: number | null
+          owner_name: string | null
+          owner_type: string
           quantity: number
+          whatsapp: string | null
         }
         Insert: {
           created_at?: string
@@ -361,7 +364,10 @@ export type Database = {
           member_price?: number | null
           name: string
           non_member_price?: number | null
+          owner_name?: string | null
+          owner_type?: string
           quantity?: number
+          whatsapp?: string | null
         }
         Update: {
           created_at?: string
@@ -372,7 +378,10 @@ export type Database = {
           member_price?: number | null
           name?: string
           non_member_price?: number | null
+          owner_name?: string | null
+          owner_type?: string
           quantity?: number
+          whatsapp?: string | null
         }
         Relationships: []
       }
