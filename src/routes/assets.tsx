@@ -18,6 +18,7 @@ import { assetsQuery, formatMoney, type CommunityAsset } from "@/lib/queries";
 import assetFallback from "@/assets/asset-fallback.jpg";
 import { useT } from "@/lib/i18n";
 import { useDyn } from "@/lib/i18n/dynamic";
+import { useCardAspect } from "@/lib/card-image";
 
 export const Route = createFileRoute("/assets")({
   head: () => ({

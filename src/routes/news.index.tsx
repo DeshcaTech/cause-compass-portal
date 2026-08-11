@@ -15,6 +15,7 @@ import { announcementsQuery } from "@/lib/queries";
 import { useT } from "@/lib/i18n";
 import { useDyn } from "@/lib/i18n/dynamic";
 import { searchString, useSearchFilter } from "@/lib/use-search-filter";
+import { useCardAspect } from "@/lib/card-image";
 
 export const Route = createFileRoute("/news/")({
   validateSearch: (search: Record<string, unknown>): { view?: string | undefined; q?: string | undefined} => ({

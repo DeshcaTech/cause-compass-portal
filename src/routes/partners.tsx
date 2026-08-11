@@ -13,6 +13,7 @@ import { useDyn } from "@/lib/i18n/dynamic";
 import { searchString, useSearchFilter } from "@/lib/use-search-filter";
 import { mergeShareMeta } from "@/lib/share-meta";
 import { useDialogParam } from "@/lib/use-dialog-param";
+import { useCardAspect } from "@/lib/card-image";
 
 export const Route = createFileRoute("/partners")({
   validateSearch: (search: Record<string, unknown>): { category?: string | undefined; partner?: string | undefined; st?: string | undefined; si?: string | undefined} => ({

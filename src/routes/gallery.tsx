@@ -21,6 +21,7 @@ import { useT } from "@/lib/i18n";
 import { useDyn } from "@/lib/i18n/dynamic";
 import { searchString, useSearchFilter } from "@/lib/use-search-filter";
 import { mergeShareMeta } from "@/lib/share-meta";
+import { useCardAspect } from "@/lib/card-image";
 
 const PLACEHOLDER_PHOTOS = [
   galleryFallback,

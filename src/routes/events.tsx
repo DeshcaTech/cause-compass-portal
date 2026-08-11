@@ -15,6 +15,7 @@ import { useT } from "@/lib/i18n";
 import { useDyn } from "@/lib/i18n/dynamic";
 import { mergeShareMeta } from "@/lib/share-meta";
 import { useDialogParam } from "@/lib/use-dialog-param";
+import { useCardAspect } from "@/lib/card-image";
 
 export const Route = createFileRoute("/events")({
   // Filters, the open tab and the open event live in the URL so links can be shared.
