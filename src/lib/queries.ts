@@ -125,6 +125,10 @@ export type CommunityAsset = {
   member_price: number | null;
   non_member_price: number | null;
   is_available: boolean;
+  /** "ccgms" for community-owned kit, "partner" for a member business's kit. */
+  owner_type: string;
+  owner_name: string | null;
+  whatsapp: string | null;
 };
 
 export type DocumentRow = {

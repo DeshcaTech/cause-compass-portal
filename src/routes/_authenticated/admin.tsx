@@ -713,6 +713,18 @@ function AdminPage() {
               fields={[
                 { name: "name", label: "Asset name", required: true },
                 { name: "description", label: "Description", type: "textarea" },
+                {
+                  name: "owner_type",
+                  label: "Owner",
+                  type: "select",
+                  required: true,
+                  options: [
+                    { value: "ccgms", label: "CCGMs asset" },
+                    { value: "partner", label: "Partner business asset" },
+                  ],
+                },
+                { name: "owner_name", label: "Business name (partner assets)" },
+                { name: "whatsapp", label: "WhatsApp number (partner assets)", placeholder: "+44 7700 900000" },
                 { name: "image_url", label: "Asset picture", type: "image", crop: { aspect: A6_LANDSCAPE, outputWidth: 1400 } },
                 { name: "quantity", label: "Quantity", type: "number", required: true },
                 { name: "member_price", label: "Member price", type: "number" },
