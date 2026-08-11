@@ -137,7 +137,8 @@ function NewsPage() {
                       src={item.image_url || newsFallback}
                       alt={dyn(item.title)}
                       loading="lazy"
-                      className="aspect-[16/9] w-full object-cover"
+                      style={cardAspect}
+                      className="w-full object-cover"
                     />
                   )}
                   <CardContent className="p-6">
