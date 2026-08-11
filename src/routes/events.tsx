@@ -89,7 +89,8 @@ function EventCard({ event, onOpen }: { event: EventRow; onOpen: () => void }) {
           loading="lazy"
           width={1280}
           height={720}
-          wrapperClassName="mb-4 aspect-[16/9] w-full rounded-xl"
+          wrapperStyle={cardAspect}
+          wrapperClassName="mb-4 w-full rounded-xl"
           className="size-full object-cover"
         />
         <div className="flex items-start justify-between gap-3">
