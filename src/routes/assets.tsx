@@ -19,6 +19,13 @@ import assetFallback from "@/assets/asset-fallback.jpg";
 import { useT } from "@/lib/i18n";
 import { useDyn } from "@/lib/i18n/dynamic";
 import { useCardAspect } from "@/lib/card-image";
+import { ShareButton } from "@/components/site/ShareButton";
+import { WhatsAppIcon } from "@/components/site/icons/WhatsApp";
+
+/** Partner-owned kit is contacted directly on the business's own WhatsApp. */
+function whatsappDigits(raw: string | null | undefined) {
+  return (raw ?? "").replace(/[^\d]/g, "");
+}
 
 export const Route = createFileRoute("/assets")({
   head: () => ({
@@ -114,6 +121,9 @@ function AssetsPage() {
                     {asset.quantity} {t("available")}
                   </Badge>
                 </div>
+                {asset.owner_type === "partner" && asset.owner_name ? (
+                  <p className="mt-1 text-sm text-muted-foreground">{dyn(asset.owner_name)}</p>
+                ) : null}
                 <p className="mt-2 flex-1 text-sm text-muted-foreground">{dyn(asset.description)}</p>
                 <dl className="mt-4 space-y-1 text-sm">
                   <div className="flex justify-between">
@@ -125,9 +135,35 @@ function AssetsPage() {
                     <dd>{formatMoney(asset.non_member_price ?? 0)}</dd>
                   </div>
                 </dl>
-                <Button variant="hero" className="mt-5" onClick={() => setSelected(asset)}>
-                  {t("Request this asset")}
-                </Button>
+                <div className="mt-5 flex flex-wrap gap-2">
+                  {asset.owner_type === "partner" ? (
+                    <Button
+                      asChild
+                      variant="hero"
+                      className="flex-1"
+                      disabled={!whatsappDigits(asset.whatsapp)}
+                    >
+                      <a
+                        href={`https://wa.me/${whatsappDigits(asset.whatsapp)}`}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        <WhatsAppIcon className="size-4" /> {t("Contact")}
+                      </a>
+                    </Button>
+                  ) : (
+                    <Button variant="hero" className="flex-1" onClick={() => setSelected(asset)}>
+                      {t("Request this asset")}
+                    </Button>
+                  )}
+                  <ShareButton
+                    title={dyn(asset.name)}
+                    path={`/assets?asset=${asset.id}`}
+                    image={asset.image_url}
+                    label={t("Share")}
+                    className="flex-1"
+                  />
+                </div>
               </CardContent>
             </Card>
           ))}
