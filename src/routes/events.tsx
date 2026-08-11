@@ -68,6 +68,7 @@ function TypeBadge({ type }: { type: EventRow["event_type"] }) {
 function EventCard({ event, onOpen }: { event: EventRow; onOpen: () => void }) {
   const t = useT();
   const dyn = useDyn();
+  const cardAspect = useCardAspect();
   return (
     <Card
       className="cursor-pointer border-border/70 transition-all hover:-translate-y-1 hover:shadow-[var(--shadow-lift)]"
