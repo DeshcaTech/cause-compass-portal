@@ -185,7 +185,8 @@ function GalleryPage() {
                   src={tile.src}
                   alt={dyn(tile.caption) || dyn(active?.title) || t("Community photo")}
                   loading="lazy"
-                  wrapperClassName="aspect-[4/3] h-56 w-full"
+                  wrapperStyle={cardAspect}
+                  wrapperClassName="w-full"
                   className="size-full object-cover transition-transform group-hover:scale-105"
                 />
               </button>
