@@ -1133,6 +1133,8 @@ export type Database = {
           about_eyebrow: string
           about_title: string
           android_app_url: string | null
+          asset_whatsapp_message_ccgms: string | null
+          asset_whatsapp_message_other: string | null
           card_image_ratio: number
           contact_address: string
           contact_email: string
@@ -1167,6 +1169,8 @@ export type Database = {
           about_eyebrow?: string
           about_title?: string
           android_app_url?: string | null
+          asset_whatsapp_message_ccgms?: string | null
+          asset_whatsapp_message_other?: string | null
           card_image_ratio?: number
           contact_address?: string
           contact_email?: string
@@ -1201,6 +1205,8 @@ export type Database = {
           about_eyebrow?: string
           about_title?: string
           android_app_url?: string | null
+          asset_whatsapp_message_ccgms?: string | null
+          asset_whatsapp_message_other?: string | null
           card_image_ratio?: number
           contact_address?: string
           contact_email?: string
