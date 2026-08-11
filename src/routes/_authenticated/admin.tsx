@@ -710,6 +710,7 @@ function AdminPage() {
                 `${row['quantity']} available${row['is_available'] ? "" : " · hidden"}`
               }
               defaults={{ is_available: true, quantity: 1 }}
+              // owner_type defaults to CCGMs kit unless a partner business is chosen.
               fields={[
                 { name: "name", label: "Asset name", required: true },
                 { name: "description", label: "Description", type: "textarea" },
