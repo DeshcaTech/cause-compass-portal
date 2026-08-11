@@ -6,6 +6,8 @@ import { toast } from "sonner";
 import { z } from "zod";
 
 import { PageHeader } from "@/components/site/PageHeader";
+import { FilterPage, FilterSelect } from "@/components/site/FilterPage";
+import { useSearchFilter } from "@/lib/use-search-filter";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -64,6 +66,7 @@ function AssetsPage() {
   const dyn = useDyn();
   const cardAspect = useCardAspect();
   const { data: assets = [] } = useQuery(assetsQuery);
+  const [ownerFilter, setOwnerFilter] = useSearchFilter("owner", "all");
   const [selected, setSelected] = useState<CommunityAsset | null>(null);
   const [saving, setSaving] = useState(false);
 
@@ -96,6 +99,11 @@ function AssetsPage() {
     setSelected(null);
   }
 
+  const ccgms = assets.filter((a) => a.owner_type !== "partner");
+  const others = assets.filter((a) => a.owner_type === "partner");
+  const visible =
+    ownerFilter === "ccgms" ? ccgms : ownerFilter === "other" ? others : assets;
+
   return (
     <>
       <PageHeader
@@ -103,9 +111,22 @@ function AssetsPage() {
         title={t("Rent community assets")}
         description={t("Equipment bought and maintained by the community, available to members at reduced rates.")}
       />
-      <section className="container-page py-14">
+      <FilterPage
+        filters={(
+          <FilterSelect
+            label={t("Filter by category")}
+            value={ownerFilter}
+            onChange={setOwnerFilter}
+            options={[
+              { value: "all", label: t("All assets"), meta: `${assets.length}` },
+              { value: "ccgms", label: t("CCGMs assets"), meta: `${ccgms.length}` },
+              { value: "other", label: t("Other assets"), meta: `${others.length}` },
+            ]}
+          />
+        )}
+      >
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {assets.map((asset) => (
+          {visible.map((asset) => (
             <Card key={asset.id} className="flex flex-col border-border/70">
               <CardContent className="flex flex-1 flex-col p-6">
                 <img
@@ -168,7 +189,7 @@ function AssetsPage() {
             </Card>
           ))}
         </div>
-      </section>
+      </FilterPage>
 
       <Dialog open={!!selected} onOpenChange={(open) => !open && setSelected(null)}>
         <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-lg">
