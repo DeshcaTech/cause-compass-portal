@@ -1,9 +1,11 @@
 import { Globe, Mail, MapPin, Phone } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import type { Partner } from "@/lib/queries";
+import { fillTemplate, siteSettingsQuery, whatsappHref } from "@/lib/site-settings";
 import { useT } from "@/lib/i18n";
 import { useDyn } from "@/lib/i18n/dynamic";
 import { ShareButton } from "@/components/site/ShareButton";
