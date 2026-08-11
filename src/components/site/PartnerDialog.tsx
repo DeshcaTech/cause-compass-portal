@@ -1,4 +1,4 @@
-import { Globe, Mail, MapPin, MessageCircle, Phone } from "lucide-react";
+import { Globe, Mail, MapPin, Phone } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -7,6 +7,7 @@ import type { Partner } from "@/lib/queries";
 import { useT } from "@/lib/i18n";
 import { useDyn } from "@/lib/i18n/dynamic";
 import { ShareButton } from "@/components/site/ShareButton";
+import { WhatsAppIcon } from "@/components/site/icons/WhatsApp";
 import businessFallback from "@/assets/business-fallback.jpg";
 
 /** Admins often type "example.com" — make sure it opens as an external site. */
@@ -41,7 +42,7 @@ export function PartnerDialog({
             <img
               src={partner.logo_url ?? businessFallback}
               alt={`${partner.business_name} logo`}
-              className="aspect-[16/9] w-full rounded-xl object-cover"
+              className="max-h-[60vh] w-full rounded-xl bg-secondary object-contain"
             />
             <Badge variant="secondary">{dyn(partner.category)}</Badge>
             <p className="text-sm text-foreground/85">
@@ -49,18 +50,48 @@ export function PartnerDialog({
             </p>
             <ul className="space-y-2 text-sm text-muted-foreground">
               {partner.phone ? (
-                <li className="flex items-center gap-2">
-                  <Phone className="size-4" /> {partner.phone}
+                <li>
+                  <a
+                    href={`tel:${partner.phone.replace(/\s+/g, "")}`}
+                    className="flex items-center gap-2 underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    <Phone className="size-4 shrink-0" /> {partner.phone}
+                  </a>
+                </li>
+              ) : null}
+              {whatsapp ? (
+                <li>
+                  <a
+                    href={`https://wa.me/${whatsapp}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="flex items-center gap-2 underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    <WhatsAppIcon className="size-4 shrink-0 text-[#25D366]" />{" "}
+                    {partner.whatsapp}
+                  </a>
                 </li>
               ) : null}
               {partner.email ? (
-                <li className="flex items-center gap-2">
-                  <Mail className="size-4" /> {partner.email}
+                <li>
+                  <a
+                    href={`mailto:${partner.email}`}
+                    className="flex items-center gap-2 break-all underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    <Mail className="size-4 shrink-0" /> {partner.email}
+                  </a>
                 </li>
               ) : null}
               {partner.address ? (
-                <li className="flex items-center gap-2">
-                  <MapPin className="size-4" /> {dyn(partner.address)}
+                <li>
+                  <a
+                    href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(partner.address)}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="flex items-center gap-2 underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    <MapPin className="size-4 shrink-0" /> {dyn(partner.address)}
+                  </a>
                 </li>
               ) : null}
             </ul>
@@ -82,7 +113,7 @@ export function PartnerDialog({
               ) : whatsapp ? (
                 <Button asChild variant="hero" className="flex-1">
                   <a href={`https://wa.me/${whatsapp}`} target="_blank" rel="noreferrer">
-                    <MessageCircle /> {t("Contact")}
+                    <WhatsAppIcon className="size-4" /> {t("Contact")}
                   </a>
                 </Button>
               ) : null}
