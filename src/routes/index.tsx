@@ -469,7 +469,8 @@ function Index() {
                   width={1280}
                   height={720}
                   pictureClassName="block"
-                  className="aspect-[16/9] w-full object-cover"
+                  style={cardAspect}
+                  className="w-full object-cover"
                 />
                 <CardContent className="flex h-full flex-col p-6 sm:p-8 md:p-10">
                   <p className="eyebrow text-gold">{formatDate(upcoming[0]!.start_at)}</p>
@@ -521,7 +522,7 @@ function Index() {
             <img
               src={info.image}
               alt=""
-              className="aspect-[16/9] w-full rounded-xl object-cover"
+              className="max-h-[60vh] w-full rounded-xl bg-secondary object-contain"
             />
           ) : null}
           <DialogDescription className="whitespace-pre-line text-left">
