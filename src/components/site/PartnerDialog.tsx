@@ -1,9 +1,11 @@
 import { Globe, Mail, MapPin, Phone } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import type { Partner } from "@/lib/queries";
+import { fillTemplate, siteSettingsQuery, whatsappHref } from "@/lib/site-settings";
 import { useT } from "@/lib/i18n";
 import { useDyn } from "@/lib/i18n/dynamic";
 import { ShareButton } from "@/components/site/ShareButton";
@@ -29,7 +31,11 @@ export function PartnerDialog({
 }) {
   const t = useT();
   const dyn = useDyn();
-  const whatsapp = partner?.whatsapp?.replace(/[^\d]/g, "") ?? "";
+  const { data: site } = useQuery(siteSettingsQuery);
+  const waHref = whatsappHref(
+    partner?.whatsapp,
+    fillTemplate(site?.business_whatsapp_message, { business: partner?.business_name }),
+  );
   const website = externalUrl(partner?.website ?? "");
   return (
     <Dialog open={!!partner} onOpenChange={onOpenChange}>
@@ -59,10 +65,10 @@ export function PartnerDialog({
                   </a>
                 </li>
               ) : null}
-              {whatsapp ? (
+              {waHref ? (
                 <li>
                   <a
-                    href={`https://wa.me/${whatsapp}`}
+                    href={waHref}
                     target="_blank"
                     rel="noreferrer"
                     className="flex items-center gap-2 underline-offset-4 hover:text-foreground hover:underline"
@@ -110,9 +116,9 @@ export function PartnerDialog({
                     <Globe /> {t("View website")}
                   </a>
                 </Button>
-              ) : whatsapp ? (
+              ) : waHref ? (
                 <Button asChild variant="hero" className="flex-1">
-                  <a href={`https://wa.me/${whatsapp}`} target="_blank" rel="noreferrer">
+                  <a href={waHref} target="_blank" rel="noreferrer">
                     <WhatsAppIcon className="size-4" /> {t("Contact")}
                   </a>
                 </Button>

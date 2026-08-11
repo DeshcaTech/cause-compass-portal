@@ -140,9 +140,9 @@ const GROUPS: Group[] = [
     ],
   },
   {
-    title: "Asset rent WhatsApp messages (level 1 & 2)",
+    title: "WhatsApp pre-filled messages (level 1 & 2)",
     description:
-      "Pre-filled WhatsApp text when someone asks about an asset. Use {asset} for the asset name, {start} for the collection date and {end} for the return date.",
+      "Text pre-filled when someone opens WhatsApp from the site. Use {asset}, {start} and {end} for asset requests, {business} for a member business, and {group} for a group.",
     whatsappAdminOnly: true,
     fields: [
       {
@@ -155,6 +155,18 @@ const GROUPS: Group[] = [
         key: "asset_whatsapp_message_other",
         label: "Other assets message",
         hint: "Hello, I would like to rent {asset} from {start} to {end}. Is it available?",
+        multiline: true,
+      },
+      {
+        key: "business_whatsapp_message",
+        label: "Member business message",
+        hint: "Hello {business}, I found you on the CCGMs website and would like to know more.",
+        multiline: true,
+      },
+      {
+        key: "group_whatsapp_message",
+        label: "Group contact message",
+        hint: "Hello, I would like to know more about {group}.",
         multiline: true,
       },
     ],
@@ -205,6 +217,12 @@ export function SiteContentSettings({
         asset_whatsapp_message_other: draft.asset_whatsapp_message_other?.trim()
           ? draft.asset_whatsapp_message_other.trim()
           : null,
+        business_whatsapp_message: draft.business_whatsapp_message?.trim()
+          ? draft.business_whatsapp_message.trim()
+          : null,
+        group_whatsapp_message: draft.group_whatsapp_message?.trim()
+          ? draft.group_whatsapp_message.trim()
+          : null,
         facebook_url: draft.facebook_url?.trim() ? draft.facebook_url.trim() : null,
         instagram_url: draft.instagram_url?.trim() ? draft.instagram_url.trim() : null,
         x_url: draft.x_url?.trim() ? draft.x_url.trim() : null,
@@ -220,6 +238,8 @@ export function SiteContentSettings({
         delete (payload as Partial<SiteSettings>).whatsapp_message;
         delete (payload as Partial<SiteSettings>).asset_whatsapp_message_ccgms;
         delete (payload as Partial<SiteSettings>).asset_whatsapp_message_other;
+        delete (payload as Partial<SiteSettings>).business_whatsapp_message;
+        delete (payload as Partial<SiteSettings>).group_whatsapp_message;
         delete (payload as Partial<SiteSettings>).membership_free;
         delete (payload as Partial<SiteSettings>).membership_fee_individual;
         delete (payload as Partial<SiteSettings>).membership_fee_student;

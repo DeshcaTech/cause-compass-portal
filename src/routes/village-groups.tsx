@@ -16,7 +16,7 @@ import { useT } from "@/lib/i18n";
 import { useDyn } from "@/lib/i18n/dynamic";
 import { mergeShareMeta } from "@/lib/share-meta";
 import { useDialogParam } from "@/lib/use-dialog-param";
-import { whatsappHref } from "@/lib/site-settings";
+import { fillTemplate, siteSettingsQuery, whatsappHref } from "@/lib/site-settings";
 import { WhatsAppIcon } from "@/components/site/icons/WhatsApp";
 import groupsBanner from "@/assets/community-together.jpg";
 
@@ -73,6 +73,7 @@ function VillageGroupsPage() {
     ? (search.category as CategoryKey)
     : "all";
   const { data: groups = [] } = useQuery(villageGroupsQuery);
+  const { data: site } = useQuery(siteSettingsQuery);
   // The open group lives in the URL so the popup can be shared as a link.
   const selected = groups.find((g) => g.id === search.group) ?? null;
   const openGroup = useDialogParam("group");
@@ -202,10 +203,18 @@ function VillageGroupsPage() {
                     </a>
                   </li>
                 ) : null}
-                {whatsappHref(selected.contact_phone) ? (
+                {whatsappHref(
+                  selected.contact_phone,
+                  fillTemplate(site?.group_whatsapp_message, { group: selected.name }),
+                ) ? (
                   <li>
                     <a
-                      href={whatsappHref(selected.contact_phone)!}
+                      href={
+                        whatsappHref(
+                          selected.contact_phone,
+                          fillTemplate(site?.group_whatsapp_message, { group: selected.name }),
+                        )!
+                      }
                       target="_blank"
                       rel="noreferrer"
                       className="flex items-center gap-2 underline-offset-4 hover:underline"
