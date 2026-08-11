@@ -16,7 +16,7 @@ import { useT } from "@/lib/i18n";
 import { useDyn } from "@/lib/i18n/dynamic";
 import { mergeShareMeta } from "@/lib/share-meta";
 import { useDialogParam } from "@/lib/use-dialog-param";
-import { whatsappHref } from "@/lib/site-settings";
+import { fillTemplate, siteSettingsQuery, whatsappHref } from "@/lib/site-settings";
 import { WhatsAppIcon } from "@/components/site/icons/WhatsApp";
 import groupsBanner from "@/assets/community-together.jpg";
 

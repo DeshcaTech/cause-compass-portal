@@ -140,9 +140,9 @@ const GROUPS: Group[] = [
     ],
   },
   {
-    title: "Asset rent WhatsApp messages (level 1 & 2)",
+    title: "WhatsApp pre-filled messages (level 1 & 2)",
     description:
-      "Pre-filled WhatsApp text when someone asks about an asset. Use {asset} for the asset name, {start} for the collection date and {end} for the return date.",
+      "Text pre-filled when someone opens WhatsApp from the site. Use {asset}, {start} and {end} for asset requests, {business} for a member business, and {group} for a group.",
     whatsappAdminOnly: true,
     fields: [
       {
