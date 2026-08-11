@@ -21,6 +21,8 @@ export type SiteSettings = {
   show_contact_whatsapp: boolean;
   developer_whatsapp: string | null;
   whatsapp_message: string | null;
+  asset_whatsapp_message_ccgms: string | null;
+  asset_whatsapp_message_other: string | null;
   facebook_url: string | null;
   instagram_url: string | null;
   x_url: string | null;
@@ -57,6 +59,10 @@ export const DEFAULT_SITE_SETTINGS: SiteSettings = {
   show_contact_whatsapp: true,
   developer_whatsapp: null,
   whatsapp_message: null,
+  asset_whatsapp_message_ccgms:
+    "Hello CCGMs, I would like to request {asset} from {start} to {end}.",
+  asset_whatsapp_message_other:
+    "Hello, I would like to rent {asset} from {start} to {end}. Is it available?",
   facebook_url: null,
   instagram_url: null,
   x_url: null,
@@ -78,7 +84,7 @@ export const siteSettingsQuery = queryOptions({
     const { data, error } = await supabase
       .from("site_settings")
       .select(
-        "org_name, hero_eyebrow, hero_title_line1, hero_title_line2, hero_intro, about_eyebrow, about_title, about_body_1, about_body_2, android_app_url, ios_app_url, contact_address, contact_phone, contact_email, footer_blurb, contact_whatsapp, show_contact_whatsapp, developer_whatsapp, whatsapp_message, facebook_url, instagram_url, x_url, youtube_url, tiktok_url, membership_fee_individual, membership_fee_student, membership_fee_family, membership_free, card_image_ratio",
+        "org_name, hero_eyebrow, hero_title_line1, hero_title_line2, hero_intro, about_eyebrow, about_title, about_body_1, about_body_2, android_app_url, ios_app_url, contact_address, contact_phone, contact_email, footer_blurb, contact_whatsapp, show_contact_whatsapp, developer_whatsapp, whatsapp_message, asset_whatsapp_message_ccgms, asset_whatsapp_message_other, facebook_url, instagram_url, x_url, youtube_url, tiktok_url, membership_fee_individual, membership_fee_student, membership_fee_family, membership_free, card_image_ratio",
       )
       .eq("id", 1)
       .maybeSingle();
@@ -96,4 +102,16 @@ export function whatsappHref(raw: string | null | undefined, message?: string | 
   return text
     ? `https://wa.me/${digits}?text=${encodeURIComponent(text)}`
     : `https://wa.me/${digits}`;
+}
+
+/** Fill {asset}, {start} and {end} placeholders in an asset WhatsApp template. */
+export function fillAssetMessage(
+  template: string | null | undefined,
+  values: { asset: string; start?: string | null; end?: string | null },
+) {
+  if (!template?.trim()) return null;
+  return template
+    .replace(/\{asset\}/gi, values.asset)
+    .replace(/\{start\}/gi, values.start?.trim() || "…")
+    .replace(/\{end\}/gi, values.end?.trim() || "…");
 }
