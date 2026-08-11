@@ -693,7 +693,7 @@ function AdminPage() {
                 { name: "president_name", label: "President name", required: true },
                 { name: "title", label: "Title", required: true },
                 { name: "message", label: "Message", type: "textarea", required: true },
-                { name: "photo_url", label: "Photo", type: "image", crop: { aspect: A6_LANDSCAPE, outputWidth: 1200 } },
+                { name: "photo_url", label: "Photo", type: "image", crop: { aspect: 3 / 4, outputWidth: 1200 } },
                 { name: "is_published", label: "Published", type: "switch" },
               ]}
             />
