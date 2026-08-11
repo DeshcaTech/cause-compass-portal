@@ -169,8 +169,8 @@ function VillageGroupsPage() {
                 src={selected.image_url ?? groupsBanner}
                 alt={selected.name}
                 loading="lazy"
-                wrapperClassName="aspect-[16/9] w-full overflow-hidden rounded-xl"
-                className="size-full object-cover"
+                wrapperClassName="max-h-[60vh] w-full overflow-hidden rounded-xl"
+                className="max-h-[60vh] w-full object-contain"
               />
               <DialogHeader>
                 <DialogTitle className="text-2xl">{selected.name}</DialogTitle>
@@ -191,13 +191,36 @@ function VillageGroupsPage() {
                   </li>
                 ) : null}
                 {selected.contact_phone ? (
-                  <li className="flex items-center gap-2">
-                    <Phone className="size-4" /> {selected.contact_phone}
+                  <li>
+                    <a
+                      href={`tel:${selected.contact_phone.replace(/\s+/g, "")}`}
+                      className="flex items-center gap-2 underline-offset-4 hover:underline"
+                    >
+                      <Phone className="size-4 shrink-0" /> {selected.contact_phone}
+                    </a>
+                  </li>
+                ) : null}
+                {whatsappHref(selected.contact_phone) ? (
+                  <li>
+                    <a
+                      href={whatsappHref(selected.contact_phone)!}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="flex items-center gap-2 underline-offset-4 hover:underline"
+                    >
+                      <WhatsAppIcon className="size-4 shrink-0 text-[#25D366]" />{" "}
+                      {t("Message on WhatsApp")}
+                    </a>
                   </li>
                 ) : null}
                 {selected.contact_email ? (
-                  <li className="flex items-center gap-2">
-                    <Mail className="size-4" /> {selected.contact_email}
+                  <li>
+                    <a
+                      href={`mailto:${selected.contact_email}`}
+                      className="flex items-center gap-2 break-all underline-offset-4 hover:underline"
+                    >
+                      <Mail className="size-4 shrink-0" /> {selected.contact_email}
+                    </a>
                   </li>
                 ) : null}
               </ul>
