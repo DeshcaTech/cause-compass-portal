@@ -2,12 +2,6 @@ import type { ReactNode } from "react";
 import { ChevronDown, Filter } from "lucide-react";
 
 import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
 import {
   Select,
   SelectContent,
@@ -32,17 +26,15 @@ export function FilterPage({ filters, children }: { filters: ReactNode; children
     <section className="container-page py-10">
       <div className="hidden gap-4 sm:grid sm:grid-cols-2 lg:grid-cols-3">{filters}</div>
 
-      <Collapsible className="group/collapsible sm:hidden">
-        <CollapsibleTrigger asChild>
-          <Button variant="outline" className="w-full justify-between">
-            <span className="flex items-center gap-2">
-              <Filter className="size-4" /> {t("Filter")}
-            </span>
-            <ChevronDown className="size-4 shrink-0 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-180" />
-          </Button>
-        </CollapsibleTrigger>
-        <CollapsibleContent className="mt-3 space-y-4">{filters}</CollapsibleContent>
-      </Collapsible>
+      <details className="group/filter sm:hidden">
+        <summary className="flex h-9 w-full cursor-pointer items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground">
+          <span className="flex items-center gap-2">
+            <Filter className="size-4" /> {t("Filter")}
+          </span>
+          <ChevronDown className="size-4 shrink-0 transition-transform duration-200 group-open/filter:rotate-180" />
+        </summary>
+        <div className="mt-3 space-y-4">{filters}</div>
+      </details>
 
       <div className="mt-6">{children}</div>
     </section>
