@@ -32,7 +32,7 @@ export function FilterPage({ filters, children }: { filters: ReactNode; children
     <section className="container-page py-10">
       <div className="hidden gap-4 sm:grid sm:grid-cols-2 lg:grid-cols-3">{filters}</div>
 
-      <Collapsible className="sm:hidden">
+      <Collapsible className="group/collapsible sm:hidden">
         <CollapsibleTrigger asChild>
           <Button variant="outline" className="w-full justify-between">
             <span className="flex items-center gap-2">
