@@ -210,72 +210,83 @@ function JobsPage() {
       </FilterPage>
 
       <Dialog open={!!selected} onOpenChange={(open) => !open && setSelected(null)}>
-        <DialogContent className="sm:max-w-lg">
-          <DialogHeader>
-            <DialogTitle>{dyn(selected?.title)}</DialogTitle>
-          </DialogHeader>
+        <DialogContent className="!left-0 !top-0 !h-screen !w-screen !max-w-full !translate-x-0 !translate-y-0 overflow-y-auto rounded-none border-0 p-0">
           {selected ? (
-            <div className="space-y-4">
-              <div className="flex flex-wrap gap-2">
-                <Badge variant="secondary">{dyn(selected.category)}</Badge>
-                <Badge variant="outline">{dyn(selected.job_type)}</Badge>
-              </div>
-              <p className="text-sm text-foreground/85">{dyn(selected.description)}</p>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li className="flex items-center gap-2">
-                  <Briefcase className="size-4" /> {selected.company}
-                </li>
-                {selected.location ? (
-                  <li className="flex items-center gap-2">
-                    <MapPin className="size-4" /> {dyn(selected.location)}
-                  </li>
+            <div className="container-page mx-auto max-w-4xl py-8 sm:py-12">
+              <DialogHeader>
+                <DialogTitle className="text-left text-2xl">{dyn(selected.title)}</DialogTitle>
+              </DialogHeader>
+              <div className="mt-6 space-y-5">
+                {selected.image_url ? (
+                  <div className="flex max-h-[50vh] w-full items-center justify-center rounded-xl bg-secondary">
+                    <img
+                      src={selected.image_url}
+                      alt={dyn(selected.title)}
+                      className="max-h-[50vh] w-full object-contain"
+                    />
+                  </div>
                 ) : null}
-                {selected.salary_range ? (
+                <div className="flex flex-wrap gap-2">
+                  <Badge variant="secondary">{dyn(selected.category)}</Badge>
+                  <Badge variant="outline">{dyn(selected.job_type)}</Badge>
+                </div>
+                <p className="text-sm text-foreground/85">{dyn(selected.description)}</p>
+                <ul className="space-y-2 text-sm text-muted-foreground">
                   <li className="flex items-center gap-2">
-                    <Banknote className="size-4" /> {selected.salary_range}
+                    <Briefcase className="size-4" /> {selected.company}
                   </li>
-                ) : null}
-                {selected.closes_at ? (
-                  <li className="flex items-center gap-2">
-                    <CalendarClock className="size-4" /> {t("Closing date")}:{" "}
-                    {new Date(selected.closes_at).toLocaleDateString()}
-                  </li>
-                ) : null}
-                {selected.contact_email ? (
-                  <li className="flex items-center gap-2">
-                    <Mail className="size-4" />
-                    <a className="underline underline-offset-4" href={`mailto:${selected.contact_email}`}>
-                      {selected.contact_email}
-                    </a>
-                  </li>
-                ) : null}
-                {selected.contact_phone ? (
-                  <li className="flex items-center gap-2">
-                    <Phone className="size-4" />
-                    <a className="underline underline-offset-4" href={`tel:${selected.contact_phone}`}>
-                      {selected.contact_phone}
-                    </a>
-                  </li>
-                ) : null}
-              </ul>
-              <div className="flex flex-wrap gap-2">
-                <Button
-                  variant="hero"
-                  className="flex-1"
-                  onClick={() => {
-                    setApplyFor(selected);
-                    setSelected(null);
-                  }}
-                >
-                  <ExternalLink /> {t("Apply now")}
-                </Button>
-                <ShareButton
-                  title={dyn(selected.title)}
-                  path={`/jobs?job=${selected.id}`}
-                  image={selected.image_url ?? null}
-                  label={t("Share job")}
-                  className="flex-1"
-                />
+                  {selected.location ? (
+                    <li className="flex items-center gap-2">
+                      <MapPin className="size-4" /> {dyn(selected.location)}
+                    </li>
+                  ) : null}
+                  {selected.salary_range ? (
+                    <li className="flex items-center gap-2">
+                      <Banknote className="size-4" /> {selected.salary_range}
+                    </li>
+                  ) : null}
+                  {selected.closes_at ? (
+                    <li className="flex items-center gap-2">
+                      <CalendarClock className="size-4" /> {t("Closing date")}:{" "}
+                      {new Date(selected.closes_at).toLocaleDateString()}
+                    </li>
+                  ) : null}
+                  {selected.contact_email ? (
+                    <li className="flex items-center gap-2">
+                      <Mail className="size-4" />
+                      <a className="underline underline-offset-4" href={`mailto:${selected.contact_email}`}>
+                        {selected.contact_email}
+                      </a>
+                    </li>
+                  ) : null}
+                  {selected.contact_phone ? (
+                    <li className="flex items-center gap-2">
+                      <Phone className="size-4" />
+                      <a className="underline underline-offset-4" href={`tel:${selected.contact_phone}`}>
+                        {selected.contact_phone}
+                      </a>
+                    </li>
+                  ) : null}
+                </ul>
+                <div className="flex flex-wrap gap-3">
+                  <Button
+                    variant="hero"
+                    className="flex-1"
+                    onClick={() => {
+                      setApplyFor(selected);
+                      setSelected(null);
+                    }}
+                  >
+                    <ExternalLink /> {t("Apply now")}
+                  </Button>
+                  <ShareButton
+                    title={dyn(selected.title)}
+                    path={`/jobs?job=${selected.id}`}
+                    image={selected.image_url ?? null}
+                    label={t("Share job")}
+                    className="flex-1"
+                  />
+                </div>
               </div>
             </div>
           ) : null}
